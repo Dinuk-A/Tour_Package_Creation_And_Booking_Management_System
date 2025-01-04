@@ -39,7 +39,7 @@ const fillDataIntoDynamicDropDowns = (tagId, msg, dataContainer, displayingPrope
 }
 
 //fill and display 2 values into the same <option>
-const fillTwoValuesIntoDynamicDropDown = (tagId, msg, dataContainer, displayingPropertyName1, displayingPropertyName2, selectedValue) => {
+const fillMultDataIntoDynamicDropDown = (tagId, msg, dataContainer, displayingPropertyName1, displayingPropertyName2, selectedValue) => {
 
     tagId.innerHTML = "";
 
@@ -84,7 +84,7 @@ const fillDataIntoDynamicDataList = (datalistId, dataContainer, displayingProper
 // ++++++++++++ fns to control data selection ++++++++++
 
 //restrict choosing future dates (maximum choosing date is today)
-const disableChoosingFutureDate = (calenderTagId) => {
+const disableFutureDate = (calenderTagId) => {
     let now = new Date();
     let todayDate = (now.toISOString().split('T'))[0];
     calenderTagId.max = todayDate;
@@ -153,4 +153,4 @@ const validateStaticSelectVals = (selectTagId, object, property) => {
 
 }
 
-//datalist validation
+//datalist validation @ validationFns.js
