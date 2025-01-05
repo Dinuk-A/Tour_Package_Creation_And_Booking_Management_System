@@ -67,7 +67,7 @@ public class Employee {
     private String note;
 
     @Column(name = "emp_status")
-    @NotNull
+    // @NotNull
     private Boolean emp_status;
 
     @Column(name = "emp_isdeleted")

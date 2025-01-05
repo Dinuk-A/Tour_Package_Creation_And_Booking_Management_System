@@ -132,7 +132,7 @@
                                 </div>
                                 <div class="col-8">
                                     <input id="inputFullName" type="text" class="form-control"
-                                        placeholder="Enter The Full Name" onkeyup="fullNameValidator(this)" required>
+                                        placeholder="Enter The Full Name" onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','employee' , 'fullname')" required>
                                 </div>
                             </div>
 
@@ -262,7 +262,7 @@
                                                 Designation <span class="text-danger"> * </span> :
                                             </label>
                                             <select id="selectDesignation" required class="form-select"
-                                                onchange="dynamicSelectValidator(this, '' , 'employee' , 'designation_id')">
+                                                onchange="dynamicSelectValidator(this,  'employee' , 'designation_id')">
 
                                             </select>
                                         </div>

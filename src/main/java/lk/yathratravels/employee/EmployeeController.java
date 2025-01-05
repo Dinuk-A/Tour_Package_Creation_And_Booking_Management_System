@@ -74,7 +74,7 @@ public class EmployeeController {
 
             employee.setAddeddatetime(LocalDateTime.now());
             employeeDao.save(employee);
-            return "1";
+            return "OK";
         } catch (Exception e) {
             return "Error Saving Data: " + e.getMessage();
         }
