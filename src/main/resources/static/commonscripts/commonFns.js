@@ -11,7 +11,7 @@ const ajaxGetReq = (url) => {
         success: function (data) {
 
             console.log("GET success");
-            console.log(url + data);
+            console.log(url + " " + data);
             responseOfGet = data;
 
         },
@@ -19,7 +19,7 @@ const ajaxGetReq = (url) => {
         error: function (response) {
 
             console.log("GET failed");
-            console.log(url + response);
+            console.log(url + " " + response);
             responseOfGet = [];
 
         }
@@ -34,19 +34,19 @@ const ajaxRequest = (url, method, object) => {
 
     let responseOfMethod;
 
-    $.ajax(url,{
+    $.ajax(url, {
         type: method,
         data: JSON.stringify(object),
         contentType: "application/json",
         async: false,
 
-        success: function(data){
+        success: function (data) {
             console.log(method + " success");
             console.log(url + data);
             responseOfMethod = data;
         },
 
-        error: function(response){
+        error: function (response) {
             console.log(response);
             responseOfMethod = response;
         }

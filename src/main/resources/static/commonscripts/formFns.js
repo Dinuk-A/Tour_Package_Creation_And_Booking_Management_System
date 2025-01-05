@@ -124,7 +124,7 @@ const inputValidatorText = (inputTagId, pattern, object, property) => {
 }
 
 //validate selected options (dynamic select tags)
-const validateDynamicSelectVals = (selectTagId, object, property) => {
+const dynamicSelectValidator = (selectTagId, object, property) => {
 
     const selectedValue = selectTagId.value;
 
@@ -139,7 +139,7 @@ const validateDynamicSelectVals = (selectTagId, object, property) => {
 }
 
 //validate selected options (static select tags)
-const validateStaticSelectVals = (selectTagId, object, property) => {
+const staticSelectValidator = (selectTagId, object, property) => {
 
     const selectedValue = selectTagId.value;
 

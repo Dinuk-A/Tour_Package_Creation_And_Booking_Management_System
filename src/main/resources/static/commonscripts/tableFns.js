@@ -3,7 +3,15 @@
 
 //populate data in them
 
-const createTable = (tableId, dataContainer, tableColumnInfoArray) => {
+const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColumnInfoArray) => {
+
+    //clear out any previous data 
+    tableHolderDivId.innerHTML = '';
+
+    //create main table tag
+    const tableTag = document.createElement('table');
+    tableTag.setAttribute('class', 'table table-bordered table-striped border-primary mt-2 mb-2');
+    tableTag.setAttribute('id', uniqueIdOfTable);
 
     //create empty thead
     const tableHead = document.createElement('thead');
@@ -12,15 +20,15 @@ const createTable = (tableId, dataContainer, tableColumnInfoArray) => {
 
     //create index column separately
     const indexTH = document.createElement('th');
+    indexTH.setAttribute('class', 'text-center justify-content-center');
     indexTH.innerText = "#";
     tableHead.appendChild(indexTH);
 
-    //create first row (trs set)
+    //create first row (ths set)
     tableColumnInfoArray.forEach(columnObj => {
         const columnHead = document.createElement('th');
         columnHead.innerText = columnObj.colHeadName;
-        //awul giyoth inner () ayn karanna, yathra.js openReusableModalForCardsReadMore
-        columnHead.setAttribute('class', ('col-' + columnObj.colHeadName));
+        columnHead.setAttribute('class', ('text-center justify-content-center col-head col-' + columnObj.colHeadName));
 
         //append to thead tag
         tableHead.appendChild(columnHead);
@@ -39,6 +47,7 @@ const createTable = (tableId, dataContainer, tableColumnInfoArray) => {
 
         //create and fill first td cell(index) separately
         const indexCell = document.createElement('td');
+        indexCell.setAttribute('class', 'text-center justify-content-center');
         indexCell.innerText = index + 1;
         tr.appendChild(indexCell);
 
@@ -46,18 +55,18 @@ const createTable = (tableId, dataContainer, tableColumnInfoArray) => {
         tableColumnInfoArray.forEach((columnObj) => {
 
             const td = document.createElement('td');
-            td.setAttribute('class', 'text-center,justify-content-center');
+            td.setAttribute('class', 'text-center justify-content-center');
 
             //different scenarios for different display types
             switch (columnObj.displayType) {
                 case "text":
                     //employee[0][fullname]
-                    td.innerText = record[columnObj.displayingValOrFn];
+                    td.innerText = record[columnObj.displayingPropertyOrFn];
                     break;
 
                 case "function":
                     //getDesignation(employee[0])
-                    td.innerHTML = columnObj.displayingValOrFn(record)
+                    td.innerHTML = columnObj.displayingPropertyOrFn(record)
                     break;
 
                 //more cases needed
@@ -72,18 +81,21 @@ const createTable = (tableId, dataContainer, tableColumnInfoArray) => {
 
         //action 
         tr.ondblclick = function () {
-            console.log("row clicked " + indexCell + 1);
+            console.log("row clicked " + (indexCell + 1));
         }
+
+        //append tr to tbody
+        tableBody.appendChild(tr);
 
     })
 
-    //append tr to tbody
-    tableBody.appendChild(tr);
-
     //append thead to table
-    tableId.appendChild(tableHead);
+    tableTag.appendChild(tableHead);
 
     //append tbody to table
-    tableId.appendChild(tableBody);
+    tableTag.appendChild(tableBody);
+
+    //append entire table to the main containing div tag
+    tableHolderDivId.appendChild(tableTag);
 
 }
