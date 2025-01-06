@@ -1,3 +1,5 @@
+<!-- common head tag for all html pages , this includes all the common scripts, libraries and css pages -->
+
 <head th:fragment="commonHeadFr">
 
     <meta charset="UTF-8">
@@ -26,6 +28,9 @@
     <!-- link common fn -->
     <script src="commonscripts/commonFns.js"></script>
 
+    <!-- for user info change portal -->
+    <script src="commonscripts/useredit.js"></script>
+
     <!-- link jquery  -->
     <script src="libs/jQuery.js"></script>
 
@@ -37,7 +42,376 @@
 
 </head>
 
-<h1 th:fragment="comH" style="color: aliceblue;"> fdsgdf gfds g hgfh  </h1>
+<!-- common fragment for top nav bar(header) , from bootstrap designs-->
+<header th:fragment="headerFragment" id="commonHeader" class="header fixed-top d-flex align-items-center">
 
-<p th:fragment="comPPPP" class="bg-light"> gfg  hghfghfgh hhhhhhhhhhhh </p>
+    <div class="d-flex align-items-center justify-content-between">
+        <!-- toggle button starts -->
+        <button class="bi bi-list toggle-sidebar-btn border-none">
+            <img src="images/toggle.svg" width="25px" alt="" onclick="openNav();">
+        </button>
 
+        <!-- brand name text starts (not a img)-->
+        <a href="http://localhost:8081/dashboard" class="logo d-flex align-items-center my-auto">
+            <!-- <img src="ylogo.png" alt="image failed" style="background-size: contain;"> -->
+            <span class="d-none d-lg-block ms-1">Yathra Travels</span>
+        </a>
+    </div>
+
+    <nav class="header-nav ms-auto d-flex align-items-center">
+        <ul class="d-flex align-items-center">
+
+            <!-- dropdown -->
+            <li class="nav-item  pe-3">
+                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
+                    <!-- data-bs-toggle="dropdown" -->
+                    <img id="userPhotoIDHere" src="images/employee.png" alt="Profile image here" class="rounded-circle"
+                        data-bs-toggle="modal" data-bs-target="#userInfoEditModal" onclick="refreshProfileEditForm();">
+                    <span class=" d-md-block ps-2" th:text="${loggedusername}"></span>
+                    <span class=" d-md-block ps-2 d-none" id="loggedUserDesignationId"
+                        th:text="${loggeduserdesignation}" style="display: none !important;"></span>
+
+                </a>
+            </li>
+
+        </ul>
+
+        <!-- meka one tour pkg ekedi only-->
+        <ul class="d-flex align-items-center ms-5 " style="visibility: hidden;">
+            <li class="nav-item  mx-auto" th:text="${loggeduserrole}">role</li>
+        </ul>
+
+        <!-- sign out button -->
+        <ul class="d-flex align-items-center mx-5">
+            <li class="nav-item border border-warning p-1">
+                <a onclick="let userConfirm = confirm('Are you sure to sign out...?'); if (userConfirm) window.location.replace('/logout'); "
+                    class="fw-bold text-warning" style="cursor: pointer; text-decoration: none; ">
+                    <span>Sign Out</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<!-- common sidebar -->
+<aside th:fragment="asideFragment" id="dashboardSidebarID" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/emp">
+                <i class="bi bi-grid"></i>
+                <span>Employee Management</span>
+            </a>
+        </li>
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/user">
+                <i class="bi bi-grid"></i>
+                <span>User Management </span>
+            </a>
+        </li>
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/privilege">
+                <i class="bi bi-grid"></i>
+                <span>Privilege Management</span>
+            </a>
+        </li>
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/vehicle">
+                <i class="bi bi-grid"></i>
+                <span>Vehicle Management</span>
+            </a>
+        </li>
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/attraction">
+                <i class="bi bi-grid"></i>
+                <span>Destinations Management </span>
+            </a>
+        </li>
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/dayplan">
+                <i class="bi bi-grid"></i>
+                <span>Day Plan Creation</span>
+            </a>
+        </li>
+
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/stay">
+                <i class="bi bi-grid"></i>
+                <span>Accommodations Management</span>
+            </a>
+        </li>
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#tpkg-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Tour Packages Management</span><i
+                    class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <!-- items inside main items -->
+            <ul id="tpkg-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+
+                <!-- 1st item inside the main item -->
+                <li>
+                    <a href="http://localhost:8081/attraction">
+                        <i class="bi bi-circle"></i><span>Destinations Management</span>
+                    </a>
+                </li>
+
+                <!-- 2nd item inside the main item -->
+                <li>
+                    <a href="http://localhost:8081/stay">
+                        <i class="bi bi-circle"></i><span>Accomodations Management</span>
+                    </a>
+                </li>
+
+                <!-- 3rd item inside the main item -->
+                <li>
+                    <a href="http://localhost:8081/dayplan">
+                        <i class="bi bi-circle"></i><span>Day Plan Creation</span>
+                    </a>
+                </li>
+
+                <!-- 4th item inside the main item -->
+                <li>
+                    <a href="http://localhost:8081/tourpackage">
+                        <i class="bi bi-circle"></i><span>Create Tour Packages</span>
+                    </a>
+                </li>
+
+            </ul>
+        </li>
+
+
+
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/inquiry">
+                <i class="bi bi-grid"></i>
+                <span>Inquiry Management</span>
+            </a>
+        </li>
+
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/client">
+                <i class="bi bi-grid"></i>
+                <span>Client Management</span>
+            </a>
+        </li>
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/booking">
+                <i class="bi bi-grid"></i>
+                <span>Booking Management</span>
+            </a>
+        </li>
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/payment">
+                <i class="bi bi-grid"></i>
+                <span>Payment Management</span>
+            </a>
+        </li>
+
+        <!-- main items -->
+        <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/expenses">
+                <i class="bi bi-grid"></i>
+                <span>Expenses Management</span>
+            </a>
+        </li>
+
+        <!-- main items -->
+        <!-- <li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/report">
+                <i class="bi bi-grid"></i>
+                <span>Report Module </span>
+            </a>
+        </li> -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#report-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Report Module</span><i
+                    class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <!-- items inside main items -->
+            <ul id="report-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+
+                <!-- 1st item inside the main item -->
+                <li>
+                    <a href="http://localhost:8081/reportsuccessinqs">
+                        <i class="bi bi-circle"></i><span>Success Inquiry Report</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="http://localhost:8081/reportpaymentsum">
+                        <i class="bi bi-circle"></i><span>Payment Report</span>
+                    </a>
+                </li>
+
+
+            </ul>
+        </li>
+
+        <!-- main items-->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#inq-nav" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Inquiry Management</span><i
+                    class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <!-- items inside main items -->
+            <ul id="inq-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+
+                <!-- 1st item inside the main item -->
+                <li>
+                    <a href="http://localhost:8081/inquiry">
+                        <i class="bi bi-circle"></i><span>New Inquiries</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="http://localhost:8081/inquiryresponse">
+                        <i class="bi bi-circle"></i><span>Inquiry Responses</span>
+                    </a>
+                </li>
+
+
+            </ul>
+        </li>
+
+        <!-- <li class="nav-heading">Pages</li> -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="users-profile.html">
+                <i class="bi bi-person"></i>
+                <span>Profile</span>
+            </a>
+        </li>
+
+    </ul>
+
+</aside>
+
+<!-- modal for change user's info by himself -->
+<div th:fragment="userInfoEditModalFragment" class="modal fade" id="userInfoEditModal" tabindex="-1"
+    aria-labelledby="userEditModalLabel" aria-hidden="true">
+
+    <!-- modal starts -->
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <h2 class="modal-title text-warning fs-5" id="userEditModalLabel">Edit User Info</h2>
+                <button type="button" class="btn-close bg-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-light">
+                <form onsubmit="return false" id="formUserDetailsEdit">
+
+                    <!-- main row , photos and main inputs, except current pw and submit button-->
+                    <div class="row mt-2 borders">
+
+                        <!-- user photo -->
+                        <div class="col-3 text-center">
+
+                        </div>
+
+                        <!-- space -->
+                        <div class="col-1"></div>
+
+                        <!-- other text input fields -->
+                        <div class="col-7">
+                            <!-- username and email -->
+                            <div class="row mt-0">
+                                <!-- username -->
+                                <div class="col-6 p-1 mx-auto">
+                                    <label for="editPortalUN" class="form-label fw-bold mb-0">User Name : </label>
+                                    <input type="text" id="editPortalUN" class="form-control shadow" required
+                                        placeholder="Enter The Username"
+                                        onkeyup="inputFieldValidator(this,'','loggedUser','username')">
+                                </div>
+
+                                <!-- email -->
+                                <div class="col-6 p-1 mx-auto">
+                                    <label for="editPortalEmail" class="form-label fw-bold mb-0 mt-1">Email : </label>
+                                    <input type="text" id="editPortalEmail" class="form-control shadow" required
+                                        placeholder="Enter The Email Address"
+                                        onkeyup="inputFieldValidator(this,'','loggedUser','email')">
+                                </div>
+                            </div>
+
+                            <!-- new password 2 times -->
+                            <div class="row mt-1">
+                                <!-- new password -->
+                                <div class="col-6">
+                                    <label for="editPortalNewPW" class="form-label fw-bold mb-0 mt-1">New Password :
+                                    </label>
+                                    <input type="password" id="editPortalNewPW" class="form-control shadow " required
+                                        placeholder="Enter The New Passworde"
+                                        onkeyup="inputFieldValidator(this,'','loggedUser','newpw')">
+                                </div>
+
+                                <!-- retype new password -->
+                                <div class="col-6">
+                                    <label for="editPortalRetypePW" class="form-label fw-bold mb-0 mt-1">Re Enter The
+                                        Password
+                                        : </label>
+                                    <input type="password" id="editPortalRetypePW" class="form-control shadow" required
+                                        placeholder="Enter The Same Password "
+                                        onkeyup="retypePasswordValiForEditPortal();">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-1">
+                        <!-- empty space to align with above row's begining content -->
+                        <div class="col-4"></div>
+
+                        <!-- current pw and submit buttons -->
+                        <div class="col-4 p-1 mx-auto">
+                            <label for="editPortalCurrentPW" class="form-label fw-bold mb-0 mt-1">Curent Password :
+                            </label>
+                            <input type="password" id="editPortalCurrentPW" class="form-control shadow " required
+                                placeholder="Enter The Current Passworde"
+                                onkeyup="inputFieldValidator(this,'','loggedUser','currentpw')">
+                        </div>
+
+                        <!-- for clear buttons -->
+                        <div class="col-2">
+                            <button type="button" class="btn btn-danger">Clear</button>
+                        </div>
+                        <!-- for submit button -->
+                        <div class="col-2">
+                            <button type="button" class="btn btn-primary" onclick="submitProfileChanges();">Save
+                                changes</button>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- for testing only -->
+<h1 th:fragment="comH" style="color: aliceblue;"> fdsgdf gfds g hgfh </h1>
+
+<p th:fragment="comPPPP" class="bg-light"> gfg hghfghfgh hhhhhhhhhhhh </p>

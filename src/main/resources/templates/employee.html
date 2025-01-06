@@ -12,6 +12,10 @@
 </head>
 
 <body>
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+
     <main id="mainAreaID" class="main min-vh-100">
 
         <!-- title starts -->
@@ -57,7 +61,7 @@
             <!-- table starts -->
             <div class="col-10">
                 <div id="tableHolderDiv" class="card card-body bg-info bg-opacity-25">
-                   <!-- a table will be dynamically generated in here -->
+                    <!-- a table will be dynamically generated in here -->
                 </div>
             </div>
             <div class="col-1"></div>
@@ -132,7 +136,9 @@
                                 </div>
                                 <div class="col-8">
                                     <input id="inputFullName" type="text" class="form-control"
-                                        placeholder="Enter The Full Name" onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','employee' , 'fullname')" required>
+                                        placeholder="Enter The Full Name"
+                                        onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','employee' , 'fullname')"
+                                        required>
                                 </div>
                             </div>
 

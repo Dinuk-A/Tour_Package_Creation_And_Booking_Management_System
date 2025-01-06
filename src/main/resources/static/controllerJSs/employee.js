@@ -130,7 +130,7 @@ const checkFormErrors = () => {
 
 }
 
-//fn to submit button (add)
+//fn to submit button (add button)
 const btnAddEmp = () => {
 
     const errors = checkFormErrors();
@@ -173,7 +173,24 @@ const btnAddEmp = () => {
 
 }
 
+//fn for edit button,
+//current way === this will open the same form but with filled values
+const btnEditEmp = (empObj) => {
 
+    $('#modalEmployeeAdd').modal('show');
+
+
+}
+
+//show updated values
+//update btn
+//dlt btn
+//print btn
+//print record
+//img validator (should be a common fn)
+//clear uploaded image (not delete)
+
+//check privileges before all 
 
 
 /* settings btn ekak hadanna table walata, thiyana okkoma cols list 1 pennnawa checkbox widiyata, max 5k select krla UI eke pennanaa cols tika change krganna puluwan */

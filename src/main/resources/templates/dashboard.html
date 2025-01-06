@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Template Main JS File -->
+    <script src="controllerJS/dashboard.js"></script>
+
+    <!-- <style>
+        :root {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Open Sans", sans-serif;
+            background: #f6f9ff;
+                       color: #444444;
+        }
+
+        a {
+            color: #4154f1;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #717ff5;
+            text-decoration: none;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Nunito", sans-serif;
+        }
+
+        .header {
+            background-color: #03045E;
+            color: #ffffff;
+            transition: all 0.5s;
+            z-index: 997;
+            height: 60px;
+            box-shadow: 0px 2px 20px rgba(1, 41, 112, 0.1);
+            padding-left: 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .header .toggle-sidebar-btn {
+            font-size: 32px;
+            padding-left: 10px;
+            cursor: pointer;
+            color: #ffffff;
+        }
+
+        .header-nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-nav .nav-icon {
+            font-size: 20px;
+            color: #012970;
+        }
+
+        .header-nav .nav-profile img {
+            max-height: 40px;
+        }
+
+        .header-nav .nav-profile span {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            z-index: 996;
+            transition: width 0.3s ease;
+            overflow-y: auto;
+            background-color: #ADE8F4;
+            color: #ffffff;
+            box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+        }
+
+        .sidebar.open {
+            width: 300px;
+        }
+
+        .sidebar-nav {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .sidebar-nav .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-nav .nav-item a {
+            color: #ffffff;
+            border: 1px solid #87CEEB;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #0077B6;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar-nav .nav-item a:hover {
+            background-color: #1E90FF;
+            color: #ffffff;
+        }
+
+        .sidebar-nav .nav-heading {
+            color: #F4A460;
+            padding: 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .logo {
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .logo img {
+            max-height: 26px;
+            margin-right: 6px;
+        }
+
+        .logo span {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+            background-color: #03045E;
+            padding: 5px;
+            border-radius: 4px;
+            font-family: "Nunito", sans-serif;
+        }
+
+        #mainAreaID {
+            background-color: #87CEEB;
+            padding: 20px 30px;
+            margin-top: 60px;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .card {
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-body {
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.75rem;
+            padding: 5px 10px;
+            border-radius: 12px;
+        }
+
+        .badge.bg-primary {
+            background-color: #007bff;
+        }
+
+        .badge.bg-success {
+            background-color: #28a745;
+        }
+
+        .footer {
+            padding: 20px 0;
+            font-size: 14px;
+            border-top: 1px solid #cddfff;
+            background-color: #2E8B57;
+            color: #ffffff;
+        }
+    </style> -->
+
+</head>
+
+<body>
+
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+
+    <main id="mainAreaID" class="main min-vh-100">
+
+        <!-- Cards -->
+        <div class="row">
+
+            <!-- new inquiries card -->
+            <!-- <div class="col-md-3">
+               
+                    <div class="card" onclick="customAlert(test, '#fff', '#007bff', buttonTextColor = '#fff')">
+                        <div class="card-body position-relative">
+                            <h5 class="card-title py-2">New Inquiries</h5>
+                            <span class="badge bg-primary" id="newInquiriesCount"></span>
+                        </div>
+                    </div>
+               
+            </div> -->
+
+            <!-- in progress inquiries card -->
+            <div class="col-md-3">
+                <a href="http://localhost:8080/inquiryresponse" class="text-decoration-none">
+                    <div class="card">
+                        <div class="card-body position-relative">
+                            <h5 class="card-title py-2">Live Inquiries</h5>
+                            <span class="badge bg-success" id="inProgressAndNewInqsCount"></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- ======= Footer ======= -->
+    <!-- <footer id="footer" class="footer">
+<p>ssdsd</p>
+footer area test
+  </footer> -->
+
+</body>
+
+</html>
