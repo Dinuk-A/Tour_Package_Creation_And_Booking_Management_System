@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{head :: headFragment}"></head>
+
+<head>
+    <!-- link main css -->
+    <!-- <link rel="stylesheet" href="css/user.css"> -->
+
+    <!-- link user js file  -->
+    <script src="controllerJSs/user.js"></script>
+
+    <style>
+        .w-48 {
+            width: 48%;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+
+    <main id="mainAreaID" class="main min-vh-100">
+
+        <div class="container-fluid main">
+
+            <!-- title start-->
+            <div class="row p-2">
+                <div class="col-12 text-center bg-primary">
+                    <h2 class="h2">
+                        User Management
+                    </h2>
+                </div>
+            </div>
+
+            <!-- modal button starts -->
+            <div class="row mt-2 ">
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn modal-btn" data-bs-toggle="modal" data-bs-target="#userModal">
+                        User Management </button>
+                </div>
+            </div>
+
+            <!-- 3 buttons starts -->
+            <div class="row">
+                <div class="col-1"></div>
+
+                <div class="col-10 text-end">
+                    <div id="divModify" class="d-none">
+                        <button type="button" id="btnEdit" style="pointer-events: all;"
+                            onclick="refillUserForm(window['editOb'], window['editRow'])"
+                            class="btn btn-warning btn-edit">Edit</button>
+                        <button type="button" id="btnDelete" style="pointer-events: all;"
+                            onclick="deleteUser(window['editOb'], window['editRow'])"
+                            class="btn btn-danger btn-delete">Delete</button>
+                        <button type="button" id="btnPrint" style="pointer-events: all;"
+                            onclick="printUser(window['editOb'], window['editRow'])"
+                            class="btn btn-info btn-print">Print</button>
+                    </div>
+                </div>
+
+                <div class="col-1"></div>
+            </div>
+
+            <!-- table area start -->
+            <div class="row mt-2">
+                <div class="col-1"></div>
+
+                <!-- table starts -->
+                <div class="col-10">
+                    <div id="tableHolderDiv" class="card card-body bg-info bg-opacity-25">
+                        <!-- a table will be dynamically generated in here -->
+                    </div>
+                </div>
+
+                <div class="col-1"></div>
+            </div>
+        </div>
+
+        <!-- modal start-->
+        <div class="modal fade" id="userModalAdd" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg" style="width: 550px !important;">
+                <div class="modal-content">
+
+                    <!-- modal header -->
+                    <div class="modal-header">
+                        <h2> Edit User </h2>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            onclick="window.location.reload()"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <!-- form Start-->
+                        <form id="formUser" onsubmit="return false">
+
+                            <!-- required Mark starts -->
+                            <div class="row mb-3">
+                            <div class="col-3 text-start fw-bold ">
+                                <span class="text-danger"> * </span> Required Data Fields
+                            </div>
+                            <div class="col-2"></div>
+                            <div class="col-3 text-start fw-bold 3">
+                                <span class="text-info"> * </span> Optional Data Fields
+                            </div>
+                        </div>
+
+                            <!-- select employee starts -->
+                            <div class="row mt-2 mx-auto bordered bg-light">
+                                <div class="div">
+                                    <label for="selectEmployee" class="fw-bold form-label mb-0"> Employee: </label>
+                                    <select id="selectEmployee" class="form-select mb-3"
+                                        onchange="dynamicSelectValidator(this , '' , 'user','employee_id'); generateEmail()">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- USERNAME + EMAIL STARTS -->
+                            <div class="row mt-2 mx-auto bordered bg-light">
+                                <div class="col-6 pe-1">
+                                    <label for="inputUserName" class="form-label fw-bold mb-0"> User Name: </label>
+                                    <input type="text" class="form-control form-input mb-3" id="inputUserName"
+                                        placeholder="Enter The Username"
+                                        onkeyup="inputValidatorText(this,'','user','username')">
+                                </div>
+
+                                <div class="col-6 ps-1">
+                                    <label for="inputEmail" class="col-4 form-label fw-bold mb-0 "> Email: </label>
+                                    <input type="text" id="inputEmail" class="form-control mb-3"
+                                        placeholder="Enter The Email Address"
+                                        onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','user','email')">
+                                </div>
+                            </div>
+
+                            <!-- password starts -->
+
+                            <div class="row mt-2 mx-auto bordered bg-light">
+                                <div class="col-6 pe-1">
+                                    <label for="inputPwd" class=" form-label fw-bold mb-0"> Password: </label>
+                                    <div class="">
+                                        <input type="password" id="inputPwd" class="form-control  mb-3"
+                                            placeholder="Enter The Password"
+                                            onkeyup="inputValidatorText(this,'','user','password')"
+                                            style="width: 250px;">
+                                    </div>
+                                </div>
+
+                                <!-- re-type password starts -->
+                                <div class="col-6 ps-1">
+                                    <label for="rePwd" class="form-label fw-bold mb-0"> Re-Password: </label>
+                                    <div class="">
+                                        <input type="password" id="rePwd" class="form-control  mb-3"
+                                            placeholder="Retype The Password" onkeyup="retypePasswordVali()">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <div class="row bordered bg-light mt-3"> -->
+                            <div class="mb-2 w-100 border p-3 accordion accordion-flush mt-2 bg-light"
+                                id="accordionForRoles">
+
+                                <div class="accordion-item">
+
+                                    <h5 class="accordion-header mb-2">
+
+                                        <button class="accordion-button collapsed fw-bold bg-light p-1" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#flushCollapseUserRoles"
+                                            aria-expanded="false" aria-controls="flushCollapseUserRoles">
+                                            <!--button  1 athule style="padding-top: 0px; margin-left: 0px;" -->
+
+                                            <h5 class="text-info fw-bold"> Roles : Click to view</h5>
+                                        </button>
+                                    </h5>
+
+                                    <div id="flushCollapseUserRoles" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordionForRoles">
+                                        <div class="accordion-body ps-4">
+                                            <!--  d-flex justify-content-between -->
+
+                                            <!-- this will be filled by a JS -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row mt-2 bordered mx-auto bg-light mb-2">
+
+                                <h5>User Account Status</h5>
+
+                                <!-- <div class="input-group"> -->
+                                <input type="radio" class="btn-check" id="userAccActive" autocomplete="off"
+                                    name="accStatus" onchange="if (this.checked) {
+                                    user.user_status = true;
+                                }else{
+                                    user.user_status = false;
+                                }">
+
+                                <label class="btn btn-outline-success w-50 rounded-start" for="userAccActive">Account is
+                                    active</label>
+
+                                <input type="radio" class="btn-check" id="userAccInactive" autocomplete="off"
+                                    name="accStatus" onchange="if (this.checked) {
+                                        user.user_status = false;
+                                    }else{
+                                        user.user_status = true;
+                                    }">
+
+                                <label class="btn ms-1 btn-outline-danger w-48" for="userAccInactive">Account is not
+                                    active</label>
+                                <!-- </div> -->
+                            </div>
+
+                            <!--3 form buttons starts -->
+                            <div class="row mt-4 mb-2">
+
+                                <div class="col-3">
+                                    <button type="button" id="btnClear" class="btn btnall btn-clear fw-bold"
+                                        onclick="refreshUserform()">
+                                        Clear </button>
+                                </div>
+                                <div class="col-8 text-end">
+                                    <button id="userUpdtBtn" type="submit" class="btn btnall btn-update fw-bold me-2"
+                                        onclick="userUpdate()" style="pointer-events: all;">
+                                        Update </button>
+
+                                    <button id="userAddBtn" type="submit" class="btn btnall btn-add fw-bold"
+                                        onclick="userAdd()" style="pointer-events: all;">
+                                        Add </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

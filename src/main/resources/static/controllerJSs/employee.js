@@ -24,7 +24,7 @@ const buildEmployeeTable = () => {
 
     createTable(tableHolderDiv, sharedTableId, employees, tableColumnInfo);
 
-    $('#mainTableEmployee').dataTable();
+    $(`#${sharedTableId}`).dataTable();
     // Initialize DataTables
     //  $(`#${sharedTableId}`).DataTable({
     //     destroy: true, // Ensure any existing instance is destroyed
