@@ -73,12 +73,6 @@ public class Employee {
     @Column(name = "emp_isdeleted")
     private Boolean emp_isdeleted;
 
-    @Column(name = "emp_photo")
-    private byte[] emp_photo;
-
-    @Column(name = "emp_photo_name")
-    private String emp_photo_name;
-
     @ManyToOne
     @JoinColumn(name = "designation_id", referencedColumnName = "id")
     private Designation designation_id;
@@ -128,3 +122,9 @@ public class Employee {
  * emp_status tinyint
  * emp_isdeleted tinyint
  */
+
+// @Column(name = "emp_photo")
+// private byte[] emp_photo;
+
+// @Column(name = "emp_photo_name")
+// private String emp_photo_name;

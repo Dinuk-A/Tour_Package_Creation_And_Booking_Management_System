@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yathra Login</title>
+
+    <!-- link bootstrp css -->
+    <link rel="stylesheet" href="libs/bootstrap-5.2.3/css/bootstrap.min.css">
+
+    <!-- link bootsrtap js file -->
+    <script src="libs/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+
+    <!-- link main css -->
+    <link rel="stylesheet" href="css/login.css">
+
+    <!-- link login js -->
+    <!-- <script src="controllerJSs/login.js"></script> -->
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8 card flex-row mx-auto">
+                <div class="img-left d-none d-md-flex align-items-center justify-content-center">                   
+                    <img src="images/ylogo2.png" alt="Logo" class="img-fluid">
+                </div>
+
+                <div class="card-body">
+                    <h4 class="title text-center mt-4">Log Into Account</h4>
+
+                    <form action="login" method="post" class="form-box px-3">
+                        
+                        <div class="form-input">
+                            <input name="username" type="text" placeholder="Username" autocomplete="off" required>
+                        </div>
+
+                        <div class="form-input">
+                            <input name="password" type="password" placeholder="Password" autocomplete="off" required>
+                        </div>
+
+                        <div class="row mb-3">
+                            <button type="submit" class="col-12 btn btn-primary mx-auto">Login</button>
+                        </div>
+
+                        <div class="text-danger fw-bold text-center" th:if="${param.error}">
+                            Invalid Username & Password!
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
