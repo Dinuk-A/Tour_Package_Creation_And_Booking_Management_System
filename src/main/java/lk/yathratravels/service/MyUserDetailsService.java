@@ -15,8 +15,9 @@ import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
+@Service
 public class MyUserDetailsService implements UserDetailsService {
-     @Autowired
+    @Autowired
     private UserDao userDao;
 
     @Override
@@ -34,20 +35,16 @@ public class MyUserDetailsService implements UserDetailsService {
 
         Set<GrantedAuthority> authoritiesSet = new HashSet<>();
 
-        for(Role role : loggedUser.getRoles()){
+        for (Role role : loggedUser.getRoles()) {
             authoritiesSet.add(new SimpleGrantedAuthority(role.getName()));
         }
 
-        ArrayList<GrantedAuthority> authsArrayList= new ArrayList<>(authoritiesSet);
+        ArrayList<GrantedAuthority> authsArrayList = new ArrayList<>(authoritiesSet);
 
         return new org.springframework.security.core.userdetails.User(loggedUser.getUsername(),
-        loggedUser.getPassword(),
-        loggedUser.getUser_status(), true, true, true, authsArrayList); 
+                loggedUser.getPassword(),
+                loggedUser.getUser_status(), true, true, true, authsArrayList);
 
-        
     }
-
-   
-
 
 }
