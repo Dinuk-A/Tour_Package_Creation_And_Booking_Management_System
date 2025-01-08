@@ -1,6 +1,7 @@
 window.addEventListener('load', () => {
 
-    buildEmployeeTable();
+    // buildEmployeeTable();
+    buildEmployeeTableNew();
     refreshEmployeeForm();
 
 })
@@ -29,6 +30,37 @@ const buildEmployeeTable = () => {
     //  $(`#${sharedTableId}`).DataTable({
     //     destroy: true, // Ensure any existing instance is destroyed
     // });
+
+}
+
+const buildEmployeeTableNew = async () => {
+
+    try {
+        employees = await newGetReq("/emp/all");
+
+        const tableColumnInfo = [
+            { displayType: 'text', displayingPropertyOrFn: 'emp_code', colHeadName: 'Code' },
+            { displayType: 'text', displayingPropertyOrFn: 'fullname', colHeadName: 'Full Name' },
+            { displayType: 'text', displayingPropertyOrFn: 'email', colHeadName: 'Email' },
+            { displayType: 'text', displayingPropertyOrFn: 'mobilenum', colHeadName: 'Contact' },
+            { displayType: 'function', displayingPropertyOrFn: getDesignation, colHeadName: 'Designation' },
+            { displayType: 'function', displayingPropertyOrFn: getEmployeeStatus, colHeadName: 'Status' }
+        ]
+
+        createTable(tableHolderDiv, sharedTableId, employees, tableColumnInfo);
+
+        $(`#${sharedTableId}`).dataTable();
+        // Initialize DataTables
+        //  $(`#${sharedTableId}`).DataTable({
+        //     destroy: true, // Ensure any existing instance is destroyed
+        // });
+    } catch (error) {
+        console.error("Failed to refresh privilege table:", error);
+        console.log("*****************");
+        console.error("jqXHR:", error.jqXHR);
+        console.error("Status:", error.textStatus);
+        console.error("Error Thrown:", error.errorThrown);
+    }
 
 }
 
@@ -131,7 +163,7 @@ const checkFormErrors = () => {
 }
 
 //fn to submit button (add button)
-const btnAddEmp = () => {
+const btnAddEmpNew = () => {
 
     const errors = checkFormErrors();
 
@@ -172,6 +204,40 @@ const btnAddEmp = () => {
 
 
 }
+
+//fn to submit button (add button)
+const btnAddEmp = async () => {
+    console.log('add btn clkd');
+
+    let errors = checkFormErrors();
+    if (errors == '') {
+        const userConfirm = confirm('Are you sure to add?');
+
+        if (userConfirm) {
+            try {
+                // Await the response from the AJAX request
+                const postServerResponse = await ajaxRequestNew("/emp", "POST", employee);
+
+                if (postServerResponse === 'OK') {
+                    alert('Saved successfully');
+                    buildEmployeeTable();
+                    formEmployee.reset();
+                    refreshEmployeeForm();
+                } else {
+                    alert('Failed to submit ' + postServerResponse);
+                }
+            } catch (error) {
+                // Handle errors (such as network issues or server errors)
+                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            }
+        } else {
+            alert('User cancelled the task');
+        }
+    } else {
+        alert('Form has some errors: ' + errors);
+    }
+};
+
 
 //fn for edit button,
 //current way === this will open the same form but with filled values

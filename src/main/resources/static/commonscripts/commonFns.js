@@ -10,16 +10,23 @@ const ajaxGetReq = (url) => {
 
         success: function (data) {
 
-            console.log("GET success");
-            console.log(url + " " + data);
+            console.log("GET success for " + url);
+
+            //store recieved data
             responseOfGet = data;
 
         },
 
-        error: function (response) {
+        error: function (jqXHR, textStatus, errorThrown) {
 
-            console.log("GET failed");
-            console.log(url + " " + response);
+            console.error("GET failed for " + url);
+            // console.error("Server Response" + response);
+            console.error('Status:', jqXHR.status);
+            console.error('Status Text:', jqXHR.statusText);
+            console.error('Text Status:', textStatus);
+            console.error('Error Thrown:', errorThrown);
+
+            // make the response empty because nothing returned
             responseOfGet = [];
 
         }
@@ -41,13 +48,13 @@ const ajaxRequest = (url, method, object) => {
         async: false,
 
         success: function (data) {
-            console.log(method + " success");
-            console.log(url + data);
+            console.log(method + " success for " + url);
             responseOfMethod = data;
         },
 
         error: function (response) {
             console.log(response);
+            console.error(method + " failed for " + url);
             responseOfMethod = response;
         }
 
@@ -55,3 +62,40 @@ const ajaxRequest = (url, method, object) => {
 
     return responseOfMethod;
 }
+
+//by gpt
+const newGetReq = (url) => {
+    return new Promise((resolve, reject) => {
+        $.ajax(url, {
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log("GET success for " + url);
+                resolve(data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("GET failed for " + url);
+                reject({ jqXHR, textStatus, errorThrown });
+            }
+        });
+    });
+}
+
+//by gpt
+const ajaxRequestNew = (url, method, object) => {
+    return new Promise((resolve, reject) => {
+        $.ajax(url, {
+            type: method,
+            data: JSON.stringify(object),
+            contentType: "application/json",
+            success: function (data) {
+                console.log(method + " success for " + url);
+                resolve(data);  // Resolve the promise with the response data
+            },
+            error: function (response) {
+                console.error(method + " failed for " + url);
+                reject(response);  // Reject the promise with the error response
+            }
+        });
+    });
+};
