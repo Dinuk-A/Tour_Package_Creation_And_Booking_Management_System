@@ -106,8 +106,8 @@ const refreshEmployeeForm = () => {
         selectDesignation
     ];
 
-    inputTagsIds.forEach((field) => {
-        field.style.border = "1px solid #ced4da";
+    inputTagsIds.forEach((fieldID) => {
+        fieldID.style.border = "1px solid #ced4da";
     });
 
     buildEmployeeTable();
@@ -241,12 +241,104 @@ const btnAddEmp = async () => {
 
 //fn for edit button,
 //current way === this will open the same form but with filled values
-const btnEditEmp = (empObj) => {
+const openModal = (empObj) => {
 
-    $('#modalEmployeeAdd').modal('show');
+    $('#infoModal').modal('show');
+    document.getElementById('modalEmpName').innerText = empObj.fullname;
+    document.getElementById('modalEmpEmail').textContent = empObj.email;
 
 
 }
+
+// refill the form to edit a record
+const refillEmployeeForm = (empObj) => {
+
+    //mewata access modifires danna anthimata
+    employee = JSON.parse(JSON.stringify(empObj));
+    oldEmployee = JSON.parse(JSON.stringify(empObj));
+
+    inputFullName.value = empObj.fullname;
+    inputNIC.value = empObj.nic;
+    inputEmail.value = empObj.email;
+    inputMobile.value = empObj.mobilenum;
+    inputLand.value = empObj.landnum;
+    inputAddress.value = empObj.address;
+    inputNote.value = empObj.note;
+    dateDateOfBirth.value = empObj.dob;
+
+    if (empObj.gender == "Male") {
+        radioMale.checked = true;
+    } else {
+        radioFemale.checked = true;
+    }
+
+    designations = ajaxGetReq("/desig/all");
+    fillDataIntoDynamicDropDowns(selectDesignation, 'Select Designation', designations, 'name', empObj.designation_id.name);
+
+    $("#infoModal").modal("hide");
+
+    var myFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myFormTab.show();
+
+}
+
+//clear form everytime table tab is viewed
+// use the same inputTagsIds array used in refreshEmployeeForm
+//make it global
+//.forEach and value = '' ; and border colours to normal
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+
+            // Reset the employee object
+            employee = {};
+
+            // Array of input field IDs to reset
+            const inputTagsIds = [
+                'inputFullName',
+                'inputNIC',
+                'dateDateOfBirth',
+                'inputEmail',
+                'inputMobile',
+                'inputLand',
+                'inputAddress',
+                'inputNote',
+                'selectDesignation'
+            ];
+
+            inputTagsIds.forEach((fieldID) => {
+                const field = document.getElementById(fieldID);
+                if (field) {
+                    // Reset styles and values
+                    field.style.border = "1px solid #ced4da";
+                    field.value = '';
+                }
+            });
+
+            // Reset radio buttons
+            const genderRadios = document.querySelectorAll("input[name='gender']");
+            genderRadios.forEach((radio) => (radio.checked = false));
+        }
+    });
+});
+
+
+
+/**
+ * Object.keys(obj).forEach(key => {
+    delete obj[key];
+});
+ */
+
+//
+const printEmployeeRecord = () => {
+    alert('cat');
+}
+
+
+
 
 //show updated values
 //update btn

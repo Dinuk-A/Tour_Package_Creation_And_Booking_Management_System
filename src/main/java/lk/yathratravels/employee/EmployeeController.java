@@ -27,8 +27,9 @@ public class EmployeeController {
     public ModelAndView showEmployeeUI() {
 
         ModelAndView empView = new ModelAndView();
-        empView.setViewName("employee.html");
+        empView.setViewName("newemp.html");
         empView.addObject("title", "Yathra Employee");
+        empView.addObject("moduleName", "Employee Management");
         return empView;
 
     }

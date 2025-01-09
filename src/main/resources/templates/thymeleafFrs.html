@@ -47,18 +47,22 @@
 
     <div class="d-flex align-items-center justify-content-between">
         <!-- toggle button starts -->
-        <button class="bi bi-list toggle-sidebar-btn border-none">
+        <button class="bi bi-list toggle-sidebar-btn border-none bg-info">
             <img src="images/toggle.svg" width="25px" alt="" onclick="openNav();">
         </button>
 
         <!-- brand name text starts (not a img)-->
         <a href="http://localhost:8081/dashboard" class="logo d-flex align-items-center my-auto">
             <!-- <img src="ylogo.png" alt="image failed" style="background-size: contain;"> -->
-            <span class="d-none d-lg-block ms-1">Yathra Travels</span>
+            <span class="d-none d-lg-block ms-1 text-primary">Yathra Travels</span>
         </a>
     </div>
 
-    <nav class="header-nav ms-auto d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between mx-auto">
+        <h2 th:text="${moduleName}" class="ms-5 my-auto text-info" ></h2>
+    </div>
+
+    <nav class="header-nav d-flex align-items-center">
         <ul class="d-flex align-items-center">
 
             <!-- dropdown -->
