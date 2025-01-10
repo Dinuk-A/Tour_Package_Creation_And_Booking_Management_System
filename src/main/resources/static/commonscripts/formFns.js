@@ -1,7 +1,7 @@
 //+++++++ fns to populate data into form elements +++++++++
 
 // fill and display <option> inside <select> elements of forms (data recieved from databases)
-const fillDataIntoDynamicDropDowns = (tagId, msg, dataContainer, displayingPropertyName, selectedValue) => {
+const fillDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropertyName, selectedValue) => {
 
     tagId.innerHTML = "";
 
@@ -39,7 +39,7 @@ const fillDataIntoDynamicDropDowns = (tagId, msg, dataContainer, displayingPrope
 }
 
 //fill and display 2 values into the same <option>
-const fillMultDataIntoDynamicDropDown = (tagId, msg, dataContainer, displayingPropertyName1, displayingPropertyName2, selectedValue) => {
+const fillMultDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropertyName1, displayingPropertyName2, selectedValue) => {
 
     tagId.innerHTML = "";
 

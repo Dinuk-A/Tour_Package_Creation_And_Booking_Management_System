@@ -27,7 +27,7 @@ public class EmployeeController {
     public ModelAndView showEmployeeUI() {
 
         ModelAndView empView = new ModelAndView();
-        empView.setViewName("newemp.html");
+        empView.setViewName("employee.html");
         empView.addObject("title", "Yathra Employee");
         empView.addObject("moduleName", "Employee Management");
         return empView;
@@ -87,8 +87,11 @@ public class EmployeeController {
     @Transactional
     public String updateEmployee(@RequestBody Employee employee) {
 
+        // storing this updating employee record's ID for duplication completions
+        Integer idOfUpdatingEmployee = employee.getId();
+
         // get the existing employee record by his ID(same as this passing ID)
-        Employee existingEmployee = employeeDao.getReferenceById(employee.getId());
+        Employee existingEmployee = employeeDao.getReferenceById(idOfUpdatingEmployee);
 
         // first check if the employee record exist or not
         // (should be exist except for accidental deletions in db table level)
@@ -96,28 +99,31 @@ public class EmployeeController {
             return "Update Not Completed : Employee Does Not Exists";
         }
 
-        // storing this updating employee record's ID for duplication completions
-        Integer idOfUpdatingEmployee = employee.getId();
-
         // check duplications with entered nic
         Employee anEmployeeByThisNIC = employeeDao.getEmployeeByNIC(employee.getNic());
 
-        if (anEmployeeByThisNIC != null && anEmployeeByThisNIC.getId() != idOfUpdatingEmployee) {
-            return "Update Not Completed, This NIC Exists in Another Employee Record Too";
+        if (anEmployeeByThisNIC != null) {
+            if (anEmployeeByThisNIC.getId() != idOfUpdatingEmployee) {
+                return "Update Not Completed, This NIC Exists in Another Employee Record Too";
+            }
         }
 
         // check duplications with entered email
         Employee anEmployeeByThisEmail = employeeDao.getEmployeeByEmail(employee.getEmail());
 
-        if (anEmployeeByThisEmail != null && anEmployeeByThisEmail.getId() != employee.getId()) {
-            return "Update Not Completed, This Email Exists in Another Employee Record Too";
+        if (anEmployeeByThisEmail != null) {
+            if (anEmployeeByThisEmail.getId() != idOfUpdatingEmployee) {
+                return "Update Not Completed, This Email Exists in Another Employee Record Too";
+            }
         }
 
         // check duplications with entered mobile
         Employee anEmployeeByThisMobile = employeeDao.getEmployeeByMobileNum(employee.getMobilenum());
 
-        if (anEmployeeByThisMobile != null && anEmployeeByThisEmail.getId() != employee.getId()) {
-            return "Update Not Completed, This Mobile Number Exists in Another Employee Record Too";
+        if (anEmployeeByThisMobile != null) {
+            if (anEmployeeByThisMobile.getId() != idOfUpdatingEmployee) {
+                return "Update Not Completed, This Mobile Number Exists in Another Employee Record Too";
+            }
         }
 
         try {
@@ -151,7 +157,7 @@ public class EmployeeController {
         }
 
         try {
-            existingEmployee.setEmp_isdeleted(true);
+            // existingEmployee.setEmp_isdeleted(true);
             existingEmployee.setDeleteddatetime(LocalDateTime.now());
             employeeDao.save(existingEmployee);
             return "OK";

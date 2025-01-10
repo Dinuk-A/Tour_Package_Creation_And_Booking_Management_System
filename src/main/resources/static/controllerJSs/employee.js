@@ -1,6 +1,5 @@
 window.addEventListener('load', () => {
 
-    // buildEmployeeTable();
     buildEmployeeTableNew();
     refreshEmployeeForm();
 
@@ -10,52 +9,31 @@ window.addEventListener('load', () => {
 let sharedTableId = "mainTableEmployee";
 
 //to create and refresh content in main employee table
-const buildEmployeeTable = () => {
-
-    employees = ajaxGetReq("/emp/all");
-
-    const tableColumnInfo = [
-        { displayType: 'text', displayingPropertyOrFn: 'emp_code', colHeadName: 'Code' },
-        { displayType: 'text', displayingPropertyOrFn: 'fullname', colHeadName: 'Full Name' },
-        { displayType: 'text', displayingPropertyOrFn: 'email', colHeadName: 'Email' },
-        { displayType: 'text', displayingPropertyOrFn: 'mobilenum', colHeadName: 'Contact' },
-        { displayType: 'function', displayingPropertyOrFn: getDesignation, colHeadName: 'Designation' },
-        { displayType: 'function', displayingPropertyOrFn: getEmployeeStatus, colHeadName: 'Status' }
-    ]
-
-    createTable(tableHolderDiv, sharedTableId, employees, tableColumnInfo);
-
-    $(`#${sharedTableId}`).dataTable();
-    // Initialize DataTables
-    //  $(`#${sharedTableId}`).DataTable({
-    //     destroy: true, // Ensure any existing instance is destroyed
-    // });
-
-}
-
 const buildEmployeeTableNew = async () => {
 
     try {
-        employees = await newGetReq("/emp/all");
+        const employees = await newGetReq("/emp/all");
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'emp_code', colHeadName: 'Code' },
             { displayType: 'text', displayingPropertyOrFn: 'fullname', colHeadName: 'Full Name' },
+            { displayType: 'function', displayingPropertyOrFn: getDesignation, colHeadName: 'Designation' },
             { displayType: 'text', displayingPropertyOrFn: 'email', colHeadName: 'Email' },
             { displayType: 'text', displayingPropertyOrFn: 'mobilenum', colHeadName: 'Contact' },
-            { displayType: 'function', displayingPropertyOrFn: getDesignation, colHeadName: 'Designation' },
             { displayType: 'function', displayingPropertyOrFn: getEmployeeStatus, colHeadName: 'Status' }
         ]
 
         createTable(tableHolderDiv, sharedTableId, employees, tableColumnInfo);
 
         $(`#${sharedTableId}`).dataTable();
+
         // Initialize DataTables
         //  $(`#${sharedTableId}`).DataTable({
         //     destroy: true, // Ensure any existing instance is destroyed
         // });
+
     } catch (error) {
-        console.error("Failed to refresh privilege table:", error);
+        console.error("Failed to refresh employee table:", error);
         console.log("*****************");
         console.error("jqXHR:", error.jqXHR);
         console.error("Status:", error.textStatus);
@@ -72,15 +50,16 @@ const getDesignation = (empObj) => {
 // fn to fill the table
 const getEmployeeStatus = (empObj) => {
 
-    if (!empObj.emp_isdeleted) {
-        if (empObj.emp_status) {
-            return "working"
-        } else {
-            return "Resigned"
-        }
-    } else {
-        return "Deleted Record"
-    }
+    // if (!empObj.emp_isdeleted) {
+    //     if (empObj.emp_status) {
+    //         return "working"
+    //     } else {
+    //         return "Resigned"
+    //     }
+    // } else {
+    //     return "Deleted Record"
+    // }
+    return 'change this'
 
 }
 
@@ -91,29 +70,45 @@ const refreshEmployeeForm = () => {
 
     document.getElementById('formEmployee').reset();
 
-    designations = ajaxGetReq("/desig/all")
-    fillDataIntoDynamicDropDowns(selectDesignation, 'Select Designation', designations, 'name')
+    const designations = ajaxGetReq("/desig/all")
+    fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name')
 
+    // Array of input field IDs to reset
     const inputTagsIds = [
-        inputFullName,
-        inputNIC,
-        dateDateOfBirth,
-        inputEmail,
-        inputMobile,
-        inputLand,
-        inputAddress,
-        inputNote,
-        selectDesignation
+        'inputFullName',
+        'inputNIC',
+        'dateDateOfBirth',
+        'inputEmail',
+        'inputMobile',
+        'inputLand',
+        'inputAddress',
+        'inputNote',
+        'selectDesignation',
+        'selectEmployeementStatus'
     ];
 
+    //clear out any previous styles
     inputTagsIds.forEach((fieldID) => {
-        fieldID.style.border = "1px solid #ced4da";
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
     });
-
-    buildEmployeeTable();
 
     empUpdateBtn.disabled = true;
     empUpdateBtn.style.cursor = "not-allowed";
+
+    empAddBtn.disabled = false;
+    empAddBtn.style.cursor = "pointer";
+
+    buildEmployeeTableNew();
+
+    /** also works
+ * Object.keys(obj).forEach(key => {
+    delete obj[key];
+});
+ */
 
 }
 
@@ -163,53 +158,9 @@ const checkFormErrors = () => {
 }
 
 //fn to submit button (add button)
-const btnAddEmpNew = () => {
+const addNewEmployee = async () => {
 
     const errors = checkFormErrors();
-
-    if (errors == '') {
-        const userConfirm = confirm("Are You Sure To Add ?\n " + employee.fullname);
-
-        if (userConfirm) {
-
-            let postServiceReqResponse;
-            $.ajax("/emp", {
-                type: "POST",
-                data: JSON.stringify(employee),
-                contentType: "application/json",
-                async: false,
-                success: function (data) {
-                    console.log("success" + data);
-                    postServiceReqResponse = data;
-                },
-                error: function (responseObj) {
-                    console.log("fail" + responseObj);
-                    postServiceReqResponse = responseObj;
-                }
-            });
-            if (postServiceReqResponse == "OK") {
-                alert('Succesfully Saved !!!')
-                buildEmployeeTable();
-                formEmployee.reset();
-                refreshEmployeeForm();
-                $("#modalEmployeeAdd").modal("hide");
-            } else {
-                alert("post service failed \n " + postServiceReqResponse)
-            }
-
-        }
-    } else {
-        alert('form has following errors... \n \n' + errors)
-    }
-
-
-}
-
-//fn to submit button (add button)
-const btnAddEmp = async () => {
-    console.log('add btn clkd');
-
-    let errors = checkFormErrors();
     if (errors == '') {
         const userConfirm = confirm('Are you sure to add?');
 
@@ -220,11 +171,11 @@ const btnAddEmp = async () => {
 
                 if (postServerResponse === 'OK') {
                     alert('Saved successfully');
-                    buildEmployeeTable();
+                    buildEmployeeTableNew();
                     formEmployee.reset();
                     refreshEmployeeForm();
                 } else {
-                    alert('Failed to submit ' + postServerResponse);
+                    alert('Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
@@ -237,7 +188,6 @@ const btnAddEmp = async () => {
         alert('Form has some errors: ' + errors);
     }
 };
-
 
 //fn for edit button,
 //current way === this will open the same form but with filled values
@@ -266,6 +216,9 @@ const refillEmployeeForm = (empObj) => {
     inputNote.value = empObj.note;
     dateDateOfBirth.value = empObj.dob;
 
+    //meka hithanna delete ekatath ekkma logic ekak
+    //  selectEmployeementStatus.value
+
     if (empObj.gender == "Male") {
         radioMale.checked = true;
     } else {
@@ -273,7 +226,13 @@ const refillEmployeeForm = (empObj) => {
     }
 
     designations = ajaxGetReq("/desig/all");
-    fillDataIntoDynamicDropDowns(selectDesignation, 'Select Designation', designations, 'name', empObj.designation_id.name);
+    fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name', empObj.designation_id.name);
+
+    empUpdateBtn.disabled = false;
+    empUpdateBtn.style.cursor = "pointer";
+
+    empAddBtn.disabled = true;
+    empAddBtn.style.cursor = "not-allowed";
 
     $("#infoModal").modal("hide");
 
@@ -292,45 +251,118 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.target.id === 'table-tab') {
             console.log("Switching to table tab - clearing form");
 
+            refreshEmployeeForm();
+
             // Reset the employee object
-            employee = {};
+            // employee = {};
 
             // Array of input field IDs to reset
-            const inputTagsIds = [
-                'inputFullName',
-                'inputNIC',
-                'dateDateOfBirth',
-                'inputEmail',
-                'inputMobile',
-                'inputLand',
-                'inputAddress',
-                'inputNote',
-                'selectDesignation'
-            ];
+            // const inputTagsIds = [
+            //     'inputFullName',
+            //     'inputNIC',
+            //     'dateDateOfBirth',
+            //     'inputEmail',
+            //     'inputMobile',
+            //     'inputLand',
+            //     'inputAddress',
+            //     'inputNote',
+            //     'selectDesignation',
+            //     'selectEmployeementStatus'
+            // ];
 
-            inputTagsIds.forEach((fieldID) => {
-                const field = document.getElementById(fieldID);
-                if (field) {
-                    // Reset styles and values
-                    field.style.border = "1px solid #ced4da";
-                    field.value = '';
-                }
-            });
+            // inputTagsIds.forEach((fieldID) => {
+            //     const field = document.getElementById(fieldID);
+            //     if (field) {
+            //         field.style.border = "1px solid #ced4da";
+            //         field.value = '';
+            //     }
+            // });
 
             // Reset radio buttons
-            const genderRadios = document.querySelectorAll("input[name='gender']");
-            genderRadios.forEach((radio) => (radio.checked = false));
+            // const genderRadios = document.querySelectorAll("input[name='gender']");
+            // genderRadios.forEach((radio) => (radio.checked = false));
         }
     });
 });
 
+//show value changes before update
+const showValueChanges = () => {
+
+    let updates = "";
+
+    if (employee.fullname != oldEmployee.fullname) {
+        updates = updates + " Full Name will be changed to " + employee.fullname + "\n";
+    }
+    if (employee.nic != oldEmployee.nic) {
+        updates = updates + " NIC will be changed to " + employee.nic + "\n";
+    }
+    if (employee.mobilenum != oldEmployee.mobilenum) {
+        updates = updates + " Mobile Number will be changed to " + employee.mobilenum + "\n";
+    }
+    if (employee.landnum != oldEmployee.landnum) {
+        updates = updates + " Land Number will be changed to " + employee.landnum + "\n";
+    }
+    if (employee.email != oldEmployee.email) {
+        updates = updates + " Email will be changed to " + employee.email + "\n";
+    }
+    if (employee.dob != oldEmployee.dob) {
+        updates = updates + " DOB will be changed to " + employee.dob + "\n";
+    }
+    if (employee.gender != oldEmployee.gender) {
+        updates = updates + " Gender will be changed to " + employee.gender + "\n";
+    }
+    if (employee.address != oldEmployee.address) {
+        updates = updates + " Address will be changed to " + employee.address + "\n";
+    }
+    if (employee.designation_id.name != oldEmployee.designation_id.name) {
+        updates = updates + " Designation will be changed to " + employee.designation_id.name + "\n";
+    }
+    if (employee.emp_status != oldEmployee.emp_status) {
+        updates = updates + " Status will be changed to " + employee.emp_status + "\n";
+    }
+    if (employee.note != oldEmployee.note) {
+        updates = updates + " Note will be changed to " + employee.note + "\n";
+    }
+}
+
+//fn for update button
+const updateEmployee = async () => {
+    const errors = checkFormErrors();
+    if (errors == "") {
+        let updates = showValueChanges();
+        if (updates == "") {
+            alert("No changes detected to update");
+        } else {
+            let userConfirm = confirm("Are you sure to proceed ? \n \n" + updates);
+
+            if (userConfirm) {
+
+                try {
+                    let putServiceResponse = await ajaxRequestNew("/emp", "PUT", employee);
+
+                    if (putServiceResponse === "OK") {
+                        alert("Successfully Updated");
+                        buildEmployeeTableNew();
+                        formEmployee.reset();
+                        refreshEmployeeForm()
+
+                    } else {
+                        alert("Update Failed \n" + putServiceResponse);
+                    }
+
+                } catch (error) {
+                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                }
+            } else {
+                alert("User cancelled the task");
+            }
+        }
+    } else {
+        alert("Form has some errors: \n" + errors);
+    }
+}
 
 
-/**
- * Object.keys(obj).forEach(key => {
-    delete obj[key];
-});
- */
 
 //
 const printEmployeeRecord = () => {
