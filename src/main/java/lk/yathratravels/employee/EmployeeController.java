@@ -101,7 +101,6 @@ public class EmployeeController {
 
         // check duplications with entered nic
         Employee anEmployeeByThisNIC = employeeDao.getEmployeeByNIC(employee.getNic());
-
         if (anEmployeeByThisNIC != null) {
             if (anEmployeeByThisNIC.getId() != idOfUpdatingEmployee) {
                 return "Update Not Completed, This NIC Exists in Another Employee Record Too";
@@ -110,7 +109,6 @@ public class EmployeeController {
 
         // check duplications with entered email
         Employee anEmployeeByThisEmail = employeeDao.getEmployeeByEmail(employee.getEmail());
-
         if (anEmployeeByThisEmail != null) {
             if (anEmployeeByThisEmail.getId() != idOfUpdatingEmployee) {
                 return "Update Not Completed, This Email Exists in Another Employee Record Too";
@@ -119,7 +117,6 @@ public class EmployeeController {
 
         // check duplications with entered mobile
         Employee anEmployeeByThisMobile = employeeDao.getEmployeeByMobileNum(employee.getMobilenum());
-
         if (anEmployeeByThisMobile != null) {
             if (anEmployeeByThisMobile.getId() != idOfUpdatingEmployee) {
                 return "Update Not Completed, This Mobile Number Exists in Another Employee Record Too";
@@ -144,7 +141,7 @@ public class EmployeeController {
 
     // to delete an employee record
     @DeleteMapping(value = "/emp")
-    @Transactional
+    // @Transactional
     public String deleteEmployee(@RequestBody Employee employee) {
 
         // get the existing employee record by his ID(same as this passing ID)
@@ -157,7 +154,6 @@ public class EmployeeController {
         }
 
         try {
-            // existingEmployee.setEmp_isdeleted(true);
             existingEmployee.setDeleteddatetime(LocalDateTime.now());
             employeeDao.save(existingEmployee);
             return "OK";

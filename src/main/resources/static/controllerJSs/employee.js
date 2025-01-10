@@ -50,16 +50,16 @@ const getDesignation = (empObj) => {
 // fn to fill the table
 const getEmployeeStatus = (empObj) => {
 
-    // if (!empObj.emp_isdeleted) {
-    //     if (empObj.emp_status) {
-    //         return "working"
-    //     } else {
-    //         return "Resigned"
-    //     }
-    // } else {
-    //     return "Deleted Record"
-    // }
-    return 'change this'
+    if (empObj.deleteddatetime == "" || empObj.deleteddatetime == null) {
+        if (empObj.emp_status == "Working") {
+            return "Working"
+        } else {
+            return "Resigned"
+        }
+    } else {
+        return "Deleted Record"
+    }
+
 
 }
 
@@ -241,11 +241,7 @@ const refillEmployeeForm = (empObj) => {
 
 }
 
-//clear form everytime table tab is viewed
-// use the same inputTagsIds array used in refreshEmployeeForm
-//make it global
-//.forEach and value = '' ; and border colours to normal
-
+//clear out the form everytime a user switches to table tab
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
         if (event.target.id === 'table-tab') {
@@ -323,6 +319,8 @@ const showValueChanges = () => {
     if (employee.note != oldEmployee.note) {
         updates = updates + " Note will be changed to " + employee.note + "\n";
     }
+
+    return updates;
 }
 
 //fn for update button
@@ -362,23 +360,35 @@ const updateEmployee = async () => {
     }
 }
 
+//fn to delete an employee record
+const deleteEmployeeRecord = async (empObj) => {
+    const userConfirm = confirm("Are you sure to delete the employee " + empObj.emp_code + " ?");
+    if (userConfirm) {
+        try {
+            const deleteServerResponse = await ajaxRequestNew("/emp", "DELETE", empObj);
 
+            if (deleteServerResponse === 'OK') {
+                alert('Record Deleted');
 
-//
+            } else {
+                alert('Delete Failed' + deleteServerResponce);
+            }
+        } catch (error) {
+            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else {
+        alert("User cancelled the task")
+    }
+}
+
+// print employee record
 const printEmployeeRecord = () => {
     alert('cat');
 }
 
-
-
-
-//show updated values
-//update btn
-//dlt btn
 //print btn
 //print record
-//img validator (should be a common fn)
-//clear uploaded image (not delete)
+
 
 //check privileges before all 
 

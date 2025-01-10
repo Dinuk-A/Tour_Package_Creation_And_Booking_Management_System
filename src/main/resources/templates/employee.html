@@ -225,16 +225,16 @@
                                             Employeement status <span class="text-danger fw-bold"> * </span> :
                                         </label>
                                         <select required id="selectEmployeementStatus" class="form-select"
-                                        onchange="staticSelectValidator(this , 'employee' , 'emp_status')">
-                                        <option value="" selected disabled> Select Status </option>
-                                        <option value="Working"> Working </option>
-                                        <option value="Resigned"> Resigned </option>
-                                    </select>
+                                            onchange="staticSelectValidator(this , 'employee' , 'emp_status')">
+                                            <option value="" selected disabled> Select Status </option>
+                                            <option value="Working"> Working </option>
+                                            <option value="Resigned"> Resigned </option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
 
-                        <!-- deleted nam note ekak pennanna naththan edit ekedi witharak button ekak pennanna -->
+                            <!-- deleted nam note ekak pennanna naththan edit ekedi witharak button ekak pennanna -->
 
                             <!-- Note starts -->
                             <div class="col-6">
@@ -290,9 +290,16 @@
                             <div id="modalEmpEmail" class="info-value"></div>
                         </div>
                         <div class="d-flex justify-content-between">
+
+                            <button class="btn btn-print" onclick="printEmployeeRecord()">Print</button>
+
                             <button class="btn btn-primary"
                                 onclick="refillEmployeeForm(window['currentObject'])">Edit</button>
-                            <button class="btn btn-print" onclick="printEmployeeRecord()">Print</button>
+
+                            <button class="btn btn-danger"
+                                onclick="deleteEmployeeRecord(window['currentObject'])">Delete
+                            </button>
+                            
                         </div>
                     </div>
                 </div>
