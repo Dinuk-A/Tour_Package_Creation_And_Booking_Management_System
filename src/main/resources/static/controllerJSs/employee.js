@@ -192,13 +192,26 @@ const addNewEmployee = async () => {
 //fn for edit button,
 //current way === this will open the same form but with filled values
 const openModal = (empObj) => {
+    // Populate Personal Details
+    document.getElementById('modalEmpCode').innerText = empObj.emp_code || 'N/A';
+    document.getElementById('modalEmpFullName').innerText = empObj.fullname || 'N/A';
+    document.getElementById('modalEmpNIC').innerText = empObj.nic || 'N/A';
+    document.getElementById('modalEmpDOB').innerText = empObj.dob || 'N/A';
 
+    // Populate Contact Information
+    document.getElementById('modalEmpEmail').innerText = empObj.email || 'N/A';
+    document.getElementById('modalEmpMobileNum').innerText = empObj.mobilenum || 'N/A';
+    document.getElementById('modalEmpLandNum').innerText = empObj.landnum || 'N/A';
+    document.getElementById('modalEmpAddress').innerText = empObj.address || 'N/A';
+
+    // Populate Additional Information
+    document.getElementById('modalEmpGender').innerText = empObj.gender || 'N/A';
+    document.getElementById('modalEmpNote').innerText = empObj.note || 'N/A';
+
+    // Show the modal
     $('#infoModal').modal('show');
-    document.getElementById('modalEmpName').innerText = empObj.fullname;
-    document.getElementById('modalEmpEmail').textContent = empObj.email;
+};
 
-
-}
 
 // refill the form to edit a record
 const refillEmployeeForm = (empObj) => {
@@ -383,8 +396,64 @@ const deleteEmployeeRecord = async (empObj) => {
 
 // print employee record
 const printEmployeeRecord = () => {
-    alert('cat');
-}
+    // Get the content from the modal
+    const modalContent = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;">
+            <h2 style="text-align: center; color: #007bff;">Employee Information</h2>
+            <hr style="border: 1px solid #007bff; margin-bottom: 20px;">
+
+            <!-- Personal Details -->
+            <h4 style="color: #333;">Personal Details</h4>
+            <p><strong>Employee Code:</strong> ${document.getElementById('modalEmpCode').innerText || 'N/A'}</p>
+            <p><strong>Full Name:</strong> ${document.getElementById('modalEmpFullName').innerText || 'N/A'}</p>
+            <p><strong>NIC:</strong> ${document.getElementById('modalEmpNIC').innerText || 'N/A'}</p>
+            <p><strong>Date of Birth:</strong> ${document.getElementById('modalEmpDOB').innerText || 'N/A'}</p>
+
+            <!-- Contact Information -->
+            <h4 style="color: #333;">Contact Information</h4>
+            <p><strong>Email:</strong> ${document.getElementById('modalEmpEmail').innerText || 'N/A'}</p>
+            <p><strong>Mobile Number:</strong> ${document.getElementById('modalEmpMobileNum').innerText || 'N/A'}</p>
+            <p><strong>Landline Number:</strong> ${document.getElementById('modalEmpLandNum').innerText || 'N/A'}</p>
+            <p><strong>Address:</strong> ${document.getElementById('modalEmpAddress').innerText || 'N/A'}</p>
+
+            <!-- Additional Information -->
+            <h4 style="color: #333;">Additional Information</h4>
+            <p><strong>Gender:</strong> ${document.getElementById('modalEmpGender').innerText || 'N/A'}</p>
+            <p><strong>Note:</strong> ${document.getElementById('modalEmpNote').innerText || 'N/A'}</p>
+
+            <hr style="margin-top: 30px;">
+            <p style="text-align: center; font-size: 12px; color: #555;">Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+        </div>
+    `;
+
+    // Create a new window for the print preview
+    const printWindow = window.open('', '', 'width=800, height=600');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Employee Information</title>
+                <style>
+                    body { margin: 0; padding: 0; }
+                    @media print {
+                        h2, h4 { color: #000 !important; }
+                        hr { border-color: #000 !important; }
+                    }
+                </style>
+            </head>
+            <body>${modalContent}</body>
+        </html>
+    `);
+
+    //ignals that writing to the printWindow.document (the new tab or popup window where the printable content is written) is complete
+    printWindow.document.close();
+
+    // Trigger the print dialog
+    printWindow.print();
+
+    // Close the print window after printing
+    printWindow.onafterprint = () => printWindow.close();
+};
+
 
 //print btn
 //print record
