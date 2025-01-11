@@ -110,3 +110,109 @@ body {
     }
 }
 
+
+#formEmployee {
+    background-color: #1B1E2B;
+    color: #FFFFFF;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+#formEmployee input[type="text"],
+#formEmployee input[type="date"],
+#formEmployee select,
+#formEmployee textarea {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 0.75rem;
+    color: #FFFFFF;
+    margin-top: 0.5rem;
+}
+
+#formEmployee input::placeholder,
+#formEmployee textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#formEmployee select {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+#formEmployee select option {
+    background-color: #1B1E2B;
+    color: #FFFFFF;
+}
+
+#formEmployee .form-label {
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+}
+
+/* Style for the buttons */
+#formEmployee button[type="submit"],
+#formEmployee button[type="reset"] {
+    padding: 0.75rem;
+    border-radius: 25px;
+    border: none;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+#empAddBtn,
+#empUpdateBtn {
+    background-color: #84F8B6;
+    color: #1B1E2B;
+}
+
+#formEmployee button[type="reset"] {
+    background-color: transparent;
+    border: 1px solid #FF4F4F;
+    color: #FF4F4F;
+}
+
+/* Style for the required/optional fields section */
+#formEmployee .bg-light {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #FFFFFF;
+}
+
+/* Radio button styles */
+#formEmployee .form-check-input {
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#formEmployee .form-check-input:checked {
+    background-color: #84F8B6;
+    border-color: #84F8B6;
+}
+
+/* Focus states */
+#formEmployee input:focus,
+#formEmployee select:focus,
+#formEmployee textarea:focus {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #84F8B6;
+    box-shadow: none;
+    outline: none;
+}
+
+/* Add these styles to handle autocomplete background */
+#formEmployee input:-webkit-autofill,
+#formEmployee input:-webkit-autofill:hover,
+#formEmployee input:-webkit-autofill:focus,
+#formEmployee input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #1B1E2B inset !important;
+    -webkit-text-fill-color: #FFFFFF !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* For Firefox */
+#formEmployee input:autofill {
+    background-color: #1B1E2B !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 0 0 30px #1B1E2B inset !important;
+}

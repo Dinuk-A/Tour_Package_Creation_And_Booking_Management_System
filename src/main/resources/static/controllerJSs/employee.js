@@ -23,7 +23,7 @@ const buildEmployeeTableNew = async () => {
             { displayType: 'function', displayingPropertyOrFn: getEmployeeStatus, colHeadName: 'Status' }
         ]
 
-        createTable(tableHolderDiv, sharedTableId, employees, tableColumnInfo);
+        createTable(tableEmployeeHolderDiv, sharedTableId, employees, tableColumnInfo);
 
         $(`#${sharedTableId}`).dataTable();
 

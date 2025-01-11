@@ -10,113 +10,7 @@
     <!-- link employee js -->
     <script src="controllerJSs/employee.js"></script>
 
-    <style>
-        #formEmployee {
-            background-color: #1B1E2B;
-            color: #FFFFFF;
-            padding: 2rem;
-            border-radius: 12px;
-            max-width: 850px;
-            margin: 0 auto;
-        }
-
-        #formEmployee input[type="text"],
-        #formEmployee input[type="date"],
-        #formEmployee select,
-        #formEmployee textarea {
-            background-color: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            padding: 0.75rem;
-            color: #FFFFFF;
-            margin-top: 0.5rem;
-        }
-
-        #formEmployee input::placeholder,
-        #formEmployee textarea::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        #formEmployee select {
-            background-color: rgba(255, 255, 255, 0.05);
-        }
-
-        #formEmployee select option {
-            background-color: #1B1E2B;
-            color: #FFFFFF;
-        }
-
-        #formEmployee .form-label {
-            color: #FFFFFF;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Style for the buttons */
-        #formEmployee button[type="submit"],
-        #formEmployee button[type="reset"] {
-            padding: 0.75rem;
-            border-radius: 25px;
-            border: none;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-
-        #empAddBtn,
-        #empUpdateBtn {
-            background-color: #84F8B6;
-            color: #1B1E2B;
-        }
-
-        #formEmployee button[type="reset"] {
-            background-color: transparent;
-            border: 1px solid #FF4F4F;
-            color: #FF4F4F;
-        }
-
-        /* Style for the required/optional fields section */
-        #formEmployee .bg-light {
-            background-color: rgba(255, 255, 255, 0.05) !important;
-            color: #FFFFFF;
-        }
-
-        /* Radio button styles */
-        #formEmployee .form-check-input {
-            background-color: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        #formEmployee .form-check-input:checked {
-            background-color: #84F8B6;
-            border-color: #84F8B6;
-        }
-
-        /* Focus states */
-        #formEmployee input:focus,
-        #formEmployee select:focus,
-        #formEmployee textarea:focus {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-color: #84F8B6;
-            box-shadow: none;
-            outline: none;
-        }
-
-        /* Add these styles to handle autocomplete background */
-        #formEmployee input:-webkit-autofill,
-        #formEmployee input:-webkit-autofill:hover,
-        #formEmployee input:-webkit-autofill:focus,
-        #formEmployee input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 30px #1B1E2B inset !important;
-            -webkit-text-fill-color: #FFFFFF !important;
-            transition: background-color 5000s ease-in-out 0s;
-        }
-
-        /* For Firefox */
-        #formEmployee input:autofill {
-            background-color: #1B1E2B !important;
-            color: #FFFFFF !important;
-            box-shadow: 0 0 0 30px #1B1E2B inset !important;
-        }
-    </style>
+    
 </head>
 
 <body>
@@ -130,8 +24,8 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <!-- for table side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableHolderDiv" role="tab"
-                    aria-controls="tableHolderDiv" aria-selected="true">Table</a>
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableEmployeeHolderDiv" role="tab"
+                    aria-controls="tableEmployeeHolderDiv" aria-selected="true">Table</a>
             </li>
             <!-- for form side -->
             <li class="nav-item" role="presentation">
@@ -143,7 +37,7 @@
         <!-- Tabs content -->
         <div class="tab-content mt-1" id="myTabContent">
             <!-- Table tab  -->
-            <div id="tableHolderDiv" class="tab-pane fade show active table-container bg-info bg-opacity-25"
+            <div id="tableEmployeeHolderDiv" class="tab-pane fade show active table-container bg-info bg-opacity-25"
                 role="tabpanel" aria-labelledby="table-tab">
                 <!-- a table will be dynamically generated in here -->
             </div>
