@@ -92,4 +92,12 @@ public class CommonMethods {
         return errorView;
     }
 
+    // UI for lost page
+    @GetMapping(value = "/lost")
+    public ModelAndView lostUI() {
+        ModelAndView lostView = new ModelAndView();
+        lostView.setViewName("lost.html");
+        return lostView;
+    }
+
 }

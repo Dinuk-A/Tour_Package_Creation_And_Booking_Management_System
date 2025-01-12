@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface ModuleDao extends JpaRepository<Module, Integer> {
 
     //to find module names that didnt given privileges to this role before
-    @Query("select m from Module m where m.id not in(select p.module.id from Privilege p where p.role.id=?1)")
+    @Query("select m from Module m where m.id not in(select p.module_id.id from Privilege p where p.role_id.id=?1)")
     public List<Module> getModulesByRole(Integer roleid);
 
     // 1st step === select module ids from PRIVILEGE TABLE where the related role id  equals to the given role id in passing parameter

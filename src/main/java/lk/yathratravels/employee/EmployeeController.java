@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.security.core.Authentication;
 
 import jakarta.transaction.Transactional;
+import lk.yathratravels.privilege.Privilege;
+import lk.yathratravels.privilege.PrivilegeController;
+import lk.yathratravels.privilege.PrivilegeServices;
 
 @RestController
 public class EmployeeController {
@@ -22,16 +27,26 @@ public class EmployeeController {
     @Autowired
     private EmployeeDao employeeDao;
 
+    @Autowired
+    private PrivilegeServices privilegeService;
+
     // display employee UI
     @RequestMapping(value = "/emp", method = RequestMethod.GET)
     public ModelAndView showEmployeeUI() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
 
-        ModelAndView empView = new ModelAndView();
-        empView.setViewName("employee.html");
-        empView.addObject("title", "Yathra Employee");
-        empView.addObject("moduleName", "Employee Management");
-        return empView;
-
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            ModelAndView lost = new ModelAndView();
+            lost.setViewName("lost.html");
+            return lost;
+        } else {
+            ModelAndView empView = new ModelAndView();
+            empView.setViewName("employee.html");
+            empView.addObject("title", "Yathra Employee");
+            empView.addObject("moduleName", "Employee Management");
+            return empView;
+        }
     }
 
     // get all employee list from DB

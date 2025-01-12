@@ -27,45 +27,14 @@ public class PrivilegeController {
     @Autowired
     private PrivilegeDao privilegeDao;
 
-    // for return privileges by the module name and user
-    public Privilege filterPrivileges(String username, String modulename) {
+    @Autowired
+    private PrivilegeServices privilegeService;
 
-        // admin have full access
-        if (username.equals("Admin")) {
-            Privilege adminPrivilege = new Privilege(true, true, true, true);
-
-            return adminPrivilege;
-
-        } else {
-            String recievedPrivi = privilegeDao.getPrivilegesByUserAndModule(username, modulename);
-            String[] recievedPriviAsArray = recievedPrivi.split(",");
-            Boolean select = recievedPriviAsArray[0].equals("1");
-            Boolean insert = recievedPriviAsArray[1].equals("1");
-            Boolean update = recievedPriviAsArray[2].equals("1");
-            Boolean delete = recievedPriviAsArray[3].equals("1");
-
-            Privilege otherPrivileges = new Privilege(select, insert, update, delete);
-
-            return otherPrivileges;
-        }
-    }
-
-    // get privileges by module name using above method
-    @GetMapping(value = "/privilege/bymodule/{modulename}")
-    public Privilege getPrvByModules(@PathVariable("modulename") String modulename) {
-
+    // Get privileges by module name
+    @GetMapping(value = "/privilege/bymodule/{moduleName}")
+    public Privilege getPrivilegesByModule(@PathVariable("moduleName") String moduleName) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        return filterPrivileges(auth.getName(), modulename);
-    }
-
-    // get all privi records w/o filtering by any parameters
-    @GetMapping(value = "/privilege/all", produces = "application/json")
-    public List<Privilege> getPrvAllData() {
-
-        // methana group by module name karanna try karanna
-        // or JS ekedi .filter eken group karanna balanna ??????????
-        return privilegeDao.findAll(Sort.by(Direction.DESC, "id"));
+        return privilegeService.getPrivileges(auth.getName(), moduleName);
     }
 
     // display privi web page
@@ -76,9 +45,18 @@ public class PrivilegeController {
 
         ModelAndView privilegeView = new ModelAndView();
         privilegeView.setViewName("privilege.html");
-        // privilegeView.addObject("loggedusername", auth.getName());
+        privilegeView.addObject("loggedusername", auth.getName());
         privilegeView.addObject("title", "Yathra Privilege");
         return privilegeView;
+    }
+
+    // get all privi records w/o filtering by any parameters
+    @GetMapping(value = "/privilege/all", produces = "application/json")
+    public List<Privilege> getPrvAllData() {
+
+        // methana group by module name karanna try karanna
+        // or JS ekedi .filter eken group karanna balanna ??????????
+        return privilegeDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
     @PostMapping(value = "/privilege")
