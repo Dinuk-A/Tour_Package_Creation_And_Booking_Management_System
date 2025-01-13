@@ -13,8 +13,15 @@ public interface PrivilegeDao extends JpaRepository<Privilege, Integer> {
 
     // Step 2: Identify the role_ids assigned to the user based on the username.
 
+    /*
+     * It first finds the user_id by looking up the username (the first parameter,
+     * username) in the user table.
+     * Then, it finds the role_ids associated with that user_id from the
+     * user_has_role table. This links the user to the roles they belong to.
+     */
+
     // Step 3: Filter the privilege table for the identified module_id and role_ids.
-    
+
     // Step 4: Aggregate the privilege flags using BIT_OR to ensure that if any role
     // has the privilege enabled, it will be considered.
 
@@ -60,7 +67,5 @@ public interface PrivilegeDao extends JpaRepository<Privilege, Integer> {
     // """, nativeQuery = true)
     // public String getPrivilegesByUserAndModule(String username, String
     // modulename);
-
-    
 
 }

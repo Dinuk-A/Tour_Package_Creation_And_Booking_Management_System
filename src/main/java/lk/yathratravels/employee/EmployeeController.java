@@ -169,6 +169,7 @@ public class EmployeeController {
         }
 
         try {
+            //❌ not finished
             existingEmployee.setDeleteddatetime(LocalDateTime.now());
             employeeDao.save(existingEmployee);
             return "OK";

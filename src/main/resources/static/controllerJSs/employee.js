@@ -1,6 +1,6 @@
 window.addEventListener('load', () => {
 
-    buildEmployeeTableNew();
+    buildEmployeeTable();
     refreshEmployeeForm();
 
 })
@@ -9,10 +9,10 @@ window.addEventListener('load', () => {
 let sharedTableId = "mainTableEmployee";
 
 //to create and refresh content in main employee table
-const buildEmployeeTableNew = async () => {
+const buildEmployeeTable = async () => {
 
     try {
-        const employees = await newGetReq("/emp/all");
+        const employees = await ajaxGetReq("/emp/all");
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'emp_code', colHeadName: 'Code' },
@@ -64,13 +64,13 @@ const getEmployeeStatus = (empObj) => {
 }
 
 //fn to ready the main form for accept values
-const refreshEmployeeForm = () => {
+const refreshEmployeeForm = async() => {
 
     employee = new Object();
 
     document.getElementById('formEmployee').reset();
 
-    const designations = ajaxGetReq("/desig/all")
+    const designations =await ajaxGetReq("/desig/all")
     fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name')
 
     // Array of input field IDs to reset
@@ -102,18 +102,12 @@ const refreshEmployeeForm = () => {
     empAddBtn.disabled = false;
     empAddBtn.style.cursor = "pointer";
 
-    buildEmployeeTableNew();
-
-    /** also works
- * Object.keys(obj).forEach(key => {
-    delete obj[key];
-});
- */
+    //buildEmployeeTableNew();
 
 }
 
 //check errors before submitting
-const checkFormErrors = () => {
+const checkEmpFormErrors = () => {
 
     let errors = "";
 
@@ -160,14 +154,14 @@ const checkFormErrors = () => {
 //fn to submit button (add button)
 const addNewEmployee = async () => {
 
-    const errors = checkFormErrors();
+    const errors = checkEmpFormErrors();
     if (errors == '') {
         const userConfirm = confirm('Are you sure to add?');
 
         if (userConfirm) {
             try {
                 // Await the response from the AJAX request
-                const postServerResponse = await ajaxRequestNew("/emp", "POST", employee);
+                const postServerResponse = await ajaxPPDRequest("/emp", "POST", employee);
 
                 if (postServerResponse === 'OK') {
                     alert('Saved successfully');
@@ -185,7 +179,7 @@ const addNewEmployee = async () => {
             alert('User cancelled the task');
         }
     } else {
-        alert('Form has some errors: ' + errors);
+        alert('Form has following errors: ' + errors);
     }
 };
 
@@ -214,7 +208,7 @@ const openModal = (empObj) => {
 
 
 // refill the form to edit a record
-const refillEmployeeForm = (empObj) => {
+const refillEmployeeForm = async (empObj) => {
 
     //mewata access modifires danna anthimata
     employee = JSON.parse(JSON.stringify(empObj));
@@ -238,7 +232,7 @@ const refillEmployeeForm = (empObj) => {
         radioFemale.checked = true;
     }
 
-    designations = ajaxGetReq("/desig/all");
+    designations = await ajaxGetReq("/desig/all");
     fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name', empObj.designation_id.name);
 
     empUpdateBtn.disabled = false;
@@ -249,8 +243,8 @@ const refillEmployeeForm = (empObj) => {
 
     $("#infoModal").modal("hide");
 
-    var myFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
-    myFormTab.show();
+    var myEmpFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myEmpFormTab.show();
 
 }
 
@@ -259,37 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
         if (event.target.id === 'table-tab') {
             console.log("Switching to table tab - clearing form");
-
             refreshEmployeeForm();
-
-            // Reset the employee object
-            // employee = {};
-
-            // Array of input field IDs to reset
-            // const inputTagsIds = [
-            //     'inputFullName',
-            //     'inputNIC',
-            //     'dateDateOfBirth',
-            //     'inputEmail',
-            //     'inputMobile',
-            //     'inputLand',
-            //     'inputAddress',
-            //     'inputNote',
-            //     'selectDesignation',
-            //     'selectEmployeementStatus'
-            // ];
-
-            // inputTagsIds.forEach((fieldID) => {
-            //     const field = document.getElementById(fieldID);
-            //     if (field) {
-            //         field.style.border = "1px solid #ced4da";
-            //         field.value = '';
-            //     }
-            // });
-
-            // Reset radio buttons
-            // const genderRadios = document.querySelectorAll("input[name='gender']");
-            // genderRadios.forEach((radio) => (radio.checked = false));
         }
     });
 });
@@ -338,7 +302,8 @@ const showValueChanges = () => {
 
 //fn for update button
 const updateEmployee = async () => {
-    const errors = checkFormErrors();
+
+    const errors = checkEmpFormErrors();
     if (errors == "") {
         let updates = showValueChanges();
         if (updates == "") {
@@ -349,7 +314,7 @@ const updateEmployee = async () => {
             if (userConfirm) {
 
                 try {
-                    let putServiceResponse = await ajaxRequestNew("/emp", "PUT", employee);
+                    let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
 
                     if (putServiceResponse === "OK") {
                         alert("Successfully Updated");
@@ -369,7 +334,7 @@ const updateEmployee = async () => {
             }
         }
     } else {
-        alert("Form has some errors: \n" + errors);
+        alert("Form has following errors: \n" + errors);
     }
 }
 
@@ -378,7 +343,7 @@ const deleteEmployeeRecord = async (empObj) => {
     const userConfirm = confirm("Are you sure to delete the employee " + empObj.emp_code + " ?");
     if (userConfirm) {
         try {
-            const deleteServerResponse = await ajaxRequestNew("/emp", "DELETE", empObj);
+            const deleteServerResponse = await ajaxPPDRequest("/emp", "DELETE", empObj);
 
             if (deleteServerResponse === 'OK') {
                 alert('Record Deleted');

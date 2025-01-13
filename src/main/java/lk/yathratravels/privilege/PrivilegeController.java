@@ -104,12 +104,22 @@ public class PrivilegeController {
     @DeleteMapping(value = "/privilege")
     public String deletePrivilege(@RequestBody Privilege privilege) {
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege existingRecord = privilegeDao.getReferenceById(privilege.getId());
+
+        if (existingRecord == null) {
+            return "Delete Not Completed : Record Does Not Exists";
+        }
 
         try {
-            privilege.setDeleteddatetime(LocalDateTime.now());
+            //❌ not finished
             // prvDao.delete(privilege);
-            privilegeDao.delete(privilegeDao.getReferenceById(privilege.getId()));
+            //privilegeDao.delete(privilegeDao.getReferenceById(privilege.getId()));
+
+            privilege.setDeleteddatetime(LocalDateTime.now());
+            //privilegeDao
+            
             return "OK";
         } catch (Exception e) {
             return "Delete Not Completed " + e.getMessage();

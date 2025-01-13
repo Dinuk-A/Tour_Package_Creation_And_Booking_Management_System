@@ -1,70 +1,205 @@
 window.addEventListener('load', () => {
 
-    loggedUserPrivileges = ajaxGetRequest("/privilege/bymodule/PRIVILEGE");
-
-    //call fn for refresh privilege table
-    refreshPrvTbl();
-
-    //call a fn for-refresh privilege form
+    buildPriviTable();
     refreshPrivilegeForm();
 
 })
 
-//define fn for refresh privilege table
-const refreshPrvTbl = () => {
+//global var to store id of the table
+let sharedTableId = "mainTablePrivi";
 
-    permissions = ajaxGetRequest("/privilege/alldata");
+//create a custom table creation function because in this table we dont need a model since all info are visible in one window(full table)
+const createPriviTableCustomFn = (dataContainer) => {
 
+    // Clear out any previous data
+    tablePriviHolderDiv.innerHTML = '';
 
-    const displayProperty = [
-        { dataType: 'function', propertyName: getRoles },
-        { dataType: 'function', propertyName: getModule },
-        { dataType: 'function', propertyName: getSelect },
-        { dataType: 'function', propertyName: getInsert },
-        { dataType: 'function', propertyName: getUpdate },
-        { dataType: 'function', propertyName: getDelete }
+    // Create main table tag
+    const tableTag = document.createElement('table');
+    tableTag.setAttribute('class', 'table table-bordered table-striped border-primary mt-2 mb-2');
+    tableTag.setAttribute('id', sharedTableId);
+
+    // Create thead
+    const tableHead = document.createElement('thead');
+
+    // Create a row for the head
+    const tableHeadRow = document.createElement('tr');
+
+    // Add the index column first
+    const indexTH = document.createElement('th');
+    indexTH.innerText = '#';
+    tableHeadRow.appendChild(indexTH);
+
+    //Array containing info related to table build
+    const tableColumnInfoArray = [
+        { displayType: 'function', displayingPropertyOrFn: getRoles, colHeadName: 'Role' },
+        { displayType: 'function', displayingPropertyOrFn: getModule, colHeadName: 'Module' },
+        { displayType: 'function', displayingPropertyOrFn: getSelect, colHeadName: 'Select' },
+        { displayType: 'function', displayingPropertyOrFn: getInsert, colHeadName: 'Insert' },
+        { displayType: 'function', displayingPropertyOrFn: getUpdate, colHeadName: 'Update' },
+        { displayType: 'function', displayingPropertyOrFn: getDelete, colHeadName: 'Delete' }
     ]
 
-    fillDataIntoTable3(privilegeTable, permissions, displayProperty, buttonVisibility = true, loggedUserPrivileges)
+    // Add other column headers
+    tableColumnInfoArray.forEach(columnObj => {
+        const columnHead = document.createElement('th');
+        columnHead.innerText = columnObj.colHeadName;
+        columnHead.setAttribute('class', ('text-center justify-content-center col-head col-' + columnObj.colHeadName));
+        tableHeadRow.appendChild(columnHead);
+    });
 
-    //call the new datatable format(from net)
-    $('#privilegeTable').dataTable();
+    // Add the button column last
+    const buttonTH = document.createElement('th');
+    buttonTH.innerText = 'Action';
+    tableHeadRow.appendChild(buttonTH);
+
+    // Append the row to the thead
+    tableHead.appendChild(tableHeadRow);
+
+    // Create tbody
+    const tableBody = document.createElement('tbody');
+
+    // Populate tbody with data
+    dataContainer.forEach((record, index) => {
+        const row = document.createElement('tr');
+
+        // Index column
+        const indexCell = document.createElement('td');
+        indexCell.innerText = index + 1;
+        indexCell.setAttribute('class', 'text-center justify-content-center');
+        row.appendChild(indexCell);
+
+        // Data columns
+        tableColumnInfoArray.forEach(columnObj => {
+            const cell = document.createElement('td');
+            cell.setAttribute('class', 'text-center justify-content-center');
+
+            //different scenarios for different display types
+            switch (columnObj.displayType) {
+                case "text":
+                    //ex: employee[0][fullname]
+                    cell.innerText = record[columnObj.displayingPropertyOrFn];
+                    break;
+
+                case "function":
+                    //ex: getDesignation(employee[0])
+                    cell.innerHTML = columnObj.displayingPropertyOrFn(record)
+                    break;
+
+                //more cases needed
+
+                default:
+                    alert("error creating table");
+                    break;
+            }
+            row.appendChild(cell);
+        });
+
+        // Action button cell in last (2 buttons)
+        const buttonCell = document.createElement('td');
+        buttonCell.setAttribute('class', 'text-center justify-content-center');
+
+        //create an EDIT button to insert inside this cell
+        const editButton = document.createElement('button');
+        editButton.setAttribute('class', 'btn btn-info');
+        editButton.innerText = "Edit";
+
+        //function for edit button
+        editButton.onclick = function () {
+
+            refillPriviForm(record);
+
+            //window['currentObject'] = record;
+
+        }
+
+        //create an DELETE button to insert inside this cell
+        const deleteButton = document.createElement('button');
+        deleteButton.setAttribute('class', 'ms-1 btn btn-danger');
+        deleteButton.innerText = "Delete";
+
+        //function for delete button
+        deleteButton.onclick = function () {
+
+            deletePriviRecord(record);
+            //window['currentObject'] = record;
+            // window['currentObjectIndex'] = index;
+
+        }
+
+        //append those 2 buttons to the cell
+        buttonCell.appendChild(editButton);
+        buttonCell.appendChild(deleteButton);
+
+        //append that cell to the row
+        row.appendChild(buttonCell);
+
+        tableBody.appendChild(row);
+    });
+
+    // Append thead and tbody to the table
+    tableTag.appendChild(tableHead);
+    tableTag.appendChild(tableBody);
+
+    // Append the table to the holder div
+    tablePriviHolderDiv.appendChild(tableTag);
 }
 
-const getRoles = (ob) => {
-    return ob.role.name;
+//define fn for refresh privilege table
+const buildPriviTable = async () => {
+
+    try {
+
+        permissions = await ajaxGetReq("/privilege/all");
+
+        createPriviTableCustomFn(permissions);
+
+        $(`#${sharedTableId}`).dataTable();
+
+    } catch (error) {
+        console.error("Failed to refresh employee table:", error);
+        console.log("*****************");
+        console.error("jqXHR:", error.jqXHR);
+        console.error("Status:", error.textStatus);
+        console.error("Error Thrown:", error.errorThrown);
+    }
+
 }
 
-const getModule = (ob) => {
-    return ob.module.name;
+const getRoles = (priviObj) => {
+    return priviObj.role_id.name;
 }
 
-const getSelect = (ob) => {
-    if (ob.privselect) {
+const getModule = (priviObj) => {
+    return priviObj.module_id.name;
+}
+
+const getSelect = (priviObj) => {
+    if (priviObj.prvselect) {
         return "✅"
     } else {
         return "🟥"
     }
 }
 
-const getInsert = (ob) => {
-    if (ob.privinsert) {
+const getInsert = (priviObj) => {
+    if (priviObj.prvinsert) {
         return "✅"
     } else {
         return "🟥"
     }
 }
 
-const getUpdate = (ob) => {
-    if (ob.privupdate) {
+const getUpdate = (priviObj) => {
+    if (priviObj.prvupdate) {
         return "✅"
     } else {
         return "🟥"
     }
 }
 
-const getDelete = (ob) => {
-    if (ob.privdelete) {
+const getDelete = (priviObj) => {
+    if (priviObj.prvdelete) {
         return "✅"
     } else {
         return "🟥"
@@ -72,29 +207,29 @@ const getDelete = (ob) => {
 }
 
 //define a fn for refresh privi form
-const refreshPrivilegeForm = () => {
+const refreshPrivilegeForm = async () => {
 
-    privilege = new Object;
+    privilege = new Object();
 
-    formPrivilege.reset();
+    document.getElementById('formPrivilege').reset();
 
     //get ROLES list for select element
-    roles = ajaxGetRequest("role/alldata");
-    fillDataIntoSelect(selectRole, 'Please Select The Role', roles, 'name');
+    roles = await ajaxGetReq("role/all");
+    fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name');
     selectRole.disabled = false;
 
     //get MODULES list for select element
-    modules = ajaxGetRequest("module/alldata");
-    fillDataIntoSelect(selectModule, 'Please Select The Module', modules, 'name');
+    modules = await  ajaxGetReq("module/all");
+    fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name');
     selectModule.disabled = false;
 
     selectRole.style.border = "1px solid #ced4da"
     selectModule.style.border = "1px solid #ced4da"
 
-    privilege.privselect = false;
-    privilege.privinsert = false;
-    privilege.privupdate = false;
-    privilege.privdelete = false;
+    privilege.prvselect = false;
+    privilege.prvinsert = false;
+    privilege.prvupdate = false;
+    privilege.prvdelete = false;
 
     labelSel.innerHTML = "  <div class='text-danger '>Not Granted </div>";
     labelInsert.innerHTML = " <div class='text-danger'>Not Granted </div> ";
@@ -104,37 +239,14 @@ const refreshPrivilegeForm = () => {
     priviUpdateBtn.disabled = true;
     priviUpdateBtn.style.cursor = "not-allowed";
 
+    priviAddBtn.disabled = false;
+    priviAddBtn.style.cursor = "pointer";
+
+    //buildPriviTable();
+
 }
 
-//for filter
-// const getModulesnRolesFilter = () => {
-
-//     let selectedRole = false;
-//     let selectedModule = false;
-
-//     if (selectRoleForFilter.value != '') {
-//         selectedRole = true;
-//     }
-
-//     if (selectModuleForFilter.value != '') {
-//         selectedModule = true;
-//     }
-
-//     const getModulesnRolesFilter= permissions.filter((privi)=>{
-//         let role;
-//         let module;
-
-//         const roleValue = JSON.parse(selectRoleForFilter.value).id;
-//         role = privi.role.id;
-//     })
-
-
-
-// }
-
-
-
-//create checkbox validator function 
+//custom checkbox validator function 
 const checkPrivi = (feildId, object, property, trueValue, falseValue,
     labelId, prvType) => {
 
@@ -147,156 +259,89 @@ const checkPrivi = (feildId, object, property, trueValue, falseValue,
     }
 }
 
-/*create checkbox validator function 
- const checkPrivi = (feildId,pattern,object,property,trueValue,falseValue,
-                        labelId,labelTrueValue,labelFalseValue) => {
-
-   if (feildId.checked) {
-    window[object][property] = trueValue;
-    labelId.innerHTML = labelTrueValue;
-   } else {
-    window[object][property] = falseValue;
-    labelId.innerHTML = labelFalseValue;
-   }
-}*/
-
 //filter module list by given role
-const generateModuleList = () => {
+const generateModuleList =async () => {
 
-    modulesByRole = ajaxGetRequest("/module/listbyrole?roleid=" + JSON.parse(selectRole.value).id);
+    modulesByRole = await ajaxGetReq("/module/listbyrole?roleid=" + JSON.parse(selectRole.value).id);
 
-    fillDataIntoSelect(selectModule, 'Please Select Module', modulesByRole, 'name');
+    fillDataIntoDynamicSelects(selectModule, 'Please Select Module', modulesByRole, 'name');
     selectModule.disabled = false;
 }
 
-//fn for update button
-const updatePrivilege = () => {
-    console.log("Update btn clicked");
-    console.log(privilege);
-    console.log(oldPrivOb);
+//define fn ckeckerror
+const checkPriviFormErrors = () => {
 
-    //check errors
-    let errors = checkFormError();
-    if (errors == "") {
-        //check available update 
-        let updates = checkFormUpdate();
-        if (updates == "") {
-            alert("Nothing Updated..!");
-        } else {
-            //get user confirmation
-            let userConfirm = confirm("Are you sure to update following record? \n" + updates);
+    let errors = '';
 
-            if (userConfirm) {
-                //call put service
-                let putServiceResponce;
-
-                $.ajax("/privilege", {
-                    type: "PUT",
-                    contentType: "application/json",
-                    async: false,
-                    data: JSON.stringify(privilege),
-                    success: function (data) {
-                        putServiceResponce = data;
-                    },
-
-                    error: function (resData) {
-                        putServiceResponce = resData;
-                    }
-                });
-
-                if (putServiceResponce == "OK") {
-                    alert("Update Successfully!");
-                    refreshPrvTbl();
-                    formPrivilege.reset();
-                    $('#offcanvasPrv').offcanvas('hide');
-                    refreshPrivilegeForm();
-
-                } else {
-                    alert("Form content failure \n" + putServiceResponce);
-                }
-            }
-
-        }
-
-
-    } else {
-        alert("Form has some errors... please check the form again..\n" + errors);
+    if (privilege.role_id == null) {
+        errors = errors + "Please select the ROLE  \n";
     }
+    if (privilege.module_id == null) {
+        errors = errors + "Please select the MODULE \n";
+    }
+    if (privilege.prvselect == null) {
+        errors = errors + "Please select 'SELECT' privilege  \n";
+    }
+    if (privilege.prvinsert == null) {
+        errors = errors + "Please select 'INSERT' privilege  \n";
+    }
+    if (privilege.prvupdate == null) {
+        errors = errors + "Please select 'UPDATE' privilege \n";
+    }
+    if (privilege.prvdelete == null) {
+        errors = errors + "Please select 'DELETE' privilege  \n";
+    }
+
+    return errors;
 }
 
 //fn for add button
-const addPrivilege = () => {
-    console.log("form ADD button clicked");
+const addPrivilege = async () => {
 
     //chech form errors
-    let errors = checkFormError();
+    let errors = checkPriviFormErrors();
 
     if (errors == '') {
-        const userConfirm = confirm("are you sure to grant following permissions ? \n" + privilege.module.name)
+        const userConfirm = confirm("Are you sure to grant following permissions ? \n" + privilege.module_id.name)
 
         if (userConfirm) {
-            //call POST service
-            let postServiceResponse;
+            try {
+                const postServerResponse = await ajaxPPDRequest("/privilege", "POST", privilege);
 
-            // ajaxRequest("/privilege", "POST", "privilege"); meka waradiy
-
-            $.ajax("/privilege", {
-                type: "POST",
-                async: false,
-                contentType: "application/json",
-                data: JSON.stringify(privilege),
-                success: function (data) {
-                    console.log(data + " success");
-                    postServiceResponse = data;
-                },
-                error: function (resOb) {
-                    console.log("failed " + resOb);
-                    postServiceResponse
+                if (postServerResponse === 'OK') {
+                    alert('Saved successfully');
+                    buildPriviTable();
+                    document.getElementById('formPrivilege').reset();
+                    refreshPrivilegeForm();
+                } else {
+                    alert('Submit Failed ' + postServerResponse);
                 }
-            });
-
-            if (postServiceResponse == "OK") {
-                console.log("add btn working fine");
-                alert("Saved ");
-                formPrivilege.reset();
-                refreshPrvTbl();
-                refreshPrivilegeForm(); //mekay
-                //mekay 2ma thiyenna one ???
-                //eth 2nd time ekedi refresh wenne na
-                $('#offcanvasPrv').offcanvas('hide');
-
+            } catch (error) {
+                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         } else {
             alert("user cancelled the task")
         }
-
-
     } else {
-        alert("form has following errors \n " + errors)
+        alert("Form has following errors \n " + errors)
     }
-
-
 }
 
-//for EDIT btn FOR REFILL
-const editPriv = (rowOb, rowInd) => {
+//to refill privilege form
+const refillPriviForm = async (prvObj) => {
 
-    console.log('edit button clicked');
+    privilege = JSON.parse(JSON.stringify(prvObj));
+    oldPrivOb = JSON.parse(JSON.stringify(prvObj));
 
-    $('#offcanvasPrv').offcanvas('show');
-
-    privilege = JSON.parse(JSON.stringify(rowOb));
-    oldPrivOb = JSON.parse(JSON.stringify(rowOb));
-
-    roles = ajaxGetRequest("role/alldata");
-    fillDataIntoSelect(selectRole, 'Please Select The Role', roles, 'name', rowOb.role.name);
+    roles = await ajaxGetReq("role/all");
+    fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name', prvObj.role_id.name);
     selectRole.disabled = false;
 
-    modules = ajaxGetRequest("module/alldata");
-    fillDataIntoSelect(selectModule, 'Please Select The Module', modules, 'name', rowOb.module.name);
+    modules = await ajaxGetReq("module/all");
+    fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name', prvObj.module_id.name);
     selectModule.disabled = false;
 
-    if (rowOb.privselect) {
+    if (prvObj.prvselect) {
         selectSwitch.checked = true;
         labelSel.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
     } else {
@@ -304,7 +349,7 @@ const editPriv = (rowOb, rowInd) => {
         labelSel.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
     }
 
-    if (rowOb.privinsert) {
+    if (prvObj.prvinsert) {
         insertSwitch.checked = true;
         labelInsert.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
     } else {
@@ -312,7 +357,7 @@ const editPriv = (rowOb, rowInd) => {
         labelInsert.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
     }
 
-    if (rowOb.privupdate) {
+    if (prvObj.prvupdate) {
         updateSwitch.checked = true;
         labelUpdate.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
     } else {
@@ -320,7 +365,7 @@ const editPriv = (rowOb, rowInd) => {
         labelUpdate.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
     }
 
-    if (rowOb.privdelete) {
+    if (prvObj.prvdelete) {
         deleteSwitch.checked = true;
         labelDelete.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
     } else {
@@ -334,114 +379,123 @@ const editPriv = (rowOb, rowInd) => {
     priviAddBtn.disabled = true;
     priviAddBtn.style.cursor = "not-allowed";
 
+    var myPrvFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myPrvFormTab.show();
 
-}
-
-//fn for DELETE btn
-const deletePrivi = (ob, rowInd) => {
-    console.log('delete btn clicked');
-
-    //row eka colour wenne na
-    //privilegeTable.children[1].children[rowInd].style.backgroundColor = 'red';
-
-    setTimeout(function () {
-        const userConfirm = confirm('You sure ?');
-
-        if (userConfirm) {
-            let deleteServerResponse;
-
-            // ajaxRequest("/privilege" , "DELETE" , ob)
-
-            $.ajax("/privilege", {
-                type: "DELETE",
-                async: false,
-                contentType: "application/json",
-                data: JSON.stringify(ob),
-                success: function (data) {
-                    console.log(data + " success");
-                    deleteServerResponse = data;
-                },
-                error: function (resOb) {
-                    console.log("failed " + resOb);
-                    deleteServerResponse
-                }
-            });
-            if (deleteServerResponse == "OK") {
-                alert("delete success");
-                refreshPrvTbl();
-            } else {
-                alert("have errors " + deleteServerResponse);
-            }
-
-        }
-
-    }, 500);
-}
-
-
-const printPrivi = () => { }
-
-//define fn ckeckerror
-const checkFormError = () => {
-
-    let errors = '';
-
-    if (privilege.role == null) {
-        errors = errors + "Please select the ROLE  \n";
-        //textName.style.background = 'rgba(255,0,0,0.1)';
-    }
-    if (privilege.module == null) {
-        errors = errors + "Please select the MODULE \n";
-    }
-    if (privilege.privselect == null) {
-        errors = errors + "Please select 'SELECT' privilege  \n";
-    }
-    if (privilege.privinsert == null) {
-        errors = errors + "Please select 'INSERT' privilege  \n";
-    }
-    if (privilege.privupdate == null) {
-        errors = errors + "Please select 'UPDATE' privilege \n";
-    }
-    if (privilege.privdelete == null) {
-        errors = errors + "Please select 'DELETE' privilege  \n";
-    }
-
-    //meka waradi
-    // if (employee.propertyName==null){
-    //     errors = errors + "full name cant be empty \n";
-    // }
-
-    return errors;
 }
 
 //fn for compare and check updated values
-const checkFormUpdate = () => {
+const showValueChanges = () => {
     let updates = '';
 
-    if (privilege.role.name != oldPrivOb.role.name) {
+    if (privilege.role_id.name != oldPrivOb.role_id.name) {
         updates = updates + " Role changed \n";
     }
 
-    if (privilege.module.name != oldPrivOb.module.name) {
+    if (privilege.module_id.name != oldPrivOb.module_id.name) {
         updates = updates + " Module changed \n";
     }
 
-    if (privilege.privselect != oldPrivOb.privselect) {
-        updates = updates + "SELECT privilege is changed \n";
+    if (privilege.prvselect != oldPrivOb.prvselect) {
+        updates = updates + " SELECT privilege has changed \n";
     }
 
-    if (privilege.privinsert != oldPrivOb.privinsert) {
-        updates = updates + "INSERT privilege is changed \n";
+    if (privilege.prvinsert != oldPrivOb.prvinsert) {
+        updates = updates + " INSERT privilege has changed \n";
     }
 
-    if (privilege.privupdate != oldPrivOb.privupdate) {
-        updates = updates + "UPDATE privilege is changed \n";
+    if (privilege.prvupdate != oldPrivOb.prvupdate) {
+        updates = updates + " UPDATE privilege has changed \n";
     }
 
-    if (privilege.privdelete != oldPrivOb.privdelete) {
-        updates = updates + "DELETE privilege is changed \n";
+    if (privilege.prvdelete != oldPrivOb.prvdelete) {
+        updates = updates + " DELETE privilege has changed \n";
     }
 
     return updates;
 }
+
+//fn for update button
+const updatePrivilege = async () => {
+
+    let errors = checkPriviFormErrors();
+    if (errors == "") {
+
+        let updates = showValueChanges();
+        if (updates == "") {
+            alert("No changes detected to update");
+        } else {
+
+            let userConfirm = confirm("Are you sure to update following record? \n \n" + updates);
+
+            if (userConfirm) {
+
+                try {
+                    let putServiceResponse = await ajaxPPDRequest("/privilege", "PUT", privilege);
+
+                    if (putServiceResponse === "OK") {
+                        alert("Successfully Updated");
+                        buildPriviTable();
+                        document.getElementById('formPrivilege').reset();
+                        refreshPrivilegeForm();
+
+                    } else {
+                        alert("Update Failed \n" + putServiceResponse);
+                    }
+
+                } catch (error) {
+                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                }
+
+            } else {
+                alert("User cancelled the task");
+            }
+        }
+    } else {
+        alert("Form has following errors \n" + errors);
+    }
+}
+
+//fn for DELETE btn
+const deletePriviRecord = async (prvObj) => {
+
+    const userConfirm = confirm('Are you sure to delete ?');
+
+    if (userConfirm) {
+
+        try {
+            const deleteServerResponse = await ajaxPPDRequest("/privilege", "DELETE", prvObj);
+            if (deleteServerResponse === 'OK') {
+                alert('Record Deleted');
+
+            } else {
+                alert('Delete Failed' + deleteServerResponce);
+            }
+
+        } catch (error) {
+            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else {
+        alert("User cancelled the task")
+    }
+
+}
+
+//clear out the form everytime a user switches to table tab
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshPrivilegeForm();
+        }
+    });
+});
+
+//print entire table module vise or ???
+const printPrivi = (prvObj) => { alert('test print ') }
+
+
+
+
+
 
