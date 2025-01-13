@@ -157,7 +157,7 @@ const buildPriviTable = async () => {
         $(`#${sharedTableId}`).dataTable();
 
     } catch (error) {
-        console.error("Failed to refresh employee table:", error);
+        console.error("Failed to build employee table:", error);
         console.log("*****************");
         console.error("jqXHR:", error.jqXHR);
         console.error("Status:", error.textStatus);
@@ -207,7 +207,7 @@ const getDelete = (priviObj) => {
 }
 
 //define a fn for refresh privi form
-const refreshPrivilegeForm = async () => {
+const refreshPrivilegeFormOriginal = async () => {
 
     privilege = new Object();
 
@@ -219,7 +219,7 @@ const refreshPrivilegeForm = async () => {
     selectRole.disabled = false;
 
     //get MODULES list for select element
-    modules = await  ajaxGetReq("module/all");
+    modules = await ajaxGetReq("module/all");
     fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name');
     selectModule.disabled = false;
 
@@ -242,9 +242,53 @@ const refreshPrivilegeForm = async () => {
     priviAddBtn.disabled = false;
     priviAddBtn.style.cursor = "pointer";
 
-    //buildPriviTable();
-
 }
+
+//same as above but with promises 💥
+const refreshPrivilegeForm = async () => {
+    try {
+        privilege = new Object();
+        document.getElementById('formPrivilege').reset();
+
+        // Get ROLES list for select element
+        roles = await ajaxGetReq("role/all");
+        fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name');
+        selectRole.disabled = false;
+
+        // Get MODULES list for select element
+        modules = await ajaxGetReq("module/all");
+        fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name');
+        selectModule.disabled = false;
+
+        selectRole.style.border = "1px solid #ced4da";
+        selectModule.style.border = "1px solid #ced4da";
+
+        privilege.prvselect = false;
+        privilege.prvinsert = false;
+        privilege.prvupdate = false;
+        privilege.prvdelete = false;
+
+        labelSel.innerHTML = "<div class='text-danger'>Not Granted</div>";
+        labelInsert.innerHTML = "<div class='text-danger'>Not Granted</div>";
+        labelUpdate.innerHTML = "<div class='text-danger'>Not Granted</div>";
+        labelDelete.innerHTML = "<div class='text-danger'>Not Granted</div>";
+
+        priviUpdateBtn.disabled = true;
+        priviUpdateBtn.style.cursor = "not-allowed";
+
+        priviAddBtn.disabled = false;
+        priviAddBtn.style.cursor = "pointer";
+    } catch (error) {
+        console.error("Error in refreshPrivilegeForm:", error);
+
+        if (error.jqXHR) {
+            console.error("AJAX error:", error);
+        } else {
+            console.error("Unexpected error:", error);
+        }
+    }
+};
+
 
 //custom checkbox validator function 
 const checkPrivi = (feildId, object, property, trueValue, falseValue,
@@ -260,13 +304,30 @@ const checkPrivi = (feildId, object, property, trueValue, falseValue,
 }
 
 //filter module list by given role
-const generateModuleList =async () => {
+const generateModuleListOri = async () => {
 
     modulesByRole = await ajaxGetReq("/module/listbyrole?roleid=" + JSON.parse(selectRole.value).id);
 
     fillDataIntoDynamicSelects(selectModule, 'Please Select Module', modulesByRole, 'name');
     selectModule.disabled = false;
 }
+
+//same as above but with promises 💥
+const generateModuleList = async () => {
+    try {
+        const selectedRole = JSON.parse(selectRole.value);
+
+        const modulesByRole = await ajaxGetReq(`/module/listbyrole?roleid=${selectedRole.id}`);
+
+        fillDataIntoDynamicSelects(selectModule, 'Please Select Module', modulesByRole, 'name');
+        selectModule.disabled = false;
+
+    } catch (error) {
+        console.error("Failed to fetch modules by role:", error);
+        console.error("Details - jqXHR:", error.jqXHR, "Status:", error.textStatus, "Error Thrown:", error.errorThrown);
+    }
+};
+
 
 //define fn ckeckerror
 const checkPriviFormErrors = () => {
@@ -330,57 +391,63 @@ const addPrivilege = async () => {
 //to refill privilege form
 const refillPriviForm = async (prvObj) => {
 
-    privilege = JSON.parse(JSON.stringify(prvObj));
-    oldPrivOb = JSON.parse(JSON.stringify(prvObj));
+    try {
+        privilege = JSON.parse(JSON.stringify(prvObj));
+        oldPrivOb = JSON.parse(JSON.stringify(prvObj));
 
-    roles = await ajaxGetReq("role/all");
-    fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name', prvObj.role_id.name);
-    selectRole.disabled = false;
+        roles = await ajaxGetReq("role/all");
+        fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name', prvObj.role_id.name);
+        selectRole.disabled = false;
 
-    modules = await ajaxGetReq("module/all");
-    fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name', prvObj.module_id.name);
-    selectModule.disabled = false;
+        modules = await ajaxGetReq("module/all");
+        fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name', prvObj.module_id.name);
+        selectModule.disabled = false;
 
-    if (prvObj.prvselect) {
-        selectSwitch.checked = true;
-        labelSel.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
-    } else {
-        selectSwitch.checked = false;
-        labelSel.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+        if (prvObj.prvselect) {
+            selectSwitch.checked = true;
+            labelSel.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+        } else {
+            selectSwitch.checked = false;
+            labelSel.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+        }
+
+        if (prvObj.prvinsert) {
+            insertSwitch.checked = true;
+            labelInsert.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+        } else {
+            insertSwitch.checked = false;
+            labelInsert.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+        }
+
+        if (prvObj.prvupdate) {
+            updateSwitch.checked = true;
+            labelUpdate.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+        } else {
+            updateSwitch.checked = false;
+            labelUpdate.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+        }
+
+        if (prvObj.prvdelete) {
+            deleteSwitch.checked = true;
+            labelDelete.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+        } else {
+            deleteSwitch.checked = false;
+            labelDelete.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+        }
+
+        priviUpdateBtn.disabled = false;
+        priviUpdateBtn.style.cursor = "pointer";
+
+        priviAddBtn.disabled = true;
+        priviAddBtn.style.cursor = "not-allowed";
+
+        var myPrvFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+        myPrvFormTab.show();
+
+    } catch (error) {
+        console.error("Error in refillPriviForm:", error);
+        console.error("Details - jqXHR:", error.jqXHR, "Status:", error.textStatus, "Error Thrown:", error.errorThrown);
     }
-
-    if (prvObj.prvinsert) {
-        insertSwitch.checked = true;
-        labelInsert.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
-    } else {
-        insertSwitch.checked = false;
-        labelInsert.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
-    }
-
-    if (prvObj.prvupdate) {
-        updateSwitch.checked = true;
-        labelUpdate.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
-    } else {
-        updateSwitch.checked = false;
-        labelUpdate.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
-    }
-
-    if (prvObj.prvdelete) {
-        deleteSwitch.checked = true;
-        labelDelete.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
-    } else {
-        deleteSwitch.checked = false;
-        labelDelete.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
-    }
-
-    priviUpdateBtn.disabled = false;
-    priviUpdateBtn.style.cursor = "pointer";
-
-    priviAddBtn.disabled = true;
-    priviAddBtn.style.cursor = "not-allowed";
-
-    var myPrvFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
-    myPrvFormTab.show();
 
 }
 
@@ -493,9 +560,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //print entire table module vise or ???
 const printPrivi = (prvObj) => { alert('test print ') }
-
-
-
-
-
-
