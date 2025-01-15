@@ -26,7 +26,7 @@ import lk.yathratravels.employee.Employee;
 @AllArgsConstructor
 
 public class User {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -44,62 +44,67 @@ public class User {
     @NotNull
     private String email;
 
-    @Column(name = "note") 
+    @Column(name = "note")
     private String note;
 
     @Column(name = "user_photo")
     private byte[] user_photo;
 
-    @Column(name = "user_status")
+    //💥💥💥 db name eka wenas karanna
+    @Column(name = "acc_status")
     @NotNull
-    private Boolean user_status;
+    private Boolean acc_status;
 
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     private Employee employee_id;
 
     @ManyToMany
-    @JoinTable (name = "user_has_role" , joinColumns = @JoinColumn(name="user_id"), inverseJoinColumns = @JoinColumn(name="role_id"))
-    private Set <Role> roles ;
+    @JoinTable(name = "user_has_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles;
 
-     // common 6
-     @Column(name = "addeddatetime")
-     private LocalDateTime addeddatetime;
- 
-     @Column(name = "lastmodifieddatetime")
-     private LocalDateTime lastmodifieddatetime;
- 
-     @Column(name = "deleteddatetime")
-     private LocalDateTime deleteddatetime;
- 
-    //  @Column(name = "addeduserid")
-    //  private Integer addeduserid;
- 
-    //  @Column(name = "lastmodifieduserid")
-    //  private Integer lastmodifieduserid;
- 
-    //  @Column(name = "deleteduserid")
-    //  private Integer deleteduserid;
+    // common 6
+    @Column(name = "addeddatetime")
+    private LocalDateTime addeddatetime;
 
-    //custom constructor
-    //to get only the username for print 
-    public User(String username){
+    @Column(name = "lastmodifieddatetime")
+    private LocalDateTime lastmodifieddatetime;
+
+    // user kenek delete karnna denna onemada 💥💥💥 ???
+
+    @Column(name = "deleteddatetime")
+    private LocalDateTime deleteddatetime;
+
+    // @Column(name = "addeduserid")
+    // private Integer addeduserid;
+
+    // @Column(name = "lastmodifieduserid")
+    // private Integer lastmodifieduserid;
+
+    // @Column(name = "deleteduserid")
+    // private Integer deleteduserid;
+
+    // custom constructor
+    // to get only the username for print
+    public User(String username) {
         this.username = username;
     }
 
 }
 
-/*id int AI PK 
-username varchar(150) 
-password varchar(255) 
-email varchar(150) 
-status tinyint 
-note text 
-user_photo mediumblob 
-addeddatetime datetime 
-lastmodifieddatetime datetime 
-deleteddatetime datetime 
-addeduserid int 
-lastmodifieduserid int 
-deleteduserid int 
-employee_id int */
+/*
+ * id int AI PK
+ * username varchar(150)
+ * password varchar(255)
+ * email varchar(150)
+ * status tinyint
+ * note text
+ * user_photo mediumblob
+ * addeddatetime datetime
+ * lastmodifieddatetime datetime
+ * deleteddatetime datetime
+ * addeduserid int
+ * lastmodifieduserid int
+ * deleteduserid int
+ * employee_id int
+ */

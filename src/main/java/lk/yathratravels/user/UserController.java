@@ -21,23 +21,28 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import lk.yathratravels.privilege.PrivilegeServices;
+
 @RestController
 public class UserController {
-    
+
     @Autowired
     private UserDao userDao;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private PrivilegeServices privilegeService;
+
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public ModelAndView userUi() {
 
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         ModelAndView userView = new ModelAndView(); // create modalandview obj for return a ui
         userView.setViewName("user.html"); // set view name
-        // userView.addObject("username", auth.getName());
+        userView.addObject("username", auth.getName());
         userView.addObject("title", "Yathra User");
 
         return userView;
@@ -46,12 +51,7 @@ public class UserController {
     @GetMapping(value = "/user/all", produces = "application/json")
     public List<User> getUserAllData() {
 
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        // Privilege loggedUserPrivilege = prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "USER");
-        // if (!loggedUserPrivilege.getPrivselect()) {
-        //     return new ArrayList<User>();
-        // }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         return userDao.findAll(Sort.by(Direction.DESC, "id"));
     }

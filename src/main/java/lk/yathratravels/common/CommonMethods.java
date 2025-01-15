@@ -43,7 +43,7 @@ public class CommonMethods {
         sysAdmin.setUsername("Admin");
         sysAdmin.setEmail("admindinuka101@yathra.com");
         sysAdmin.setPassword(bCryptPasswordEncoder.encode("12345"));
-        sysAdmin.setUser_status(true);
+        sysAdmin.setAcc_status(true);
         sysAdmin.setAddeddatetime(LocalDateTime.now());
 
         sysAdmin.setEmployee_id(employeeDao.getReferenceById(7));

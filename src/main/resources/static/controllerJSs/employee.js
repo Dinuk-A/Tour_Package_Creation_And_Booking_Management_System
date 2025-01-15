@@ -64,13 +64,13 @@ const getEmployeeStatus = (empObj) => {
 }
 
 //fn to ready the main form for accept values
-const refreshEmployeeForm = async() => {
+const refreshEmployeeForm = async () => {
 
     employee = new Object();
 
     document.getElementById('formEmployee').reset();
 
-    const designations =await ajaxGetReq("/desig/all")
+    const designations = await ajaxGetReq("/desig/all")
     fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name')
 
     // Array of input field IDs to reset
@@ -102,7 +102,7 @@ const refreshEmployeeForm = async() => {
     empAddBtn.disabled = false;
     empAddBtn.style.cursor = "pointer";
 
-    //buildEmployeeTableNew();
+    //buildEmployeeTable();
 
 }
 
@@ -164,9 +164,9 @@ const addNewEmployee = async () => {
                 const postServerResponse = await ajaxPPDRequest("/emp", "POST", employee);
 
                 if (postServerResponse === 'OK') {
-                    alert('Saved successfully');
-                    buildEmployeeTableNew();
-                    formEmployee.reset();
+                    alert('Saved Successfully');
+                    buildEmployeeTable();
+                    document.getElementById('formEmployee').reset();
                     refreshEmployeeForm();
                 } else {
                     alert('Submit Failed ' + postServerResponse);
@@ -203,14 +203,12 @@ const openModal = (empObj) => {
     document.getElementById('modalEmpNote').innerText = empObj.note || 'N/A';
 
     // Show the modal
-    $('#infoModal').modal('show');
+    $('#infoModalEmployee').modal('show');
 };
-
 
 // refill the form to edit a record
 const refillEmployeeForm = async (empObj) => {
 
-    //mewata access modifires danna anthimata
     employee = JSON.parse(JSON.stringify(empObj));
     oldEmployee = JSON.parse(JSON.stringify(empObj));
 
@@ -241,7 +239,7 @@ const refillEmployeeForm = async (empObj) => {
     empAddBtn.disabled = true;
     empAddBtn.style.cursor = "not-allowed";
 
-    $("#infoModal").modal("hide");
+    $("#infoModalEmployee").modal("hide");
 
     var myEmpFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myEmpFormTab.show();
@@ -259,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //show value changes before update
-const showValueChanges = () => {
+const showEmpValueChanges = () => {
 
     let updates = "";
 
@@ -305,7 +303,7 @@ const updateEmployee = async () => {
 
     const errors = checkEmpFormErrors();
     if (errors == "") {
-        let updates = showValueChanges();
+        let updates = showEmpValueChanges();
         if (updates == "") {
             alert("No changes detected to update");
         } else {
@@ -318,7 +316,7 @@ const updateEmployee = async () => {
 
                     if (putServiceResponse === "OK") {
                         alert("Successfully Updated");
-                        buildEmployeeTableNew();
+                        buildEmployeeTable();
                         formEmployee.reset();
                         refreshEmployeeForm()
 
@@ -419,10 +417,7 @@ const printEmployeeRecord = () => {
     printWindow.onafterprint = () => printWindow.close();
 };
 
-
-//print btn
-//print record
-
+// fn for print entire table
 
 //check privileges before all 
 
