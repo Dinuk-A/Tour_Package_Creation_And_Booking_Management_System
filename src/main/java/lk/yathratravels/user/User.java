@@ -71,7 +71,6 @@ public class User {
     private LocalDateTime lastmodifieddatetime;
 
     // user kenek delete karnna denna onemada 💥💥💥 ???
-
     @Column(name = "deleteddatetime")
     private LocalDateTime deleteddatetime;
 

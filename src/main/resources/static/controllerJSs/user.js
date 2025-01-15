@@ -1,6 +1,7 @@
 window.addEventListener('load', () => {
 
     buildUserTable();
+    refreshUserForm();
 
 })
 
@@ -467,4 +468,6 @@ const deleteUserRecord = async (userObj) => {
         alert("User cancelled the task")
     }
 }
+
+//random pw generator ekak hadanna
 
