@@ -55,7 +55,7 @@ public class PrivilegeController {
     public List<Privilege> getPrvAllData() {
 
         // methana group by module name karanna try karanna
-        // or JS ekedi .filter eken group karanna balanna ??????????
+        // or JS ekedi .filter eken group karanna balanna 💥💥💥??????????
         return privilegeDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
@@ -113,7 +113,7 @@ public class PrivilegeController {
         }
 
         try {
-            //❌ not finished
+            //❌ not finished 💥💥💥
             // prvDao.delete(privilege);
             //privilegeDao.delete(privilegeDao.getReferenceById(privilege.getId()));
 

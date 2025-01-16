@@ -2,6 +2,7 @@ package lk.yathratravels.employee;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import java.util.List;
 
 public interface EmployeeDao extends JpaRepository<Employee, Integer> {
 
@@ -20,6 +21,10 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
     // get the employee, when mobile number is given
     @Query(value = "select e from Employee e where e.mobilenum =?1")
     public Employee getEmployeeByMobileNum(String mobilenum);
+
+    //get employees who dont have an user account
+    @Query(value = "select e from Employee e where e.id not in (select u.employee_id.id from User u)")
+    public List<Employee> getEmpsWithoutAccount();
 
     // ANOTHER WAY
     /*

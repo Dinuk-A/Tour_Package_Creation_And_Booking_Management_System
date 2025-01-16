@@ -33,4 +33,20 @@ const ajaxPPDRequest = (url, method, object) => {
             }
         });
     });
-};
+}
+
+function openNav() {
+    var sidebar = document.getElementById("dashboardSidebarID");
+    var mainArea = document.getElementById("mainAreaID");
+
+    if (sidebar.classList.contains("open")) {
+        sidebar.classList.remove("open");
+        sidebar.style.width = "0px"; 
+        mainArea.style.marginLeft = "0px"; 
+    } else {
+        sidebar.classList.add("open");
+        sidebar.style.width = "300px"; 
+        // mainArea.style.marginLeft = "300px"; 
+        mainArea.setAttribute('style','margin-left: 300px;')
+    }
+}

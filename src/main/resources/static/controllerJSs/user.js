@@ -78,91 +78,109 @@ const getUserStatus = (userObj) => {
 //fn to ready the main form for accept values
 const refreshUserForm = async () => {
 
-    user = new Object();
-    oldUser = null;
+    try {
+        user = new Object();
+        oldUser = null;
 
-    let userRoles = new Array();
+        user.roles = new Array();
 
-    document.getElementById('formUser').reset();
+        document.getElementById('formUser').reset();
 
-    const empListWOUserAccs = await ajaxGetReq("/emp/listwithoutuseracc")
-    fillMultDataIntoDynamicSelects(selectEmployee, 'Select Employee', empListWOUserAccs, 'emp_code', 'fullname')
+        const empListWOUserAccs = await ajaxGetReq("/emp/listwithoutuseracc")
+        fillMultDataIntoDynamicSelects(selectEmployee, 'Select Employee', empListWOUserAccs, 'emp_code', 'fullname')
 
-    rolesList = await ajaxGetReq("/role/roleswoadmin");
-    flushCollapseUserRoles.innerHTML = "";
-    rolesList.forEach(element => {
+        rolesList = await ajaxGetReq("/role/exceptadmin");
+        flushCollapseUserRoles.innerHTML = "";
+        rolesList.forEach(element => {
 
-        let newDiv = document.createElement('div');
-        newDiv.className = "form-check form-check-inline";
-        newDiv.style.minWidth = "200px"
+            let newDiv = document.createElement('div');
+            newDiv.className = "form-check form-check-inline";
+            newDiv.style.minWidth = "200px"
 
-        let newInput = document.createElement('input');
-        newInput.classList.add("form-check-input");
-        newInput.type = "checkbox";
-        newInput.setAttribute('id', JSON.stringify(element.name))
+            let newInput = document.createElement('input');
+            newInput.classList.add("form-check-input");
+            newInput.type = "checkbox";
+            newInput.setAttribute('id', JSON.stringify(element.name))
 
-        let newLabel = document.createElement('label');
-        newLabel.classList.add("form-check-label");
-        newLabel.innerText = element.name;
+            let newLabel = document.createElement('label');
+            newLabel.classList.add("form-check-label");
+            newLabel.innerText = element.name;
 
-        newLabel.setAttribute('for', JSON.stringify(element.name))
+            newLabel.setAttribute('for', JSON.stringify(element.name))
 
-        newInput.onchange = function () {
-            if (this.checked) {
-                userRoles.push(element)
-            } else {
+            newInput.onchange = function () {
+                //if this option has checked , add it to the user's roles list
+                if (this.checked) {
+                    user.roles.push(element)
+                    //if this option has unchecked , remove it from the user's roles list
+                } else {
+                    user.roles.pop(element)
 
-                userRoles.pop(element)
+                    //let existIndex = userRoles.map(role => role.id).indexOf(element.id);
+                    //if (existIndex != -1) {
+                    //    userRoles.splice(existIndex, 1)
+                    //}
 
-                //meka steps kipekata kadanna 💥💥💥
-                let existIndex = userRoles.map(role => role.id).indexOf(element.id);
-                if (existIndex != -1) {
-                    userRoles.splice(existIndex, 1)
+                    const roleIDsOnly = user.roles.map(r => r.id);
+                    const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
+
+
+                    if (indexOfCurrentPoppingElement != -1) {
+                        user.roles.splice(indexOfCurrentPoppingElement, 1);
+                    }
                 }
             }
-        }
 
-        newDiv.appendChild(newInput);
-        newDiv.appendChild(newLabel);
+            newDiv.appendChild(newInput);
+            newDiv.appendChild(newLabel);
 
-        flushCollapseUserRoles.appendChild(newDiv)
+            flushCollapseUserRoles.appendChild(newDiv)
 
-    });
+        });
 
-    user.acc_status = false;
+        user.acc_status = false;
 
-    // Array of input field IDs to reset
-    const inputTagsIds = [
-        'selectEmployee',
-        'inputUserName',
-        'inputPwd',
-        'retypePwd',
-        'inputEmail'
-    ];
+        // Array of input field IDs to reset
+        const inputTagsIds = [
+            'selectEmployee',
+            'inputUserName',
+            'inputPwd',
+            'retypePwd',
+            'inputEmail'
+        ];
 
-    //clear out any previous styles
-    inputTagsIds.forEach((fieldID) => {
-        const field = document.getElementById(fieldID);
-        if (field) {
-            field.style.border = "1px solid #ced4da";
-            field.value = '';
-        }
-    });
+        //clear out any previous styles
+        inputTagsIds.forEach((fieldID) => {
+            const field = document.getElementById(fieldID);
+            if (field) {
+                field.style.border = "1px solid #ced4da";
+                field.value = '';
+            }
+        });
 
-    userUpdateBtn.disabled = true;
-    userUpdateBtn.style.cursor = "not-allowed";
+        userUpdateBtn.disabled = true;
+        userUpdateBtn.style.cursor = "not-allowed";
 
-    userAddBtn.disabled = false;
-    userAddBtn.style.cursor = "pointer";
+        userAddBtn.disabled = false;
+        userAddBtn.style.cursor = "pointer";
 
-    /* INSERT (ADD KARANNA) PRIVI NATHTHAN FORM EKA OPEN KARADDIMA PENNANNA, YOU DONT HAVE PRIVI KIYALA  */
-    //if (loggedAUserPrivilege.privinsert) {
-    //    userAddBtn.disabled = false;
-    //    userAddBtn.style.cursor = "pointer"
-    //} else {
-    //    userAddBtn.disabled = true;
-    //    userAddBtn.style.cursor = "not-allowed"
-    //}
+        /* INSERT (ADD KARANNA) PRIVI NATHTHAN FORM EKA OPEN KARADDIMA PENNANNA, YOU DONT HAVE PRIVI KIYALA  */
+        //if (loggedAUserPrivilege.privinsert) {
+        //    userAddBtn.disabled = false;
+        //    userAddBtn.style.cursor = "pointer"
+        //} else {
+        //    userAddBtn.disabled = true;
+        //    userAddBtn.style.cursor = "not-allowed"
+        //}
+    } catch (error) {
+        console.error("Failed to refresh user table:", error);
+        console.log("*****************");
+        console.error("jqXHR:", error.jqXHR);
+        console.error("Status:", error.textStatus);
+        console.error("Error Thrown:", error.errorThrown);
+    }
+
+
 }
 
 //company ekema email ekak demu personal eka wenama thiyala 💥💥💥
@@ -255,106 +273,124 @@ const addNewUser = async () => {
 //fn for edit button  💥
 const openModal = (userObj) => {
 
-    document.getElementById('modalEmpCode').innerText = userObj.emp_code || 'N/A';
-    document.getElementById('modalEmpFullName').innerText = userObj.fullname || 'N/A';
-    document.getElementById('modalEmpNIC').innerText = userObj.nic || 'N/A';
-    document.getElementById('modalEmpDOB').innerText = userObj.dob || 'N/A';
-    document.getElementById('modalEmpEmail').innerText = userObj.email || 'N/A';
-    document.getElementById('modalEmpMobileNum').innerText = userObj.mobilenum || 'N/A';
-    document.getElementById('modalEmpLandNum').innerText = userObj.landnum || 'N/A';
-    document.getElementById('modalEmpAddress').innerText = userObj.address || 'N/A';
-    document.getElementById('modalEmpGender').innerText = userObj.gender || 'N/A';
-    document.getElementById('modalEmpNote').innerText = userObj.note || 'N/A';
+    document.getElementById('modalUserEmpCode').innerText = userObj.employee_id.emp_code || 'N/A';
+    document.getElementById('modalUserEmpName').innerText = userObj.employee_id.fullname || 'N/A';
+    document.getElementById('modalUserUsername').innerText = userObj.username || 'N/A';
+    document.getElementById('modalUserEmail').innerText = userObj.email || 'N/A';
+    document.getElementById('modalUserRoles').innerText = userObj.roles.name || 'N/A';
+    document.getElementById('modalUserNote').innerText = userObj.mobilenum || 'N/A';
+    //document.getElementById('modalUserAddedDateTime').innerText = userObj.landnum || 'N/A';
+    //document.getElementById('modalEmpAddress').innerText = userObj.address || 'N/A';
+    //document.getElementById('modalEmpGender').innerText = userObj.gender || 'N/A';
+    //document.getElementById('modalEmpNote').innerText = userObj.note || 'N/A';
 
     // Show the modal
-    $('#infoModalEmployee').modal('show');
+    $('#infoModalUser').modal('show');
 };
 
 // refill the form to edit a record
 const refillUserForm = async (userObj) => {
 
-    user = JSON.parse(JSON.stringify(userObj));
-    oldUser = JSON.parse(JSON.stringify(userObj));
+    try {
+        user = JSON.parse(JSON.stringify(userObj));
+        oldUser = JSON.parse(JSON.stringify(userObj));
 
-    //?????💥💥💥
-    empListWOUserAcc = await ajaxGetReq("/emp/listwithoutuseracc");
-    empListWOUserAcc.push(user.employee_id);
-    fillMultDataIntoDynamicSelects(selectEmployee, "Select Employee", empListWOUserAcc, 'emp_code', 'fullname', user.employee_id.fullname);
-    inputUserName.disabled = true;
+        //?????💥💥💥
+        empListWOUserAcc = await ajaxGetReq("/emp/listwithoutuseracc");
+        empListWOUserAcc.push(user.employee_id);
+        fillMultDataIntoDynamicSelects(selectEmployee, "Select Employee", empListWOUserAcc, 'emp_code', 'fullname', user.employee_id.fullname);
+        inputUserName.disabled = true;
 
-    rolesList = await ajaxGetReq("/role/roleswoadmin");
-    flushCollapseUserRoles.innerHTML = "";
-    rolesList.forEach(element => {
+        rolesList = await ajaxGetReq("/role/exceptadmin");
+        flushCollapseUserRoles.innerHTML = "";
+        rolesList.forEach(element => {
 
-        let newDiv = document.createElement('div');
-        newDiv.className = "form-check form-check-inline";
-        // newDiv.style.width = "30%";
-        newDiv.style.minWidth = "200px"
+            let newDiv = document.createElement('div');
+            newDiv.className = "form-check form-check-inline";
+            // newDiv.style.width = "30%";
+            newDiv.style.minWidth = "200px"
 
-        let newInput = document.createElement('input');
-        newInput.classList.add("form-check-input");
-        newInput.type = "checkbox";
-        newInput.setAttribute('id', JSON.stringify(element.name))
+            let newInput = document.createElement('input');
+            newInput.classList.add("form-check-input");
+            newInput.type = "checkbox";
+            newInput.setAttribute('id', JSON.stringify(element.name))
 
-        let newLabel = document.createElement('label');
-        newLabel.classList.add("form-check-label");
-        newLabel.innerText = element.name;
+            let newLabel = document.createElement('label');
+            newLabel.classList.add("form-check-label");
+            newLabel.innerText = element.name;
 
-        newLabel.setAttribute('for', JSON.stringify(element.name))
+            newLabel.setAttribute('for', JSON.stringify(element.name))
 
-        //change whole logic 💥💥💥
-        newInput.onchange = function () {
-            if (this.checked) {
-                user.roles.push(element)
-            } else {
+            newInput.onchange = function () {
+                if (this.checked) {
+                    user.roles.push(element)
+                } else {
+                    user.roles.pop(element)
 
-                user.roles.pop(element)
+                    const roleIDsOnly = user.roles.map(r => r.id);
+                    const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
 
-                let existIndex = user.roles.map(role => role.id).indexOf(element.id);
-                if (existIndex != -1) {
-                    user.roles.splice(existIndex, 1)
+                    if (indexOfCurrentPoppingElement != -1) {
+                        user.roles.splice(indexOfCurrentPoppingElement, 1);
+                    }
                 }
             }
+
+            const roleIDsOnly = user.roles.map(r => r.id);
+            const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
+
+            if (indexOfCurrentPoppingElement != -1) {
+                newInput.checked = true;
+            }
+
+            newDiv.appendChild(newInput);
+            newDiv.appendChild(newLabel);
+
+            flushCollapseUserRoles.appendChild(newDiv)
+
+        });
+
+        //user.roles = userRoles;
+
+        if (user.status) {
+            document.getElementById('userAccActive').checked = true;
+        } else {
+            document.getElementById('userAccInactive').checked = true;
         }
 
-        let existIndex = user.roles.map(role => role.id).indexOf(element.id);
-        if (existIndex != -1) {
-            newInput.checked = true;
-        }
+        inputUserName.value = user.username;
+        inputEmail.value = user.email;
 
-        newDiv.appendChild(newInput);
-        newDiv.appendChild(newLabel);
+        document.getElementById('inputPwd').disabled = true;
+        document.getElementById('retypePwd').disabled = true;
 
-        flushCollapseUserRoles.appendChild(newDiv)
+        document.getElementById('userAddBtn').disabled = true;
+        document.getElementById('userAddBtn').style.cursor = "not-allowed";
 
-    });
+        document.getElementById('userUpdateBtn').disabled = false;
+        document.getElementById('userUpdateBtn').style.cursor = "pointer";
 
-    if (user.status) {
-        document.getElementById('userAccActive').checked = true;
-    } else {
-        document.getElementById('userAccInactive').checked = true;
+        //edit karanna nodima inna mechchara dura noya, alert ekak danna 💥💥
+        //    if (privileges.privupdate) {
+        //        userUpdateBtn.disabled = false;
+        //        userUpdateBtn.style.cursor="pointer"
+        //    } else {
+        //        userUpdateBtn.disabled = true;
+        //        userUpdateBtn.style.cursor="not-allowed" 
+        //    }
+
+        var myUserFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+        myUserFormTab.show();
+
+    } catch (error) {
+        console.error("Failed to refresh user table:", error);
+        console.log("*****************");
+        console.error("jqXHR:", error.jqXHR);
+        console.error("Status:", error.textStatus);
+        console.error("Error Thrown:", error.errorThrown);
     }
 
-    inputUserName.value = user.username;
-    inputEmail.value = user.email;
 
-    document.getElementById('inputPwd').disabled = true;
-    document.getElementById('retypePwd').disabled = true;
-
-    document.getElementById('userAddBtn').disabled = true;
-    document.getElementById('userAddBtn').style.cursor = "not-allowed";
-
-    document.getElementById('userUpdtBtn').disabled = false;
-    document.getElementById('userUpdtBtn').style.cursor = "pointer";
-
-    //edit karanna nodima inna mechchara dura noya, alert ekak danna 💥💥
-    //    if (privileges.privupdate) {
-    //        userUpdtBtn.disabled = false;
-    //        userUpdtBtn.style.cursor="pointer"
-    //    } else {
-    //        userUpdtBtn.disabled = true;
-    //        userUpdtBtn.style.cursor="not-allowed" 
-    //    }
 
 }
 
@@ -382,7 +418,7 @@ const showUserValueChanges = () => {
 
     //change these too 💥💥💥
     if (user.roles.length != oldUser.roles.length) {
-        alert("Role Has Changed");
+        alert("Role Has Changed one");
     } else {
 
         for (let element of user.roles) {
@@ -399,10 +435,10 @@ const showUserValueChanges = () => {
         updates = updates + " Status will be change to " + user.status;
     }
 
-    // ????
-    //if (user.roles !== oldUser.role) {
-    //    updates = updates + "role is change to " + user.role;
-    //}
+    // ????💥💥💥
+    if (user.roles !== oldUser.role) {
+        updates = updates + "role will be change to " + user.role;
+    }
 
 
     return updates;
@@ -427,7 +463,7 @@ const updateUser = async () => {
                         alert("Successfully Updated");
                         buildUserTable();
                         document.getElementById('formUser').reset();
-                        refreshUserform();
+                        refreshUserForm();
 
                     } else {
                         alert("Update Failed \n" + putServiceResponse);

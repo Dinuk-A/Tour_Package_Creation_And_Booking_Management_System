@@ -55,6 +55,12 @@ public class EmployeeController {
         return employeeDao.findAll();
     }
 
+    //get employees who dont have an user account
+    @GetMapping(value = "/emp/listwithoutuseracc", produces = "application/json")
+    public List<Employee> showEmpsWOUserAccs(){
+        return employeeDao.getEmpsWithoutAccount();
+    }
+
     // save employee record on DB
     @PostMapping(value = "/emp")
     @Transactional
