@@ -246,10 +246,11 @@ const refreshPrivilegeFormOriginal = async () => {
 
 //same as above but with promises 💥
 const refreshPrivilegeForm = async () => {
-    try {
-        privilege = new Object();
-        document.getElementById('formPrivilege').reset();
 
+    privilege = new Object();
+    document.getElementById('formPrivilege').reset();
+
+    try {
         // Get ROLES list for select element
         roles = await ajaxGetReq("role/all");
         fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name');
@@ -260,33 +261,29 @@ const refreshPrivilegeForm = async () => {
         fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name');
         selectModule.disabled = false;
 
-        selectRole.style.border = "1px solid #ced4da";
-        selectModule.style.border = "1px solid #ced4da";
 
-        privilege.prvselect = false;
-        privilege.prvinsert = false;
-        privilege.prvupdate = false;
-        privilege.prvdelete = false;
-
-        labelSel.innerHTML = "<div class='text-danger'>Not Granted</div>";
-        labelInsert.innerHTML = "<div class='text-danger'>Not Granted</div>";
-        labelUpdate.innerHTML = "<div class='text-danger'>Not Granted</div>";
-        labelDelete.innerHTML = "<div class='text-danger'>Not Granted</div>";
-
-        priviUpdateBtn.disabled = true;
-        priviUpdateBtn.style.cursor = "not-allowed";
-
-        priviAddBtn.disabled = false;
-        priviAddBtn.style.cursor = "pointer";
     } catch (error) {
-        console.error("Error in refreshPrivilegeForm:", error);
-
-        if (error.jqXHR) {
-            console.error("AJAX error:", error);
-        } else {
-            console.error("Unexpected error:", error);
-        }
+        console.error("Error fetching data in refreshPrivilegeForm:", error);
     }
+
+    selectRole.style.border = "1px solid #ced4da";
+    selectModule.style.border = "1px solid #ced4da";
+
+    privilege.prvselect = false;
+    privilege.prvinsert = false;
+    privilege.prvupdate = false;
+    privilege.prvdelete = false;
+
+    labelSel.innerHTML = "<div class='text-danger'>Not Granted</div>";
+    labelInsert.innerHTML = "<div class='text-danger'>Not Granted</div>";
+    labelUpdate.innerHTML = "<div class='text-danger'>Not Granted</div>";
+    labelDelete.innerHTML = "<div class='text-danger'>Not Granted</div>";
+
+    priviUpdateBtn.disabled = true;
+    priviUpdateBtn.style.cursor = "not-allowed";
+
+    priviAddBtn.disabled = false;
+    priviAddBtn.style.cursor = "pointer";
 };
 
 
@@ -391,10 +388,10 @@ const addPrivilege = async () => {
 //to refill privilege form
 const refillPriviForm = async (prvObj) => {
 
+    privilege = JSON.parse(JSON.stringify(prvObj));
+    oldPrivOb = JSON.parse(JSON.stringify(prvObj));
+    
     try {
-        privilege = JSON.parse(JSON.stringify(prvObj));
-        oldPrivOb = JSON.parse(JSON.stringify(prvObj));
-
         roles = await ajaxGetReq("role/all");
         fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name', prvObj.role_id.name);
         selectRole.disabled = false;
@@ -403,51 +400,50 @@ const refillPriviForm = async (prvObj) => {
         fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name', prvObj.module_id.name);
         selectModule.disabled = false;
 
-        if (prvObj.prvselect) {
-            selectSwitch.checked = true;
-            labelSel.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
-        } else {
-            selectSwitch.checked = false;
-            labelSel.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
-        }
-
-        if (prvObj.prvinsert) {
-            insertSwitch.checked = true;
-            labelInsert.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
-        } else {
-            insertSwitch.checked = false;
-            labelInsert.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
-        }
-
-        if (prvObj.prvupdate) {
-            updateSwitch.checked = true;
-            labelUpdate.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
-        } else {
-            updateSwitch.checked = false;
-            labelUpdate.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
-        }
-
-        if (prvObj.prvdelete) {
-            deleteSwitch.checked = true;
-            labelDelete.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
-        } else {
-            deleteSwitch.checked = false;
-            labelDelete.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
-        }
-
-        priviUpdateBtn.disabled = false;
-        priviUpdateBtn.style.cursor = "pointer";
-
-        priviAddBtn.disabled = true;
-        priviAddBtn.style.cursor = "not-allowed";
-
-        var myPrvFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
-        myPrvFormTab.show();
-
     } catch (error) {
         console.error("Error in refillPriviForm:", error);
-        console.error("Details - jqXHR:", error.jqXHR, "Status:", error.textStatus, "Error Thrown:", error.errorThrown);
     }
+
+    if (prvObj.prvselect) {
+        selectSwitch.checked = true;
+        labelSel.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+    } else {
+        selectSwitch.checked = false;
+        labelSel.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+    }
+
+    if (prvObj.prvinsert) {
+        insertSwitch.checked = true;
+        labelInsert.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+    } else {
+        insertSwitch.checked = false;
+        labelInsert.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+    }
+
+    if (prvObj.prvupdate) {
+        updateSwitch.checked = true;
+        labelUpdate.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+    } else {
+        updateSwitch.checked = false;
+        labelUpdate.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+    }
+
+    if (prvObj.prvdelete) {
+        deleteSwitch.checked = true;
+        labelDelete.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+    } else {
+        deleteSwitch.checked = false;
+        labelDelete.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+    }
+
+    priviUpdateBtn.disabled = false;
+    priviUpdateBtn.style.cursor = "pointer";
+
+    priviAddBtn.disabled = true;
+    priviAddBtn.style.cursor = "not-allowed";
+
+    var myPrvFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myPrvFormTab.show();
 
 }
 

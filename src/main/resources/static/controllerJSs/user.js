@@ -78,14 +78,12 @@ const getUserStatus = (userObj) => {
 //fn to ready the main form for accept values
 const refreshUserForm = async () => {
 
+    user = new Object();
+    oldUser = null;
+
+    user.roles = new Array();
+
     try {
-        user = new Object();
-        oldUser = null;
-
-        user.roles = new Array();
-
-        document.getElementById('formUser').reset();
-
         const empListWOUserAccs = await ajaxGetReq("/emp/listwithoutuseracc")
         fillMultDataIntoDynamicSelects(selectEmployee, 'Select Employee', empListWOUserAccs, 'emp_code', 'fullname')
 
@@ -112,14 +110,8 @@ const refreshUserForm = async () => {
                 //if this option has checked , add it to the user's roles list
                 if (this.checked) {
                     user.roles.push(element)
-                    //if this option has unchecked , remove it from the user's roles list
+                    //if this option has unchecked , remove exactly that element from the user's roles list
                 } else {
-                    user.roles.pop(element)
-
-                    //let existIndex = userRoles.map(role => role.id).indexOf(element.id);
-                    //if (existIndex != -1) {
-                    //    userRoles.splice(existIndex, 1)
-                    //}
 
                     const roleIDsOnly = user.roles.map(r => r.id);
                     const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
@@ -138,49 +130,46 @@ const refreshUserForm = async () => {
 
         });
 
-        user.acc_status = false;
-
-        // Array of input field IDs to reset
-        const inputTagsIds = [
-            'selectEmployee',
-            'inputUserName',
-            'inputPwd',
-            'retypePwd',
-            'inputEmail'
-        ];
-
-        //clear out any previous styles
-        inputTagsIds.forEach((fieldID) => {
-            const field = document.getElementById(fieldID);
-            if (field) {
-                field.style.border = "1px solid #ced4da";
-                field.value = '';
-            }
-        });
-
-        userUpdateBtn.disabled = true;
-        userUpdateBtn.style.cursor = "not-allowed";
-
-        userAddBtn.disabled = false;
-        userAddBtn.style.cursor = "pointer";
-
-        /* INSERT (ADD KARANNA) PRIVI NATHTHAN FORM EKA OPEN KARADDIMA PENNANNA, YOU DONT HAVE PRIVI KIYALA  */
-        //if (loggedAUserPrivilege.privinsert) {
-        //    userAddBtn.disabled = false;
-        //    userAddBtn.style.cursor = "pointer"
-        //} else {
-        //    userAddBtn.disabled = true;
-        //    userAddBtn.style.cursor = "not-allowed"
-        //}
     } catch (error) {
-        console.error("Failed to refresh user table:", error);
-        console.log("*****************");
-        console.error("jqXHR:", error.jqXHR);
-        console.error("Status:", error.textStatus);
-        console.error("Error Thrown:", error.errorThrown);
+        console.error("Failed to fetch user data: ", error);
     }
 
+    document.getElementById('formUser').reset();
 
+    user.acc_status = false;
+
+    // Array of input field IDs to reset
+    const inputTagsIds = [
+        'selectEmployee',
+        'inputUserName',
+        'inputPwd',
+        'retypePwd',
+        'inputEmail'
+    ];
+
+    //clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    userUpdateBtn.disabled = true;
+    userUpdateBtn.style.cursor = "not-allowed";
+
+    userAddBtn.disabled = false;
+    userAddBtn.style.cursor = "pointer";
+
+    /* INSERT (ADD KARANNA) PRIVI NATHTHAN FORM EKA OPEN KARADDIMA PENNANNA, YOU DONT HAVE PRIVI KIYALA  */
+    //if (loggedAUserPrivilege.privinsert) {
+    //    userAddBtn.disabled = false;
+    //    userAddBtn.style.cursor = "pointer"
+    //} else {
+    //    userAddBtn.disabled = true;
+    //    userAddBtn.style.cursor = "not-allowed"
+    //}
 }
 
 //company ekema email ekak demu personal eka wenama thiyala 💥💥💥
@@ -291,11 +280,10 @@ const openModal = (userObj) => {
 // refill the form to edit a record
 const refillUserForm = async (userObj) => {
 
-    try {
-        user = JSON.parse(JSON.stringify(userObj));
-        oldUser = JSON.parse(JSON.stringify(userObj));
+    user = JSON.parse(JSON.stringify(userObj));
+    oldUser = JSON.parse(JSON.stringify(userObj));
 
-        //?????💥💥💥
+    try {
         empListWOUserAcc = await ajaxGetReq("/emp/listwithoutuseracc");
         empListWOUserAcc.push(user.employee_id);
         fillMultDataIntoDynamicSelects(selectEmployee, "Select Employee", empListWOUserAcc, 'emp_code', 'fullname', user.employee_id.fullname);
@@ -350,46 +338,40 @@ const refillUserForm = async (userObj) => {
 
         });
 
-        //user.roles = userRoles;
-
-        if (user.status) {
-            document.getElementById('userAccActive').checked = true;
-        } else {
-            document.getElementById('userAccInactive').checked = true;
-        }
-
-        inputUserName.value = user.username;
-        inputEmail.value = user.email;
-
-        document.getElementById('inputPwd').disabled = true;
-        document.getElementById('retypePwd').disabled = true;
-
-        document.getElementById('userAddBtn').disabled = true;
-        document.getElementById('userAddBtn').style.cursor = "not-allowed";
-
-        document.getElementById('userUpdateBtn').disabled = false;
-        document.getElementById('userUpdateBtn').style.cursor = "pointer";
-
-        //edit karanna nodima inna mechchara dura noya, alert ekak danna 💥💥
-        //    if (privileges.privupdate) {
-        //        userUpdateBtn.disabled = false;
-        //        userUpdateBtn.style.cursor="pointer"
-        //    } else {
-        //        userUpdateBtn.disabled = true;
-        //        userUpdateBtn.style.cursor="not-allowed" 
-        //    }
-
-        var myUserFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
-        myUserFormTab.show();
 
     } catch (error) {
-        console.error("Failed to refresh user table:", error);
-        console.log("*****************");
-        console.error("jqXHR:", error.jqXHR);
-        console.error("Status:", error.textStatus);
-        console.error("Error Thrown:", error.errorThrown);
+        console.error("Failed to fetch user data: ", error);
     }
 
+    if (user.status) {
+        document.getElementById('userAccActive').checked = true;
+    } else {
+        document.getElementById('userAccInactive').checked = true;
+    }
+
+    inputUserName.value = user.username;
+    inputEmail.value = user.email;
+
+    document.getElementById('inputPwd').disabled = true;
+    document.getElementById('retypePwd').disabled = true;
+
+    document.getElementById('userAddBtn').disabled = true;
+    document.getElementById('userAddBtn').style.cursor = "not-allowed";
+
+    document.getElementById('userUpdateBtn').disabled = false;
+    document.getElementById('userUpdateBtn').style.cursor = "pointer";
+
+    //edit karanna nodima inna mechchara dura noya, alert ekak danna 💥💥
+    //    if (privileges.privupdate) {
+    //        userUpdateBtn.disabled = false;
+    //        userUpdateBtn.style.cursor="pointer"
+    //    } else {
+    //        userUpdateBtn.disabled = true;
+    //        userUpdateBtn.style.cursor="not-allowed" 
+    //    }
+
+    var myUserFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myUserFormTab.show();
 
 
 }

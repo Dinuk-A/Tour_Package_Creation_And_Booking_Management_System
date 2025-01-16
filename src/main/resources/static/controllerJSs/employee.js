@@ -34,10 +34,6 @@ const buildEmployeeTable = async () => {
 
     } catch (error) {
         console.error("Failed to refresh employee table:", error);
-        console.log("*****************");
-        console.error("jqXHR:", error.jqXHR);
-        console.error("Status:", error.textStatus);
-        console.error("Error Thrown:", error.errorThrown);
     }
 
 }
@@ -70,8 +66,13 @@ const refreshEmployeeForm = async () => {
 
     document.getElementById('formEmployee').reset();
 
-    const designations = await ajaxGetReq("/desig/all")
-    fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name')
+    try {
+        const designations = await ajaxGetReq("/desig/all")
+        fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name');
+    } catch (error) {
+        console.error("Failed to fetch Designations : ", error);
+    }
+
 
     // Array of input field IDs to reset
     const inputTagsIds = [
@@ -230,8 +231,12 @@ const refillEmployeeForm = async (empObj) => {
         radioFemale.checked = true;
     }
 
-    designations = await ajaxGetReq("/desig/all");
-    fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name', empObj.designation_id.name);
+    try {
+        designations = await ajaxGetReq("/desig/all");
+        fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name', empObj.designation_id.name);
+    } catch (error) {
+        console.error("Failed to fetch Designations : ", error);
+    }
 
     empUpdateBtn.disabled = false;
     empUpdateBtn.style.cursor = "pointer";
