@@ -111,7 +111,7 @@ body {
 }
 
 
-#formEmployee {
+/*#formEmployee {
     background-color: #1B1E2B;
     color: #FFFFFF;
     padding: 2rem;
@@ -171,19 +171,19 @@ body {
     background-color: transparent;
     border: 1px solid #FF4F4F;
     color: #FF4F4F;
-}
+}*/
 
 /* Style for the required/optional fields section */
-#formEmployee .bg-light {
+/*#formEmployee .bg-light {
     background-color: rgba(255, 255, 255, 0.05) !important;
     color: #FFFFFF;
-}
+}*/
 
 /* Radio button styles */
-#formEmployee .form-check-input {
+/*#formEmployee .form-check-input {
     background-color: transparent;
     border: 1px solid rgba(255, 255, 255, 0.2);
-}
+}*/
 
 #formEmployee .form-check-input:checked {
     background-color: #84F8B6;
@@ -191,28 +191,28 @@ body {
 }
 
 /* Focus states */
-#formEmployee input:focus,
+/*#formEmployee input:focus,
 #formEmployee select:focus,
 #formEmployee textarea:focus {
     background-color: rgba(255, 255, 255, 0.05);
     border-color: #84F8B6;
     box-shadow: none;
     outline: none;
-}
+}*/
 
 /* Add these styles to handle autocomplete background */
-#formEmployee input:-webkit-autofill,
+/*#formEmployee input:-webkit-autofill,
 #formEmployee input:-webkit-autofill:hover,
 #formEmployee input:-webkit-autofill:focus,
 #formEmployee input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #1B1E2B inset !important;
     -webkit-text-fill-color: #FFFFFF !important;
     transition: background-color 5000s ease-in-out 0s;
-}
+}*/
 
 /* For Firefox */
-#formEmployee input:autofill {
+/*#formEmployee input:autofill {
     background-color: #1B1E2B !important;
     color: #FFFFFF !important;
     box-shadow: 0 0 0 30px #1B1E2B inset !important;
-}
+}*/

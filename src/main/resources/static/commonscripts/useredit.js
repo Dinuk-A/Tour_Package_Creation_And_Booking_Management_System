@@ -8,7 +8,7 @@ const refreshProfileEditForm = () => {
     editPortalUN.value = loggedUser.username;
     editPortalEmail.value = loggedUser.email;
 
-    if (loggedUser.user_photo === null) {
+    if (loggedUser.user_photo == null) {
         editPortalImage.src = "resources/images/employee.png";
     } else {
         editPortalImage.src = atob(loggedUser.user_photo);

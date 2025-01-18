@@ -10,7 +10,7 @@
     <!-- link employee js -->
     <script src="controllerJSs/employee.js"></script>
 
-    
+
 </head>
 
 <body>
@@ -29,8 +29,8 @@
             </li>
             <!-- for form side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formEmployeeHolderDiv" role="tab" aria-controls="formEmployeeHolderDiv"
-                    aria-selected="false">Form</a>
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formEmployeeHolderDiv" role="tab"
+                    aria-controls="formEmployeeHolderDiv" aria-selected="false">Form</a>
             </li>
         </ul>
 
@@ -44,157 +44,228 @@
 
             <!-- Form tab -->
             <div class="tab-pane fade" id="formEmployeeHolderDiv" role="tabpanel" aria-labelledby="form-tab">
-                <div class="shadow-sm w-75 mx-auto">
+                <div class="card mx-auto" style="width: 1100px;">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">Employee Registration Form</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="formEmployee" onsubmit="return false">
 
-                    <form id="formEmployee" onsubmit="return false">
+                            <!-- Personal Data Section -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Personal Information</legend>
 
-                        <!-- Required Fields Section -->
-                        <div class="row mb-3 bg-light rounded-3 p-3">
-                            <div class="col-4 text-start fw-bold">
-                                <span class="text-danger"> * </span> Required Data Fields
-                            </div>
-                            <div class="col-2"></div>
-                            <div class="col-4 text-start fw-bold">
-                                <span class="text-info"> * </span> Optional Data Fields
-                            </div>
-                        </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <!-- full name -->
+                                        <div class="row mb-2">
+                                            <div class="col-12">
+                                                <label for="inputFullName" class="form-label fw-bold mb-0"> Full Name
+                                                    <span class="text-danger"> * </span> :</label>
+                                                <input id="inputFullName" type="text" class="form-control"
+                                                    placeholder="Enter The Full Name"
+                                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','employee' , 'fullname')"
+                                                    required>
+                                            </div>
+                                        </div>
 
-                        <!-- Personal Data Section -->
-                        <div class="row mb-3">
+                                        <!-- nic, dob , gender -->
+                                        <div class="row mt-3">
+                                            <!-- nic -->
+                                            <div class="col-4">
+                                                <label for="inputNIC" class="form-label fw-bold mb-0"> NIC <span
+                                                        class="text-danger">
+                                                        *
+                                                    </span> :</label>
+                                                <input id="inputNIC" type="text" class="form-control" required
+                                                    onkeyup="inputValidatorText(this,'^[0-9Vv]{10}$', 'employee' , 'nic')"
+                                                    placeholder="Enter The NIC Number">
+                                            </div>
 
-                            <!-- Full Name -->
-                            <div class="col-md-6">
-                                <label for="inputFullName" class="form-label fw-bold"> Full Name <span
-                                        class="text-danger"> * </span> :</label>
-                                <input id="inputFullName" type="text" class="form-control"
-                                    placeholder="Enter The Full Name"
-                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','employee' , 'fullname')"
-                                    required>
-                            </div>
+                                            <!-- dob -->
+                                            <div class="col-4">
+                                                <label for="dateDateOfBirth" class="form-label fw-bold mb-0"> Date
+                                                    of Birth
+                                                    <span class="text-danger"> * </span> :</label>
+                                                <input type="date" class="form-control mt-0" required
+                                                    id="dateDateOfBirth"
+                                                    onchange="inputValidatorText(this, '^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$' ,'employee' , 'dob')">
+                                            </div>
 
-                            <!-- NIC -->
-                            <div class="col-md-6">
-                                <label for="inputNIC" class="form-label fw-bold"> NIC <span class="text-danger"> *
-                                    </span> :</label>
-                                <input id="inputNIC" type="text" class="form-control" required
-                                    onkeyup="inputValidatorText(this,'^[0-9Vv]{10}$', 'employee' , 'nic')"
-                                    placeholder="Enter The NIC Number">
-                            </div>
-                        </div>
+                                            <!-- gender -->
+                                            <div class="col-4">
+                                                <label class="form-label fw-bold"> Gender <span class="text-danger">
+                                                        * </span>
+                                                    :</label>
+                                                <div class="form-check form-check-inline">
+                                                    <input type="radio" class="form-check-input" name="gender" required
+                                                        id="radioMale" value="Male"
+                                                        onchange="employee.gender = this.value ">
+                                                    <label for="radioMale" class="form-check-label fw-bold"> Male
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input type="radio" class="form-check-input" required name="gender"
+                                                        id="radioFemale" value="Female"
+                                                        onchange="employee.gender = this.value ">
+                                                    <label for="radioFemale" class="form-check-label fw-bold">
+                                                        Female </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                        <div class="row mb-3">
-                            <!-- Date of Birth -->
-                            <div class="col-md-6 ">
-                                <label for="dateDateOfBirth" class="form-label fw-bold mb-0"> Date of Birth <span
-                                        class="text-danger"> * </span> :</label>
-                                <input type="date" class="form-control mt-0" required id="dateDateOfBirth"
-                                    onchange="inputValidatorText(this, '^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$' ,'employee' , 'dob')">
-                            </div>
+                                    <!-- photo ✊🏼✊🏼✊🏼✊🏼-->
+                                    <div class="col-md-4 mx-auto">                                        
 
-                            <!-- Gender -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold"> Gender <span class="text-danger"> * </span> :</label>
-                                <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" name="gender" required id="radioMale"
-                                        value="Male" onchange="employee.gender = this.value ">
-                                    <label for="radioMale" class="form-check-label fw-bold"> Male </label>
+                                        <div class="row mx-auto d-flex align-items-center">
+                                            <div class="col-7 ">
+                                                <img id="previewEmployeeImg" src="images/employee.png" alt="Preview" class="img-thumbnail " style="height:150px; width: 150px; border:2px solid #ced4da">
+                                           
+                                            
+                                            </div>
+                                            <div class="col-5">
+                                                <button type="" class="btn btn-primary mb-2">Select Image</button>
+                                                <button type="button" class="btn btn-danger">Clear Image</button>
+                                            </div>
+                                        </div>
+
+
+                                        <!--<div class="d-flex flex-column align-items-center">
+                                            <img id="previewEmployeeImg" src="https://via.placeholder.com/150"
+                                                alt="Preview" class="img-thumbnail mb-2">
+                                           
+                                            <input type="file" class="d-none" id="fileEmpPhoto"
+                                                onchange="imgValidatorForEmpJs(this,'employee','emp_photo','emp_photo_name',empImg)">
+                                            <div>
+                                                <button type="" class="btn btn-secondary me-1">Select Image</button>
+                                                <button type="button" class="btn btn-danger">Clear</button>
+                                            </div>
+                                        </div>-->
+
+
+                                    </div>
+
+
                                 </div>
-                                <div class="form-check form-check-inline">
-                                    <input type="radio" class="form-check-input" required name="gender" id="radioFemale"
-                                        value="Female" onchange="employee.gender = this.value ">
-                                    <label for="radioFemale" class="form-check-label fw-bold"> Female </label>
+
+                            </fieldset>
+
+                            <!-- Contact Information Section -->
+                            <fieldset class="border border-dark p-4 mb-4">
+                                <legend class="float-none w-auto px-2 text-primary">Contact Information</legend>
+                                <div class="row">
+                                    <!-- all except address -->
+                                    <div class="col-7">
+                                        <!-- mobilr and land num -->
+                                        <div class="row mb-2">
+                                            <!-- mobile num -->
+                                            <div class="col-6 ">
+                                                <label for="inputMobile" class="form-label fw-bold mb-0"> Mobile Number
+                                                    <span class="text-danger"> * </span> :</label>
+                                                <input id="inputMobile" type="text" required
+                                                    placeholder="Enter The Mobile Number" class="form-control"
+                                                    onkeyup="inputValidatorText(this,'^[0][7][1245678][0-9]{7}$' , 'employee' , 'mobilenum')">
+                                            </div>
+
+                                            <!-- land num -->
+                                            <div class="col-6">
+                                                <label for="inputLand" class="form-label fw-bold mb-0"> Land Number
+                                                    <span class="text-info">
+                                                        * </span> :</label>
+                                                <input id="inputLand" type="text" class="form-control"
+                                                    placeholder="Enter The Land Number"
+                                                    onkeyup="inputValidatorText(this, '^[0][1-9][0-9]{8}$','employee','landnum')">
+                                            </div>
+                                        </div>
+
+                                        <!-- email -->
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                <label for="inputEmail" class="form-label fw-bold mb-0"> Email <span
+                                                        class="text-danger"> *
+                                                    </span> :</label>
+                                                <input id="inputEmail" type="text" required class="form-control"
+                                                    placeholder="Enter The Email Address"
+                                                    onkeyup="inputValidatorText(this, '^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,20}[.][a-z]{2,3}$','employee','email')">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- for address -->
+                                    <div class="col-5">
+                                        <label for="inputAddress" class="form-label fw-bold mb-0"> Address <span
+                                                class="text-danger">
+                                                * </span> :</label>
+                                        <textarea id="inputAddress" class="form-control" required
+                                            placeholder="Enter The Address" rows="4"
+                                            onkeyup="inputValidatorText(this, '' ,'employee' , 'address')"></textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- Employment Details Section -->
+                            <fieldset class="border border-dark p-4 mb-4">
+                                <legend class="float-none w-auto px-2 text-primary">Job Details</legend>
+
+                                <div class="row mb-2">
+                                    <!-- all except note -->
+                                    <div class="col-7">
+                                        <div class="row">
+
+                                            <!-- designatiom -->
+                                            <div class="col-6">
+                                                <label for="selectDesignation" class="form-label fw-bold mb-0">
+                                                    Designation <span class="text-danger"> * </span> :</label>
+                                                <select id="selectDesignation" required class="form-select"
+                                                    onchange="dynamicSelectValidator(this,  'employee' , 'designation_id')"></select>
+                                            </div>
+
+                                            <!-- status -->
+                                            <div class="col-6 ">
+                                                <label for="selectEmployeementStatus" class="form-label fw-bold mb-0">
+                                                    Employment
+                                                    Status
+                                                    <span class="text-danger"> * </span> :</label>
+                                                <select required id="selectEmployeementStatus" class="form-select"
+                                                    onchange="staticSelectValidator(this , 'employee' , 'emp_status')">
+                                                    <option value="" selected disabled> Select Status </option>
+                                                    <option value="Working"> Working </option>
+                                                    <option value="Resigned"> Resigned </option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- note -->
+                                    <div class="col-5">
+                                        <label for="inputNote" class="form-label fw-bold mb-0"> Note <span
+                                                class="text-info">
+                                                *
+                                            </span> :</label>
+                                        <textarea id="inputNote" placeholder="Enter A Note" class="form-control"
+                                            rows="6"
+                                            onkeyup="inputValidatorText(this, '' ,'employee' , 'note')"></textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- Form Buttons -->
+                            <div class="row mt-4 mb-2">
+                                <div class="col-4">
+                                    <button type="reset" class="btn btn-outline-danger fw-bold w-75"
+                                        onclick="refreshEmployeeForm()">Reset</button>
+                                </div>
+                                <div class="col-8 text-end">
+                                    <button type="submit" id="empUpdateBtn" class="btn btn-success fw-bold me-2 w-40"
+                                        onclick="updateEmployee()">Update</button>
+                                    <button type="submit" id="empAddBtn" class="btn btn-primary fw-bold w-40"
+                                        onclick="addNewEmployee()">Add</button>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Contact Information Section -->
-                        <div class="row mb-3">
-                            <!-- Email -->
-                            <div class="col-md-4">
-                                <label for="inputEmail" class="form-label fw-bold"> Email <span class="text-danger"> *
-                                    </span> :</label>
-                                <input id="inputEmail" type="text" required class="form-control"
-                                    placeholder="Enter The Email Address"
-                                    onkeyup="inputValidatorText(this, '^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,20}[.][a-z]{2,3}$','employee','email')">
-                            </div>
-
-                            <!-- Mobile -->
-                            <div class="col-md-4">
-                                <label for="inputMobile" class="form-label fw-bold"> Mobile Number <span
-                                        class="text-danger"> * </span> :</label>
-                                <input id="inputMobile" type="text" required placeholder="Enter The Mobile Number"
-                                    class="form-control"
-                                    onkeyup="inputValidatorText(this,'^[0][7][1245678][0-9]{7}$' , 'employee' , 'mobilenum')">
-                            </div>
-
-                            <!-- Land Number -->
-                            <div class="col-md-4">
-                                <label for="inputLand" class="form-label fw-bold"> Land Number <span class="text-info">
-                                        * </span> :</label>
-                                <input id="inputLand" type="text" class="form-control"
-                                    placeholder="Enter The Land Number"
-                                    onkeyup="inputValidatorText(this, '^[0][1-9][0-9]{8}$','employee','landnum')">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <!-- Address -->
-                            <div class="col-md-12">
-                                <label for="inputAddress" class="form-label fw-bold"> Address <span class="text-danger">
-                                        * </span> :</label>
-                                <textarea id="inputAddress" class="form-control" required
-                                    placeholder="Enter The Address" rows="4"
-                                    onkeyup="inputValidatorText(this, '' ,'employee' , 'address')"></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Employment Details Section -->
-                        <div class="row mb-3">
-                            <!-- Designation -->
-                            <div class="col-md-6">
-                                <label for="selectDesignation" class="form-label fw-bold"> Designation <span
-                                        class="text-danger"> * </span> :</label>
-                                <select id="selectDesignation" required class="form-select"
-                                    onchange="dynamicSelectValidator(this,  'employee' , 'designation_id')"></select>
-                            </div>
-
-                            <!-- Employment Status -->
-                            <div class="col-md-6">
-                                <label for="selectEmployeementStatus" class="form-label fw-bold"> Employment Status
-                                    <span class="text-danger"> * </span> :</label>
-                                <select required id="selectEmployeementStatus" class="form-select"
-                                    onchange="staticSelectValidator(this , 'employee' , 'emp_status')">
-                                    <option value="" selected disabled> Select Status </option>
-                                    <option value="Working"> Working </option>
-                                    <option value="Resigned"> Resigned </option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Note Section -->
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <label for="inputNote" class="form-label fw-bold"> Note <span class="text-info"> *
-                                    </span> :</label>
-                                <textarea id="inputNote" placeholder="Enter A Note" class="form-control" rows="6"
-                                    onkeyup="inputValidatorText(this, '' ,'employee' , 'note')"></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Form Buttons -->
-                        <div class="row mt-4 mb-2">
-                            <div class="col-4">
-                                <button type="reset" class="btn btn-outline-danger fw-bold w-75"
-                                    onclick="refreshEmployeeForm()">Clear</button>
-                            </div>
-                            <div class="col-8 text-end">
-                                <button type="submit" id="empUpdateBtn" class="btn btn-success fw-bold me-2 w-40"
-                                    onclick="updateEmployee()">Update</button>
-                                <button type="submit" id="empAddBtn" class="btn btn-primary fw-bold w-40"
-                                    onclick="addNewEmployee()">Add</button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
 
                 </div>
             </div>
@@ -202,7 +273,8 @@
 
 
         <!-- Modal to display full details of a row -->
-        <div class="modal fade py-5" id="infoModalEmployee" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+        <div class="modal fade py-5" id="infoModalEmployee" tabindex="-1" aria-labelledby="infoModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <!-- Modal Header -->

@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 public class EditUser {
     private Integer id;
     private String username;
-    private String currentpw;
-    private String newpw;
+    private String currentpassword;
+    private String newpassword;
     private String email;
-    private byte[] user_photo;
+    //private byte[] user_photo;
 }
