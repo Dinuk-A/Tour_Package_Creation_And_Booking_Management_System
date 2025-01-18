@@ -49,6 +49,7 @@ const fillMultDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPro
         firstOption.value = "";
         firstOption.selected = true;
         firstOption.disabled = true;
+        tagId.appendChild(firstOption);
     }
 
     dataContainer.forEach((element) => {

@@ -50,146 +50,121 @@
 
             <!-- Form tab -->
             <div class="tab-pane fade" id="formUserHolderDiv" role="tabpanel" aria-labelledby="form-tab">
-                <div class="shadow-sm w-75 mx-auto">
+                <div class="card mx-auto" style="width: 700px;">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">User Account Management Form</h3>
+                    </div>
+                    <div class="card-body" style="background-color: ivory;">
+                        <form id="formUser" onsubmit="return false">
 
-                    <form id="formUser" onsubmit="return false">
-
-                        <!-- required Mark starts -->
-                        <div class="row mb-3 bg-light rounded-3 p-3">
-                            <div class="col-4 text-start fw-bold">
-                                <span class="text-danger"> * </span> Required Data Fields
-                            </div>
-                            <div class="col-2"></div>
-                            <div class="col-4 text-start fw-bold">
-                                <span class="text-info"> * </span> Optional Data Fields
-                            </div>
-                        </div>
-
-                        <!-- select employee starts -->
-                        <div class="row mt-2 mx-auto bordered bg-light">
-                            <div class="div">
-                                <label for="selectEmployee" class="fw-bold form-label mb-0"> Employee: </label>
-                                <select id="selectEmployee" class="form-select mb-3"
-                                    onchange="dynamicSelectValidator(this , 'user','employee_id'); generateEmail()">
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- USERNAME + EMAIL STARTS -->
-                        <div class="row mt-2 mx-auto bordered bg-light">
-                            <div class="col-6 pe-1">
-                                <label for="inputUserName" class="form-label fw-bold mb-0"> User Name: </label>
-                                <input type="text" class="form-control form-input mb-3" id="inputUserName"
-                                    placeholder="Enter The Username"
-                                    onkeyup="inputValidatorText(this,'','user','username')">
-                            </div>
-
-                            <div class="col-6 ps-1">
-                                <label for="inputEmail" class="col-4 form-label fw-bold mb-0 "> Email: </label>
-                                <input type="text" id="inputEmail" class="form-control mb-3"
-                                    placeholder="Enter The Email Address"
-                                    onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','user','email')">
-                            </div>
-                        </div>
-
-                        <!-- password starts -->
-
-                        <div class="row mt-2 mx-auto bordered bg-light">
-                            <div class="col-6 pe-1">
-                                <label for="inputPwd" class=" form-label fw-bold mb-0"> Password: </label>
-                                <div class="">
-                                    <input type="password" id="inputPwd" class="form-control  mb-3"
-                                        placeholder="Enter The Password"
-                                        onkeyup="inputValidatorText(this,'','user','password')" style="width: 250px;">
+                            <!-- select employee starts -->
+                            <div class="row mt-2 mx-auto">
+                                <div class="div">
+                                    <label for="selectEmployee" class="fw-bold form-label mb-0"> Employee: </label>
+                                    <select id="selectEmployee" class="form-select mb-3"
+                                        onchange="dynamicSelectValidator(this , 'user','employee_id'); generateEmail()">
+                                    </select>
                                 </div>
                             </div>
 
-                            <!-- re-type password starts -->
-                            <div class="col-6 ps-1">
-                                <label for="retypePwd" class="form-label fw-bold mb-0"> Re-Password: </label>
-                                <div class="">
-                                    <input type="password" id="retypePwd" class="form-control  mb-3"
-                                        placeholder="Retype The Password" onkeyup="retypePasswordVali()">
+                            <!-- USERNAME + EMAIL STARTS -->
+                            <div class="row mt-2 mx-auto">
+                                <div class="col-5 ">
+                                    <label for="inputUserName" class="form-label fw-bold mb-0"> User Name: </label>
+                                    <input type="text" class="form-control form-input mb-3" id="inputUserName"
+                                        placeholder="Enter The Username"
+                                        onkeyup="inputValidatorText(this,'','user','username')">
+                                </div>
+
+                                <div class="col-7">
+                                    <label for="inputEmail" class="col-4 form-label fw-bold mb-0 ">Work Email: </label>
+                                    <input type="text" id="inputEmail" class="form-control mb-3"
+                                        placeholder="Enter The Email Address"
+                                        onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','user','email')">
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- <div class="row bordered bg-light mt-3"> -->
-                        <div class="mb-2 w-100 border p-3 accordion accordion-flush mt-2 bg-light"
-                            id="accordionForRoles">
+                            <!-- roles  -->
+                            <div class="row mt-2 mx-auto ">
+                                <label class="form-label fw-bold mb-0"> Role(s): </label>
+                                <div class="row p-1" id="dynamicUserRoles">
+                                    <!-- roles will be here -->
+                                    <!-- not inline, ask gpt 💥💥💥💥 -->
+                                </div>
+                            </div>
 
-                            <div class="accordion-item">
+                            <!-- password starts -->
+                            <div class="row mt-2 mx-auto ">
+                                <div class="col-6 pe-1">
+                                    <label for="inputPwd" class=" form-label fw-bold mb-0"> Password: </label>
+                                    <div class="">
+                                        <input type="password" id="inputPwd" class="form-control  mb-3"
+                                            placeholder="Enter The Password"
+                                            onkeyup="inputValidatorText(this,'','user','password')">
+                                    </div>
+                                </div>
 
-                                <h5 class="accordion-header mb-2">
-
-                                    <button class="accordion-button collapsed fw-bold bg-light p-1" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#flushCollapseUserRoles"
-                                        aria-expanded="false" aria-controls="flushCollapseUserRoles">
-                                        <!--button  1 athule style="padding-top: 0px; margin-left: 0px;" -->
-
-                                        <h5 class="text-info fw-bold"> Roles : Click to view</h5>
-                                    </button>
-                                </h5>
-
-                                <div id="flushCollapseUserRoles" class="accordion-collapse collapse"
-                                    data-bs-parent="#accordionForRoles">
-                                    <div class="accordion-body ps-4">
-                                        <!--  d-flex justify-content-between -->
-
-                                        <!-- this will be filled by a JS -->
-
+                                <!-- re-type password starts -->
+                                <div class="col-6 ps-1">
+                                    <label for="retypePwd" class="form-label fw-bold mb-0"> Confirm Password: </label>
+                                    <div class="">
+                                        <input type="password" id="retypePwd" class="form-control  mb-3"
+                                            placeholder="Retype The Password" onkeyup="retypePasswordVali()">
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
+                            <!-- acc status  -->
+                            <div class="row mt-2 mx-auto mb-2">
 
-                        <div class="row mt-2 bordered mx-auto bg-light mb-2">
+                                <label for="accStatus" class="form-label fw-bold mb-0"> User Account Status: </label>
 
-                            <h5>User Account Status</h5>
+                                <input type="radio" class="btn-check" id="userAccActive" autocomplete="off"
+                                    name="accStatus" onchange="if (this.checked) {
+                            user.acc_status = true;
+                        }else{
+                            user.acc_status = false;
+                        }">
 
-                            <!-- <div class="input-group"> -->
-                            <input type="radio" class="btn-check" id="userAccActive" autocomplete="off" name="accStatus"
-                                onchange="if (this.checked) {
-                                user.acc_status = true;
-                            }else{
+                                <label class="btn btn-outline-success rounded-start w-50 ms-1"
+                                    for="userAccActive">Account
+                                    is
+                                    active</label>
+
+                                <input type="radio" class="btn-check" id="userAccInactive" autocomplete="off"
+                                    name="accStatus" onchange="if (this.checked) {
                                 user.acc_status = false;
+                            }else{
+                                user.acc_status = true;
                             }">
 
-                            <label class="btn btn-outline-success w-50 rounded-start" for="userAccActive">Account is
-                                active</label>
+                                <label class="btn  btn-outline-danger w-48 ms-2" for="userAccInactive">Account is not
+                                    active</label>
 
-                            <input type="radio" class="btn-check" id="userAccInactive" autocomplete="off"
-                                name="accStatus" onchange="if (this.checked) {
-                                    user.acc_status = false;
-                                }else{
-                                    user.acc_status = true;
-                                }">
 
-                            <label class="btn ms-1 btn-outline-danger w-48" for="userAccInactive">Account is not
-                                active</label>
-                            <!-- </div> -->
-                        </div>
-
-                        <!--3 form buttons starts -->
-                        <div class="row mt-4 mb-2">
-
-                            <div class="col-3">
-                                <button type="button" id="btnClear" class="btn btnall btn-clear fw-bold"
-                                    onclick="refreshUserform()">
-                                    Clear </button>
                             </div>
-                            <div class="col-8 text-end">
-                                <button id="userUpdateBtn" type="submit" class="btn btnall btn-update fw-bold me-2"
-                                    onclick="updateUser()" style="pointer-events: all;">
-                                    Update </button>
 
-                                <button id="userAddBtn" type="submit" class="btn btnall btn-add fw-bold"
-                                    onclick="addNewUser()" style="pointer-events: all;">
-                                    Add </button>
+                            <!--3 form buttons starts -->
+                            <div class="row mt-4 mb-2">
+
+                                <div class="col-3">
+                                    <button type="button" id="btnClear" class="btn btnall btn-clear fw-bold"
+                                        onclick="refreshUserform()">
+                                        Clear </button>
+                                </div>
+                                <div class="col-8 text-end">
+                                    <button id="userUpdateBtn" type="submit" class="btn btnall btn-update fw-bold me-2"
+                                        onclick="updateUser()" style="pointer-events: all;">
+                                        Update </button>
+
+                                    <button id="userAddBtn" type="submit" class="btn btnall btn-add fw-bold"
+                                        onclick="addNewUser()" style="pointer-events: all;">
+                                        Add </button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+
 
                 </div>
             </div>
@@ -247,23 +222,23 @@
                                     <p class="fw-bold mb-1">Note:</p>
                                     <p id="modalUserNote"></p>
                                 </div>
-                                
+
                             </div>
 
                             <div class="row mb-3">
-                               <div class="col-6">
+                                <div class="col-6">
                                     <p class="fw-bold mb-1">Added Date and Time:</p>
                                     <p id="modalUserAddedDateTime"></p>
                                 </div>
-                               <div class="col-6">
+                                <div class="col-6">
                                     <p class="fw-bold mb-1">Last Edited Date and Time:</p>
                                     <p id="modalUserAddedDateTime"></p>
                                 </div>
-                               <div class="col-6 d-none">
+                                <div class="col-6 d-none">
                                     <p class="fw-bold mb-1">Deleted Date and Time:</p>
                                     <p id="modalUserAddedDateTime"></p>
                                 </div>
-                                
+
                             </div>
 
 

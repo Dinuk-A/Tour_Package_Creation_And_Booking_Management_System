@@ -88,12 +88,12 @@ const refreshUserForm = async () => {
         fillMultDataIntoDynamicSelects(selectEmployee, 'Select Employee', empListWOUserAccs, 'emp_code', 'fullname')
 
         rolesList = await ajaxGetReq("/role/exceptadmin");
-        flushCollapseUserRoles.innerHTML = "";
+         dynamicUserRoles.innerHTML = "";
         rolesList.forEach(element => {
 
             let newDiv = document.createElement('div');
             newDiv.className = "form-check form-check-inline";
-            newDiv.style.minWidth = "200px"
+            //newDiv.style.minWidth = "200px"
 
             let newInput = document.createElement('input');
             newInput.classList.add("form-check-input");
@@ -116,7 +116,6 @@ const refreshUserForm = async () => {
                     const roleIDsOnly = user.roles.map(r => r.id);
                     const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
 
-
                     if (indexOfCurrentPoppingElement != -1) {
                         user.roles.splice(indexOfCurrentPoppingElement, 1);
                     }
@@ -126,7 +125,7 @@ const refreshUserForm = async () => {
             newDiv.appendChild(newInput);
             newDiv.appendChild(newLabel);
 
-            flushCollapseUserRoles.appendChild(newDiv)
+             dynamicUserRoles.appendChild(newDiv);
 
         });
 
@@ -290,7 +289,7 @@ const refillUserForm = async (userObj) => {
         inputUserName.disabled = true;
 
         rolesList = await ajaxGetReq("/role/exceptadmin");
-        flushCollapseUserRoles.innerHTML = "";
+         dynamicUserRoles.innerHTML = "";
         rolesList.forEach(element => {
 
             let newDiv = document.createElement('div');
@@ -334,7 +333,7 @@ const refillUserForm = async (userObj) => {
             newDiv.appendChild(newInput);
             newDiv.appendChild(newLabel);
 
-            flushCollapseUserRoles.appendChild(newDiv)
+             dynamicUserRoles.appendChild(newDiv)
 
         });
 
