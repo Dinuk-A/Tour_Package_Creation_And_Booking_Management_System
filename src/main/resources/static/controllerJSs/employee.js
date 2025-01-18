@@ -152,6 +152,45 @@ const checkEmpFormErrors = () => {
 
 }
 
+//to validate and bind the image 
+const imgValidatorEmpPic = (fileInputID, object, imgProperty, previewId) => {
+
+    //let fileInputIDVar = document.getElementById(fileInputID);
+
+    if (fileInputID.files != null) {
+
+        let file = fileInputID.files[0];
+
+        let fileReader = new FileReader();
+
+        fileReader.onload = function (e) {
+            previewId.src = e.target.result;
+            window[object][imgProperty] = btoa(e.target.result);
+
+        }
+        fileReader.readAsDataURL(file);
+
+        //me point eken passe img tag eke borders lime wenna hadanna 💥💥💥💥
+
+    }
+}
+
+//clear uploaded image (not delete)
+const clearEmpImg = () => {
+    if (employee.emp_photo != null) {
+        let userConfirmImgDlt = confirm("Are You Sure To Clear This Image?");
+        if (userConfirmImgDlt) {
+            employee.emp_photo = null;
+            document.getElementById('previewEmployeeImg').src = 'images/employee.png';
+            document.getElementById('fileInputEmpPhoto').files = null;
+
+        } else {
+            alert("User Cancelled The Deletion Task")
+        }
+    }
+}
+
+
 //fn to submit button (add button)
 const addNewEmployee = async () => {
 

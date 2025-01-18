@@ -63,6 +63,9 @@ public class Employee {
     @NotNull
     private LocalDate dob;
 
+    @Column(name = "emp_photo")
+    private byte[] emp_photo;
+
     @Column(name = "note")
     private String note;
 

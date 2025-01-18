@@ -48,7 +48,7 @@
                     <div class="card-header bg-primary text-white text-center">
                         <h3 class="mb-0">Employee Registration Form</h3>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="background-color: ivory;">
                         <form id="formEmployee" onsubmit="return false">
 
                             <!-- Personal Data Section -->
@@ -94,56 +94,56 @@
 
                                             <!-- gender -->
                                             <div class="col-4">
-                                                <label class="form-label fw-bold"> Gender <span class="text-danger">
+                                                <label class="form-label fw-bold mb-0"> Gender <span
+                                                        class="text-danger">
                                                         * </span>
                                                     :</label>
-                                                <div class="form-check form-check-inline">
-                                                    <input type="radio" class="form-check-input" name="gender" required
-                                                        id="radioMale" value="Male"
-                                                        onchange="employee.gender = this.value ">
-                                                    <label for="radioMale" class="form-check-label fw-bold"> Male
-                                                    </label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input type="radio" class="form-check-input" required name="gender"
-                                                        id="radioFemale" value="Female"
-                                                        onchange="employee.gender = this.value ">
-                                                    <label for="radioFemale" class="form-check-label fw-bold">
-                                                        Female </label>
+
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <input type="radio" class="btn-check" id="radioMale"
+                                                            autocomplete="off" name="gender" value="Male"
+                                                            onchange="employee.gender = this.value ">
+
+                                                        <label class="btn btn-outline-primary rounded-start"
+                                                            for="radioMale" style="width:100px">Male</label>
+                                                    </div>
+
+                                                    <div class="col-6">
+                                                        <input type="radio" class="btn-check" id="radioFemale"
+                                                            autocomplete="off" name="gender" value="Female"
+                                                            onchange="employee.gender = this.value ">
+
+                                                        <label class="btn btn-outline-info" for="radioFemale"
+                                                            style="width:100px">Female</label>
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- photo ✊🏼✊🏼✊🏼✊🏼-->
-                                    <div class="col-md-4 mx-auto">                                        
+                                    <!-- photo -->
+                                    <div class="col-md-4 mx-auto">
 
                                         <div class="row mx-auto d-flex align-items-center">
                                             <div class="col-7 ">
-                                                <img id="previewEmployeeImg" src="images/employee.png" alt="Preview" class="img-thumbnail " style="height:150px; width: 150px; border:2px solid #ced4da">
-                                           
-                                            
+                                                <img id="previewEmployeeImg" src="images/employee.png" alt="Preview"
+                                                    class="img-thumbnail"
+                                                    style="height:150px; width: 150px; border:2px solid #ced4da">
+                                                <!-- use accepts 💥💥💥 -->
+                                                <input type="file" class="d-none" id="fileInputEmpPhoto"
+                                                    onchange="imgValidatorEmpPic(this,'employee','emp_photo',previewEmployeeImg)">
+
                                             </div>
                                             <div class="col-5">
-                                                <button type="" class="btn btn-primary mb-2">Select Image</button>
-                                                <button type="button" class="btn btn-danger">Clear Image</button>
+                                                <button type="button" class="btn btn-primary w-100 mb-2"
+                                                    onclick="fileInputEmpPhoto.click();">Select Image</button>
+
+                                                <button type="button" class="btn btn-danger"
+                                                    onclick="clearEmpImg();">Clear Image</button>
                                             </div>
                                         </div>
-
-
-                                        <!--<div class="d-flex flex-column align-items-center">
-                                            <img id="previewEmployeeImg" src="https://via.placeholder.com/150"
-                                                alt="Preview" class="img-thumbnail mb-2">
-                                           
-                                            <input type="file" class="d-none" id="fileEmpPhoto"
-                                                onchange="imgValidatorForEmpJs(this,'employee','emp_photo','emp_photo_name',empImg)">
-                                            <div>
-                                                <button type="" class="btn btn-secondary me-1">Select Image</button>
-                                                <button type="button" class="btn btn-danger">Clear</button>
-                                            </div>
-                                        </div>-->
-
-
                                     </div>
 
 
@@ -240,8 +240,8 @@
 
                                     <!-- note -->
                                     <div class="col-5">
-                                        <label for="inputNote" class="form-label fw-bold mb-0"> Note <span
-                                                class="text-info">
+                                        <label for="inputNote" class="form-label fw-bold mb-0"> Additional Information
+                                            <span class="text-info">
                                                 *
                                             </span> :</label>
                                         <textarea id="inputNote" placeholder="Enter A Note" class="form-control"
@@ -254,13 +254,13 @@
                             <!-- Form Buttons -->
                             <div class="row mt-4 mb-2">
                                 <div class="col-4">
-                                    <button type="reset" class="btn btn-outline-danger fw-bold w-75"
+                                    <button type="reset" class="btn btn-outline-danger fw-bold w-50"
                                         onclick="refreshEmployeeForm()">Reset</button>
                                 </div>
                                 <div class="col-8 text-end">
-                                    <button type="submit" id="empUpdateBtn" class="btn btn-success fw-bold me-2 w-40"
+                                    <button type="submit" id="empUpdateBtn" class="btn btn-success fw-bold me-2"
                                         onclick="updateEmployee()">Update</button>
-                                    <button type="submit" id="empAddBtn" class="btn btn-primary fw-bold w-40"
+                                    <button type="submit" id="empAddBtn" class="btn btn-primary fw-bold"
                                         onclick="addNewEmployee()">Add</button>
                                 </div>
                             </div>
