@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 // import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,21 +21,20 @@ import lk.yathratravels.user.UserDao;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @RestController
 public class CommonMethods {
 
     @Autowired
-	private EmployeeDao employeeDao;
+    private EmployeeDao employeeDao;
 
-	@Autowired
-	private RoleDao roleDao;
+    @Autowired
+    private RoleDao roleDao;
 
-	@Autowired
+    @Autowired
     private UserDao userDao;
 
-    @Autowired 
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // to create the first user by running this URL
     @GetMapping(value = "/createadmin")
@@ -41,7 +42,7 @@ public class CommonMethods {
 
         User sysAdmin = new User();
         sysAdmin.setUsername("Admin");
-        sysAdmin.setEmail("admindinuka101@yathra.com");
+        sysAdmin.setCompany_email("admindinuka101@yathra.com");
         sysAdmin.setPassword(bCryptPasswordEncoder.encode("12345"));
         sysAdmin.setAcc_status(true);
         sysAdmin.setAddeddatetime(LocalDateTime.now());
@@ -70,9 +71,11 @@ public class CommonMethods {
     @GetMapping(value = "/dashboard")
     public ModelAndView dashboardUI() {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
         ModelAndView dbView = new ModelAndView();
         dbView.setViewName("dashboard.html");
-        // dbView.addObject("loggedusername", auth.getName());
+        dbView.addObject("loggedusername", auth.getName());
 
         // roles godak thiyana nisa list eke palawni eka witharay enne
         // dbView.addObject("loggeduserrole",

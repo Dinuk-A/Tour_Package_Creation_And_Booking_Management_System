@@ -40,17 +40,16 @@ public class User {
     // @NotNull
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "company_email")
     @NotNull
-    private String email;
+    private String company_email;
 
     @Column(name = "note")
     private String note;
 
-    @Column(name = "user_photo")
-    private byte[] user_photo;
+    @Column(name = "avatar")
+    private byte[] avatar;
 
-    //💥💥💥 db name eka wenas karanna
     @Column(name = "acc_status")
     @NotNull
     private Boolean acc_status;

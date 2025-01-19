@@ -94,7 +94,7 @@ public class UserController {
         }
 
         // duplications #02 === by email
-        User isUserEmailExist = userDao.getUserByEmail(user.getEmail());
+        User isUserEmailExist = userDao.getUserByEmail(user.getCompany_email());
         if (isUserEmailExist != null) {
             return "User save not completed : Given email already exist for another user account";
         }

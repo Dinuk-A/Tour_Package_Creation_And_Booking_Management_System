@@ -32,7 +32,7 @@ public class EditUserInfoController {
 
         updatingUser.setId(loggedUser.getId());
         updatingUser.setUsername(loggedUser.getUsername());
-        updatingUser.setEmail(loggedUser.getEmail());
+        updatingUser.setEmail(loggedUser.getCompany_email());
         updatingUser.setCurrentpassword(loggedUser.getPassword());
 
         return updatingUser;
@@ -52,7 +52,7 @@ public class EditUserInfoController {
 
             // Update other user details (username, email.)
             existingUser.setUsername(editUser.getUsername());
-            existingUser.setEmail(editUser.getEmail());           
+            existingUser.setCompany_email(editUser.getEmail());           
 
             userDao.save(existingUser);
 

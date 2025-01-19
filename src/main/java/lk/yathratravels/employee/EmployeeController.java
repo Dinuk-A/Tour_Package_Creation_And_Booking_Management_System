@@ -43,6 +43,7 @@ public class EmployeeController {
         } else {
             ModelAndView empView = new ModelAndView();
             empView.setViewName("employee.html");
+            empView.addObject("loggedusername", auth.getName());
             empView.addObject("title", "Yathra Employee");
             empView.addObject("moduleName", "Employee Management");
             return empView;

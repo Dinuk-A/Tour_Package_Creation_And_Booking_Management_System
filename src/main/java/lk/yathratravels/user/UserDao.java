@@ -12,7 +12,7 @@ public interface UserDao extends JpaRepository<User, Integer> {
     public User getUserByEmployeeID(Integer empid);
 
     // FILTER THE USER BY GIVEN EMAIL
-    @Query(value = "select u from User u where u.email=?1")
+    @Query(value = "select u from User u where u.company_email=?1")
     public User getUserByEmail(String email);
 
     // FILTER THE USER BY GIVEN USER NAME
