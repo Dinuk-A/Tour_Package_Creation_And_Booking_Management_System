@@ -87,46 +87,118 @@ const refreshUserForm = async () => {
         const empListWOUserAccs = await ajaxGetReq("/emp/listwithoutuseracc")
         fillMultDataIntoDynamicSelects(selectEmployee, 'Select Employee', empListWOUserAccs, 'emp_code', 'fullname')
 
+        //ORIGINAL
+        //        rolesList = await ajaxGetReq("/role/exceptadmin");
+        //        dynamicUserRoles.innerHTML = "";
+        //        rolesList.forEach(element => {
+        //
+        //            let newDiv = document.createElement('div');
+        //            newDiv.className = "form-check form-check-inline";
+        //
+        //            let newInput = document.createElement('input');
+        //            newInput.classList.add("form-check-input");
+        //            newInput.type = "checkbox";
+        //            newInput.setAttribute('id', JSON.stringify(element.name))
+        //
+        //            let newLabel = document.createElement('label');
+        //            newLabel.classList.add("form-check-label");
+        //            newLabel.innerText = element.name;
+        //
+        //            newLabel.setAttribute('for', JSON.stringify(element.name))
+        //
+        //            newInput.onchange = function () {
+        //
+        //                if (this.checked) {
+        //                    user.roles.push(element);
+        //                } else {
+        //                    const roleIDsOnly = user.roles.map(r => r.id);
+        //                    const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
+        //
+        //                    if (indexOfCurrentPoppingElement != -1) {
+        //                        user.roles.splice(indexOfCurrentPoppingElement, 1);
+        //                    }
+        //                }
+        //            }
+        //
+        //            newDiv.appendChild(newInput);
+        //            newDiv.appendChild(newLabel);
+        //
+        //            dynamicUserRoles.appendChild(newDiv);
+        //
+        //        });
+
+        //claude worked
+        //        rolesList = await ajaxGetReq("/role/exceptadmin");
+        //        dynamicUserRoles.innerHTML = "";
+        //        dynamicUserRoles.classList.add("d-flex", "flex-wrap", "gap-2");
+        //
+        //        rolesList.forEach(element => {
+        //            let newDiv = document.createElement('div');
+        //            newDiv.className = "form-check form-check-inline";
+        //
+        //            let newInput = document.createElement('input');
+        //            newInput.classList.add("form-check-input");
+        //            newInput.type = "checkbox";
+        //            newInput.id = element.name;
+        //
+        //            let newLabel = document.createElement('label');
+        //            newLabel.classList.add("form-check-label", "ms-1");
+        //            newLabel.innerText = element.name;
+        //            newLabel.htmlFor = element.name;
+        //
+        //            newInput.onchange = function () {
+        //                if (this.checked) {
+        //                    user.roles.push(element);
+        //                } else {
+        //                    const roleIDsOnly = user.roles.map(r => r.id);
+        //                    const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
+        //                    if (indexOfCurrentPoppingElement !== -1) {
+        //                        user.roles.splice(indexOfCurrentPoppingElement, 1);
+        //                    }
+        //                }
+        //            }
+        //
+        //            newDiv.appendChild(newInput);
+        //            newDiv.appendChild(newLabel);
+        //            dynamicUserRoles.appendChild(newDiv);
+        //        });
+
+        /**<input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off">
+         * 
+<label class="btn btn-outline-primary" for="btn-check-outlined">Single toggle</label><br> */
+
         rolesList = await ajaxGetReq("/role/exceptadmin");
-         dynamicUserRoles.innerHTML = "";
+        dynamicUserRoles.innerHTML = "";
+        dynamicUserRoles.classList.add("d-flex", "flex-wrap", "gap-2");
+
         rolesList.forEach(element => {
-
-            let newDiv = document.createElement('div');
-            newDiv.className = "form-check form-check-inline";
-            //newDiv.style.minWidth = "200px"
-
             let newInput = document.createElement('input');
-            newInput.classList.add("form-check-input");
             newInput.type = "checkbox";
-            newInput.setAttribute('id', JSON.stringify(element.name))
+            newInput.classList.add("btn-check");
+            newInput.setAttribute('id', JSON.stringify(element.name));
+            newInput.setAttribute('autocomplete', 'off');
 
             let newLabel = document.createElement('label');
-            newLabel.classList.add("form-check-label");
+            newLabel.className = "btn , btn-outline-primary";
+            newLabel.setAttribute('for', JSON.stringify(element.name));
             newLabel.innerText = element.name;
-
-            newLabel.setAttribute('for', JSON.stringify(element.name))
+            newLabel.style.minWidth = "100px";
+            newLabel.style.textAlign = "center";
 
             newInput.onchange = function () {
-                //if this option has checked , add it to the user's roles list
                 if (this.checked) {
-                    user.roles.push(element)
-                    //if this option has unchecked , remove exactly that element from the user's roles list
+                    user.roles.push(element);
                 } else {
-
                     const roleIDsOnly = user.roles.map(r => r.id);
                     const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
-
-                    if (indexOfCurrentPoppingElement != -1) {
+                    if (indexOfCurrentPoppingElement !== -1) {
                         user.roles.splice(indexOfCurrentPoppingElement, 1);
                     }
                 }
             }
 
-            newDiv.appendChild(newInput);
-            newDiv.appendChild(newLabel);
-
-             dynamicUserRoles.appendChild(newDiv);
-
+            dynamicUserRoles.appendChild(newInput);
+            dynamicUserRoles.appendChild(newLabel);
         });
 
     } catch (error) {
@@ -258,7 +330,7 @@ const addNewUser = async () => {
     }
 }
 
-//fn for edit button  💥
+//fn for edit button  
 const openModal = (userObj) => {
 
     document.getElementById('modalUserEmpCode').innerText = userObj.employee_id.emp_code || 'N/A';
@@ -289,24 +361,21 @@ const refillUserForm = async (userObj) => {
         inputUserName.disabled = true;
 
         rolesList = await ajaxGetReq("/role/exceptadmin");
-         dynamicUserRoles.innerHTML = "";
+        dynamicUserRoles.innerHTML = "";
         rolesList.forEach(element => {
 
-            let newDiv = document.createElement('div');
-            newDiv.className = "form-check form-check-inline";
-            // newDiv.style.width = "30%";
-            newDiv.style.minWidth = "200px"
-
             let newInput = document.createElement('input');
-            newInput.classList.add("form-check-input");
             newInput.type = "checkbox";
-            newInput.setAttribute('id', JSON.stringify(element.name))
+            newInput.classList.add("btn-check");
+            newInput.setAttribute('id', JSON.stringify(element.name));
+            newInput.setAttribute('autocomplete', 'off');
 
             let newLabel = document.createElement('label');
-            newLabel.classList.add("form-check-label");
+            newLabel.className = "btn , btn-outline-primary";
+            newLabel.setAttribute('for', JSON.stringify(element.name));
             newLabel.innerText = element.name;
-
-            newLabel.setAttribute('for', JSON.stringify(element.name))
+            newLabel.style.minWidth = "100px";
+            newLabel.style.textAlign = "center";
 
             newInput.onchange = function () {
                 if (this.checked) {
@@ -330,10 +399,11 @@ const refillUserForm = async (userObj) => {
                 newInput.checked = true;
             }
 
-            newDiv.appendChild(newInput);
-            newDiv.appendChild(newLabel);
+            //newDiv.appendChild(newInput);
+            //newDiv.appendChild(newLabel);
 
-             dynamicUserRoles.appendChild(newDiv)
+            dynamicUserRoles.appendChild(newInput)
+            dynamicUserRoles.appendChild(newLabel)
 
         });
 

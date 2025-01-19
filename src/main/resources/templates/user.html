@@ -85,11 +85,12 @@
                             </div>
 
                             <!-- roles  -->
-                            <div class="row mt-2 mx-auto ">
-                                <label class="form-label fw-bold mb-0"> Role(s): </label>
-                                <div class="row p-1" id="dynamicUserRoles">
-                                    <!-- roles will be here -->
-                                    <!-- not inline, ask gpt 💥💥💥💥 -->
+                            <div class="row mt-2 mx-auto">
+                                <label class="form-label fw-bold mb-0">Role(s):</label>
+                                <div class="col">                                    
+                                    <div class="mt-1 mb-3" id="dynamicUserRoles">
+                                        <!-- roles will be here -->
+                                    </div>
                                 </div>
                             </div>
 
@@ -148,8 +149,7 @@
                             <div class="row mt-4 mb-2">
 
                                 <div class="col-3">
-                                    <button type="button" id="btnClear" class="btn fw-bold"
-                                        onclick="refreshUserform()">
+                                    <button type="button" id="btnClear" class="btn fw-bold" onclick="refreshUserform()">
                                         Clear </button>
                                 </div>
                                 <div class="col-8 text-end">
@@ -157,8 +157,8 @@
                                         onclick="updateUser()" style="pointer-events: all;">
                                         Update </button>
 
-                                    <button id="userAddBtn" type="submit" class="btn fw-bold"
-                                        onclick="addNewUser()" style="pointer-events: all;">
+                                    <button id="userAddBtn" type="submit" class="btn fw-bold" onclick="addNewUser()"
+                                        style="pointer-events: all;">
                                         Add </button>
                                 </div>
                             </div>
