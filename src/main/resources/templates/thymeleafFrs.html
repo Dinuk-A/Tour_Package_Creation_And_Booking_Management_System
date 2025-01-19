@@ -319,13 +319,15 @@
                     <div class="row mb-3">
                         <!-- Image Preview -->
                         <div class="col-md-6 text-center">
-                            <img src="images/employee.png" id="imagePreview" class="img-fluid rounded-circle"
+                            <img src="images/employee.png" id="previewUserAvatar" class="img-fluid rounded-circle"
                                 alt="User Image" style="width: 150px; height: 150px;">
+                            <input type="file" class="d-none" id="fileInputUserAvatar"
+                                onchange="imgValidatorUserEditPortal();">
                         </div>
 
                         <!-- Buttons for Change and Clear Image -->
                         <div class="col-md-6 d-flex flex-column justify-content-center align-items-start">
-                            <button type="button" class="btn btn-info mb-2 mx-auto" onclick="changeImage();">Change
+                            <button type="button" class="btn btn-info mb-2 mx-auto" onclick="fileInputUserAvatar.click();">Change
                                 Image</button>
                             <button type="button" class="btn btn-danger mx-auto" onclick="clearImage();">Clear
                                 Image</button>
@@ -337,7 +339,7 @@
                         <label for="editPortalUN" class="form-label fw-bold mb-0">Username:</label>
                         <input type="text" id="editPortalUN" class="form-control shadow" required
                             placeholder="Enter New Username"
-                            onkeyup="inputFieldValidator(this, '', 'loggedUser', 'username')">
+                            onkeyup="inputValidatorText(this, '', 'loggedUser', 'username')">
                     </div>
 
                     <!-- New Password and Confirm Password Fields -->
@@ -347,14 +349,14 @@
                             <label for="editPortalNewPW" class="form-label fw-bold mb-0">New Password:</label>
                             <input type="password" id="editPortalNewPW" class="form-control shadow" required
                                 placeholder="Enter New Password"
-                                onkeyup="inputFieldValidator(this, '', 'loggedUser', 'newpw')">
+                                onkeyup="checkNewPassword();">
                         </div>
 
                         <!-- Confirm New Password -->
                         <div class="col-md-6">
                             <label for="editPortalRetypePW" class="form-label fw-bold mb-0">Confirm Password:</label>
-                            <input type="password" id="editPortalRetypePW" class="form-control shadow" required
-                                placeholder="Confirm New Password" onkeyup="retypePasswordValiForEditPortal();">
+                            <input disabled type="password" id="editPortalRetypePW" class="form-control shadow" required
+                                placeholder="Confirm New Password" onkeyup="retypePWValiForEditPortal();">
                         </div>
                     </div>
 
@@ -364,7 +366,7 @@
                             <label for="editPortalCurrentPW" class="form-label fw-bold mb-0">Current Password:</label>
                             <input type="password" id="editPortalCurrentPW" class="form-control shadow" required
                                 placeholder="Enter Your Current Password"
-                                onkeyup="inputFieldValidator(this, '', 'loggedUser', 'currentpw')">
+                                onkeyup="inputValidatorText(this, '', 'loggedUser', 'currentpassword')">
                         </div>
 
                         <div class="col-6">
@@ -374,24 +376,13 @@
                                 changes.
                             </small>
                         </div>
-                    </div>
-
-                    <!--<div class="mb-3">
-                        <label for="editPortalCurrentPW" class="form-label fw-bold mb-0">Current Password:</label>
-                        <input type="password" id="editPortalCurrentPW" class="form-control shadow" required
-                            placeholder="Enter Your Current Password"
-                            onkeyup="inputFieldValidator(this, '', 'loggedUser', 'currentpw')">
-                        <small class="form-text text-muted mt-2">
-                            <strong>Note:</strong> For security reasons, your current password is required to make
-                            changes.
-                        </small>
-                    </div>-->
+                    </div>                  
 
                     <!-- Reset and Submit Buttons -->
                     <div class="row">
                         <div class="col-12 text-end mt-3">
                             <button type="button" class="btn btn-secondary me-0">Reset</button>
-                            <button type="button" class="btn btn-primary" onclick="submitProfileChanges();">Save
+                            <button type="button" class="btn btn-primary" onclick="submitUserAccChanges();">Save
                                 Changes</button>
                         </div>
                     </div>

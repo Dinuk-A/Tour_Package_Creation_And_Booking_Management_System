@@ -1,60 +1,67 @@
-window.addEventListener('DOMContentLoaded',()=>{
-    loggedUser = ajaxGetRequest("/loggeduser");
+window.addEventListener('DOMContentLoaded',async () => {
+    try {
+        loggedUser = await ajaxGetReq("/loggeduser");
+    } catch (error) {
+        console.error("Failed to fetch Current User : ", error);
+    }
 })
 
 
-const refreshProfileEditForm = () => {    
+const refreshProfileEditForm = () => {
 
     editPortalUN.value = loggedUser.username;
-    editPortalEmail.value = loggedUser.email;
 
-    if (loggedUser.user_photo == null) {
-        editPortalImage.src = "resources/images/employee.png";
+    if (loggedUser.avatar == null) {
+        previewUserAvatar.src = "images/employee.png";
     } else {
-        editPortalImage.src = atob(loggedUser.user_photo);
+        previewUserAvatar.src = atob(loggedUser.avatar);
     }
+
 }
 
-const retypePasswordValiForEditPortal = () => {
+const checkNewPassword=()=>{
+    editPortalRetypePW.disabled = false;
+}
+
+const retypePWValiForEditPortal = () => {
     if (editPortalRetypePW.value == editPortalNewPW.value) {
         editPortalRetypePW.style.border = "2px solid lime";
-        loggedUser.newpw = editPortalRetypePW.value;
+        loggedUser.newpassword = editPortalRetypePW.value;
     } else {
         editPortalRetypePW.style.border = '2px solid red';
-        loggedUser.newpw = null;
+        loggedUser.newpassword = null;
     }
 }
 
-const imgValidator = (fileElement, object, imgProperty, imgNameProperty, previewId) => {
 
-    if (fileElement.files != null) {
-        console.log(fileElement.files);
 
-        let file = fileElement.files[0];
-        // window[object][imgNameProperty] = file.name;
-
+//submit image
+const imgValidatorUserEditPortal = () => {
+    if (fileInputUserAvatar.files != null) {
+        let imgFile = fileInputUserAvatar.files[0];
         let fileReader = new FileReader();
-
         fileReader.onload = function (e) {
-            previewId.src = e.target.result;
-            window[object][imgProperty] = btoa(e.target.result);
-
+            previewUserAvatar.src = e.target.result;
+            loggedUser.avatar = btoa(e.target.result);
         }
-        fileReader.readAsDataURL(file);
+        fileReader.readAsDataURL(imgFile);
     }
-
 }
 
-const submitProfileChanges = () => {
-    
-    let updateServicesResponces = ajaxRequest("/edituserinfo", "PUT", loggedUser);
+const submitUserAccChanges =async () => {
+
+    try {
+        let updateServicesResponces = await ajaxPPDRequest("/edituserinfo", "PUT", loggedUser);
 
     if (updateServicesResponces == 'OK') {
         alert('User Profile Changed Successfully! \n ');
         window.location.assign("/logout");
     } else {
-
         alert('User Info Change Failed \n' +
             updateServicesResponces);
     }
+    } catch (error) {
+        alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+    }
+    
 }

@@ -29,11 +29,9 @@ public class EditUserInfoController {
         User loggedUser = userDao.getUserByUsername(auth.getName());
 
         EditUser updatingUser = new EditUser();
-
         updatingUser.setId(loggedUser.getId());
         updatingUser.setUsername(loggedUser.getUsername());
-        updatingUser.setEmail(loggedUser.getCompany_email());
-        updatingUser.setCurrentpassword(loggedUser.getPassword());
+        updatingUser.setAvatar(loggedUser.getAvatar());
 
         return updatingUser;
 
@@ -42,17 +40,23 @@ public class EditUserInfoController {
     @PutMapping(value = "/edituserinfo")
     public String updateUserInfoFromPortal(@RequestBody EditUser editUser) {
         try {
+
             User existingUser = userDao.getReferenceById(editUser.getId());
 
-              // Update password
-             // Check if new password is provided
-             if (editUser.getNewpassword() != null) {              
+            // Validate current password
+            if (!bCryptPasswordEncoder.matches(editUser.getCurrentpassword(), existingUser.getPassword())) {
+                return "Invalid current password";
+            }
+
+            // Update password
+            // Check if a new password is provided, and then set it
+            if (editUser.getNewpassword() != null) {
                 existingUser.setPassword(bCryptPasswordEncoder.encode(editUser.getNewpassword()));
             }
 
-            // Update other user details (username, email.)
+            // Update other user details (username, avatar.)
             existingUser.setUsername(editUser.getUsername());
-            existingUser.setCompany_email(editUser.getEmail());           
+            existingUser.setAvatar(editUser.getAvatar());
 
             userDao.save(existingUser);
 
