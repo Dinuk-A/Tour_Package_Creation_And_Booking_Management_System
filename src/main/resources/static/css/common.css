@@ -188,3 +188,78 @@ h6 {
     background-color: #2E8B57;
     color: #ffffff;
 }
+
+/* Custom tab headers layout */
+.nav-tabs {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.nav-tabs .nav-item {
+    flex: 1;
+    text-align: center;
+}
+
+.nav-tabs .nav-link {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: box-shadow 0.3s, background 0.3s, border 0.3s;
+}
+
+.nav-tabs .nav-link.active {
+    background: linear-gradient(45deg, #007bff, #00bcd4);
+    color: white;
+    border-top: 2px solid #007bff;
+    border-bottom: 2px solid transparent;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: #f8f9fa;
+}
+
+/* Modal style */
+.modal-content {
+    border-radius: 8px;
+}
+
+.modal-body .info-item {
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-body .info-value {
+    font-size: 1.1rem;
+    color: #007bff;
+}
+
+.modal.fade .modal-dialog {
+    transform: translateY(-50px);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+ /* Small avatar in navbar */
+ .avatar-small {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+/* Enlarged avatar in dropdown and popover */
+.avatar-large {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}

@@ -270,6 +270,12 @@ const refillEmployeeForm = async (empObj) => {
         radioFemale.checked = true;
     }
 
+    if (employee.emp_photo != null) {
+        previewEmployeeImg.src = atob(employee.emp_photo);
+    } else {
+        previewEmployeeImg.src = "images/employee.png";
+    }
+
     try {
         designations = await ajaxGetReq("/desig/all");
         fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name', empObj.designation_id.name);
@@ -337,6 +343,10 @@ const showEmpValueChanges = () => {
     }
     if (employee.note != oldEmployee.note) {
         updates = updates + " Note will be changed to " + employee.note + "\n";
+    }
+
+    if (employee.emp_photo != oldEmployee.emp_photo) {
+        updates = updates + " Employee Photo has changed";
     }
 
     return updates;

@@ -198,7 +198,7 @@ const retypePasswordVali = () => {
     }
 }
 
-//
+//check form errors before submit
 const checkUserFormErrors = () => {
     let errors = '';
 

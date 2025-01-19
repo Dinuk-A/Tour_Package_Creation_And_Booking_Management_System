@@ -42,8 +42,8 @@
 
 </head>
 
-<!-- common fragment for top nav bar(header) , from bootstrap designs-->
-<header th:fragment="headerFragment" id="commonHeader" class="header fixed-top d-flex align-items-center">
+<!-- common fragment for top nav bar(header) -->
+<header th:fragment="headerFragmentOri" id="commonHeader" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
         <!-- toggle button starts -->
@@ -53,22 +53,42 @@
 
         <!-- brand name text starts (not a img)-->
         <a href="http://localhost:8081/dashboard" class="logo d-flex align-items-center my-auto">
-            <!-- <img src="ylogo.png" alt="image failed" style="background-size: contain;"> -->
+
             <span class="d-none d-lg-block ms-1 text-primary">Yathra Travels</span>
         </a>
     </div>
 
     <div class="d-flex align-items-center justify-content-between mx-auto">
-        <h2 th:text="${moduleName}" class="ms-5 my-auto text-info" ></h2>
+        <h2 th:text="${moduleName}" class="ms-5 my-auto text-info"></h2>
     </div>
 
     <nav class="header-nav d-flex align-items-center">
+        <!-- new -->
+        <!-- Avatar with Dropdown -->
+        <div class="dropdown me-3">
+            <img src="images/employee.png" alt="Avatar" class="rounded-circle avatar-small" data-bs-toggle="dropdown"
+                aria-expanded="false" style="cursor: pointer;">
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li class="text-center p-3">
+                    <img src="images/employee.png" alt="Avatar" class="rounded-circle avatar-large mb-2">
+                    <p class="mb-0 fw-bold">John Doe</p>
+                    <p class="text-muted">john.doe@example.com</p>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#settings">Settings</a></li>
+                <li><a class="dropdown-item text-danger" href="#logout">Logout</a></li>
+            </ul>
+        </div>
+
+        <!--ori-->
         <ul class="d-flex align-items-center">
 
             <!-- dropdown -->
             <li class="nav-item  pe-3">
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#">
-                    <!-- data-bs-toggle="dropdown" -->
+
                     <img id="userPhotoIDHere" src="images/employee.png" alt="Profile image here" class="rounded-circle"
                         data-bs-toggle="modal" data-bs-target="#userInfoEditModal" onclick="refreshProfileEditForm();">
                     <span class=" d-md-block ps-2" th:text="${loggedusername}"></span>
@@ -80,7 +100,7 @@
 
         </ul>
 
-        <!-- meka one tour pkg ekedi only-->
+        <!-- this will be needed later in tourpackage module-->
         <ul class="d-flex align-items-center ms-5 " style="visibility: hidden;">
             <li class="nav-item  mx-auto" th:text="${loggeduserrole}">role</li>
         </ul>
@@ -95,6 +115,52 @@
             </li>
         </ul>
     </nav>
+</header>
+
+<header th:fragment="headerFragment" id="commonHeader" class="header fixed-top d-flex align-items-center">
+
+    <!-- Container for the top bar content -->
+    <div class="d-flex align-items-center justify-content-between w-100">
+
+        <div class="d-flex align-items-center justify-content-between">
+
+        <!-- Toggle button for sidebar -->
+        <button class="bi bi-list toggle-sidebar-btn border-none bg-info" onclick="openNav();">
+            <img src="images/toggle.svg" width="25px" alt="Toggle Sidebar">
+        </button>
+
+        <!-- Brand name (Yathra Travels) -->
+        <a href="http://localhost:8081/dashboard" class="logo d-flex align-items-center my-auto">
+            <span class="d-none d-lg-block ms-1 text-primary">Yathra Travels</span>
+        </a>
+        </div>
+
+
+        <!-- Display module name (dynamic) -->
+        <h2 th:text="${moduleName}" class="ms-5 my-auto text-info"></h2>
+
+        <!-- User role (hidden, for later use in tourpackage module) -->
+        <div class="d-flex align-items-center ms-5" style="visibility: hidden;">
+            <span th:text="${loggeduserrole}">role</span>
+        </div>
+
+        <!-- Avatar with Dropdown -->
+        <div class="dropdown me-3">
+            <img src="images/employee.png" alt="Avatar" class="rounded-circle avatar-small" data-bs-toggle="dropdown"
+                aria-expanded="false" style="cursor: pointer;">
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li class="text-center p-3">
+                    <img src="images/employee.png" alt="Avatar" class="rounded-circle avatar-large mb-2">
+                    <p class="mb-0 fw-bold" th:text="${loggedusername}"></p>
+                    <p class="text-muted">john.doe@example.com</p>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#userInfoEditModal" onclick="refreshProfileEditForm();">Settings</a></li>
+                <li><a class="dropdown-item text-danger" onclick="let userConfirmNew = confirm('Are you sure to sign out...?'); if (userConfirmNew) window.location.replace('/logout'); ">Logout</a></li>
+            </ul>
+        </div>
+
+    </div>
 </header>
 
 <!-- common sidebar -->
@@ -305,14 +371,14 @@
 </aside>
 
 <!-- modal for change user's info by himself -->
-<div th:fragment="userInfoEditModalFragmentOri" class="modal fade" id="userInfoEditModal" tabindex="-1"
+<div th:fragment="userInfoEditModalFragment" class="modal fade" id="userInfoEditModal" tabindex="-1"
     aria-labelledby="userEditModalLabel" aria-hidden="true">
 
     <!-- modal starts -->
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg mt-5 pt-5">
         <div class="modal-content">
             <div class="modal-header bg-dark">
-                <h2 class="modal-title text-warning fs-5" id="userEditModalLabel">Edit User Info</h2>
+                <h2 class="modal-title text-warning fs-5" id="userEditModalLabel">Edit User Account</h2>
                 <button type="button" class="btn-close bg-danger" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-light">
@@ -409,131 +475,3 @@
         </div>
     </div>
 </div>
-
-<!-- //by gpt -->
-<div th:fragment="userInfoEditModalFragment" class="modal fade" id="userInfoEditModal" tabindex="-1"
-    aria-labelledby="userEditModalLabel" aria-hidden="true">
-
-    <!-- modal starts -->
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-dark">
-                <h2 class="modal-title text-warning fs-5" id="userEditModalLabel">Edit User Info</h2>
-                <button type="button" class="btn-close bg-danger" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-light">
-                <form onsubmit="return false" id="formUserDetailsEdit">
-
-                    <!-- main row , photos and main inputs, except current pw and submit button-->
-                    <div class="row mt-2 borders">
-
-                        <!-- user photo -->
-                        <div class="col-md-3">
-                            <div class="text-start mb-2">Upload Photo:</div>
-                            <!-- Preview container -->
-                            <div class="mb-2">
-                                <img id="photoPreview" src="/path/to/default/photo.jpg" 
-                                     class="border rounded" 
-                                     style="width: 150px; height: 150px; object-fit: cover; display: none;">
-                            </div>
-                            <div class="input-group mb-2">
-                                <input type="file" id="userPhoto" class="form-control" 
-                                       accept="image/*" 
-                                       onchange="document.getElementById('photoPreview').src = window.URL.createObjectURL(this.files[0]); 
-                                                document.getElementById('photoPreview').style.display = 'block';">
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button type="button" class="btn btn-warning" id="changePhotoBtn">Change Photo</button>
-                                <button type="button" class="btn btn-danger" id="clearPhotoBtn" 
-                                        onclick="document.getElementById('userPhoto').value = ''; 
-                                                 document.getElementById('photoPreview').style.display = 'none';">
-                                    Clear Selected
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- space -->
-                        <div class="col-md-1"></div>
-
-                        <!-- other text input fields -->
-                        <div class="col-md-8">
-                            <!-- username and email -->
-                            <div class="row">
-                                <!-- username -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="editPortalUN" class="form-label">User Name : </label>
-                                    <input type="text" id="editPortalUN" class="form-control shadow" required
-                                        placeholder="Enter The Username"
-                                        onkeyup="inputFieldValidator(this,'','loggedUser','username')">
-                                </div>
-
-                                <!-- email -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="editPortalEmail" class="form-label">Email : </label>
-                                    <input type="text" id="editPortalEmail" class="form-control shadow" required
-                                        placeholder="Enter The Email Address"
-                                        onkeyup="inputFieldValidator(this,'','loggedUser','email')">
-                                </div>
-                            </div>
-
-                            <!-- new password 2 times -->
-                            <div class="row">
-                                <!-- new password -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="editPortalNewPW" class="form-label">New Password : </label>
-                                    <input type="password" id="editPortalNewPW" class="form-control shadow" required
-                                        placeholder="Enter The New Password"
-                                        onkeyup="inputFieldValidator(this,'','loggedUser','newpw')">
-                                </div>
-
-                                <!-- retype new password -->
-                                <div class="col-md-6 mb-3">
-                                    <label for="editPortalRetypePW" class="form-label">Re Enter The Password : </label>
-                                    <input type="password" id="editPortalRetypePW" class="form-control shadow" required
-                                        placeholder="Enter The Same Password"
-                                        onkeyup="retypePasswordValiForEditPortal();">
-                                </div>
-                            </div>
-
-                            <!-- current password -->
-                            <div class="row mb-3">
-                                <div class="col-md-7">
-                                    <label for="editPortalCurrentPW" class="form-label">Current Password : </label>
-                                    <input type="password" id="editPortalCurrentPW" class="form-control shadow" required
-                                        placeholder="Enter The Current Password"
-                                        onkeyup="inputFieldValidator(this,'','loggedUser','currentpw')">
-                                </div>
-                                <div class="col-md-5 d-flex align-items-center pt-4">
-                                    <small class="text-danger">
-                                        * Please enter your current password to save the changes above
-                                    </small>
-                                </div>
-                            </div>
-                        
-                            <!-- buttons -->
-                            <div class="row">
-                                <div class="col-12 text-end">
-                                    <button type="button" class="btn btn-danger me-2">Clear</button>
-                                    <button type="button" class="btn btn-primary" onclick="submitProfileChanges();">
-                                        Save changes
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-<!-- for testing only -->
-<h1 th:fragment="comH" style="color: aliceblue;"> fdsgdf gfds g hgfh </h1>
-
-<p th:fragment="comPPPP" class="bg-light"> gfg hghfghfgh hhhhhhhhhhhh </p>
