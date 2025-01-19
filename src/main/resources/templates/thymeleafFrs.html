@@ -50,15 +50,15 @@
 
         <div class="d-flex align-items-center justify-content-between">
 
-        <!-- Toggle button for sidebar -->
-        <button class="bi bi-list toggle-sidebar-btn border-none bg-info" onclick="openNav();">
-            <img src="images/toggle.svg" width="25px" alt="Toggle Sidebar">
-        </button>
+            <!-- Toggle button for sidebar -->
+            <button class="bi bi-list toggle-sidebar-btn border-none bg-info" onclick="openNav();">
+                <img src="images/toggle.svg" width="25px" alt="Toggle Sidebar">
+            </button>
 
-        <!-- Brand name (Yathra Travels) -->
-        <a href="http://localhost:8081/dashboard" class="logo d-flex align-items-center my-auto">
-            <span class="d-none d-lg-block ms-1 text-primary">Yathra Travels</span>
-        </a>
+            <!-- Brand name (Yathra Travels) -->
+            <a href="http://localhost:8081/dashboard" class="logo d-flex align-items-center my-auto">
+                <span class="d-none d-lg-block ms-1 text-primary">Yathra Travels</span>
+            </a>
         </div>
 
 
@@ -80,9 +80,14 @@
                     <p class="mb-0 fw-bold" th:text="${loggedusername}"></p>
                     <p class="text-muted">john.doe@example.com</p>
                 </li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#userInfoEditModal" onclick="refreshProfileEditForm();">Settings</a></li>
-                <li><a class="dropdown-item text-danger" onclick="let userConfirmNew = confirm('Are you sure to sign out...?'); if (userConfirmNew) window.location.replace('/logout'); ">Logout</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#userInfoEditModal"
+                        onclick="refreshProfileEditForm();">Settings</a></li>
+                <li><a class="dropdown-item text-danger"
+                        onclick="let userConfirmNew = confirm('Are you sure to sign out...?'); if (userConfirmNew) window.location.replace('/logout'); ">Logout</a>
+                </li>
             </ul>
         </div>
 
@@ -301,7 +306,7 @@
     aria-labelledby="userEditModalLabel" aria-hidden="true">
 
     <!-- modal starts -->
-    <div class="modal-dialog modal-lg mt-5 pt-5">
+    <div class="modal-dialog modal-md mt-5 pt-5">
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <h2 class="modal-title text-warning fs-5" id="userEditModalLabel">Edit User Account</h2>
@@ -310,94 +315,91 @@
             <div class="modal-body bg-light">
                 <form onsubmit="return false" id="formUserDetailsEdit">
 
-                    <!-- main row , photos and main inputs, except current pw and submit button-->
-                    <div class="row mt-2 borders">
-
-                        <!-- user photo -->
-                        <div class="col-3 text-center">
-
+                    <!-- Image Preview and Buttons Row -->
+                    <div class="row mb-3">
+                        <!-- Image Preview -->
+                        <div class="col-md-6 text-center">
+                            <img src="images/employee.png" id="imagePreview" class="img-fluid rounded-circle"
+                                alt="User Image" style="width: 150px; height: 150px;">
                         </div>
 
-                        <!-- space -->
-                        <div class="col-1"></div>
-
-                        <!-- other text input fields -->
-                        <div class="col-7">
-                            <!-- username and email -->
-                            <div class="row mt-0">
-                                <!-- username -->
-                                <div class="col-6 p-1 mx-auto">
-                                    <label for="editPortalUN" class="form-label fw-bold mb-0">User Name : </label>
-                                    <input type="text" id="editPortalUN" class="form-control shadow" required
-                                        placeholder="Enter The Username"
-                                        onkeyup="inputFieldValidator(this,'','loggedUser','username')">
-                                </div>
-
-                                <!-- email -->
-                                <div class="col-6 p-1 mx-auto">
-                                    <label for="editPortalEmail" class="form-label fw-bold mb-0 mt-1">Email : </label>
-                                    <input type="text" id="editPortalEmail" class="form-control shadow" required
-                                        placeholder="Enter The Email Address"
-                                        onkeyup="inputFieldValidator(this,'','loggedUser','email')">
-                                </div>
-                            </div>
-
-                            <!-- new password 2 times -->
-                            <div class="row mt-1">
-                                <!-- new password -->
-                                <div class="col-6">
-                                    <label for="editPortalNewPW" class="form-label fw-bold mb-0 mt-1">New Password :
-                                    </label>
-                                    <input type="password" id="editPortalNewPW" class="form-control shadow " required
-                                        placeholder="Enter The New Passworde"
-                                        onkeyup="inputFieldValidator(this,'','loggedUser','newpw')">
-                                </div>
-
-                                <!-- retype new password -->
-                                <div class="col-6">
-                                    <label for="editPortalRetypePW" class="form-label fw-bold mb-0 mt-1">Re Enter The
-                                        Password
-                                        : </label>
-                                    <input type="password" id="editPortalRetypePW" class="form-control shadow" required
-                                        placeholder="Enter The Same Password "
-                                        onkeyup="retypePasswordValiForEditPortal();">
-                                </div>
-                            </div>
-
+                        <!-- Buttons for Change and Clear Image -->
+                        <div class="col-md-6 d-flex flex-column justify-content-center align-items-start">
+                            <button type="button" class="btn btn-info mb-2 mx-auto" onclick="changeImage();">Change
+                                Image</button>
+                            <button type="button" class="btn btn-danger mx-auto" onclick="clearImage();">Clear
+                                Image</button>
                         </div>
-
                     </div>
 
-                    <div class="row mt-1">
-                        <!-- empty space to align with above row's begining content -->
-                        <div class="col-4"></div>
+                    <!-- Username Field -->
+                    <div class="mb-3">
+                        <label for="editPortalUN" class="form-label fw-bold mb-0">Username:</label>
+                        <input type="text" id="editPortalUN" class="form-control shadow" required
+                            placeholder="Enter New Username"
+                            onkeyup="inputFieldValidator(this, '', 'loggedUser', 'username')">
+                    </div>
 
-                        <!-- current pw and submit buttons -->
-                        <div class="col-4 p-1 mx-auto">
-                            <label for="editPortalCurrentPW" class="form-label fw-bold mb-0 mt-1">Curent Password :
-                            </label>
-                            <input type="password" id="editPortalCurrentPW" class="form-control shadow " required
-                                placeholder="Enter The Current Passworde"
-                                onkeyup="inputFieldValidator(this,'','loggedUser','currentpw')">
+                    <!-- New Password and Confirm Password Fields -->
+                    <div class="row mb-3">
+                        <!-- New Password -->
+                        <div class="col-md-6">
+                            <label for="editPortalNewPW" class="form-label fw-bold mb-0">New Password:</label>
+                            <input type="password" id="editPortalNewPW" class="form-control shadow" required
+                                placeholder="Enter New Password"
+                                onkeyup="inputFieldValidator(this, '', 'loggedUser', 'newpw')">
                         </div>
 
-                        <!-- for clear buttons -->
-                        <div class="col-2">
-                            <button type="button" class="btn btn-danger">Clear</button>
+                        <!-- Confirm New Password -->
+                        <div class="col-md-6">
+                            <label for="editPortalRetypePW" class="form-label fw-bold mb-0">Confirm Password:</label>
+                            <input type="password" id="editPortalRetypePW" class="form-control shadow" required
+                                placeholder="Confirm New Password" onkeyup="retypePasswordValiForEditPortal();">
                         </div>
-                        <!-- for submit button -->
-                        <div class="col-2">
+                    </div>
+
+                    <!-- Current Password Field (for additional security) -->
+                    <div class="row mb-3 mt-4">
+                        <div class="col-6">
+                            <label for="editPortalCurrentPW" class="form-label fw-bold mb-0">Current Password:</label>
+                            <input type="password" id="editPortalCurrentPW" class="form-control shadow" required
+                                placeholder="Enter Your Current Password"
+                                onkeyup="inputFieldValidator(this, '', 'loggedUser', 'currentpw')">
+                        </div>
+
+                        <div class="col-6">
+                            <small class="form-text text-danger">
+                                <strong class="text-danger">Note:</strong> For security reasons, your current password
+                                is required to make
+                                changes.
+                            </small>
+                        </div>
+                    </div>
+
+                    <!--<div class="mb-3">
+                        <label for="editPortalCurrentPW" class="form-label fw-bold mb-0">Current Password:</label>
+                        <input type="password" id="editPortalCurrentPW" class="form-control shadow" required
+                            placeholder="Enter Your Current Password"
+                            onkeyup="inputFieldValidator(this, '', 'loggedUser', 'currentpw')">
+                        <small class="form-text text-muted mt-2">
+                            <strong>Note:</strong> For security reasons, your current password is required to make
+                            changes.
+                        </small>
+                    </div>-->
+
+                    <!-- Reset and Submit Buttons -->
+                    <div class="row">
+                        <div class="col-12 text-end mt-3">
+                            <button type="button" class="btn btn-secondary me-0">Reset</button>
                             <button type="button" class="btn btn-primary" onclick="submitProfileChanges();">Save
-                                changes</button>
+                                Changes</button>
                         </div>
-
                     </div>
 
                 </form>
-            </div>
-            <div class="modal-footer">
 
             </div>
+
         </div>
     </div>
 </div>
