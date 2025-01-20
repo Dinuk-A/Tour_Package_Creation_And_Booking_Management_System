@@ -25,4 +25,8 @@ public interface UserDao extends JpaRepository<User, Integer> {
     @Query(value = "select new User(u.username) from User u where u.id=?1")
     public User getOnlyUserNameByUserId(int userid);
 
+    //get company email when employee id is given
+    //@Query(value = "select new User(u.company_email) from User u where u.employee_id.id=?1")
+    //public User getOnlyCompanyEmailByEmpId(int empID);
+
 }

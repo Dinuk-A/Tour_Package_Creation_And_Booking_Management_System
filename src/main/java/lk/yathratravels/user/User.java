@@ -87,6 +87,10 @@ public class User {
     public User(String username) {
         this.username = username;
     }
+    // to get only the username for print
+    //public User(String company_email) {
+    //    this.company_email = company_email;
+    //}
 
 }
 

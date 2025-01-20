@@ -162,6 +162,7 @@ public class EmployeeController {
     }
 
     // to delete an employee record
+      //❌ not finished
     @DeleteMapping(value = "/emp")
     // @Transactional
     public String deleteEmployee(@RequestBody Employee employee) {

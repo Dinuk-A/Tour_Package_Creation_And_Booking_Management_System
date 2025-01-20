@@ -226,24 +226,31 @@ const addNewEmployee = async () => {
 //fn for edit button,
 //current way === this will open the same form but with filled values
 const openModal = (empObj) => {
-    // Populate Personal Details
+
     document.getElementById('modalEmpCode').innerText = empObj.emp_code || 'N/A';
     document.getElementById('modalEmpFullName').innerText = empObj.fullname || 'N/A';
     document.getElementById('modalEmpNIC').innerText = empObj.nic || 'N/A';
     document.getElementById('modalEmpDOB').innerText = empObj.dob || 'N/A';
-
-    // Populate Contact Information
-    document.getElementById('modalEmpEmail').innerText = empObj.email || 'N/A';
+    document.getElementById('modalEmpPersonalEmail').innerText = empObj.email || 'N/A';
+    //document.getElementById('modalEmpWorkEmail').innerText = empObj.email || 'N/A';
     document.getElementById('modalEmpMobileNum').innerText = empObj.mobilenum || 'N/A';
     document.getElementById('modalEmpLandNum').innerText = empObj.landnum || 'N/A';
     document.getElementById('modalEmpAddress').innerText = empObj.address || 'N/A';
-
-    // Populate Additional Information
     document.getElementById('modalEmpGender').innerText = empObj.gender || 'N/A';
     document.getElementById('modalEmpNote').innerText = empObj.note || 'N/A';
+    document.getElementById('modalEmpDesignation').innerText = empObj.designation_id.name || 'N/A';
+    document.getElementById('modalEmpStatus').innerText = empObj.emp_status || 'N/A';
+
+    if (empObj.emp_photo != null) {
+        document.getElementById('modalPreviewEmployeeImg').src = atob(empObj.emp_photo) 
+    } else{
+        document.getElementById('modalPreviewEmployeeImg').src = 'images/employee.png';
+    }
+   
 
     // Show the modal
     $('#infoModalEmployee').modal('show');
+
 };
 
 // refill the form to edit a record
