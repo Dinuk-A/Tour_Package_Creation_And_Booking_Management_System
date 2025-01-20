@@ -242,11 +242,11 @@ const openModal = (empObj) => {
     document.getElementById('modalEmpStatus').innerText = empObj.emp_status || 'N/A';
 
     if (empObj.emp_photo != null) {
-        document.getElementById('modalPreviewEmployeeImg').src = atob(empObj.emp_photo) 
-    } else{
+        document.getElementById('modalPreviewEmployeeImg').src = atob(empObj.emp_photo)
+    } else {
         document.getElementById('modalPreviewEmployeeImg').src = 'images/employee.png';
     }
-   
+
     // Show the modal
     $('#infoModalEmployee').modal('show');
 
@@ -417,7 +417,7 @@ const deleteEmployeeRecord = async (empObj) => {
     }
 }
 
-// print employee record
+// fn for print an employee record
 const printEmployeeRecord = () => {
     // Get the content from the modal
     const modalContent = `
@@ -425,27 +425,34 @@ const printEmployeeRecord = () => {
             <h2 style="text-align: center; color: #007bff;">Employee Information</h2>
             <hr style="border: 1px solid #007bff; margin-bottom: 20px;">
 
-            <!-- Personal Details -->
-            <h4 style="color: #333;">Personal Details</h4>
-            <p><strong>Employee Code:</strong> ${document.getElementById('modalEmpCode').innerText || 'N/A'}</p>
-            <p><strong>Full Name:</strong> ${document.getElementById('modalEmpFullName').innerText || 'N/A'}</p>
-            <p><strong>NIC:</strong> ${document.getElementById('modalEmpNIC').innerText || 'N/A'}</p>
-            <p><strong>Date of Birth:</strong> ${document.getElementById('modalEmpDOB').innerText || 'N/A'}</p>
+            <!-- Employee Image and Basic Info -->
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="flex: 1; text-align: center;">
+                    <img src="${document.getElementById('modalPreviewEmployeeImg').src}" 
+                         alt="Employee Photo" 
+                         style="width: 150px; height: 150px; border-radius: 50%; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
+                </div>
+                <div style="flex: 2; padding-left: 20px;">
+                    <p><strong>Full Name:</strong> ${document.getElementById('modalEmpFullName').innerText || 'N/A'}</p>
+                    <p><strong>NIC:</strong> ${document.getElementById('modalEmpNIC').innerText || 'N/A'}</p>
+                </div>
+            </div>
 
-            <!-- Contact Information -->
-            <h4 style="color: #333;">Contact Information</h4>
-            <p><strong>Email:</strong> ${document.getElementById('modalEmpEmail').innerText || 'N/A'}</p>
+            <!-- Additional Details -->
+            <p><strong>Employee Code:</strong> ${document.getElementById('modalEmpCode').innerText || 'N/A'}</p>
+            <p><strong>Designation:</strong> ${document.getElementById('modalEmpDesignation').innerText || 'N/A'}</p>
+            <p><strong>Working Status:</strong> ${document.getElementById('modalEmpStatus').innerText || 'N/A'}</p>
+            <p><strong>Gender:</strong> ${document.getElementById('modalEmpGender').innerText || 'N/A'}</p>
+            <p><strong>Date of Birth:</strong> ${document.getElementById('modalEmpDOB').innerText || 'N/A'}</p>
             <p><strong>Mobile Number:</strong> ${document.getElementById('modalEmpMobileNum').innerText || 'N/A'}</p>
             <p><strong>Landline Number:</strong> ${document.getElementById('modalEmpLandNum').innerText || 'N/A'}</p>
+            <p><strong>Personal Email:</strong> ${document.getElementById('modalEmpPersonalEmail').innerText || 'N/A'}</p>
             <p><strong>Address:</strong> ${document.getElementById('modalEmpAddress').innerText || 'N/A'}</p>
-
-            <!-- Additional Information -->
-            <h4 style="color: #333;">Additional Information</h4>
-            <p><strong>Gender:</strong> ${document.getElementById('modalEmpGender').innerText || 'N/A'}</p>
-            <p><strong>Note:</strong> ${document.getElementById('modalEmpNote').innerText || 'N/A'}</p>
+            <p><strong>Additional Details:</strong> ${document.getElementById('modalEmpNote').innerText || 'N/A'}</p>
 
             <hr style="margin-top: 30px;">
-            <p style="text-align: center; font-size: 12px; color: #555;">Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+            <p style="text-align: center; font-size: 12px; color: #555;">Generated on: 
+               ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
         </div>
     `;
 
@@ -456,10 +463,33 @@ const printEmployeeRecord = () => {
             <head>
                 <title>Employee Information</title>
                 <style>
-                    body { margin: 0; padding: 0; }
+                    body {
+                        margin: 0;
+                        padding: 20px;
+                        font-family: Arial, sans-serif;
+                        color: #333;
+                    }
+                    h2 {
+                        color: #007bff;
+                        text-align: center;
+                    }
+                    p {
+                        margin: 5px 0;
+                        font-size: 14px;
+                    }
+                    img {
+                        display: block;
+                        margin: auto;
+                    }
+                    hr {
+                        border: none;
+                        border-top: 1px solid #007bff;
+                    }
                     @media print {
-                        h2, h4 { color: #000 !important; }
-                        hr { border-color: #000 !important; }
+                        body {
+                            margin: 0;
+                            padding: 0;
+                        }
                     }
                 </style>
             </head>
@@ -467,7 +497,7 @@ const printEmployeeRecord = () => {
         </html>
     `);
 
-    //ignals that writing to the printWindow.document (the new tab or popup window where the printable content is written) is complete
+    // Indicate that writing to the printWindow.document is complete
     printWindow.document.close();
 
     // Trigger the print dialog
@@ -476,6 +506,7 @@ const printEmployeeRecord = () => {
     // Close the print window after printing
     printWindow.onafterprint = () => printWindow.close();
 };
+
 
 // fn for print entire table
 

@@ -271,12 +271,11 @@
             </div>
         </div>
 
-
         <!-- Modal to display full details of a row -->
         <div class="modal fade py-5" id="infoModalEmployee" tabindex="-1" aria-labelledby="infoModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
-                <div class="modal-content">
+                <div class="modal-content shadow-lg rounded-4">
                     <!-- Modal Header -->
                     <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title" id="infoModalLabel">Yathra Employee Record</h5>
@@ -287,184 +286,104 @@
                     <!-- Modal Body -->
                     <div class="modal-body">
                         <div class="container">
-
-                            <div class="row mt-2">
-                                <!-- image here -->
-                                <div class="col-4">
+                            <!-- Employee Image and Basic Info -->
+                            <div class="row g-4 align-items-center">
+                                <!-- Image -->
+                                <div class="col-md-4 text-center">
                                     <img id="modalPreviewEmployeeImg" src="images/employee.png" alt="Preview"
-                                        class="img-thumbnail" style="height:150px; width: 150px;">
+                                        class="img-thumbnail rounded-circle shadow-sm"
+                                        style="height: 150px; width: 150px;">
                                 </div>
-
-                                <!-- name and nic -->
-                                <div class="col-8">
-                                    <div class="row my-0">
-                                        <p class="fw-bold mb-1">Full Name:</p>
-                                        <p id="modalEmpFullName"></p>
-                                    </div>
-
-                                    <div class="row mt-2">
-                                        <p class="fw-bold mb-1">NIC:</p>
-                                        <p id="modalEmpNIC"></p>
-                                    </div>
+                                <!-- Name and NIC -->
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Full Name:</p>
+                                    <p id="modalEmpFullName" class="text-muted"></p>
+                                    <p class="fw-bold mb-1">NIC:</p>
+                                    <p id="modalEmpNIC" class="text-muted"></p>
                                 </div>
                             </div>
 
-                            <div class="row mt-3">
-                                <!-- code -->
-                                <div class="col-4">
+                            <!-- Other Details -->
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
                                     <p class="fw-bold mb-1">Employee Code:</p>
-                                    <p id="modalEmpCode"></p>
+                                    <p id="modalEmpCode" class="text-muted"></p>
                                 </div>
-                                <!-- designation -->
-                                <div class="col-4">
+                                <div class="col-md-4">
                                     <p class="fw-bold mb-1">Designation:</p>
-                                    <p id="modalEmpDesignation"></p>
+                                    <p id="modalEmpDesignation" class="text-muted"></p>
                                 </div>
-                                <!-- status -->
-                                <div class="col-4">
+                                <div class="col-md-4">
                                     <p class="fw-bold mb-1">Working Status:</p>
-                                    <p id="modalEmpStatus"></p>
+                                    <p id="modalEmpStatus" class="text-muted"></p>
                                 </div>
                             </div>
 
-                            <div class="row mt-1">
-                                <!-- work email address -->
-                                <div class="col-8">
-                                    <!--<p class="fw-bold mb-1">Work Email:</p>
-                                    <p id="modalEmpWorkEmail"></p>-->
-                                </div>
-                            </div>
-
-                            <div class="row mt-2">
-                                <!-- gender -->
-                                <div class="col-4">
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
                                     <p class="fw-bold mb-1">Gender:</p>
-                                    <p id="modalEmpGender"></p>
+                                    <p id="modalEmpGender" class="text-muted"></p>
                                 </div>
-                                <!-- dob -->
-                                <div class="col-4">
+                                <div class="col-md-4">
                                     <p class="fw-bold mb-1">Date of Birth:</p>
-                                    <p id="modalEmpDOB"></p>
+                                    <p id="modalEmpDOB" class="text-muted"></p>
                                 </div>
-
-                                <!-- age (as today) -->
-                                <!-- function not ready yet -->
-                                <div class="col-4"></div>
                             </div>
 
-                            <div class="row mt-2">
-                                <!-- mobile -->
-                                <div class="col-4">
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
                                     <p class="fw-bold mb-1">Mobile Number:</p>
-                                    <p id="modalEmpMobileNum"></p>
+                                    <p id="modalEmpMobileNum" class="text-muted"></p>
                                 </div>
-                                <!-- land telephone -->
-                                <div class="col-4">
+                                <div class="col-md-4">
                                     <p class="fw-bold mb-1">Land Number:</p>
-                                    <p id="modalEmpLandNum"></p>
+                                    <p id="modalEmpLandNum" class="text-muted"></p>
                                 </div>
-                                <!-- personal email -->
-                                <div class="col-4">
-                                    <p class="fw-bold mb-1">Personal email:</p>
-                                    <p id="modalEmpPersonalEmail"></p>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Personal Email:</p>
+                                    <p id="modalEmpPersonalEmail" class="text-muted"></p>
                                 </div>
                             </div>
 
-                            <div class="row mt-1">
-                                <!-- address -->
-                                <div class="col-8">
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
                                     <p class="fw-bold mb-1">Address:</p>
-                                    <p id="modalEmpAddress"></p>
+                                    <p id="modalEmpAddress" class="text-muted"></p>
                                 </div>
                             </div>
 
-                            <div class="row mt-1">
-                                <!-- Note -->
-                                <div class="col-8">
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
                                     <p class="fw-bold mb-1">Additional Details:</p>
-                                    <p id="modalEmpNote"></p>
+                                    <p id="modalEmpNote" class="text-muted"></p>
                                 </div>
                             </div>
-                    
                         </div>
                     </div>
 
                     <!-- Modal Footer -->
-                    <div class="modal-footer d-flex justify-content-between">
-                        <button class="btn btn-outline-primary" onclick="printEmployeeRecord()">Print</button>
+                    <div class="modal-footer d-flex justify-content-between bg-light">
+                        <button class="btn btn-outline-primary" onclick="printEmployeeRecord()">
+                            Print
+                        </button>
                         <div>
-                            <button class="btn btn-success me-2"
-                                onclick="refillEmployeeForm(window['currentObject'])">Edit</button>
-                            <button class="btn btn-danger"
-                                onclick="deleteEmployeeRecord(window['currentObject'])">Delete</button>
+                            <button class="btn btn-success me-2" onclick="refillEmployeeForm(window['currentObject'])">
+                                Edit
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteEmployeeRecord(window['currentObject'])">
+                                Delete
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
     </main>
 </body>
 
 </html>
-
-   <!-- original -->
-                            <!--<h6 class="text-primary border-bottom pb-2">Personal Details</h6>
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Employee Code:</p>
-                                    <p id="modalEmpCode"></p>
-                                </div>
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Full Name:</p>
-                                    <p id="modalEmpFullName"></p>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">NIC:</p>
-                                    <p id="modalEmpNIC"></p>
-                                </div>
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Date of Birth:</p>
-                                    <p id="modalEmpDOB"></p>
-                                </div>
-                            </div>
-
-
-                            <h6 class="text-primary border-bottom pb-2">Contact Information</h6>
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Email:</p>
-                                    <p id="modalEmpEmail"></p>
-                                </div>
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Mobile Number:</p>
-                                    <p id="modalEmpMobileNum"></p>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Landline Number:</p>
-                                    <p id="modalEmpLandNum"></p>
-                                </div>
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Address:</p>
-                                    <p id="modalEmpAddress"></p>
-                                </div>
-                            </div>
-
-
-                            <h6 class="text-primary border-bottom pb-2">Additional Information</h6>
-                            <div class="row">
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Gender:</p>
-                                    <p id="modalEmpGender"></p>
-                                </div>
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Note:</p>
-                                    <p id="modalEmpNote"></p>
-                                </div>
-                            </div>-->
-

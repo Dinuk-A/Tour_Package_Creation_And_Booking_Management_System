@@ -45,9 +45,7 @@ public class EmployeeController {
             ModelAndView lost = new ModelAndView();
             lost.setViewName("lost.html");
             return lost;
-        } else {
-
-             
+        } else {            
 
             ModelAndView empView = new ModelAndView();
             empView.setViewName("employee.html");

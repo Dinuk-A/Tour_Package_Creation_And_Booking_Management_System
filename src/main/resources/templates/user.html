@@ -174,115 +174,116 @@
         <div class="modal fade py-5" id="infoModalUser" tabindex="-1" aria-labelledby="infoModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-md">
-                <div class="modal-content">
+                <div class="modal-content shadow-lg">
                     <!-- Modal Header -->
                     <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="infoModalLabel">User Account Information</h5>
+                        <h5 class="modal-title fw-bold" id="infoModalLabel">User Account Information</h5>
                         <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
 
                     <!-- Modal Body -->
-                    <div class="modal-body">
+                    <div class="modal-body bg-light">
                         <div class="container">
-
-                            <!-- emp code -->
-                            <div class="row">
+                            <!-- Employee Code -->
+                            <div class="row mb-3">
                                 <div class="col-4">
-                                    <p class="fw-bold mb-1">Employee Code:</p>
+                                    <p class="fw-bold text-primary mb-0">Employee Code:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserEmpCode"></p>
+                                    <p id="modalUserEmpCode" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
-                            <!-- fullname -->
-                            <div class="row">
+                            <!-- Full Name -->
+                            <div class="row mb-3">
                                 <div class="col-4">
-                                    <p class="fw-bold mb-1">Employee Name:</p>
+                                    <p class="fw-bold text-primary mb-0">Employee Name:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserEmpName"></p>
+                                    <p id="modalUserEmpName" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
-                            <!-- username -->
-                            <div class="row">
+                            <!-- Username -->
+                            <div class="row mb-3">
                                 <div class="col-4">
-                                    <p class="fw-bold mb-1">Username:</p>
+                                    <p class="fw-bold text-primary mb-0">Username:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserUsername"></p>
+                                    <p id="modalUserUsername" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
-                            <!-- work email -->
-                            <div class="row">
+                            <!-- Email -->
+                            <div class="row mb-3">
                                 <div class="col-4">
-                                    <p class="fw-bold mb-1">Email:</p>
+                                    <p class="fw-bold text-primary mb-0">Email:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserCompanyEmail"></p>
+                                    <p id="modalUserCompanyEmail" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
-                            <!-- roles -->
-                            <div class="row">
+                            <!-- Roles -->
+                            <div class="row mb-3">
                                 <div class="col-4">
-                                    <p class="fw-bold mb-1">Role(s):</p>
+                                    <p class="fw-bold text-primary mb-0">Role(s):</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserRoles"></p>
+                                    <p id="modalUserRoles" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
-                            <!-- acc created date -->
-                            <div class="row">
+                            <!-- Account Created Date -->
+                            <div class="row mb-3">
                                 <div class="col-4">
-                                    <p class="fw-bold mb-1">Account Created Date:</p>
+                                    <p class="fw-bold text-primary mb-0">Account Created Date:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserAccCreatedDate"></p>
+                                    <p id="modalUserAccCreatedDate" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
-                            <!-- acc status -->
-                            <div class="row">
+                            <!-- Account Status -->
+                            <div class="row mb-3">
                                 <div class="col-4">
-                                    <p class="fw-bold mb-1">Account Status:</p>
+                                    <p class="fw-bold text-primary mb-0">Account Status:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserAccStatus"></p>
+                                    <p id="modalUserAccStatus" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
-                            <!-- additional info -->
+                            <!-- Additional Information -->
                             <div class="row">
                                 <div class="col-4">
-                                    <p class="fw-bold mb-1">Additional Information:</p>
+                                    <p class="fw-bold text-primary mb-0">Additional Information:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserNote"></p>
+                                    <p id="modalUserNote" class="text-muted mb-0"></p>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
                     <!-- Modal Footer -->
-                    <div class="modal-footer d-flex justify-content-between">
-                        <button class="btn btn-outline-primary" onclick="printUserRecord()">Print</button>
+                    <div class="modal-footer d-flex justify-content-between bg-light">
+                        <button class="btn btn-outline-primary" onclick="printUserRecord()">
+                            Print
+                        </button>
                         <div>
-                            <button class="btn btn-success me-2"
-                                onclick="refillUserForm(window['currentObject'])">Edit</button>
-                            <button class="btn btn-danger"
-                                onclick="deleteUserRecord(window['currentObject'])">Delete</button>
+                            <button class="btn btn-success me-2" onclick="refillUserForm(window['currentObject'])">
+                                Edit
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteUserRecord(window['currentObject'])">
+                                Delete
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
 
     </main>
 

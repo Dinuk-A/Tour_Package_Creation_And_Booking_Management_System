@@ -571,5 +571,52 @@ const deleteUserRecord = async (userObj) => {
     }
 }
 
-//random pw generator ekak hadanna
+// fn for print an user record
+const printUserRecord = () => {
+    // Get the content from the modal
+    const modalContent = `
+        <div style="font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;">
+            <h2 style="text-align: center; color: #007bff;">User Account Information</h2>
+            <hr style="border: 1px solid #007bff; margin-bottom: 20px;">         
+           
+            <p><strong>Employee Code:</strong> ${document.getElementById('modalUserEmpCode').innerText || 'N/A'}</p>
+            <p><strong>Employee Name:</strong> ${document.getElementById('modalUserEmpName').innerText || 'N/A'}</p>
+            <p><strong>Username:</strong> ${document.getElementById('modalUserUsername').innerText || 'N/A'}</p>
+            <p><strong>Email:</strong> ${document.getElementById('modalUserCompanyEmail').innerText || 'N/A'}</p>
+            <p><strong>Role(s):</strong> ${document.getElementById('modalUserRoles').innerText || 'N/A'}</p>
+            <p><strong>Account Created Date:</strong> ${document.getElementById('modalUserAccCreatedDate').innerText || 'N/A'}</p>
+            <p><strong>Account Status:</strong> ${document.getElementById('modalUserAccStatus').innerText || 'N/A'}</p>
+            <p><strong>Additional Information:</strong> ${document.getElementById('modalUserNote').innerText || 'N/A'}</p>
 
+            <hr style="margin-top: 30px;">
+            <p style="text-align: center; font-size: 12px; color: #555;">Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+        </div>
+    `;
+
+    // Create a new window for the print preview
+    const printWindow = window.open('', '', 'width=800, height=600');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>User Account Information</title>
+                <style>
+                    body { margin: 0; padding: 0; }
+                    @media print {
+                        h2, h4 { color: #000 !important; }
+                        hr { border-color: #000 !important; }
+                    }
+                </style>
+            </head>
+            <body>${modalContent}</body>
+        </html>
+    `);
+
+    // Signal that writing to the printWindow document is complete
+    printWindow.document.close();
+
+    // Trigger the print dialog
+    printWindow.print();
+
+    // Close the print window after printing
+    printWindow.onafterprint = () => printWindow.close();
+}
