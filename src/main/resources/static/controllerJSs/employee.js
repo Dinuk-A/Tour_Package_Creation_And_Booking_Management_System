@@ -247,7 +247,6 @@ const openModal = (empObj) => {
         document.getElementById('modalPreviewEmployeeImg').src = 'images/employee.png';
     }
    
-
     // Show the modal
     $('#infoModalEmployee').modal('show');
 

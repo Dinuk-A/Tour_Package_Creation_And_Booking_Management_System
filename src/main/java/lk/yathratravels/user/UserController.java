@@ -51,9 +51,13 @@ public class UserController {
         } else {
             ModelAndView userView = new ModelAndView();
             userView.setViewName("user.html");
-            userView.addObject("username", auth.getName());
+
             userView.addObject("title", "Yathra User");
             userView.addObject("moduleName", "User Account Management");
+            userView.addObject("loggedUserUN", auth.getName());
+
+            User loggedUser = userDao.getUserByUsername(auth.getName());
+            userView.addObject("loggedUserCompanyEmail", loggedUser.getCompany_email());
 
             return userView;
         }
@@ -136,19 +140,20 @@ public class UserController {
         // ena object eke console log eken
         User existingUser = userDao.getReferenceById(user.getId());
 
-        //admin wisin user kenekge pw change krna ekata ;ogic ejaj hithanna
-        //me parana yathra eken, me logic eka epa
+        // admin wisin user kenekge pw change krna ekata ;ogic ejaj hithanna
+        // me parana yathra eken, me logic eka epa
 
-        //if (user.getPassword() != null) {
-        //    if (bCryptPasswordEncoder.matches(user.getPassword(), isUserExist.getPassword())) {
-        //        return "Update Not Complete : same pw";
-        //    } else {
-        //        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        //    }
-        //} else {
-        //    user.setPassword((isUserExist.getPassword()));
-        //}
-        
+        // if (user.getPassword() != null) {
+        // if (bCryptPasswordEncoder.matches(user.getPassword(),
+        // isUserExist.getPassword())) {
+        // return "Update Not Complete : same pw";
+        // } else {
+        // user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        // }
+        // } else {
+        // user.setPassword((isUserExist.getPassword()));
+        // }
+
         try {
             user.setLastmodifieddatetime(LocalDateTime.now());
             userDao.save(user);
@@ -157,7 +162,6 @@ public class UserController {
             return "Update not completed" + e.getMessage();
         }
 
-       
     }
 
     @DeleteMapping(value = "/user")
@@ -165,11 +169,12 @@ public class UserController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-//        Privilege loggedUserPrivilege = prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "USER");
-//
-//        if (!loggedUserPrivilege.getPrivdelete()) {
-//            return "Delete Not Completed : You Dont Have Permission";
-//        }
+        // Privilege loggedUserPrivilege =
+        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "USER");
+        //
+        // if (!loggedUserPrivilege.getPrivdelete()) {
+        // return "Delete Not Completed : You Dont Have Permission";
+        // }
 
         // exist
         User existingUser = userDao.getReferenceById(user.getId());
@@ -178,7 +183,7 @@ public class UserController {
         }
         try {
             existingUser.setDeleteddatetime(LocalDateTime.now());
-            existingUser.setAcc_status(false); 
+            existingUser.setAcc_status(false);
             userDao.save(existingUser);
             return "OK";
         } catch (Exception e) {

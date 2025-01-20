@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UserDao extends JpaRepository<User, Integer> {
 
-    //💥💥💥 mewaye enna one result eka naththan, default deyak ewanna puluwanda?
+    // 💥💥💥 mewaye enna one result eka naththan, default deyak ewanna puluwanda?
 
     // FILTER THE USER BY GIVEN EMPLOYEE ID
     @Query(value = "select u from User u where u.employee_id.id=?1") //
@@ -24,9 +24,5 @@ public interface UserDao extends JpaRepository<User, Integer> {
     // NEW CONSTRUCTOR MADE IN USER ENTITY TO REDUCE UNNECESSARY DATA LOAD
     @Query(value = "select new User(u.username) from User u where u.id=?1")
     public User getOnlyUserNameByUserId(int userid);
-
-    //get company email when employee id is given
-    //@Query(value = "select new User(u.company_email) from User u where u.employee_id.id=?1")
-    //public User getOnlyCompanyEmailByEmpId(int empID);
 
 }

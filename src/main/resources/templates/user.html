@@ -87,7 +87,7 @@
                             <!-- roles  -->
                             <div class="row mt-2 mx-auto">
                                 <label class="form-label fw-bold mb-0">Role(s):</label>
-                                <div class="col">                                    
+                                <div class="col">
                                     <div class="mt-1 mb-3" id="dynamicUserRoles">
                                         <!-- roles will be here -->
                                     </div>
@@ -173,11 +173,11 @@
         <!-- Modal to display full details of a row -->
         <div class="modal fade py-5" id="infoModalUser" tabindex="-1" aria-labelledby="infoModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <!-- Modal Header -->
                     <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="infoModalLabel">User Information</h5>
+                        <h5 class="modal-title" id="infoModalLabel">User Account Information</h5>
                         <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -185,62 +185,86 @@
                     <!-- Modal Body -->
                     <div class="modal-body">
                         <div class="container">
-                            <!-- Personal Details Section -->
-                            <h6 class="text-primary border-bottom pb-2"></h6>
-                            <div class="row mb-3">
-                                <div class="col-6">
+
+                            <!-- emp code -->
+                            <div class="row">
+                                <div class="col-4">
                                     <p class="fw-bold mb-1">Employee Code:</p>
+                                </div>
+                                <div class="col-8">
                                     <p id="modalUserEmpCode"></p>
                                 </div>
-                                <div class="col-6">
+                            </div>
+
+                            <!-- fullname -->
+                            <div class="row">
+                                <div class="col-4">
                                     <p class="fw-bold mb-1">Employee Name:</p>
+                                </div>
+                                <div class="col-8">
                                     <p id="modalUserEmpName"></p>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-6">
+
+                            <!-- username -->
+                            <div class="row">
+                                <div class="col-4">
                                     <p class="fw-bold mb-1">Username:</p>
+                                </div>
+                                <div class="col-8">
                                     <p id="modalUserUsername"></p>
                                 </div>
-                                <div class="col-6">
+                            </div>
+
+                            <!-- work email -->
+                            <div class="row">
+                                <div class="col-4">
                                     <p class="fw-bold mb-1">Email:</p>
-                                    <p id="modalUserEmail"></p>
+                                </div>
+                                <div class="col-8">
+                                    <p id="modalUserCompanyEmail"></p>
                                 </div>
                             </div>
 
-                            <!-- Contact Information Section -->
-                            <h6 class="text-primary border-bottom pb-2"></h6>
-                            <div class="row mb-3">
-                                <div class="col-6">
+                            <!-- roles -->
+                            <div class="row">
+                                <div class="col-4">
                                     <p class="fw-bold mb-1">Role(s):</p>
+                                </div>
+                                <div class="col-8">
                                     <p id="modalUserRoles"></p>
                                 </div>
-
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Note:</p>
+
+                            <!-- acc created date -->
+                            <div class="row">
+                                <div class="col-4">
+                                    <p class="fw-bold mb-1">Account Created Date:</p>
+                                </div>
+                                <div class="col-8">
+                                    <p id="modalUserAccCreatedDate"></p>
+                                </div>
+                            </div>
+
+                            <!-- acc status -->
+                            <div class="row">
+                                <div class="col-4">
+                                    <p class="fw-bold mb-1">Account Status:</p>
+                                </div>
+                                <div class="col-8">
+                                    <p id="modalUserAccStatus"></p>
+                                </div>
+                            </div>
+
+                            <!-- additional info -->
+                            <div class="row">
+                                <div class="col-4">
+                                    <p class="fw-bold mb-1">Additional Information:</p>
+                                </div>
+                                <div class="col-8">
                                     <p id="modalUserNote"></p>
                                 </div>
-
                             </div>
-
-                            <div class="row mb-3">
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Added Date and Time:</p>
-                                    <p id="modalUserAddedDateTime"></p>
-                                </div>
-                                <div class="col-6">
-                                    <p class="fw-bold mb-1">Last Edited Date and Time:</p>
-                                    <p id="modalUserAddedDateTime"></p>
-                                </div>
-                                <div class="col-6 d-none">
-                                    <p class="fw-bold mb-1">Deleted Date and Time:</p>
-                                    <p id="modalUserAddedDateTime"></p>
-                                </div>
-
-                            </div>
-
 
                         </div>
                     </div>

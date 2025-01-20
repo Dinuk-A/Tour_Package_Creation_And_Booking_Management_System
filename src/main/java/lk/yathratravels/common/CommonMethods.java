@@ -75,7 +75,8 @@ public class CommonMethods {
         
         ModelAndView dbView = new ModelAndView();
         dbView.setViewName("dashboard.html");
-        dbView.addObject("loggedusername", auth.getName());
+        dbView.addObject("loggedUserUN", auth.getName());
+      
 
         // roles godak thiyana nisa list eke palawni eka witharay enne
         // dbView.addObject("loggeduserrole",
@@ -83,6 +84,9 @@ public class CommonMethods {
 
         // dbView.addObject("loggeduserphoto", loggedUser.getUser_photo());
         dbView.addObject("title", "Yathra Dashboard");
+
+        User loggedUser = userDao.getUserByUsername(auth.getName());
+        dbView.addObject("loggedUserCompanyEmail", loggedUser.getCompany_email());
 
         return dbView;
     }

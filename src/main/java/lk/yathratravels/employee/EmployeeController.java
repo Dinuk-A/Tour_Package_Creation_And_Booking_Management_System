@@ -20,6 +20,8 @@ import jakarta.transaction.Transactional;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeController;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.user.User;
+import lk.yathratravels.user.UserDao;
 
 @RestController
 public class EmployeeController {
@@ -29,6 +31,9 @@ public class EmployeeController {
 
     @Autowired
     private PrivilegeServices privilegeService;
+
+    @Autowired
+    private UserDao userDao;
 
     // display employee UI
     @RequestMapping(value = "/emp", method = RequestMethod.GET)
@@ -41,11 +46,18 @@ public class EmployeeController {
             lost.setViewName("lost.html");
             return lost;
         } else {
+
+             
+
             ModelAndView empView = new ModelAndView();
             empView.setViewName("employee.html");
-            empView.addObject("loggedusername", auth.getName());
+            empView.addObject("loggedUserUN", auth.getName());           
             empView.addObject("title", "Yathra Employee");
             empView.addObject("moduleName", "Employee Management");
+
+            User loggedUser = userDao.getUserByUsername(auth.getName());
+            empView.addObject("loggedUserCompanyEmail", loggedUser.getCompany_email());
+
             return empView;
         }
     }

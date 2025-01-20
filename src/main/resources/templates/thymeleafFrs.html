@@ -77,8 +77,9 @@
             <ul class="dropdown-menu dropdown-menu-end">
                 <li class="text-center p-3">
                     <img src="images/employee.png" alt="Avatar" class="rounded-circle avatar-large mb-2">
-                    <p class="mb-0 fw-bold" th:text="${loggedusername}"></p>
-                    <p class="text-muted">john.doe@example.com</p>
+                    <p class="mb-0 fw-bold" th:text="${loggedUserUN}"></p>
+                    <!-- meka hadanna one -->
+                    <p class="text-muted" th:text="${loggedUserCompanyEmail}"></p>
                 </li>
                 <li>
                     <hr class="dropdown-divider">

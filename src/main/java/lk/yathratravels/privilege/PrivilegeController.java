@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 //import org.springframework.web.bind.annotation.RequestParam;
 
+import lk.yathratravels.user.User;
+import lk.yathratravels.user.UserDao;
+
 @RestController
 
 public class PrivilegeController {
@@ -29,6 +32,9 @@ public class PrivilegeController {
 
     @Autowired
     private PrivilegeServices privilegeService;
+
+    @Autowired
+    private UserDao userDao;
 
     // Get privileges by module name
     @GetMapping(value = "/privilege/bymodule/{moduleName}")
@@ -45,8 +51,12 @@ public class PrivilegeController {
 
         ModelAndView privilegeView = new ModelAndView();
         privilegeView.setViewName("privilege.html");
-        privilegeView.addObject("loggedusername", auth.getName());
+        privilegeView.addObject("loggedUserUN", auth.getName());
         privilegeView.addObject("title", "Yathra Privilege");
+
+        User loggedUser = userDao.getUserByUsername(auth.getName());
+        privilegeView.addObject("loggedUserCompanyEmail", loggedUser.getCompany_email());
+
         return privilegeView;
     }
 

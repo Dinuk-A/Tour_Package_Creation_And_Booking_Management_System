@@ -336,13 +336,28 @@ const openModal = (userObj) => {
     document.getElementById('modalUserEmpCode').innerText = userObj.employee_id.emp_code || 'N/A';
     document.getElementById('modalUserEmpName').innerText = userObj.employee_id.fullname || 'N/A';
     document.getElementById('modalUserUsername').innerText = userObj.username || 'N/A';
-    document.getElementById('modalUserEmail').innerText = userObj.email || 'N/A';
-    document.getElementById('modalUserRoles').innerText = userObj.roles.name || 'N/A';
-    document.getElementById('modalUserNote').innerText = userObj.mobilenum || 'N/A';
-    //document.getElementById('modalUserAddedDateTime').innerText = userObj.landnum || 'N/A';
-    //document.getElementById('modalEmpAddress').innerText = userObj.address || 'N/A';
-    //document.getElementById('modalEmpGender').innerText = userObj.gender || 'N/A';
-    //document.getElementById('modalEmpNote').innerText = userObj.note || 'N/A';
+    document.getElementById('modalUserCompanyEmail').innerText = userObj.company_email || 'N/A';
+
+    document.getElementById('modalUserNote').innerText = userObj.note || 'N/A';
+    document.getElementById('modalUserAccCreatedDate').innerText = userObj.addeddatetime || 'N/A';
+
+    if (userObj.acc_status) {
+        document.getElementById('modalUserAccStatus').innerText = "Account Is Active "
+    } else {
+        document.getElementById('modalUserAccStatus').innerText = "Account Is Not Active "
+    }
+
+    let userRoles = '';
+    userObj.roles.forEach((element, index) => {
+        if (userObj.roles.length - 1 == index) {
+            userRoles = userRoles + element.name;
+        }
+        else {
+            userRoles = userRoles + element.name + ", ";
+        }
+    });
+
+    document.getElementById('modalUserRoles').innerText = userRoles || 'N/A';
 
     // Show the modal
     $('#infoModalUser').modal('show');
