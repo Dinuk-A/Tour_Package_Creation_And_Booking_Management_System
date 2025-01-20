@@ -15,10 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.security.core.Authentication;
-
+import java.util.Base64;
 import jakarta.transaction.Transactional;
 import lk.yathratravels.privilege.Privilege;
-import lk.yathratravels.privilege.PrivilegeController;
 import lk.yathratravels.privilege.PrivilegeServices;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
@@ -45,16 +44,26 @@ public class EmployeeController {
             ModelAndView lost = new ModelAndView();
             lost.setViewName("lost.html");
             return lost;
-        } else {            
+        } else {
 
             ModelAndView empView = new ModelAndView();
             empView.setViewName("employee.html");
-            empView.addObject("loggedUserUN", auth.getName());           
+            empView.addObject("loggedUserUN", auth.getName());
             empView.addObject("title", "Yathra Employee");
             empView.addObject("moduleName", "Employee Management");
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
             empView.addObject("loggedUserCompanyEmail", loggedUser.getCompany_email());
+
+            // Convert avatar to Base64 string
+            //byte[] avatarBytes = loggedUser.getAvatar();
+            //String avatarBase64;
+            //if (avatarBytes != null && avatarBytes.length > 0) {
+            //    avatarBase64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(avatarBytes);
+            //} else {
+            //    avatarBase64 = "images/ylogo2.png"; }
+
+            //empView.addObject("loggedUserAvatar", avatarBase64);
 
             return empView;
         }
@@ -66,9 +75,9 @@ public class EmployeeController {
         return employeeDao.findAll();
     }
 
-    //get employees who dont have an user account
+    // get employees who dont have an user account
     @GetMapping(value = "/emp/listwithoutuseracc", produces = "application/json")
-    public List<Employee> showEmpsWOUserAccs(){
+    public List<Employee> showEmpsWOUserAccs() {
         return employeeDao.getEmpsWithoutAccount();
     }
 
@@ -172,7 +181,7 @@ public class EmployeeController {
     }
 
     // to delete an employee record
-      //❌ not finished
+    // ❌ not finished
     @DeleteMapping(value = "/emp")
     // @Transactional
     public String deleteEmployee(@RequestBody Employee employee) {
@@ -187,7 +196,7 @@ public class EmployeeController {
         }
 
         try {
-            //❌ not finished
+            // ❌ not finished
             existingEmployee.setDeleteddatetime(LocalDateTime.now());
             employeeDao.save(existingEmployee);
             return "OK";
