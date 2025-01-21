@@ -46,17 +46,15 @@ const getDesignation = (empObj) => {
 // fn to fill the table
 const getEmployeeStatus = (empObj) => {
 
-    if (empObj.deleteddatetime == "" || empObj.deleteddatetime == null) {
+    if (empObj.deleted_emp == null || empObj.deleted_emp == false) {
         if (empObj.emp_status == "Working") {
             return "Working"
         } else {
             return "Resigned"
         }
-    } else {
-        return "Deleted Record"
+    } else if (empObj.deleted_emp != null && empObj.deleted_emp == true) {
+        return '<p class="text-danger"> Deleted Record </p>'
     }
-
-
 }
 
 //fn to ready the main form for accept values
@@ -190,7 +188,6 @@ const clearEmpImg = () => {
     }
 }
 
-
 //fn to submit button (add button)
 const addNewEmployee = async () => {
 
@@ -205,9 +202,11 @@ const addNewEmployee = async () => {
 
                 if (postServerResponse === 'OK') {
                     alert('Saved Successfully');
-                    buildEmployeeTable();
                     document.getElementById('formEmployee').reset();
                     refreshEmployeeForm();
+                    buildEmployeeTable();
+                    var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    myEmpTableTab.show();
                 } else {
                     alert('Submit Failed ' + postServerResponse);
                 }
@@ -221,7 +220,7 @@ const addNewEmployee = async () => {
     } else {
         alert('Form has following errors: ' + errors);
     }
-};
+}
 
 //fn for edit button,
 //current way === this will open the same form but with filled values
@@ -247,10 +246,47 @@ const openModal = (empObj) => {
         document.getElementById('modalPreviewEmployeeImg').src = 'images/employee.png';
     }
 
+    if (empObj.deleted_emp) {
+        document.getElementById('modalEmpIfDeleted').classList.remove('d-none');
+        document.getElementById('modalEmpIfDeleted').innerHTML =
+            'This is a deleted record. <br>Deleted at ' +
+            new Date(empObj.deleteddatetime).toLocaleString();
+        document.getElementById('modalEmpEditBtn').disabled = true;
+        document.getElementById('modalEmpDeleteBtn').disabled = true;
+        document.getElementById('modalEmpEditBtn').classList.add('d-none');
+        document.getElementById('modalEmpDeleteBtn').classList.add('d-none');
+        document.getElementById('modalEmpRecoverBtn').classList.remove('d-none');
+    }
+
     // Show the modal
     $('#infoModalEmployee').modal('show');
 
 };
+
+//restore employee record if its already deleted
+// or this should call a new service to set deleted_emp as false ? 💥💥💥
+const restoreEmployeeRecord = async () => {
+
+    try {
+        employee = window.currentObject;
+        employee.deleted_emp = false;
+        let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
+
+        if (putServiceResponse === "OK") {
+            alert("Successfully Restored");
+            document.getElementById('formEmployee').reset();
+            refreshEmployeeForm();
+            buildEmployeeTable();
+            $("#infoModalEmployee").modal("hide");
+
+        } else {
+            alert("Update Failed \n" + putServiceResponse);
+        }
+
+    } catch (error) {
+        alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+    }
+}
 
 // refill the form to edit a record
 const refillEmployeeForm = async (empObj) => {
@@ -266,9 +302,7 @@ const refillEmployeeForm = async (empObj) => {
     inputAddress.value = empObj.address;
     inputNote.value = empObj.note;
     dateDateOfBirth.value = empObj.dob;
-
-    //meka hithanna delete ekatath ekkma logic ekak
-    //  selectEmployeementStatus.value
+    selectEmployeementStatus.value = empObj.emp_status;
 
     if (empObj.gender == "Male") {
         radioMale.checked = true;
@@ -376,10 +410,11 @@ const updateEmployee = async () => {
 
                     if (putServiceResponse === "OK") {
                         alert("Successfully Updated");
+                        document.getElementById('formEmployee').reset();
+                        refreshEmployeeForm();
                         buildEmployeeTable();
-                        formEmployee.reset();
-                        refreshEmployeeForm()
-
+                        var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                        myEmpTableTab.show();
                     } else {
                         alert("Update Failed \n" + putServiceResponse);
                     }
@@ -405,7 +440,8 @@ const deleteEmployeeRecord = async (empObj) => {
 
             if (deleteServerResponse === 'OK') {
                 alert('Record Deleted');
-
+                $('#infoModalEmployee').modal('hide');
+                buildEmployeeTable();
             } else {
                 alert('Delete Failed' + deleteServerResponce);
             }

@@ -152,7 +152,7 @@
                             </fieldset>
 
                             <!-- Contact Information Section -->
-                            <fieldset class="border border-dark p-4 mb-4">
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
                                 <legend class="float-none w-auto px-2 text-primary">Contact Information</legend>
                                 <div class="row">
                                     <!-- all except address -->
@@ -205,7 +205,7 @@
                             </fieldset>
 
                             <!-- Employment Details Section -->
-                            <fieldset class="border border-dark p-4 mb-4">
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
                                 <legend class="float-none w-auto px-2 text-primary">Job Details</legend>
 
                                 <div class="row mb-2">
@@ -232,6 +232,7 @@
                                                     <option value="" selected disabled> Select Status </option>
                                                     <option value="Working"> Working </option>
                                                     <option value="Resigned"> Resigned </option>
+                                                    <option value="ifDeleted" class="d-none"> Deleted </option>
                                                 </select>
                                             </div>
 
@@ -308,15 +309,15 @@
                             <div class="row g-4">
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Employee Code:</p>
-                                    <p id="modalEmpCode" class="text-muted"></p>
+                                    <p id="modalEmpCode" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Designation:</p>
-                                    <p id="modalEmpDesignation" class="text-muted"></p>
+                                    <p id="modalEmpDesignation" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Working Status:</p>
-                                    <p id="modalEmpStatus" class="text-muted"></p>
+                                    <p id="modalEmpStatus" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
@@ -324,11 +325,11 @@
                             <div class="row g-4">
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Gender:</p>
-                                    <p id="modalEmpGender" class="text-muted"></p>
+                                    <p id="modalEmpGender" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Date of Birth:</p>
-                                    <p id="modalEmpDOB" class="text-muted"></p>
+                                    <p id="modalEmpDOB" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
@@ -336,15 +337,15 @@
                             <div class="row g-4">
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Mobile Number:</p>
-                                    <p id="modalEmpMobileNum" class="text-muted"></p>
+                                    <p id="modalEmpMobileNum" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Land Number:</p>
-                                    <p id="modalEmpLandNum" class="text-muted"></p>
+                                    <p id="modalEmpLandNum" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Personal Email:</p>
-                                    <p id="modalEmpPersonalEmail" class="text-muted"></p>
+                                    <p id="modalEmpPersonalEmail" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
@@ -352,7 +353,7 @@
                             <div class="row g-4">
                                 <div class="col-md-8">
                                     <p class="fw-bold mb-1">Address:</p>
-                                    <p id="modalEmpAddress" class="text-muted"></p>
+                                    <p id="modalEmpAddress" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
@@ -360,7 +361,11 @@
                             <div class="row g-4">
                                 <div class="col-md-8">
                                     <p class="fw-bold mb-1">Additional Details:</p>
-                                    <p id="modalEmpNote" class="text-muted"></p>
+                                    <p id="modalEmpNote" class="text-muted mb-0"></p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <p id="modalEmpIfDeleted" class="text-danger d-none mb-0"></p>
                                 </div>
                             </div>
                         </div>
@@ -372,11 +377,14 @@
                             Print
                         </button>
                         <div>
-                            <button class="btn btn-success me-2" onclick="refillEmployeeForm(window['currentObject'])">
-                                Edit
+                            <button id="modalEmpEditBtn" class="btn btn-outline-success me-2" onclick="refillEmployeeForm(window['currentObject'])">
+                                Edit Employee Record
                             </button>
-                            <button class="btn btn-danger" onclick="deleteEmployeeRecord(window['currentObject'])">
-                                Delete
+                            <button  id="modalEmpDeleteBtn" class="btn btn-outline-danger" onclick="deleteEmployeeRecord(window['currentObject'])">
+                                Delete Employee Record
+                            </button>
+                            <button id="modalEmpRecoverBtn" class="btn btn-outline-primary d-none" onclick="restoreEmployeeRecord()">
+                                Restore Employee Record
                             </button>
                         </div>
                     </div>

@@ -51,6 +51,9 @@ public class Privilege {
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role_id;
 
+    @Column(name = "deleted_privi")
+    private Boolean deleted_privi;
+
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
 

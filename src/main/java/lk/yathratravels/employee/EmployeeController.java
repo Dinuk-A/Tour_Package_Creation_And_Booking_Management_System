@@ -56,14 +56,15 @@ public class EmployeeController {
             empView.addObject("loggedUserCompanyEmail", loggedUser.getCompany_email());
 
             // Convert avatar to Base64 string
-            //byte[] avatarBytes = loggedUser.getAvatar();
-            //String avatarBase64;
-            //if (avatarBytes != null && avatarBytes.length > 0) {
-            //    avatarBase64 = "data:image/png;base64," + Base64.getEncoder().encodeToString(avatarBytes);
-            //} else {
-            //    avatarBase64 = "images/ylogo2.png"; }
+            // byte[] avatarBytes = loggedUser.getAvatar();
+            // String avatarBase64;
+            // if (avatarBytes != null && avatarBytes.length > 0) {
+            // avatarBase64 = "data:image/png;base64," +
+            // Base64.getEncoder().encodeToString(avatarBytes);
+            // } else {
+            // avatarBase64 = "images/ylogo2.png"; }
 
-            //empView.addObject("loggedUserAvatar", avatarBase64);
+            // empView.addObject("loggedUserAvatar", avatarBase64);
 
             return empView;
         }
@@ -181,7 +182,7 @@ public class EmployeeController {
     }
 
     // to delete an employee record
-    // ❌ not finished
+    // 💥💥💥 not finished
     @DeleteMapping(value = "/emp")
     // @Transactional
     public String deleteEmployee(@RequestBody Employee employee) {
@@ -196,9 +197,14 @@ public class EmployeeController {
         }
 
         try {
-            // ❌ not finished
+           
             existingEmployee.setDeleteddatetime(LocalDateTime.now());
+            existingEmployee.setDeleted_emp(true);
             employeeDao.save(existingEmployee);
+
+            // inactive the user acc too 💥💥💥
+
+            
             return "OK";
         } catch (Exception e) {
             return "Delete Not Completed " + e.getMessage();

@@ -54,6 +54,9 @@ public class User {
     @NotNull
     private Boolean acc_status;
 
+    @Column(name = "deleted_user")
+     private Boolean deleted_user;
+
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
     private Employee employee_id;

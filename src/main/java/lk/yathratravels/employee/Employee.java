@@ -73,8 +73,8 @@ public class Employee {
     // @NotNull
     private String emp_status;
 
-    // @Column(name = "emp_isdeleted")
-    // private Boolean emp_isdeleted;
+     @Column(name = "deleted_emp")
+     private Boolean deleted_emp;
 
     @ManyToOne
     @JoinColumn(name = "designation_id", referencedColumnName = "id")
