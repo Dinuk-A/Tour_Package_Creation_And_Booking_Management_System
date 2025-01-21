@@ -267,25 +267,33 @@ const openModal = (empObj) => {
 // or this should call a new service to set deleted_emp as false ? 💥💥💥
 const restoreEmployeeRecord = async () => {
 
-    try {
-        employee = window.currentObject;
-        employee.deleted_emp = false;
-        let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
+    const userConfirm = confirm("Are you sure to recover this deleted record ?");
 
-        if (putServiceResponse === "OK") {
-            alert("Successfully Restored");
-            document.getElementById('formEmployee').reset();
-            refreshEmployeeForm();
-            buildEmployeeTable();
-            $("#infoModalEmployee").modal("hide");
-
-        } else {
-            alert("Update Failed \n" + putServiceResponse);
+    if (userConfirm) {
+        try {
+            employee = window.currentObject;
+            employee.deleted_emp = false;
+            let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
+    
+            if (putServiceResponse === "OK") {
+                alert("Successfully Restored");
+                document.getElementById('formEmployee').reset();
+                refreshEmployeeForm();
+                buildEmployeeTable();
+                $("#infoModalEmployee").modal("hide");
+    
+            } else {
+                alert("Update Failed \n" + putServiceResponse);
+            }
+    
+        } catch (error) {
+            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
-
-    } catch (error) {
-        alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+    } else{
+        alert('User cancelled the recovery task');
     }
+
+   
 }
 
 // refill the form to edit a record
