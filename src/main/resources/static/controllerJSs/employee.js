@@ -71,7 +71,6 @@ const refreshEmployeeForm = async () => {
         console.error("Failed to fetch Designations : ", error);
     }
 
-
     // Array of input field IDs to reset
     const inputTagsIds = [
         'inputFullName',
@@ -101,77 +100,95 @@ const refreshEmployeeForm = async () => {
     empAddBtn.disabled = false;
     empAddBtn.style.cursor = "pointer";
 
-    //buildEmployeeTable();
-
+    employee.emp_photo = null;
+    document.getElementById('previewEmployeeImg').src = 'images/employee.png';
+    document.getElementById('fileInputEmpPhoto').files = null;
+    document.getElementById('previewEmployeeImg').style.border = "1px solid #ced4da";
 }
 
 //check errors before submitting
 const checkEmpFormErrors = () => {
-
     let errors = "";
 
     if (employee.fullname == null) {
-        errors = errors + "Full Name cannot be empty \n";
+        errors += "Full Name cannot be empty \n";
     }
 
     if (employee.nic == null) {
-        errors = errors + "NIC cannot be empty \n";
+        errors += "NIC cannot be empty \n";
     }
 
     if (employee.dob == null) {
-        errors = errors + "DOB cannot be empty \n";
+        errors += "DOB cannot be empty \n";
     }
 
     if (employee.gender == null) {
-        errors = errors + "Gender cannot be empty \n";
+        errors += "Gender cannot be empty \n";
     }
 
     if (employee.email == null) {
-        errors = errors + "Email cannot be empty \n";
+        errors += "Email cannot be empty \n";
     }
 
     if (employee.mobilenum == null) {
-        errors = errors + "Mobile Number cannot be empty \n"
+        errors += "Mobile Number cannot be empty \n";
     }
 
     if (employee.address == null) {
-        errors = errors + "Address cannot be empty \n"
+        errors += "Address cannot be empty \n";
     }
 
     if (employee.designation_id == null) {
-        errors = errors + "Designation cannot be empty \n"
+        errors += "Designation cannot be empty \n";
     }
 
-    // if (employee.emp_status == null) {
-    //     errors = errors + "Employee Status cannot be empty \n"
-    // }
+    // Image validation
+    const fileInput = document.getElementById("fileInputEmpPhoto");
+    const previewImg = document.getElementById("previewEmployeeImg");
+    const isImageValid = imgValidatorEmpPic(fileInput, "employee", "emp_photo", previewImg);
+
+    if (!isImageValid) {
+        errors += "Invalid or missing employee image \n";
+    }
 
     return errors;
-
-}
+};
 
 //to validate and bind the image 
 const imgValidatorEmpPic = (fileInputID, object, imgProperty, previewId) => {
-
-    //let fileInputIDVar = document.getElementById(fileInputID);
-
     if (fileInputID.files != null) {
+        const file = fileInputID.files[0];
 
-        let file = fileInputID.files[0];
-
-        let fileReader = new FileReader();
-
-        fileReader.onload = function (e) {
-            previewId.src = e.target.result;
-            window[object][imgProperty] = btoa(e.target.result);
-
+        // Validate file size (1 MB max)
+        const maxSizeInBytes = 1 * 1024 * 1024;
+        if (file.size > maxSizeInBytes) {
+            alert("The file size exceeds 1 MB. Please select a smaller file.");
+            return false;
         }
+
+        // Validate file type (JPEG, JPG, PNG)
+        const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+        if (!allowedTypes.includes(file.type)) {
+            alert("Invalid file type. Only JPEG, JPG, and PNG files are allowed.");
+            return false;
+        }
+
+        // Process file and update the preview
+        const fileReader = new FileReader();
+        fileReader.onload = function (e) {
+            previewId.src = e.target.result; // Show image preview
+            window[object][imgProperty] = btoa(e.target.result); // Store Base64 data
+            previewId.style.border = "2px solid lime";
+        };
         fileReader.readAsDataURL(file);
 
-        //me point eken passe img tag eke borders lime wenna hadanna 💥💥💥💥
-
+        return true;
     }
-}
+    previewId.style.border = "2px solid red";
+    return false;
+
+};
+
 
 //clear uploaded image (not delete)
 const clearEmpImg = () => {
@@ -181,6 +198,7 @@ const clearEmpImg = () => {
             employee.emp_photo = null;
             document.getElementById('previewEmployeeImg').src = 'images/employee.png';
             document.getElementById('fileInputEmpPhoto').files = null;
+            document.getElementById('previewEmployeeImg').style.border = "1px solid #ced4da";
 
         } else {
             alert("User Cancelled The Deletion Task")
@@ -274,26 +292,26 @@ const restoreEmployeeRecord = async () => {
             employee = window.currentObject;
             employee.deleted_emp = false;
             let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
-    
+
             if (putServiceResponse === "OK") {
                 alert("Successfully Restored");
                 document.getElementById('formEmployee').reset();
                 refreshEmployeeForm();
                 buildEmployeeTable();
                 $("#infoModalEmployee").modal("hide");
-    
+
             } else {
                 alert("Update Failed \n" + putServiceResponse);
             }
-    
+
         } catch (error) {
             alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
-    } else{
+    } else {
         alert('User cancelled the recovery task');
     }
 
-   
+
 }
 
 // refill the form to edit a record
