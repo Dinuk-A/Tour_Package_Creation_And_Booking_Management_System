@@ -38,7 +38,7 @@ public class EmployeeController {
     @Autowired
     private UserDao userDao;
 
-     @Autowired
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
@@ -64,7 +64,7 @@ public class EmployeeController {
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
             empView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
-           
+
             return empView;
         }
     }
@@ -85,6 +85,8 @@ public class EmployeeController {
     @PostMapping(value = "/emp")
     @Transactional
     public String saveEmployee(@RequestBody Employee employee) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         // check duplications with entered nic
         if (employeeDao.getEmployeeByNIC(employee.getNic()) != null) {
@@ -114,23 +116,25 @@ public class EmployeeController {
             // alt === get max emp code from db here. conver to int , + 1
 
             employee.setAddeddatetime(LocalDateTime.now());
+            employee.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+
             Employee savedEmployee = employeeDao.save(employee);
 
-            //same time create a new user acc for that emp
+            // same time create a new user acc for that emp
             if (employee.getDesignation_id().getNeeduseracc()) {
                 User newUserAcc = new User();
                 newUserAcc.setUsername(employee.getEmp_code());
                 newUserAcc.setPassword(bCryptPasswordEncoder.encode(employee.getNic()));
-             
-                //unique email for each user
+
+                // unique email for each user
                 String fullname = employee.getFullname();
                 String convertedFullname = fullname.replaceAll("\\s", "").toLowerCase();
                 String empCode = employee.getEmp_code();
                 final String DOMAIN = "@yathratravels.lk";
-                String craftedEmail = convertedFullname + empCode + DOMAIN ;
+                String craftedEmail = convertedFullname + empCode + DOMAIN;
 
                 newUserAcc.setWork_email(craftedEmail);
-               
+
                 Set<Role> userRoles = new HashSet<>();
                 Role role = roleDao.getRoleByName(employee.getDesignation_id().getName());
                 userRoles.add(role);
@@ -140,9 +144,8 @@ public class EmployeeController {
                 newUserAcc.setAddeddatetime(LocalDateTime.now());
                 newUserAcc.setNote("Automatically Created By The System, Will Activate After Manager's Supervision");
 
-                //not yet activated
+                // not yet activated
                 newUserAcc.setAcc_status(false);
-
 
                 userDao.save(newUserAcc);
 
@@ -159,6 +162,8 @@ public class EmployeeController {
     @PutMapping(value = "/emp")
     @Transactional
     public String updateEmployee(@RequestBody Employee employee) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         // storing this updating employee record's ID for duplication completions
         Integer idOfUpdatingEmployee = employee.getId();
@@ -198,12 +203,21 @@ public class EmployeeController {
 
         try {
             employee.setLastmodifieddatetime(LocalDateTime.now());
-
-            // if status is 0 (resigned) , user account 1th inactive karanna one
-
-            // if status is 1, user acc eka active wenna one
+            employee.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             employeeDao.save(employee);
+
+            if (employee.getDesignation_id().getNeeduseracc()) {
+                if (employee.getEmp_status().equals("Resigned") || employee.getDeleted_emp()) {
+
+                    User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
+                    if (relatedUserAcc != null) {
+                        relatedUserAcc.setAcc_status(false);
+                        userDao.save(relatedUserAcc);
+                    }
+                }
+            }
+
             return "OK";
 
         } catch (Exception e) {
@@ -218,6 +232,8 @@ public class EmployeeController {
     // @Transactional
     public String deleteEmployee(@RequestBody Employee employee) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         // get the existing employee record by his ID(same as this passing ID)
         Employee existingEmployee = employeeDao.getReferenceById(employee.getId());
 
@@ -228,14 +244,19 @@ public class EmployeeController {
         }
 
         try {
-           
+
             existingEmployee.setDeleteddatetime(LocalDateTime.now());
             existingEmployee.setDeleted_emp(true);
+            employee.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());
             employeeDao.save(existingEmployee);
 
-            // inactive the user acc too 💥💥💥
+            User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
+            if (relatedUserAcc != null) {
+                relatedUserAcc.setAcc_status(false);
+                relatedUserAcc.setNote("Account disabled due to Employee record is deleted");
+                userDao.save(relatedUserAcc);
+            }
 
-            
             return "OK";
         } catch (Exception e) {
             return "Delete Not Completed " + e.getMessage();
