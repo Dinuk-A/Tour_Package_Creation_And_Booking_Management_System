@@ -18,9 +18,9 @@ const buildUserTable = async () => {
             { displayType: 'function', displayingPropertyOrFn: getEmployeeCode, colHeadName: 'Emp Code' },
             { displayType: 'function', displayingPropertyOrFn: getEmployeeFullname, colHeadName: 'Name' },
             { displayType: 'text', displayingPropertyOrFn: 'username', colHeadName: 'Username' },
-            { displayType: 'text', displayingPropertyOrFn: 'email', colHeadName: 'Email' },
+            { displayType: 'text', displayingPropertyOrFn: 'work_email', colHeadName: 'Office Email' },
             { displayType: 'function', displayingPropertyOrFn: getUserRoles, colHeadName: 'Role(s)' },
-            { displayType: 'function', displayingPropertyOrFn: getUserStatus, colHeadName: 'Status' }
+            { displayType: 'function', displayingPropertyOrFn: getUserAccStatus, colHeadName: 'Status' }
         ]
 
         createTable(tableUserHolderDiv, sharedTableId, users, tableColumnInfo);
@@ -66,12 +66,12 @@ const getUserRoles = (userObj) => {
 }
 
 //to support fill main table
-const getUserStatus = (userObj) => {
+const getUserAccStatus = (userObj) => {
     if (userObj.acc_status) {
-        return ' Account Is Active '
+        return 'Active Account'
 
     } else {
-        return 'Account Is Inactive '
+        return 'Inactive Account'
     }
 }
 
@@ -107,11 +107,13 @@ const refreshUserForm = async () => {
 
             newInput.onchange = function () {
                 if (this.checked) {
+                    console.log('checked ' + element.name);
                     user.roles.push(element);
                 } else {
+                    console.log('un checked ' + element.name);
                     const roleIDsOnly = user.roles.map(r => r.id);
                     const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
-                    if (indexOfCurrentPoppingElement !== -1) {
+                    if (indexOfCurrentPoppingElement != -1) {
                         user.roles.splice(indexOfCurrentPoppingElement, 1);
                     }
                 }
@@ -165,13 +167,18 @@ const refreshUserForm = async () => {
 
 //company ekema email ekak demu personal eka wenama thiyala 💥💥💥
 // auto generate the email
-const generateEmail = () => {
+const generateWorkEmail = () => {
 
     const inputEmailVar = document.getElementById('inputEmail');
     const selectEmployeeVar = document.getElementById('selectEmployee');
 
+    //JSON.parse(document.getElementById('selectEmployee').value).fullname.split(' ')[0]
+    //JSON.parse(document.getElementById('selectEmployee').value).fullname.split(' ')[0]+JSON.parse(document.getElementById('selectEmployee').value).fullname.split(' ')[1]
+
+    //'{"id":10,"emp_code":"0007","fullname":"Sanduni Kaushalyatest","nic":"991234367V","email":"malindu123@gmail.com","mobilenum":"0779012345","landnum":"0333154682","address":"xczx","gender":"Male","dob":"2025-01-02","emp_photo":null,"note":"czczx","emp_status":"Resigned","deleted_emp":false,"designation_id":{"id":5,"name":"Tour_Agent","needuseracc":true},"addeddatetime":"2025-01-21T18:27:56","lastmodifieddatetime":"2025-01-22T14:25:48","deleteddatetime":"2025-01-21T18:33:45","addeduserid":null,"lastmodifieduserid":null,"deleteduserid":null}'
+
     inputEmailVar.value = JSON.parse(selectEmployeeVar.value).email;
-    user.email = inputEmailVar.value;
+    user.work_email = inputEmailVar.value;
     inputEmailVar.style.border = "2px solid lime";
 }
 
@@ -195,24 +202,24 @@ const checkUserFormErrors = () => {
     let errors = '';
 
     if (user.employee_id == null) {
-        errors = errors + "Employee name cannot be empty \n";
+        errors = errors + "\nEmployee name cannot be empty \n";
 
     }
     if (user.username == null) {
-        errors = errors + "Username cannot be empty \n";
+        errors = errors + "\nUsername cannot be empty \n";
 
     }
     if (user.password == null) {
-        errors = errors + "password cannot be empty \n";
+        errors = errors + "\nPassword cannot be empty \n";
 
     }
 
-    if (user.email == null) {
-        errors = errors + "Email cannot be empty \n";
+    if (user.work_email == null) {
+        errors = errors + "\nEmail cannot be empty \n";
 
     }
     if (user.roles.length == 0) {
-        errors = errors + "Select at least one Role \n";
+        errors = errors + "\nSelect at least one Role \n";
 
     }
 
@@ -231,10 +238,11 @@ const addNewUser = async () => {
                 let postServerResponse = await ajaxPPDRequest("/user", "POST", user);
                 if (postServerResponse === 'OK') {
                     alert('Saved Successfully');
-                    buildUserTable();
                     document.getElementById('formUser').reset();
-                    refreshUserform();
-
+                    refreshUserForm();
+                    buildUserTable();
+                    var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    myEmpTableTab.show();
                 } else {
                     alert('Submit Failed ' + postServerResponse);
                 }
@@ -256,7 +264,7 @@ const openModal = (userObj) => {
     document.getElementById('modalUserEmpCode').innerText = userObj.employee_id.emp_code || 'N/A';
     document.getElementById('modalUserEmpName').innerText = userObj.employee_id.fullname || 'N/A';
     document.getElementById('modalUserUsername').innerText = userObj.username || 'N/A';
-    document.getElementById('modalUserCompanyEmail').innerText = userObj.company_email || 'N/A';
+    document.getElementById('modalUserCompanyEmail').innerText = userObj.work_email || 'N/A';
 
     document.getElementById('modalUserNote').innerText = userObj.note || 'N/A';
     document.getElementById('modalUserAccCreatedDate').innerText = userObj.addeddatetime || 'N/A';
@@ -315,8 +323,8 @@ const refillUserForm = async (userObj) => {
             newInput.onchange = function () {
                 if (this.checked) {
                     user.roles.push(element)
+                    console.log('checked ' + element.name);
                 } else {
-                    user.roles.pop(element)
 
                     const roleIDsOnly = user.roles.map(r => r.id);
                     const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
@@ -324,6 +332,7 @@ const refillUserForm = async (userObj) => {
                     if (indexOfCurrentPoppingElement != -1) {
                         user.roles.splice(indexOfCurrentPoppingElement, 1);
                     }
+                    console.log('un checked ' + element.name);
                 }
             }
 
@@ -347,23 +356,26 @@ const refillUserForm = async (userObj) => {
         console.error("Failed to fetch user data: ", error);
     }
 
-    if (user.status) {
+    if (user.acc_status) {
         document.getElementById('userAccActive').checked = true;
     } else {
         document.getElementById('userAccInactive').checked = true;
     }
 
     inputUserName.value = user.username;
-    inputEmail.value = user.email;
+    inputEmail.value = user.work_email;
 
-    document.getElementById('inputPwd').disabled = true;
-    document.getElementById('retypePwd').disabled = true;
+    //to admin to change pw of accounts that users forgot the pw
+    //document.getElementById('inputPwd').disabled = true;
+    //document.getElementById('retypePwd').disabled = true;
 
     document.getElementById('userAddBtn').disabled = true;
     document.getElementById('userAddBtn').style.cursor = "not-allowed";
 
     document.getElementById('userUpdateBtn').disabled = false;
     document.getElementById('userUpdateBtn').style.cursor = "pointer";
+
+    $("#infoModalUser").modal("hide");
 
     //edit karanna nodima inna mechchara dura noya, alert ekak danna 💥💥
     //    if (privileges.privupdate) {
@@ -395,37 +407,50 @@ const showUserValueChanges = () => {
     let updates = '';
 
     if (oldUser.username != user.username) {
-        updates = updates + " Username will be changed into " + user.username;
+        updates = updates + " Username will be changed to " + user.username;
     }
 
-    if (oldUser.email != user.email) {
-        updates = updates + " Email will be changed into " + user.email;
+    if (oldUser.work_email != user.work_email) {
+        updates = updates + " Email will be changed to " + user.work_email;
     }
 
-    //change these too 💥💥💥
-    if (user.roles.length != oldUser.roles.length) {
-        alert("Role Has Changed one");
-    } else {
+    //roles changes possibilities (total 4)
+    let newUserRoleIDsOnlyArray = user.roles.map(r => r.id);
+    let oldUserRoleIDsOnlyArray = oldUser.roles.map(olur => olur.id);
 
-        for (let element of user.roles) {
-            let existRoleCount = oldUser.roles.map(item => item.id).indexOf(element.id);
+    //1, in both times same number of roles are selected , but different ones
+    if (user.roles.length == oldUser.roles.length) {
 
-            if (existRoleCount == -1) {
-                updates = updates + "role has changed";
-                break;
+        //1.1 but different ones (A ---> B)
+        for (let roleID of newUserRoleIDsOnlyArray) {
+            if (!oldUserRoleIDsOnlyArray.includes(roleID)) {
+                updates = updates + ' New Role(s) Assigned';
             }
+        }
+
+        //1.2 same roles, order changes (A,B ---> B,A)
+        //use sort arr.sort((a, b) => a - b))
+        let oldUserRolesSortedIDsArray = oldUserRoleIDsOnlyArray.sort((a, b) => a - b);
+        let newUserRolesSortedIDsArray = newUserRoleIDsOnlyArray.sort((a, b) => a - b);
+
+        if (oldUserRolesSortedIDsArray == newUserRolesSortedIDsArray) {
+            updates = '';
         }
     }
 
-    if (user.status !== oldUser.status) {
-        updates = updates + " Status will be change to " + user.status;
+    //2
+    if (user.roles.length > oldUser.roles.length) {
+        updates = updates + "Role(s) List Has Changed ";
     }
 
-    // ????💥💥💥
-    if (user.roles !== oldUser.role) {
-        updates = updates + "role will be change to " + user.role;
+    //3
+    if (user.roles.length < oldUser.roles.length) {
+        updates = updates + "Role(s) List Has Changed ";
     }
 
+    if (user.acc_status !== oldUser.acc_status) {
+        updates = updates + " Status will be changed to " + user.acc_status;
+    }
 
     return updates;
 }
@@ -447,10 +472,11 @@ const updateUser = async () => {
 
                     if (putServiceResponse === "OK") {
                         alert("Successfully Updated");
-                        buildUserTable();
                         document.getElementById('formUser').reset();
                         refreshUserForm();
-
+                        buildUserTable();
+                        var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                        myEmpTableTab.show();
                     } else {
                         alert("Update Failed \n" + putServiceResponse);
                     }

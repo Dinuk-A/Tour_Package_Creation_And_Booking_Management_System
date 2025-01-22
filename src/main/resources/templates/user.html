@@ -62,7 +62,7 @@
                                 <div class="div">
                                     <label for="selectEmployee" class="fw-bold form-label mb-0"> Employee: </label>
                                     <select id="selectEmployee" class="form-select mb-3"
-                                        onchange="dynamicSelectValidator(this , 'user','employee_id'); generateEmail()">
+                                        onchange="dynamicSelectValidator(this , 'user','employee_id'); generateWorkEmail()">
                                     </select>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                             <!-- USERNAME + EMAIL STARTS -->
                             <div class="row mt-2 mx-auto">
                                 <div class="col-5 ">
-                                    <label for="inputUserName" class="form-label fw-bold mb-0"> User Name: </label>
+                                    <label for="inputUserName" class="form-label fw-bold mb-0"> Username: </label>
                                     <input type="text" class="form-control form-input mb-3" id="inputUserName"
                                         placeholder="Enter The Username"
                                         onkeyup="inputValidatorText(this,'','user','username')">
@@ -79,14 +79,14 @@
                                 <div class="col-7">
                                     <label for="inputEmail" class="col-4 form-label fw-bold mb-0 ">Work Email: </label>
                                     <input type="text" id="inputEmail" class="form-control mb-3"
-                                        placeholder="Enter The Email Address"
-                                        onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','user','email')">
+                                        placeholder="Enter The Personal Office Email Address"
+                                        onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{6,20}[@][a-z]{3,10}[.][a-z]{2,3}$','user','work_email')">
                                 </div>
                             </div>
 
                             <!-- roles  -->
                             <div class="row mt-2 mx-auto">
-                                <label class="form-label fw-bold mb-0">Role(s):</label>
+                                <label class="form-label fw-bold mb-0">Assigned Role(s):</label>
                                 <div class="col">
                                     <div class="mt-1 mb-3" id="dynamicUserRoles">
                                         <!-- roles will be here -->
@@ -276,7 +276,7 @@
                             <button class="btn btn-success me-2" onclick="refillUserForm(window['currentObject'])">
                                 Edit
                             </button>
-                            <button class="btn btn-danger" onclick="deleteUserRecord(window['currentObject'])">
+                            <button class="btn btn-danger d-none" onclick="deleteUserRecord(window['currentObject'])">
                                 Delete
                             </button>
                         </div>

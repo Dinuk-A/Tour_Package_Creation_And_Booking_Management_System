@@ -53,7 +53,7 @@ public class EmployeeController {
             empView.addObject("moduleName", "Employee Management");
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
-            empView.addObject("loggedUserCompanyEmail", loggedUser.getCompany_email());
+            empView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
 
             // Convert avatar to Base64 string
             // byte[] avatarBytes = loggedUser.getAvatar();

@@ -310,7 +310,7 @@ const restoreEmployeeRecord = async () => {
                 $("#infoModalEmployee").modal("hide");
 
             } else {
-                alert("Update Failed \n" + putServiceResponse);
+                alert("Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {

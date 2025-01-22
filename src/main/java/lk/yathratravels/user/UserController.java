@@ -57,7 +57,7 @@ public class UserController {
             userView.addObject("loggedUserUN", auth.getName());
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
-            userView.addObject("loggedUserCompanyEmail", loggedUser.getCompany_email());
+            userView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
 
             return userView;
         }
@@ -98,7 +98,7 @@ public class UserController {
         }
 
         // duplications #02 === by email
-        User isUserEmailExist = userDao.getUserByEmail(user.getCompany_email());
+        User isUserEmailExist = userDao.getUserByEmail(user.getWork_email());
         if (isUserEmailExist != null) {
             return "User save not completed : Given email already exist for another user account";
         }

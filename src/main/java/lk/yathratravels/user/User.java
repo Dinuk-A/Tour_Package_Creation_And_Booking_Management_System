@@ -40,9 +40,9 @@ public class User {
     // @NotNull
     private String password;
 
-    @Column(name = "company_email")
+    @Column(name = "work_email")
     @NotNull
-    private String company_email;
+    private String work_email;
 
     @Column(name = "note")
     private String note;
@@ -91,8 +91,8 @@ public class User {
         this.username = username;
     }
     // to get only the username for print
-    //public User(String company_email) {
-    //    this.company_email = company_email;
+    //public User(String work_email) {
+    //    this.work_email = work_email;
     //}
 
 }

@@ -55,7 +55,7 @@ public class PrivilegeController {
         privilegeView.addObject("title", "Yathra Privilege");
 
         User loggedUser = userDao.getUserByUsername(auth.getName());
-        privilegeView.addObject("loggedUserCompanyEmail", loggedUser.getCompany_email());
+        privilegeView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
 
         return privilegeView;
     }

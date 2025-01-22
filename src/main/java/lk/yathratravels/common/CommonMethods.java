@@ -42,7 +42,7 @@ public class CommonMethods {
 
         User sysAdmin = new User();
         sysAdmin.setUsername("Admin");
-        sysAdmin.setCompany_email("admindinuka101@yathra.com");
+        sysAdmin.setWork_email("admindinuka101@yathra.com");
         sysAdmin.setPassword(bCryptPasswordEncoder.encode("12345"));
         sysAdmin.setAcc_status(true);
         sysAdmin.setAddeddatetime(LocalDateTime.now());
@@ -86,7 +86,7 @@ public class CommonMethods {
         dbView.addObject("title", "Yathra Dashboard");
 
         User loggedUser = userDao.getUserByUsername(auth.getName());
-        dbView.addObject("loggedUserCompanyEmail", loggedUser.getCompany_email());
+        dbView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
 
         return dbView;
     }
