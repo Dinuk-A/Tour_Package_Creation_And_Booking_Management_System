@@ -1,10 +1,13 @@
 package lk.yathratravels.employee;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,10 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.security.core.Authentication;
-import java.util.Base64;
 import jakarta.transaction.Transactional;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.user.Role;
+import lk.yathratravels.user.RoleDao;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
@@ -33,6 +37,12 @@ public class EmployeeController {
 
     @Autowired
     private UserDao userDao;
+
+     @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private RoleDao roleDao;
 
     // display employee UI
     @RequestMapping(value = "/emp", method = RequestMethod.GET)
@@ -54,18 +64,7 @@ public class EmployeeController {
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
             empView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
-
-            // Convert avatar to Base64 string
-            // byte[] avatarBytes = loggedUser.getAvatar();
-            // String avatarBase64;
-            // if (avatarBytes != null && avatarBytes.length > 0) {
-            // avatarBase64 = "data:image/png;base64," +
-            // Base64.getEncoder().encodeToString(avatarBytes);
-            // } else {
-            // avatarBase64 = "images/ylogo2.png"; }
-
-            // empView.addObject("loggedUserAvatar", avatarBase64);
-
+           
             return empView;
         }
     }
@@ -103,7 +102,6 @@ public class EmployeeController {
         }
 
         try {
-
             // generate emp_code
             String nextEmpCode = employeeDao.getNextEmpCode();
 
@@ -116,10 +114,43 @@ public class EmployeeController {
             // alt === get max emp code from db here. conver to int , + 1
 
             employee.setAddeddatetime(LocalDateTime.now());
-            employeeDao.save(employee);
+            Employee savedEmployee = employeeDao.save(employee);
+
+            //same time create a new user acc for that emp
+            if (employee.getDesignation_id().getNeeduseracc()) {
+                User newUserAcc = new User();
+                newUserAcc.setUsername(employee.getEmp_code());
+                newUserAcc.setPassword(bCryptPasswordEncoder.encode(employee.getNic()));
+             
+                //unique email for each user
+                String fullname = employee.getFullname();
+                String convertedFullname = fullname.replaceAll("\\s", "").toLowerCase();
+                String empCode = employee.getEmp_code();
+                final String DOMAIN = "@yathratravels.lk";
+                String craftedEmail = convertedFullname + empCode + DOMAIN ;
+
+                newUserAcc.setWork_email(craftedEmail);
+               
+                Set<Role> userRoles = new HashSet<>();
+                Role role = roleDao.getRoleByName(employee.getDesignation_id().getName());
+                userRoles.add(role);
+                newUserAcc.setRoles(userRoles);
+
+                newUserAcc.setEmployee_id(savedEmployee);
+                newUserAcc.setAddeddatetime(LocalDateTime.now());
+                newUserAcc.setNote("Automatically Created By The System, Will Activate After Manager's Supervision");
+
+                //not yet activated
+                newUserAcc.setAcc_status(false);
+
+
+                userDao.save(newUserAcc);
+
+            }
+
             return "OK";
         } catch (Exception e) {
-            return "Error Saving Data: " + e.getMessage();
+            return "Error Saving Employee: " + e.getMessage();
         }
 
     }

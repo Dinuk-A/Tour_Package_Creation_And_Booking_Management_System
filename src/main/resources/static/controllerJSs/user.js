@@ -168,16 +168,20 @@ const refreshUserForm = async () => {
 //company ekema email ekak demu personal eka wenama thiyala 💥💥💥
 // auto generate the email
 const generateWorkEmail = () => {
+   
+    const selectedEmployee  = JSON.parse(document.getElementById('selectEmployee').value);
+
+    const fullname = selectedEmployee .fullname;
+    const empCode = selectedEmployee .emp_code;
+
+    const convertedFullname = fullname.replace(/\s+/g, "").toLowerCase();
+
+    const domain = "@yathratravels.lk";
+
+    const craftedEmail = convertedFullname + empCode + domain;
 
     const inputEmailVar = document.getElementById('inputEmail');
-    const selectEmployeeVar = document.getElementById('selectEmployee');
-
-    //JSON.parse(document.getElementById('selectEmployee').value).fullname.split(' ')[0]
-    //JSON.parse(document.getElementById('selectEmployee').value).fullname.split(' ')[0]+JSON.parse(document.getElementById('selectEmployee').value).fullname.split(' ')[1]
-
-    //'{"id":10,"emp_code":"0007","fullname":"Sanduni Kaushalyatest","nic":"991234367V","email":"malindu123@gmail.com","mobilenum":"0779012345","landnum":"0333154682","address":"xczx","gender":"Male","dob":"2025-01-02","emp_photo":null,"note":"czczx","emp_status":"Resigned","deleted_emp":false,"designation_id":{"id":5,"name":"Tour_Agent","needuseracc":true},"addeddatetime":"2025-01-21T18:27:56","lastmodifieddatetime":"2025-01-22T14:25:48","deleteddatetime":"2025-01-21T18:33:45","addeduserid":null,"lastmodifieduserid":null,"deleteduserid":null}'
-
-    inputEmailVar.value = JSON.parse(selectEmployeeVar.value).email;
+    inputEmailVar.value = craftedEmail;
     user.work_email = inputEmailVar.value;
     inputEmailVar.style.border = "2px solid lime";
 }
