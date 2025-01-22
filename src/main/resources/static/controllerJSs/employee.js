@@ -82,7 +82,6 @@ const refreshEmployeeForm = async () => {
         'inputAddress',
         'inputNote',
         'selectDesignation',
-        'selectEmployeementStatus'
     ];
 
     //clear out any previous styles
@@ -104,6 +103,14 @@ const refreshEmployeeForm = async () => {
     document.getElementById('previewEmployeeImg').src = 'images/employee.png';
     document.getElementById('fileInputEmpPhoto').files = null;
     document.getElementById('previewEmployeeImg').style.border = "1px solid #ced4da";
+}
+
+//set the status as auto every time when a new form is opened
+const setEmpStatusAuto = () => {
+    document.getElementById('selectEmployeementStatus').value = 'Working';
+    document.getElementById('selectEmployeementStatus').style.border = '2px solid lime';
+    document.getElementById('selectEmployeementStatus').children[2].setAttribute('class', 'd-none');
+    employee.emp_status = 'Working';
 }
 
 //check errors before submitting
@@ -142,14 +149,16 @@ const checkEmpFormErrors = () => {
         errors += "Designation cannot be empty \n";
     }
 
-    // Image validation
-    const fileInput = document.getElementById("fileInputEmpPhoto");
-    const previewImg = document.getElementById("previewEmployeeImg");
-    const isImageValid = imgValidatorEmpPic(fileInput, "employee", "emp_photo", previewImg);
+//    if (employee.emp_photo != null) {
+//        const fileInput = document.getElementById("fileInputEmpPhoto");
+//        const previewImg = document.getElementById("previewEmployeeImg");
+//        const isImageValid = imgValidatorEmpPic(fileInput, "employee", "emp_photo", previewImg);
+//
+//        if (!isImageValid) {
+//            errors += "Invalid employee image \n";
+//        }
+//    }
 
-    if (!isImageValid) {
-        errors += "Invalid or missing employee image \n";
-    }
 
     return errors;
 };
@@ -163,14 +172,14 @@ const imgValidatorEmpPic = (fileInputID, object, imgProperty, previewId) => {
         const maxSizeInBytes = 1 * 1024 * 1024;
         if (file.size > maxSizeInBytes) {
             alert("The file size exceeds 1 MB. Please select a smaller file.");
-            return false;
+            //return false;
         }
 
         // Validate file type (JPEG, JPG, PNG)
         const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
         if (!allowedTypes.includes(file.type)) {
             alert("Invalid file type. Only JPEG, JPG, and PNG files are allowed.");
-            return false;
+            //return false;
         }
 
         // Process file and update the preview
@@ -182,7 +191,7 @@ const imgValidatorEmpPic = (fileInputID, object, imgProperty, previewId) => {
         };
         fileReader.readAsDataURL(file);
 
-        return true;
+        //return true;
     }
     previewId.style.border = "2px solid red";
     return false;
@@ -356,6 +365,9 @@ const refillEmployeeForm = async (empObj) => {
     empAddBtn.style.cursor = "not-allowed";
 
     $("#infoModalEmployee").modal("hide");
+
+    document.getElementById('selectEmployeementStatus').style.border = '2px solid #ced4da';
+    document.getElementById('selectEmployeementStatus').children[2].classList.remove('d-none');
 
     var myEmpFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myEmpFormTab.show();
