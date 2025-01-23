@@ -206,45 +206,7 @@ const getDelete = (priviObj) => {
     }
 }
 
-//define a fn for refresh privi form
-const refreshPrivilegeFormOriginal = async () => {
-
-    privilege = new Object();
-
-    document.getElementById('formPrivilege').reset();
-
-    //get ROLES list for select element
-    roles = await ajaxGetReq("role/all");
-    fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name');
-    selectRole.disabled = false;
-
-    //get MODULES list for select element
-    modules = await ajaxGetReq("module/all");
-    fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name');
-    selectModule.disabled = false;
-
-    selectRole.style.border = "1px solid #ced4da"
-    selectModule.style.border = "1px solid #ced4da"
-
-    privilege.prvselect = false;
-    privilege.prvinsert = false;
-    privilege.prvupdate = false;
-    privilege.prvdelete = false;
-
-    labelSel.innerHTML = "  <div class='text-danger '>Not Granted </div>";
-    labelInsert.innerHTML = " <div class='text-danger'>Not Granted </div> ";
-    labelUpdate.innerHTML = " <div class='text-danger'>Not Granted </div> ";
-    labelDelete.innerHTML = " <div class='text-danger'>Not Granted </div> ";
-
-    priviUpdateBtn.disabled = true;
-    priviUpdateBtn.style.cursor = "not-allowed";
-
-    priviAddBtn.disabled = false;
-    priviAddBtn.style.cursor = "pointer";
-
-}
-
-//same as above but with promises 💥
+//fn for refresh privi form
 const refreshPrivilegeForm = async () => {
 
     privilege = new Object();
@@ -274,11 +236,6 @@ const refreshPrivilegeForm = async () => {
     privilege.prvupdate = false;
     privilege.prvdelete = false;
 
-    labelSel.innerHTML = "<div class='text-danger'>Not Granted</div>";
-    labelInsert.innerHTML = "<div class='text-danger'>Not Granted</div>";
-    labelUpdate.innerHTML = "<div class='text-danger'>Not Granted</div>";
-    labelDelete.innerHTML = "<div class='text-danger'>Not Granted</div>";
-
     priviUpdateBtn.disabled = true;
     priviUpdateBtn.style.cursor = "not-allowed";
 
@@ -288,7 +245,9 @@ const refreshPrivilegeForm = async () => {
 
 
 //custom checkbox validator function 
-const checkPrivi = (feildId, object, property, trueValue, falseValue,
+
+// onchange="checkPrivi(deleteSwitch, 'privilege' , 'prvdelete',true, false, labelDelete,'Delete')"
+const checkPriviOri = (feildId, object, property, trueValue, falseValue,
     labelId, prvType) => {
 
     if (feildId.checked) {
@@ -297,6 +256,22 @@ const checkPrivi = (feildId, object, property, trueValue, falseValue,
     } else {
         window[object][property] = falseValue;
         labelId.innerHTML = prvType + ' Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+    }
+}
+
+const setPrivileges = (buttonId, propertyName) => {
+    if (buttonId.checked) {
+        window.privilege[propertyName] = true;
+    } else {
+        window.privilege[propertyName] = false;
+    }
+}
+
+const revokePrivileges = (buttonId, propertyName) => {
+    if (buttonId.checked) {
+        window.privilege[propertyName] = false;
+    } else {
+        window.privilege[propertyName] = true;
     }
 }
 
@@ -354,20 +329,20 @@ const checkPriviFormErrors = () => {
 }
 
 //fn for add button
-const addPrivilege = async () => {
+const addPrivileges = async () => {
 
     //chech form errors
     let errors = checkPriviFormErrors();
 
     if (errors == '') {
-        const userConfirm = confirm("Are you sure to grant permissions to role  " +  privilege.role_id.name + " for the module " + privilege.module_id.name)
+        const userConfirm = confirm("Are you sure to grant permissions to role  " + privilege.role_id.name + " for the module " + privilege.module_id.name)
 
         if (userConfirm) {
             try {
                 const postServerResponse = await ajaxPPDRequest("/privilege", "POST", privilege);
 
                 if (postServerResponse === 'OK') {
-                    alert('Saved Successfully');                    
+                    alert('Saved Successfully');
                     document.getElementById('formPrivilege').reset();
                     buildPriviTable();
                     refreshPrivilegeForm();
@@ -390,7 +365,7 @@ const refillPriviForm = async (prvObj) => {
 
     privilege = JSON.parse(JSON.stringify(prvObj));
     oldPrivOb = JSON.parse(JSON.stringify(prvObj));
-    
+
     try {
         roles = await ajaxGetReq("role/all");
         fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name', prvObj.role_id.name);
@@ -404,36 +379,28 @@ const refillPriviForm = async (prvObj) => {
         console.error("Error in refillPriviForm:", error);
     }
 
-    if (prvObj.prvselect) {
-        selectSwitch.checked = true;
-        labelSel.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+     if (prvObj.prvselect) {
+        selectGrantSwitch.checked = true;
     } else {
-        selectSwitch.checked = false;
-        labelSel.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+        selectRevokeSwitch.checked = true;
     }
 
     if (prvObj.prvinsert) {
-        insertSwitch.checked = true;
-        labelInsert.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+        insertGrantSwitch.checked = true;
     } else {
-        insertSwitch.checked = false;
-        labelInsert.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+        insertRevokeSwitch.checked = true;
     }
 
     if (prvObj.prvupdate) {
-        updateSwitch.checked = true;
-        labelUpdate.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+        updateGrantSwitch.checked = true;
     } else {
-        updateSwitch.checked = false;
-        labelUpdate.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+        updateRevokeSwitch.checked = true;
     }
 
     if (prvObj.prvdelete) {
-        deleteSwitch.checked = true;
-        labelDelete.innerHTML = 'Privilege <span class="text-success fw-bold"> Granted <span>';
+        deleteGrantSwitch.checked = true;
     } else {
-        deleteSwitch.checked = false;
-        labelDelete.innerHTML = 'Privilege <span class="text-danger fw-bold"> Not Granted <span>';
+        deleteRevokeSwitch.checked = true;
     }
 
     priviUpdateBtn.disabled = false;
@@ -479,7 +446,7 @@ const showValueChanges = () => {
 }
 
 //fn for update button
-const updatePrivilege = async () => {
+const updatePrivileges = async () => {
 
     let errors = checkPriviFormErrors();
     if (errors == "") {
