@@ -360,16 +360,16 @@ const addPrivilege = async () => {
     let errors = checkPriviFormErrors();
 
     if (errors == '') {
-        const userConfirm = confirm("Are you sure to grant following permissions ? \n" + privilege.module_id.name)
+        const userConfirm = confirm("Are you sure to grant permissions to role  " +  privilege.role_id.name + " for the module " + privilege.module_id.name)
 
         if (userConfirm) {
             try {
                 const postServerResponse = await ajaxPPDRequest("/privilege", "POST", privilege);
 
                 if (postServerResponse === 'OK') {
-                    alert('Saved successfully');
-                    buildPriviTable();
+                    alert('Saved Successfully');                    
                     document.getElementById('formPrivilege').reset();
+                    buildPriviTable();
                     refreshPrivilegeForm();
                 } else {
                     alert('Submit Failed ' + postServerResponse);

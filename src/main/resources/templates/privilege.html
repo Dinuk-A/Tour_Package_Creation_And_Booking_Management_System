@@ -10,7 +10,6 @@
     <!-- link employee js -->
     <script src="controllerJSs/privilege.js"></script>
 
-
 </head>
 
 <body>
@@ -29,8 +28,8 @@
             </li>
             <!-- for form side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#form" role="tab" aria-controls="form"
-                    aria-selected="false">Privilege Form</a>
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formPriviHolderDiv" role="tab"
+                    aria-controls="formPriviHolderDiv" aria-selected="false">Privilege Form</a>
             </li>
         </ul>
 
@@ -43,115 +42,126 @@
             </div>
 
             <!-- Form tab -->
-            <div class="tab-pane fade" id="form" role="tabpanel" aria-labelledby="form-tab">
-                <div class="shadow-sm w-75 mx-auto">
-
-                    <form id="formPrivilege" onsubmit="return false">
-
-                        <!-- Role and Module Selection - Left Side -->
-                        <div class="row mt-2">
-                            <div class="col-6">
-                                <!-- select ROLE starts -->
-                                <div class="row mt-2">
-                                    <label for="selectRole" class="col-12 col-form-label fw-bold">Role:</label>
-                                    <div class="col-12">
-                                        <select name="" id="selectRole" class="form-select" required
-                                            onchange="dynamicSelectValidator(this,  'privilege', 'role_id'); generateModuleList();"></select>
+            <div class="tab-pane fade" id="formPriviHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+                <div class="card mx-auto">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">Privileges Management Form</h3>
+                    </div>
+                    <div class="card-body" style="background-color: ivory;">
+                        <form id="formPrivilege" onsubmit="return false">
+                            <!-- Role and Module Selection - Left Side -->
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <!-- select ROLE starts -->
+                                    <div class="row mt-2">
+                                        <label for="selectRole" class="col-12 col-form-label fw-bold">Role:</label>
+                                        <div class="col-12">
+                                            <select name="" id="selectRole" class="form-select" required
+                                                onchange="dynamicSelectValidator(this,  'privilege', 'role_id'); generateModuleList();"></select>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <!-- select MODULE starts -->
-                                <div class="row mt-2">
-                                    <label for="selectModule" class="col-12 col-form-label fw-bold">Module:</label>
-                                    <div class="col-12">
-                                        <select name="" id="selectModule" class="form-select" required
-                                            onchange="dynamicSelectValidator(this, 'privilege', 'module_id');"></select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Privileges - Right Side -->
-                            <div class="col-6">
-
-                                <!-- start SELECT privilege -->
-                                <div class="row mt-2">
-                                    <label class="col-4 col-form-label fw-bold"> SELECT : </label>
-                                    <div class="col-8">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch"
-                                                id="selectSwitch"
-                                                onchange="checkPrivi(selectSwitch, 'privilege' , 'prvselect',true, false, labelSel,'Select')">
-                                            <label class="form-check-label" for="selectSwitch" id="labelSel">Select
-                                                Privilege
-                                                Not Granted</label>
+                                    <!-- select MODULE starts -->
+                                    <div class="row mt-2">
+                                        <label for="selectModule" class="col-12 col-form-label fw-bold">Module:</label>
+                                        <div class="col-12">
+                                            <select name="" id="selectModule" class="form-select" required
+                                                onchange="dynamicSelectValidator(this, 'privilege', 'module_id');"></select>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- start INSERT privilege -->
-                                <div class="row mt-2">
-                                    <label class="col-4 col-form-label fw-bold"> INSERT : </label>
-                                    <div class="col-8">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch"
-                                                id="insertSwitch"
-                                                onchange="checkPrivi(insertSwitch, 'privilege' , 'prvinsert',true, false, labelInsert,'Insert')">
-                                            <label class="form-check-label" for="insertSwitch" id="labelInsert">Insert
-                                                Privilege
-                                                Not Granted</label>
+                                <!--<input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off" checked>
+                                <label class="btn btn-outline-success" for="success-outlined">Checked success radio</label>
+                                
+                                <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off">
+                                <label class="btn btn-outline-danger" for="danger-outlined">Danger radio</label>-->
+
+                                <!-- Privileges - Right Side -->
+                                <div class="col-6">
+
+                                    <!-- start SELECT privilege -->
+                                    <div class="row mt-2">
+                                        <label class="col-4 col-form-label fw-bold"> SELECT : </label>
+                                        <div class="col-8">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="selectSwitch"
+                                                    onchange="checkPrivi(selectSwitch, 'privilege' , 'prvselect',true, false, labelSel,'Select')">
+                                                <label class="form-check-label" for="selectSwitch" id="labelSel">Select
+                                                    Privilege
+                                                    Not Granted</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- start INSERT privilege -->
+                                    <div class="row mt-2">
+                                        <label class="col-4 col-form-label fw-bold"> INSERT : </label>
+                                        <div class="col-8">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="insertSwitch"
+                                                    onchange="checkPrivi(insertSwitch, 'privilege' , 'prvinsert',true, false, labelInsert,'Insert')">
+                                                <label class="form-check-label" for="insertSwitch"
+                                                    id="labelInsert">Insert
+                                                    Privilege
+                                                    Not Granted</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- start UPDATE privilege -->
+                                    <div class="row mt-2">
+                                        <label class="col-4 col-form-label fw-bold"> UPDATE : </label>
+                                        <div class="col-8">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="updateSwitch"
+                                                    onchange="checkPrivi(updateSwitch, 'privilege' , 'prvupdate',true, false, labelUpdate,'Update')">
+                                                <label class="form-check-label" for="updateSwitch"
+                                                    id="labelUpdate">Insert
+                                                    Privilege
+                                                    Not Granted</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- start DELETE privilege -->
+                                    <div class="row mt-2">
+                                        <label class="col-4 col-form-label fw-bold"> DELETE : </label>
+                                        <div class="col-8">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="deleteSwitch"
+                                                    onchange="checkPrivi(deleteSwitch, 'privilege' , 'prvdelete',true, false, labelDelete,'Delete')">
+                                                <label class="form-check-label" for="deleteSwitch"
+                                                    id="labelDelete">Insert
+                                                    Privilege
+                                                    Not Granted</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- start UPDATE privilege -->
-                                <div class="row mt-2">
-                                    <label class="col-4 col-form-label fw-bold"> UPDATE : </label>
-                                    <div class="col-8">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch"
-                                                id="updateSwitch"
-                                                onchange="checkPrivi(updateSwitch, 'privilege' , 'prvupdate',true, false, labelUpdate,'Update')">
-                                            <label class="form-check-label" for="updateSwitch" id="labelUpdate">Insert
-                                                Privilege
-                                                Not Granted</label>
-                                        </div>
-                                    </div>
-                                </div>
+                            </div>
 
-                                <!-- start DELETE privilege -->
-                                <div class="row mt-2">
-                                    <label class="col-4 col-form-label fw-bold"> DELETE : </label>
-                                    <div class="col-8">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" role="switch"
-                                                id="deleteSwitch"
-                                                onchange="checkPrivi(deleteSwitch, 'privilege' , 'prvdelete',true, false, labelDelete,'Delete')">
-                                            <label class="form-check-label" for="deleteSwitch" id="labelDelete">Insert
-                                                Privilege
-                                                Not Granted</label>
-                                        </div>
-                                    </div>
+                            <!-- 3 FORM buttons start -->
+                            <div class="row m-2">
+                                <div class="col-4 text-start">
+                                    <button type="reset" class="btn fw-bold"
+                                        onclick="refreshPrivilegeForm()">Clear</button>
+                                </div>
+                                <div class="col-8 text-end">
+                                    <button type="button" id="priviUpdateBtn" class="btn fw-bold"
+                                        onclick="updatePrivilege()" style="pointer-events: all;">Update</button>
+
+                                    <button type="submit" id="priviAddBtn" class="btn fw-bold" onclick="addPrivilege()"
+                                        style="pointer-events: all;">Add</button>
                                 </div>
                             </div>
-
-                        </div>
-
-                        <!-- 3 FORM buttons start -->
-                        <div class="row m-2">
-                            <div class="col-4 text-start">
-                                <button type="reset" class="btn fw-bold"
-                                    onclick="refreshPrivilegeForm()">Clear</button>
-                            </div>
-                            <div class="col-8 text-end">
-                                <button type="button" id="priviUpdateBtn" class="btn fw-bold"
-                                    onclick="updatePrivilege()" style="pointer-events: all;">Update</button>
-
-                                <button type="submit" id="priviAddBtn" class="btn fw-bold"
-                                    onclick="addPrivilege()" style="pointer-events: all;">Add</button>
-                            </div>
-                        </div>
-                    </form>
-
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

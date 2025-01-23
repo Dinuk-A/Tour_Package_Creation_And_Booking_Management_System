@@ -72,7 +72,7 @@ public class PrivilegeController {
     @PostMapping(value = "/privilege")
     public String SavePrivilege(@RequestBody Privilege privilege) {
 
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         // duplicates
         Privilege existPrivilege = privilegeDao.getPrivisByBothRoleAndModule(privilege.getRole_id().getId(),
@@ -82,6 +82,7 @@ public class PrivilegeController {
         }
         try {
             privilege.setAddeddatetime(LocalDateTime.now());
+            // privilege.seadu
 
             privilegeDao.save(privilege);
             return "OK";
@@ -114,8 +115,6 @@ public class PrivilegeController {
     @DeleteMapping(value = "/privilege")
     public String deletePrivilege(@RequestBody Privilege privilege) {
 
-        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         Privilege existingRecord = privilegeDao.getReferenceById(privilege.getId());
 
         if (existingRecord == null) {
@@ -123,13 +122,14 @@ public class PrivilegeController {
         }
 
         try {
-            //❌ not finished 💥💥💥
-            // prvDao.delete(privilege);
-            //privilegeDao.delete(privilegeDao.getReferenceById(privilege.getId()));
 
             privilege.setDeleteddatetime(LocalDateTime.now());
-            //privilegeDao
-            
+            privilegeDao.save(privilege);
+
+            //to delete permanatly
+            //privilegeDao.delete(existingRecord);
+          
+          
             return "OK";
         } catch (Exception e) {
             return "Delete Not Completed " + e.getMessage();
