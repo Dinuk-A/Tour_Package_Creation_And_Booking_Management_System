@@ -47,13 +47,17 @@ public class EmployeeController {
     // display employee UI
     @RequestMapping(value = "/emp", method = RequestMethod.GET)
     public ModelAndView showEmployeeUI() {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
 
         if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            
             ModelAndView lost = new ModelAndView();
             lost.setViewName("lost.html");
             return lost;
+
         } else {
 
             ModelAndView empView = new ModelAndView();
