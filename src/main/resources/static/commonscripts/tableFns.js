@@ -145,6 +145,7 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
     // Add the button column last
     const buttonTH = document.createElement('th');
     buttonTH.innerText = 'Action';
+    buttonTH.setAttribute('class', 'text-center y-3');
     tableHeadRow.appendChild(buttonTH);
 
     // Append the row to the thead

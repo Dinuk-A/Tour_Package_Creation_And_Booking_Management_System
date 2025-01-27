@@ -33,7 +33,7 @@ const buildEmployeeTable = async () => {
         // });
 
     } catch (error) {
-        console.error("Failed to refresh employee table:", error);
+        console.error("Failed to build employee table:", error);
     }
 
 }

@@ -3,33 +3,43 @@ window.addEventListener('load', () => {
     // loggedUserPrivileges = ajaxGetRequest("/privilege/bymodule/ATTRACTION");
 
     //call fn for refresh/show data in table
-    refreshAttractionTable();
+    buildAttractionTable();
 
     //for attraction form
     refreshAttractionsForm();
 })
 
+//global var to store id of the table
+let sharedTableId = "mainTableAttraction";
+
 //fn for show data in table
-const refreshAttractionTable = () => {
+const buildAttractionTable = async () => {
 
-    attractions = ajaxGetRequest("/attraction/alldata");
+    try {
+        const attractions = await ajaxGetReq("/attraction/all");
 
-    const displayProperty = [
-        { dataType: 'text', propertyName: 'name' },
-        { dataType: 'function', propertyName: getDistNProvince },
-        // { dataType: 'function', propertyName: getCategories },
-        // { dataType: 'function', propertyName: getActivities },
-        { dataType: 'function', propertyName: getDuration },
-        { dataType: 'function', propertyName: showLocalFees },
-        { dataType: 'function', propertyName: showForeignFees },
-        { dataType: 'function', propertyName: getStatus }
+        const tableColumnInfo = [
 
-    ]
+            { dataType: 'text', propertyName: 'name', colHeadName: 'Name' },
+            { dataType: 'function', propertyName: getDistNProvince, colHeadName: 'District' },
+            // { dataType: 'function', propertyName: getCategories , colHeadName: 'Categories'},
+            // { dataType: 'function', propertyName: getActivities , colHeadName: 'Activities'},
+            //{ dataType: 'function', propertyName: getDuration, colHeadName: 'Duration' },
+            { dataType: 'function', propertyName: showLocalFees, colHeadName: 'Local Fees' },
+            { dataType: 'function', propertyName: showForeignFees, colHeadName: 'Foreign Fees' },
+            { dataType: 'function', propertyName: getStatus, colHeadName: 'Status' }
 
-    fillDataIntoTable3(tableVPlace, attractions, displayProperty, buttonVisibility = true)
+        ]
 
-    //call the new datatable format(from net)
-    $('#tableVPlace').dataTable();
+        createTable(tableAttractionHolderDiv, sharedTableId, attractions, tableColumnInfo);
+
+        //call the new datatable format(from net)
+        $(`#${sharedTableId}`).dataTable();
+
+    } catch (error) {
+        console.error("Failed to build attraction table:", error);
+    }
+
 }
 
 //fn for refresh form
@@ -40,10 +50,10 @@ const refreshAttractionsForm = () => {
     attraction.categories = new Array();
     attraction.attr_activities = new Array();
 
-    vPlaceForm.reset();
+    document.getElementById('formAttraction').reset();
 
     //get province list
-    provinces = ajaxGetRequest("province/alldata");
+    provinces = ajaxGetRequest("province/all");
     fillDataIntoSelect(inputPlaceProvince, 'Please Select The Province', provinces, 'name')
 
     //get district list 
@@ -51,15 +61,8 @@ const refreshAttractionsForm = () => {
     fillDataIntoSelect(inputPlaceDistrict, 'Please Select The Provice First', districts, 'name')
     inputPlaceDistrict.disabled = true;
 
-    //get Attr Status list
-    attrstts = ajaxGetRequest("/attrstatus/alldata");
-    fillDataIntoSelect(selectAttrStatus, 'Please Select The Status', attrstts, 'name', 'Active Site')
-    attraction.attrstatus_id = JSON.parse(selectAttrStatus.value);
-    selectAttrStatus.style.border= "2px solid lime"
-
-
     //get categories list
-    categoryList = ajaxGetRequest("/category/alldata");
+    categoryList = ajaxGetRequest("/attrcategory/all");
     flushCollapseOne.innerHTML = "";
     categoryList.forEach(element => {
 
@@ -596,7 +599,7 @@ const editVPlaceBtn = (obj) => {
 
     if (attraction.vehicleparkingfee == 0.00) {
         freeParkingCBX.checked = true;
-        vehiParkingFeeInput.disabled=true;
+        vehiParkingFeeInput.disabled = true;
     }
 
     inputNote.value = attraction.description;

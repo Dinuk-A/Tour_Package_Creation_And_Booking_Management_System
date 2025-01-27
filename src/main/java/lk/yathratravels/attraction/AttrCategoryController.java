@@ -11,7 +11,7 @@ public class AttrCategoryController {
     @Autowired
     private AttrCategoryDao attrCatDao;
 
-    @GetMapping(value = "/category/all" , produces = "application/json")
+    @GetMapping(value = "/attrcategory/all" , produces = "application/json")
     public List <AttrCategory> getAllAttractionCategories(){
         return attrCatDao.findAll();
     }
