@@ -27,7 +27,7 @@ const buildAttractionTable = async () => {
             //{ displayType: 'function', displayingPropertyOrFn: getDuration, colHeadName: 'Duration' },
             { displayType: 'function', displayingPropertyOrFn: showLocalFees, colHeadName: 'Local Fees <br/> (LKR)' },
             { displayType: 'function', displayingPropertyOrFn: showForeignFees, colHeadName: 'Foreign Fees (LKR)' },
-            { displayType: 'function', displayingPropertyOrFn: 'attr_status', colHeadName: 'Status' }
+            { displayType: 'text', displayingPropertyOrFn: 'attr_status', colHeadName: 'Status' }
 
         ]
 
@@ -459,7 +459,7 @@ const addNewAttraction = async () => {
 
                 if (postServiceResponse === "OK") {
                     alert('Saved Successfully');
-                    document.getElementById('vPlaceForm').reset();
+                    document.getElementById('formAttraction').reset();
                     refreshAttractionForm();
                     buildAttractionTable();
                     var myAttrTableTab = new bootstrap.Tab(document.getElementById('table-tab'));

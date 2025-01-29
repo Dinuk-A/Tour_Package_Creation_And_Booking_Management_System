@@ -90,10 +90,14 @@
                                         onkeyup="inputValidatorText(this, '' ,'attraction' ,'name' )" type="text"
                                         class="form-control form-input me-2" style="width:35%">
 
-                                    <!-- Label input -->
-                                    <select id="selectAttrStatus" class="form-control form-select"
-                                        onchange="staticSelectValidator(this,'attraction','attr_status')">
+                                    <!-- Status input -->
+                                    <select required id="selectAttrStatus" class="form-select"  onchange="staticSelectValidator(this,'attraction','attr_status')">
 
+                                        <option value="" selected disabled> Select Status </option>
+                                        <option value="open"> Open Site </option>
+                                        <option value="permanantly_closed"> Permanantly Closed </option>
+                                        <option value="temporary_closed"> Temporary Closed </option>
+                                        <option value="ifDeleted" class="d-none"> Deleted Record </option>                                     
                                     </select>
                                 </div>
                             </div>
@@ -233,7 +237,7 @@
                                                     <span class="input-group-text p-1 pb-0">
                                                         <h6>LKR</h6>
                                                     </span>
-                                                    <input type="number" id="feeLocalAdult"
+                                                    <input type="number" id="inputLocalAdultFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
                                                         onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feelocaladult')">
@@ -251,7 +255,7 @@
                                                     <span class="input-group-text p-1 pb-0">
                                                         <h6>LKR</h6>
                                                     </span>
-                                                    <input type="text" id="feeLocalChild"
+                                                    <input type="text" id="inputLocalChildFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
                                                         onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildlocal')">
@@ -275,7 +279,7 @@
                                                     <span class="input-group-text p-1 pb-0">
                                                         <h6>LKR</h6>
                                                     </span>
-                                                    <input type="text" id="feeForeignAdult"
+                                                    <input type="text" id="inputForeignAdultFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
                                                         onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feeforeignadult')">
@@ -391,122 +395,122 @@
 
         <!-- Modal to display full details of a row -->
         <div class="modal fade py-5" id="infoModalAttraction" tabindex="-1" aria-labelledby="infoModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content shadow-lg rounded-4">
-                <!-- Modal Header -->
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="infoModalLabel">Attraction Details</h5>
-                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="infoModalLabel">Attraction Details</h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
 
-                <!-- Modal Body -->
-                <div class="modal-body">
-                    <div class="container">
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <div class="container">
 
-                        <!-- Employee Image and Basic Info -->
-                        <div class="row g-4 align-items-center">
-                          
-                            <!-- Name and NIC -->
-                            <div class="col-md-8">
-                                <p class="fw-bold mb-1">Location Name:</p>
-                                <p id="modalAttrName" class="text-muted"></p>
-                                <p class="fw-bold mb-1">NIC:</p>
-                                <p id="modalEmpNIC" class="text-muted"></p>
-                            </div>
-                        </div>
+                            <!-- Employee Image and Basic Info -->
+                            <div class="row g-4 align-items-center">
 
-                        <!-- Other Details -->
-                        <hr>
-                        <div class="row g-4">
-                            <div class="col-md-4">
-                                <p class="fw-bold mb-1">Employee Code:</p>
-                                <p id="modalEmpCode" class="text-muted mb-0"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="fw-bold mb-1">Designation:</p>
-                                <p id="modalEmpDesignation" class="text-muted mb-0"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="fw-bold mb-1">Working Status:</p>
-                                <p id="modalEmpStatus" class="text-muted mb-0"></p>
-                            </div>
-                        </div>
-
-                        <hr>
-                        <div class="row g-4">
-                            <div class="col-md-4">
-                                <p class="fw-bold mb-1">Gender:</p>
-                                <p id="modalEmpGender" class="text-muted mb-0"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="fw-bold mb-1">Date of Birth:</p>
-                                <p id="modalEmpDOB" class="text-muted mb-0"></p>
-                            </div>
-                        </div>
-
-                        <hr>
-                        <div class="row g-4">
-                            <div class="col-md-4">
-                                <p class="fw-bold mb-1">Mobile Number:</p>
-                                <p id="modalEmpMobileNum" class="text-muted mb-0"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="fw-bold mb-1">Land Number:</p>
-                                <p id="modalEmpLandNum" class="text-muted mb-0"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="fw-bold mb-1">Personal Email:</p>
-                                <p id="modalEmpPersonalEmail" class="text-muted mb-0"></p>
-                            </div>
-                        </div>
-
-                        <hr>
-                        <div class="row g-4">
-                            <div class="col-md-8">
-                                <p class="fw-bold mb-1">Address:</p>
-                                <p id="modalEmpAddress" class="text-muted mb-0"></p>
-                            </div>
-                        </div>
-
-                        <hr>
-                        <div class="row g-4">
-                            <div class="col-md-8">
-                                <p class="fw-bold mb-1">Additional Details:</p>
-                                <p id="modalEmpNote" class="text-muted mb-0"></p>
+                                <!-- Name and NIC -->
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Location Name:</p>
+                                    <p id="modalAttrName" class="text-muted"></p>
+                                    <p class="fw-bold mb-1">NIC:</p>
+                                    <p id="modalEmpNIC" class="text-muted"></p>
+                                </div>
                             </div>
 
-                            <div class="col-md-4">
-                                <p id="modalEmpIfDeleted" class="text-danger d-none mb-0"></p>
+                            <!-- Other Details -->
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Employee Code:</p>
+                                    <p id="modalEmpCode" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Designation:</p>
+                                    <p id="modalEmpDesignation" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Working Status:</p>
+                                    <p id="modalEmpStatus" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Gender:</p>
+                                    <p id="modalEmpGender" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Date of Birth:</p>
+                                    <p id="modalEmpDOB" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Mobile Number:</p>
+                                    <p id="modalEmpMobileNum" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Land Number:</p>
+                                    <p id="modalEmpLandNum" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Personal Email:</p>
+                                    <p id="modalEmpPersonalEmail" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Address:</p>
+                                    <p id="modalEmpAddress" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Additional Details:</p>
+                                    <p id="modalEmpNote" class="text-muted mb-0"></p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <p id="modalEmpIfDeleted" class="text-danger d-none mb-0"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Modal Footer -->
-                <div class="modal-footer d-flex justify-content-between bg-light">
-                    <button class="btn btn-outline-primary" onclick="printEmployeeRecord()">
-                        Print
-                    </button>
-                    <div>
-                        <button id="modalEmpEditBtn" class="btn btn-outline-success me-2"
-                            onclick="refillEmployeeForm(window['currentObject'])">
-                            Edit Employee Record
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex justify-content-between bg-light">
+                        <button class="btn btn-outline-primary" onclick="printEmployeeRecord()">
+                            Print
                         </button>
-                        <button id="modalEmpDeleteBtn" class="btn btn-outline-danger"
-                            onclick="deleteAttrRecordEmployeeRecord(window['currentObject'])">
-                            Delete Attraction Record
-                        </button>
-                        <button id="modalEmpRecoverBtn" class="btn btn-outline-primary d-none"
-                            onclick="restoreEmployeeRecord()">
-                            Restore Employee Record
-                        </button>
+                        <div>
+                            <button id="modalEmpEditBtn" class="btn btn-outline-success me-2"
+                                onclick="refillEmployeeForm(window['currentObject'])">
+                                Edit Employee Record
+                            </button>
+                            <button id="modalEmpDeleteBtn" class="btn btn-outline-danger"
+                                onclick="deleteAttrRecordEmployeeRecord(window['currentObject'])">
+                                Delete Attraction Record
+                            </button>
+                            <button id="modalEmpRecoverBtn" class="btn btn-outline-primary d-none"
+                                onclick="restoreEmployeeRecord()">
+                                Restore Employee Record
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
     </main>
 

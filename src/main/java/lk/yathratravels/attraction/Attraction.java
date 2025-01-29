@@ -69,7 +69,7 @@ public class Attraction {
     private District district_id;
 
     @ManyToMany
-    @JoinTable(name = "attraction_has_category", joinColumns = @JoinColumn(name = "attraction_id"), inverseJoinColumns = @JoinColumn(name = "attrcategory_id"))
+    @JoinTable(name = "attraction_has_attr_category", joinColumns = @JoinColumn(name = "attraction_id"), inverseJoinColumns = @JoinColumn(name = "attr_category_id"))
     private Set<AttrCategory> categories;
 
     @Column(name = "addeddatetime")
