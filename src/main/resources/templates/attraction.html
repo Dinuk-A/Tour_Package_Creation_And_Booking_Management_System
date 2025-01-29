@@ -87,12 +87,12 @@
                                 <div class="input-group">
                                     <!-- Name Input -->
                                     <input id="inputPlaceName"
-                                        onkeyup="inputFieldValidator(this, '' ,'attraction' ,'name' )" type="text"
+                                        onkeyup="inputValidatorText(this, '' ,'attraction' ,'name' )" type="text"
                                         class="form-control form-input me-2" style="width:35%">
 
                                     <!-- Label input -->
                                     <select id="selectAttrStatus" class="form-control form-select"
-                                        onchange="selectDynamicVal(this,'','attraction','attrstatus_id')">
+                                        onchange="staticSelectValidator(this,'attraction','attr_status')">
 
                                     </select>
                                 </div>
@@ -102,11 +102,11 @@
                             <div class="mb-2">
                                 <div class="input-group">
                                     <!-- Label for PROVINCE -->
-                                    <label class="form-label w-50" for="inputPlaceProvince">Province
+                                    <label class="form-label w-50" for="selectAttrProvince">Province
                                     </label>
 
                                     <!-- Label for DISTRICT -->
-                                    <label for="inputPlaceDistrict" class="form-label w-50">District
+                                    <label for="selectAttrDistrict" class="form-label w-50">District
                                     </label>
 
                                 </div>
@@ -114,13 +114,13 @@
                                 <div class="input-group">
 
                                     <!-- SELECT PROVINCE -->
-                                    <select id="inputPlaceProvince" class="form-control form-select"
+                                    <select id="selectAttrProvince" class="form-control form-select"
                                         onchange="getDistByProvince()">
                                     </select>
 
                                     <!-- SELECT DISTRICT -->
-                                    <select id="inputPlaceDistrict" class="ms-3 form-control form-select"
-                                        onchange="selectDynamicVal(this,'','attraction','district_id')">
+                                    <select id="selectAttrDistrict" class="ms-3 form-control form-select"
+                                        onchange="dynamicSelectValidator(this,'attraction','district_id')">
 
                                     </select>
                                 </div>
@@ -148,7 +148,6 @@
 
                                             <!-- this will be filled by a JS -->
 
-                                            <!-- </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -237,7 +236,7 @@
                                                     <input type="number" id="feeLocalAdult"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputFieldValidator(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feelocal')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feelocaladult')">
                                                 </div>
 
 
@@ -255,7 +254,7 @@
                                                     <input type="text" id="feeLocalChild"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputFieldValidator(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildlocal')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildlocal')">
                                                 </div>
 
 
@@ -279,7 +278,7 @@
                                                     <input type="text" id="feeForeignAdult"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputFieldValidator(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feeforeign')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feeforeignadult')">
                                                 </div>
                                             </div>
 
@@ -291,10 +290,10 @@
                                                     <span class="input-group-text p-1 pb-0">
                                                         <h6>LKR</h6>
                                                     </span>
-                                                    <input type="number" id="feeForeignChild"
+                                                    <input type="number" id="inputForeignChildFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputFieldValidator(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildforeign')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildforeign')">
                                                 </div>
 
 
@@ -311,7 +310,7 @@
                                 <div class="col-7 pb-2">
                                     <label for="inputNote" class="form-label fw-bold">Note :</label>
                                     <textarea class="form-control" placeholder=" " id="inputNote"
-                                        onkeyup="inputFieldValidator(this,'','attraction','description')"
+                                        onkeyup="inputValidatorText(this,'','attraction','description')"
                                         style="height: 100px;"></textarea>
                                 </div>
 
@@ -331,7 +330,7 @@
                                                 </span>
                                                 <input type="number" id="vehiParkingFeeInput"
                                                     class="form-control form-input p-1 text-center " placeholder=""
-                                                    onkeyup="inputFieldValidator(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','vehicleparkingfee')">
+                                                    onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','vehicleparkingfee')">
 
                                             </div>
                                         </div>
@@ -348,12 +347,12 @@
 
                                     <div class="row w-100 mt-2">
                                         <!-- DURATION -->
-                                        <label for="tourDuration" class="form-label mb-0"> Tour Duration </label>
+                                        <label for="inputTourDuration" class="form-label mb-0"> Tour Duration </label>
 
                                         <div class="input-group mt-1">
                                             <input type="number" class="form-control form-input p-1 text-center"
-                                                id="tourDuration" placeholder=""
-                                                onkeyup="inputFieldValidator(this,'^(?!0*$)\\d+(\\.\\d{1,2})?$','attraction','duration')">
+                                                id="inputTourDuration" placeholder=""
+                                                onkeyup="inputValidatorText(this,'^(?!0*$)\\d+(\\.\\d{1,2})?$','attraction','duration')">
                                             <span class="input-group-text p-1 pb-0 w-50 text-center">
                                                 <h6>Hours</h6>
                                             </span>
@@ -369,17 +368,15 @@
 
                                 <div class="col-3">
                                     <button type="reset" class="btn btn-all btn-clear"
-                                        onclick="refreshAttractionsForm()"> Clear</button>
+                                        onclick="refreshAttractionForm()"> Clear</button>
                                 </div>
 
                                 <div class="col-9 text-end">
                                     <button type="button" id="attraUpdateBtn" class="btn btn-all btn-update "
-                                        onclick="updateVplaceBtn()" style="pointer-events: all;">Update</button>
+                                        onclick="updateAttraction()" style="pointer-events: all;">Update</button>
 
                                     <button type="submit" id="attraAddBtn" class="btn btn-all btn-add "
-                                        onclick="addVPlaceBtn()" style="pointer-events: all;">Add</button>
-
-                                    <!-- <button type="button" disabled class="btn btn-warning ">Push</button> -->
+                                        onclick="addNewAttraction()" style="pointer-events: all;">Add</button>
                                 </div>
                             </div>
 
@@ -391,6 +388,125 @@
             </div>
 
         </div>
+
+        <!-- Modal to display full details of a row -->
+        <div class="modal fade py-5" id="infoModalAttraction" tabindex="-1" aria-labelledby="infoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content shadow-lg rounded-4">
+                <!-- Modal Header -->
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="infoModalLabel">Attraction Details</h5>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div class="container">
+
+                        <!-- Employee Image and Basic Info -->
+                        <div class="row g-4 align-items-center">
+                          
+                            <!-- Name and NIC -->
+                            <div class="col-md-8">
+                                <p class="fw-bold mb-1">Location Name:</p>
+                                <p id="modalAttrName" class="text-muted"></p>
+                                <p class="fw-bold mb-1">NIC:</p>
+                                <p id="modalEmpNIC" class="text-muted"></p>
+                            </div>
+                        </div>
+
+                        <!-- Other Details -->
+                        <hr>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <p class="fw-bold mb-1">Employee Code:</p>
+                                <p id="modalEmpCode" class="text-muted mb-0"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="fw-bold mb-1">Designation:</p>
+                                <p id="modalEmpDesignation" class="text-muted mb-0"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="fw-bold mb-1">Working Status:</p>
+                                <p id="modalEmpStatus" class="text-muted mb-0"></p>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <p class="fw-bold mb-1">Gender:</p>
+                                <p id="modalEmpGender" class="text-muted mb-0"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="fw-bold mb-1">Date of Birth:</p>
+                                <p id="modalEmpDOB" class="text-muted mb-0"></p>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <p class="fw-bold mb-1">Mobile Number:</p>
+                                <p id="modalEmpMobileNum" class="text-muted mb-0"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="fw-bold mb-1">Land Number:</p>
+                                <p id="modalEmpLandNum" class="text-muted mb-0"></p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="fw-bold mb-1">Personal Email:</p>
+                                <p id="modalEmpPersonalEmail" class="text-muted mb-0"></p>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="row g-4">
+                            <div class="col-md-8">
+                                <p class="fw-bold mb-1">Address:</p>
+                                <p id="modalEmpAddress" class="text-muted mb-0"></p>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="row g-4">
+                            <div class="col-md-8">
+                                <p class="fw-bold mb-1">Additional Details:</p>
+                                <p id="modalEmpNote" class="text-muted mb-0"></p>
+                            </div>
+
+                            <div class="col-md-4">
+                                <p id="modalEmpIfDeleted" class="text-danger d-none mb-0"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer d-flex justify-content-between bg-light">
+                    <button class="btn btn-outline-primary" onclick="printEmployeeRecord()">
+                        Print
+                    </button>
+                    <div>
+                        <button id="modalEmpEditBtn" class="btn btn-outline-success me-2"
+                            onclick="refillEmployeeForm(window['currentObject'])">
+                            Edit Employee Record
+                        </button>
+                        <button id="modalEmpDeleteBtn" class="btn btn-outline-danger"
+                            onclick="deleteAttrRecordEmployeeRecord(window['currentObject'])">
+                            Delete Attraction Record
+                        </button>
+                        <button id="modalEmpRecoverBtn" class="btn btn-outline-primary d-none"
+                            onclick="restoreEmployeeRecord()">
+                            Restore Employee Record
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     </main>
 

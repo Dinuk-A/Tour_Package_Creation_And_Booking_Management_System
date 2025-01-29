@@ -149,15 +149,15 @@ const checkEmpFormErrors = () => {
         errors += "Designation cannot be empty \n";
     }
 
-//    if (employee.emp_photo != null) {
-//        const fileInput = document.getElementById("fileInputEmpPhoto");
-//        const previewImg = document.getElementById("previewEmployeeImg");
-//        const isImageValid = imgValidatorEmpPic(fileInput, "employee", "emp_photo", previewImg);
-//
-//        if (!isImageValid) {
-//            errors += "Invalid employee image \n";
-//        }
-//    }
+    //    if (employee.emp_photo != null) {
+    //        const fileInput = document.getElementById("fileInputEmpPhoto");
+    //        const previewImg = document.getElementById("previewEmployeeImg");
+    //        const isImageValid = imgValidatorEmpPic(fileInput, "employee", "emp_photo", previewImg);
+    //
+    //        if (!isImageValid) {
+    //            errors += "Invalid employee image \n";
+    //        }
+    //    }
 
 
     return errors;
@@ -197,7 +197,6 @@ const imgValidatorEmpPic = (fileInputID, object, imgProperty, previewId) => {
     return false;
 
 };
-
 
 //clear uploaded image (not delete)
 const clearEmpImg = () => {
@@ -245,7 +244,7 @@ const addNewEmployee = async () => {
             alert('User cancelled the task');
         }
     } else {
-        alert('Form has following errors: ' + errors);
+        alert('Form has following errors:  \n' + errors);
     }
 }
 
@@ -362,12 +361,12 @@ const refillEmployeeForm = async (empObj) => {
     empUpdateBtn.style.cursor = "pointer";
 
     empAddBtn.disabled = true;
-    empAddBtn.style.cursor = "not-allowed";
-
-    $("#infoModalEmployee").modal("hide");
+    empAddBtn.style.cursor = "not-allowed";   
 
     document.getElementById('selectEmployeementStatus').style.border = '2px solid #ced4da';
     document.getElementById('selectEmployeementStatus').children[2].classList.remove('d-none');
+
+    $("#infoModalEmployee").modal("hide");
 
     var myEmpFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myEmpFormTab.show();

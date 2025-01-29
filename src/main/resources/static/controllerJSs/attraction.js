@@ -6,7 +6,7 @@ window.addEventListener('load', () => {
     buildAttractionTable();
 
     //for attraction form
-    refreshAttractionsForm();
+    refreshAttractionForm();
 })
 
 //global var to store id of the table
@@ -20,14 +20,14 @@ const buildAttractionTable = async () => {
 
         const tableColumnInfo = [
 
-            { dataType: 'text', propertyName: 'name', colHeadName: 'Name' },
-            { dataType: 'function', propertyName: getDistNProvince, colHeadName: 'District' },
-            // { dataType: 'function', propertyName: getCategories , colHeadName: 'Categories'},
-            // { dataType: 'function', propertyName: getActivities , colHeadName: 'Activities'},
-            //{ dataType: 'function', propertyName: getDuration, colHeadName: 'Duration' },
-            { dataType: 'function', propertyName: showLocalFees, colHeadName: 'Local Fees' },
-            { dataType: 'function', propertyName: showForeignFees, colHeadName: 'Foreign Fees' },
-            { dataType: 'function', propertyName: getStatus, colHeadName: 'Status' }
+            { displayType: 'text', displayingPropertyOrFn: 'name', colHeadName: 'Name' },
+            { displayType: 'function', displayingPropertyOrFn: getDistNProvince, colHeadName: 'District' },
+            // { displayType: 'function', displayingPropertyOrFn: getCategories , colHeadName: 'Categories'},
+            // { displayType: 'function', displayingPropertyOrFn: getActivities , colHeadName: 'Activities'},
+            //{ displayType: 'function', displayingPropertyOrFn: getDuration, colHeadName: 'Duration' },
+            { displayType: 'function', displayingPropertyOrFn: showLocalFees, colHeadName: 'Local Fees <br/> (LKR)' },
+            { displayType: 'function', displayingPropertyOrFn: showForeignFees, colHeadName: 'Foreign Fees (LKR)' },
+            { displayType: 'function', displayingPropertyOrFn: 'attr_status', colHeadName: 'Status' }
 
         ]
 
@@ -40,119 +40,6 @@ const buildAttractionTable = async () => {
         console.error("Failed to build attraction table:", error);
     }
 
-}
-
-//fn for refresh form
-const refreshAttractionsForm = () => {
-
-    attraction = new Object;
-
-    attraction.categories = new Array();
-    attraction.attr_activities = new Array();
-
-    document.getElementById('formAttraction').reset();
-
-    //get province list
-    provinces = ajaxGetRequest("province/all");
-    fillDataIntoSelect(inputPlaceProvince, 'Please Select The Province', provinces, 'name')
-
-    //get district list 
-    districts = [];
-    fillDataIntoSelect(inputPlaceDistrict, 'Please Select The Provice First', districts, 'name')
-    inputPlaceDistrict.disabled = true;
-
-    //get categories list
-    categoryList = ajaxGetRequest("/attrcategory/all");
-    flushCollapseOne.innerHTML = "";
-    categoryList.forEach(element => {
-
-        let newDiv = document.createElement('div');
-        newDiv.className = "form-check form-check-inline";
-        newDiv.style.width = "30%";
-
-        let newInput = document.createElement('input');
-        newInput.classList.add("form-check-input");
-        newInput.type = "checkbox";
-        newInput.setAttribute('id', JSON.stringify(element.name)) //new
-
-        let newLabel = document.createElement('label');
-        newLabel.classList.add("form-check-label");
-        newLabel.innerText = element.name;
-        newLabel.setAttribute('for', JSON.stringify(element.name))  //new
-
-        newInput.onchange = function () {
-            if (this.checked) {
-                attraction.categories.push(element)
-
-            } else {
-                let existIndex = attraction.categories.map(category => category.id).indexOf(element.id);
-                if (existIndex != -1) {
-                    attraction.categories.splice(existIndex, 1)
-
-                }
-            }
-        }
-
-        newDiv.appendChild(newInput);
-        newDiv.appendChild(newLabel);
-
-        flushCollapseOne.appendChild(newDiv)
-
-    })
-
-    //get Activity list
-    // attrActivities = ajaxGetRequest("/attractivity/alldata");
-    // flushCollapseTwo.innerHTML = "";
-    // attrActivities.forEach(activity => {
-
-    //     let activityDiv = document.createElement('div');
-    //     activityDiv.classList = "form-check form-check-inline";
-    //     activityDiv.style.width = "30%"
-
-    //     let activityInput = document.createElement('input');
-    //     activityInput.classList.add("form-check-input");
-    //     activityInput.type = "checkbox";
-    //     activityInput.setAttribute('id', JSON.stringify(activity.name))
-
-    //     let activityLabel = document.createElement('label');
-    //     activityLabel.classList.add("form-check-label");
-    //     activityLabel.innerText = activity.name;
-    //     activityLabel.setAttribute('for', JSON.stringify(activity.name))
-
-    //     //fn for radio clicks
-    //     activityInput.onchange = function () {
-
-    //         if (this.checked) {
-    //             attraction.attr_activities.push(activity);
-    //         } else {
-    //             let existIndex = attraction.attr_activities.map(activity => activity.id).indexOf(activity.id);
-    //             if (existIndex != -1) {
-    //                 attraction.attr_activities.splice(existIndex, 1)
-    //             }
-    //         }
-    //     }
-
-    //     activityDiv.appendChild(activityInput);
-    //     activityDiv.appendChild(activityLabel);
-
-    //     flushCollapseTwo.appendChild(activityDiv);
-
-    // })
-
-    //initially UPDATE button should be disabled (in ADD mode)
-    attraUpdateBtn.disabled = true;
-    attraUpdateBtn.style.cursor = "not-allowed";
-
-    inputPlaceName.style.border = "1px solid #ced4da";
-    selectAttrStatus.style.border = "1px solid #ced4da";
-    inputPlaceDistrict.style.border = "1px solid #ced4da";
-    feeForeignAdult.style.border = "1px solid #ced4da";
-    feeLocalAdult.style.border = "1px solid #ced4da";
-    feeForeignChild.style.border = "1px solid #ced4da";
-    feeLocalChild.style.border = "1px solid #ced4da";
-    inputNote.style.border = "1px solid #ced4da";
-    tourDuration.style.border = "1px solid #ced4da";
-    vehiParkingFeeInput.style.border = "1px solid #ced4da";
 }
 
 //fn for show district + province in table
@@ -213,13 +100,13 @@ const getDuration = (ob) => {
 //fn for show LOCAL fees in table
 const showLocalFees = (ob) => {
 
-    if (ob.feelocal != 0.00 && ob.feechildlocal != 0.00) {
+    if (ob.feelocaladult != 0.00 && ob.feechildlocal != 0.00) {
 
-        return "Adult : " + parseFloat(ob.feelocal).toFixed(2) + "<br/> Child  : " + parseFloat(ob.feechildlocal).toFixed(2);
+        return "Adult : " + parseFloat(ob.feelocaladult).toFixed(2) + "<br/> Child  : " + parseFloat(ob.feechildlocal).toFixed(2);
 
-    } else if (ob.feechildlocal == 0.00 && ob.feelocal != 0) {
+    } else if (ob.feechildlocal == 0.00 && ob.feelocaladult != 0) {
 
-        return "Adult : " + parseFloat(ob.feelocal).toFixed(2) + "<br/> Child : Free";
+        return "Adult : " + parseFloat(ob.feelocaladult).toFixed(2) + "<br/> Child : Free";
         //💥TO FIXED KARAPU GAMAN MEKA STRING EKAK WENAWA. CALC KARANNA BA ITAPASSE,  CALC KARANNA OONNAM  AYE  PARSE KARANNA💥
 
     } else {
@@ -231,57 +118,189 @@ const showLocalFees = (ob) => {
 //fn for show FOREIGN FEES in table
 const showForeignFees = (ob) => {
 
-    if (ob.feeforeign != 0.00 && ob.feechildforeign != 0.00) {
+    if (ob.feeforeignadult != 0.00 && ob.feechildforeign != 0.00) {
 
-        return "Adult : " + parseFloat(ob.feeforeign).toFixed(2) + "<br/> Child : " + parseFloat(ob.feechildforeign).toFixed(2);
+        return "Adult : " + parseFloat(ob.feeforeignadult).toFixed(2) + "<br/> Child : " + parseFloat(ob.feechildforeign).toFixed(2);
     } else {
         return 'No Entrance Fee';
     }
 }
 
-//show status in table
-const getStatus = (ob) => {
-    return ob.attrstatus_id.name;
+
+//fn for refresh form
+const refreshAttractionForm = async () => {
+
+    attraction = new Object;
+
+    attraction.categories = new Array();
+    attraction.attr_activities = new Array();
+
+    document.getElementById('formAttraction').reset();
+
+    try {
+        //get province list
+        provinces = await ajaxGetReq("province/all");
+        fillDataIntoDynamicSelects(selectAttrProvince, 'Please Select The Province', provinces, 'name');
+
+        //get categories list
+        categoryList = await ajaxGetReq("/attrcategory/all");
+        flushCollapseOne.innerHTML = "";
+        categoryList.forEach(element => {
+
+            let newDiv = document.createElement('div');
+            newDiv.className = "form-check form-check-inline";
+            newDiv.style.width = "30%";
+
+            let newInput = document.createElement('input');
+            newInput.classList.add("form-check-input");
+            newInput.type = "checkbox";
+            newInput.setAttribute('id', JSON.stringify(element.name)) //new
+
+            let newLabel = document.createElement('label');
+            newLabel.classList.add("form-check-label");
+            newLabel.innerText = element.name;
+            newLabel.setAttribute('for', JSON.stringify(element.name))  //new
+
+            newInput.onchange = function () {
+                if (this.checked) {
+                    attraction.categories.push(element)
+
+                } else {
+                    let existIndex = attraction.categories.map(category => category.id).indexOf(element.id);
+                    if (existIndex != -1) {
+                        attraction.categories.splice(existIndex, 1)
+
+                    }
+                }
+            }
+
+            newDiv.appendChild(newInput);
+            newDiv.appendChild(newLabel);
+
+            flushCollapseOne.appendChild(newDiv)
+
+        });
+
+    } catch (error) {
+        console.error("Failed to fetch Designations : ", error);
+    }
+
+    //districts will be generated based on selected province
+    districts = [];
+    fillDataIntoDynamicSelects(selectAttrDistrict, 'Please Select The Provice First', districts, 'name')
+    selectAttrDistrict.disabled = true;
+
+    //get Activity list
+    // attrActivities = ajaxGetRequest("/attractivity/alldata");
+    // flushCollapseTwo.innerHTML = "";
+    // attrActivities.forEach(activity => {
+
+    //     let activityDiv = document.createElement('div');
+    //     activityDiv.classList = "form-check form-check-inline";
+    //     activityDiv.style.width = "30%"
+
+    //     let activityInput = document.createElement('input');
+    //     activityInput.classList.add("form-check-input");
+    //     activityInput.type = "checkbox";
+    //     activityInput.setAttribute('id', JSON.stringify(activity.name))
+
+    //     let activityLabel = document.createElement('label');
+    //     activityLabel.classList.add("form-check-label");
+    //     activityLabel.innerText = activity.name;
+    //     activityLabel.setAttribute('for', JSON.stringify(activity.name))
+
+    //     //fn for radio clicks
+    //     activityInput.onchange = function () {
+
+    //         if (this.checked) {
+    //             attraction.attr_activities.push(activity);
+    //         } else {
+    //             let existIndex = attraction.attr_activities.map(activity => activity.id).indexOf(activity.id);
+    //             if (existIndex != -1) {
+    //                 attraction.attr_activities.splice(existIndex, 1)
+    //             }
+    //         }
+    //     }
+
+    //     activityDiv.appendChild(activityInput);
+    //     activityDiv.appendChild(activityLabel);
+
+    //     flushCollapseTwo.appendChild(activityDiv);
+
+    // })
+
+    //initially UPDATE button should be disabled (in ADD mode)
+    attraUpdateBtn.disabled = true;
+    attraUpdateBtn.style.cursor = "not-allowed";
+
+    attraAddBtn.disabled = false;
+    attraAddBtn.style.cursor = "pointer";
+
+    // Array of input field IDs to reset
+    const inputTagsIds = [
+        'inputPlaceName',
+
+        'selectAttrDistrict',
+        'inputForeignAdultFee',
+        'inputLocalAdultFee',
+        'inputForeignChildFee',
+        'inputLocalChildFee',
+        'inputNote',
+        'inputTourDuration',
+        'vehiParkingFeeInput',
+    ];
+
+    // 'selectAttrStatus',
+
+    //clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
 }
 
 //fn for if no entrance fee for all
 const allEntryFree = () => {
 
-    if (allEntryFreeChkBox.checked) {
+    if (document.getElementById('allEntryFreeChkBox').checked) {
 
         //disable input fields
-        feeForeignAdult.disabled = true;
-        feeLocalAdult.disabled = true;
-        feeForeignChild.disabled = true;
-        feeLocalChild.disabled = true;
+        inputForeignAdultFee.disabled = true;
+        inputLocalAdultFee.disabled = true;
+        inputForeignChildFee.disabled = true;
+        inputLocalChildFee.disabled = true;
 
         //show default value as 0.00 LKR
-        feeForeignAdult.value = "0.00";
-        feeLocalAdult.value = "0.00";
-        feeForeignChild.value = "0.00";
-        feeLocalChild.value = "0.00";
+        inputForeignAdultFee.value = "0.00";
+        inputLocalAdultFee.value = "0.00";
+        inputForeignChildFee.value = "0.00";
+        inputLocalChildFee.value = "0.00";
 
         //save 0.00 in DB
-        attraction.feeforeign = 0.00;
-        attraction.feelocal = 0.00;
+        attraction.feeforeignadult = 0.00;
+        attraction.feelocaladult = 0.00;
         attraction.feechildlocal = 0.00;
         attraction.feechildforeign = 0.00;
 
     } else {  //check karala aye uncheck kaloth 
 
-        feeForeignAdult.disabled = false;
-        feeLocalAdult.disabled = false;
-        feeForeignChild.disabled = false;
-        feeLocalChild.disabled = false;
+        inputForeignAdultFee.disabled = false;
+        inputLocalAdultFee.disabled = false;
+        inputForeignChildFee.disabled = false;
+        inputLocalChildFee.disabled = false;
 
-        feeForeignAdult.value = "";
-        feeLocalAdult.value = "";
-        feeForeignChild.value = "";
-        feeLocalChild.value = "";
+        inputForeignAdultFee.value = "";
+        inputLocalAdultFee.value = "";
+        inputForeignChildFee.value = "";
+        inputLocalChildFee.value = "";
 
         //💥TYPE KARANA VALUE EKA BIND WENNA ONE, NATHTHN DIGATAMA 0 BIND WENAWA
-        attraction.feeforeign = null;
-        attraction.feelocal = null;
+        attraction.feeforeignadult = null;
+        attraction.feelocaladult = null;
         attraction.feechildlocal = null;
         attraction.feechildforeign = null;
     }
@@ -290,35 +309,35 @@ const allEntryFree = () => {
 //fn for if only locals are free
 const localsEntryFree = () => {
 
-    if (localsEntryFreeCheckBox.checked) {
+    if (document.getElementById('localsEntryFreeCheckBox').checked) {
 
         //mulin 1st chk box eka  click krla apahu 2nd eka click krnwa nam foreign set eka apahu enable karanawa + ewaye values ayn karanawa
-        feeForeignAdult.disabled = false;
-        feeForeignChild.disabled = false;
+        inputForeignAdultFee.disabled = false;
+        inputForeignChildFee.disabled = false;
 
-        feeForeignAdult.value = "";
-        feeForeignChild.value = "";
+        inputForeignAdultFee.value = "";
+        inputForeignChildFee.value = "";
 
         //local set eka disable karanwa
-        feeLocalAdult.disabled = true;
-        feeLocalChild.disabled = true;
+        inputLocalAdultFee.disabled = true;
+        inputLocalChildFee.disabled = true;
 
-        feeLocalAdult.value = "0.00";
-        feeLocalChild.value = "0.00";
+        inputLocalAdultFee.value = "0.00";
+        inputLocalChildFee.value = "0.00";
 
-        attraction.feelocal = 0.00;
+        attraction.feelocaladult = 0.00;
         attraction.feechildlocal = 0.00;
 
     } else {
 
-        feeLocalAdult.disabled = false;
-        feeLocalChild.disabled = false;
+        inputLocalAdultFee.disabled = false;
+        inputLocalChildFee.disabled = false;
 
-        feeLocalAdult.value = "";
-        feeLocalChild.value = "";
+        inputLocalAdultFee.value = "";
+        inputLocalChildFee.value = "";
 
         //💥TYPE KARANA VALUE EKA BIND WENNA ONE, NATHTHN DIGATAMA 0 BIND WENAWA
-        attraction.feelocal = null;
+        attraction.feelocaladult = null;
         attraction.feechildlocal = null;
 
     }
@@ -328,64 +347,33 @@ const localsEntryFree = () => {
 //IF NO ONE IS FREE
 const allPaid = () => {
 
-    feeForeignAdult.disabled = false;
-    feeLocalAdult.disabled = false;
-    feeForeignChild.disabled = false;
-    feeLocalChild.disabled = false;
+    inputForeignAdultFee.disabled = false;
+    inputLocalAdultFee.disabled = false;
+    inputForeignChildFee.disabled = false;
+    inputLocalChildFee.disabled = false;
 
-    feeForeignAdult.value = "";
-    feeLocalAdult.value = "";
-    feeForeignChild.value = "";
-    feeLocalChild.value = "";
+    inputForeignAdultFee.value = "";
+    inputLocalAdultFee.value = "";
+    inputForeignChildFee.value = "";
+    inputLocalChildFee.value = "";
 
     //💥KALIN BINND WUNA 0.00 TIKA METHANADITH AYN KARANNA ONE
-    attraction.feeforeign = null;
-    attraction.feelocal = null;
+    attraction.feeforeignadult = null;
+    attraction.feelocaladult = null;
     attraction.feechildlocal = null;
     attraction.feechildforeign = null;
 
 }
 
-//fn for add a visiting place 
-const addVPlaceBtn = () => {
-
-    //check errors
-    const errors = checkAttrErrors();
-
-    if (errors == '') {
-        const userConfirm = confirm('Are You Sure To Add ? \n' + attraction.name)
-
-        if (userConfirm) {
-
-            //call POST service
-            let postServiceResponse = ajaxRequest("/attraction", "POST", attraction);
-
-            if (postServiceResponse == "OK") {
-                alert("Succesfully Saved !!!");
-                vPlaceForm.reset();
-                refreshAttractionsForm();
-                refreshAttractionTable();
-                $('#vPlaceModal').modal('hide');
-
-            } else {
-                alert("An Error Occured " + postServiceResponse);
-            }
-        } else {
-            alert('Operation Cancelled By User')
-        }
-    } else {
-        alert('Form Has Followimg Errors \n \n' + errors);
-    }
-}
-
-const checkAttrErrors = () => {
+//check errors before submitting
+const checkAttrFormErrors = () => {
     let errors = '';
 
     if (attraction.name == null) {
         errors = errors + " Please Enter The Name \n";
     }
 
-    if (attraction.attrstatus_id == null) {
+    if (attraction.attr_status == null) {
         errors = errors + " Please Select The Status \n";
     }
 
@@ -397,11 +385,12 @@ const checkAttrErrors = () => {
         errors = errors + " Please Enter A Duration \n";
     }
 
-    // if (!freeParkingCBX.checked) {
-    //     if (attraction.vehicleparkingfee == null) {
-    //         errors = errors + " Please Enter The Parking Fee \n";
-    //     }
-    // }
+    if (!document.getElementById('freeParkingCBX').checked) {
+
+        if (attraction.vehicleparkingfee == null) {
+            errors = errors + " Please Enter The Parking Fee \n";
+        }
+    }
 
     if (attraction.categories.length == 0) {
         errors = errors + "Please Select One or More Categories \n";
@@ -412,9 +401,9 @@ const checkAttrErrors = () => {
     // }
 
     //all entrance free checkbox eka unclicked nam all fees fields wala value ekak thiyennama one
-    if (allPaidCheckBox.checked) {
+    if (document.getElementById('allPaidCheckBox').checked) {
 
-        if (attraction.feeforeign == null) {
+        if (attraction.feeforeignadult == null) {
             errors = errors + " Please Enter The Foreign Adults' Entrance Fee \n";
         }
 
@@ -422,7 +411,7 @@ const checkAttrErrors = () => {
             errors = errors + " Please Enter The Foreign Childs' Entrance Fee \n";
         }
 
-        if (attraction.feelocal == null) {
+        if (attraction.feelocaladult == null) {
             errors = errors + " Please Enter The Local Adults' Entrance Fee \n";
         }
 
@@ -430,9 +419,9 @@ const checkAttrErrors = () => {
             errors = errors + " Please Enter The Local Childs' Entrance Fee \n";
         }
 
-    } else if (!localsEntryFreeCheckBox.checked) {
+    } else if (!document.getElementById('localsEntryFreeCheckBox').checked) {
 
-        if (attraction.feelocal == null) {
+        if (attraction.feelocaladult == null) {
             errors = errors + " Please Enter The Local Adult Entrance Fee \n";
         }
 
@@ -440,8 +429,9 @@ const checkAttrErrors = () => {
             errors = errors + " Please Enter The Local Child Entrance Fee \n";
         }
 
-    } else if (localsEntryFreeCheckBox.checked) {
-        if (attraction.feeforeign == null) {
+    } else if (document.getElementById('localsEntryFreeCheckBox').checked) {
+
+        if (attraction.feeforeignadult == null) {
             errors = errors + " Please Enter The Foreign Adults' Entrance Fee \n";
         }
 
@@ -453,75 +443,126 @@ const checkAttrErrors = () => {
     return errors;
 }
 
+//fn for add a visiting place 
+const addNewAttraction = async () => {
+
+    //check errors
+    const errors = checkAttrFormErrors();
+
+    if (errors == '') {
+        const userConfirm = confirm('Are You Sure To Add ? \n' + attraction.name)
+
+        if (userConfirm) {
+
+            try {
+                const postServiceResponse = await ajaxPPDRequest("/attraction", "POST", attraction);
+
+                if (postServiceResponse === "OK") {
+                    alert('Saved Successfully');
+                    document.getElementById('vPlaceForm').reset();
+                    refreshAttractionForm();
+                    buildAttractionTable();
+                    var myAttrTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    myAttrTableTab.show();
+
+                } else {
+                    alert('Submit Failed ' + postServiceResponse);
+                }
+
+            } catch (error) {
+                // Handle errors (such as network issues or server errors)
+                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            }
+
+        } else {
+            alert('User cancelled the task');
+        }
+    } else {
+        alert('Form Has Followimg Errors \n \n' + errors);
+    }
+}
+
+const openModal = (attrObj) => {
+
+}
+
+//fn for restore button
+const restoreAttrRecord = () => {
+
+}
+
 //fn for edit btn ** FOR FORM REFILL **
-const editVPlaceBtn = (obj) => {
+const refillAttrForm = async (obj) => {
 
     attraction = JSON.parse(JSON.stringify(obj));
     attractionOldObj = JSON.parse(JSON.stringify(obj));
 
-    $('#vPlaceModal').modal('show');
-
-    inputPlaceDistrict.disabled = false;
+    selectAttrDistrict.disabled = false;
 
     inputPlaceName.value = attraction.name;
     // selectAttrStatus.value = attraction.attrstatus_id;
 
-    //get province list
-    provinces = ajaxGetRequest("/province/alldata");
-    fillDataIntoSelect(inputPlaceProvince, 'Please Select The Province', provinces, 'name', attraction.district_id.province_id.name)
-    inputPlaceProvince.style.border = "1px solid ced4da"
+    try {
 
-    districts = ajaxGetRequest("/district/alldata");
-    fillDataIntoSelect(inputPlaceDistrict, 'Please Select The District', districts, 'name', attraction.district_id.name)
+        //get province list
+        provinces = await ajaxGetReq("/province/all");
+        fillDataIntoSelect(selectAttrProvince, 'Please Select The Province', provinces, 'name', attraction.district_id.province_id.name);
+        selectAttrProvince.style.border = "1px solid ced4da";
 
-    attrstts = ajaxGetRequest("/attrstatus/alldata");
-    fillDataIntoSelect(selectAttrStatus, 'Please Select The Status', attrstts, 'name', attraction.attrstatus_id.name)
+        districts = await ajaxGetReq("/district/all");
+        fillDataIntoSelect(selectAttrDistrict, 'Please Select The District', districts, 'name', attraction.district_id.name);
+
+        //get categories list
+        categoryList = ajaxGetRequest("/category/all");
+        flushCollapseOne.innerHTML = "";
+        categoryList.forEach(element => {
+
+            let newDiv = document.createElement('div');
+            newDiv.className = "form-check form-check-inline";
+            newDiv.style.width = "30%";
+
+            let newInput = document.createElement('input');
+            newInput.classList.add("form-check-input");
+            newInput.type = "checkbox";
+            newInput.setAttribute('id', JSON.stringify(element.name))
+
+            let newLabel = document.createElement('label');
+            newLabel.classList.add("form-check-label");
+            newLabel.innerText = element.name;
+            newLabel.setAttribute('for', JSON.stringify(element.name))
+
+            newInput.onchange = function () {
+                if (this.checked) {
+                    attraction.categories.push(element)
+                } else {
+                    let existIndex = attraction.categories.map(category => category.id).indexOf(element.id);
+                    if (existIndex != -1) {
+                        attraction.categories.splice(existIndex, 1)
+                    }
+                }
+            }
+
+            let existIndex = attraction.categories.map(category => category.id).indexOf(element.id);
+            if (existIndex != -1) {
+                newInput.checked = true;
+            }
+
+            newDiv.appendChild(newInput);
+            newDiv.appendChild(newLabel);
+
+            flushCollapseOne.appendChild(newDiv)
+
+        })
+
+    } catch (error) {
+        console.error("Failed to fetch Data : ", error);
+    }
 
     //open 2 collapses auto
     flushCollapseOne.classList.add("show")
     // flushCollapseTwo.classList.add("show")
 
-    //get categories list
-    categoryList = ajaxGetRequest("/category/alldata");
-    flushCollapseOne.innerHTML = "";
-    categoryList.forEach(element => {
 
-        let newDiv = document.createElement('div');
-        newDiv.className = "form-check form-check-inline";
-        newDiv.style.width = "30%";
-
-        let newInput = document.createElement('input');
-        newInput.classList.add("form-check-input");
-        newInput.type = "checkbox";
-        newInput.setAttribute('id', JSON.stringify(element.name))
-
-        let newLabel = document.createElement('label');
-        newLabel.classList.add("form-check-label");
-        newLabel.innerText = element.name;
-        newLabel.setAttribute('for', JSON.stringify(element.name))
-
-        newInput.onchange = function () {
-            if (this.checked) {
-                attraction.categories.push(element)
-            } else {
-                let existIndex = attraction.categories.map(category => category.id).indexOf(element.id);
-                if (existIndex != -1) {
-                    attraction.categories.splice(existIndex, 1)
-                }
-            }
-        }
-
-        let existIndex = attraction.categories.map(category => category.id).indexOf(element.id);
-        if (existIndex != -1) {
-            newInput.checked = true;
-        }
-
-        newDiv.appendChild(newInput);
-        newDiv.appendChild(newLabel);
-
-        flushCollapseOne.appendChild(newDiv)
-
-    })
 
     //get Activity list
     // attrActivities = ajaxGetRequest("/attractivity/alldata");
@@ -568,32 +609,32 @@ const editVPlaceBtn = (obj) => {
     // })
 
     //override default styling gave by JS
-    inputPlaceProvince.style.border = "1px solid ced4da"
+    selectAttrProvince.style.border = "1px solid #ced4da";
 
-    if (attraction.feetype == "All Free") {
+    if (attraction.feetype === "All Free") {
         allEntryFreeChkBox.checked = true;
 
-        feeForeignAdult.disabled = true;
-        feeLocalAdult.disabled = true;
-        feeForeignChild.disabled = true;
-        feeLocalChild.disabled = true;
+        inputForeignAdultFee.disabled = true;
+        inputLocalAdultFee.disabled = true;
+        inputForeignChildFee.disabled = true;
+        inputLocalChildFee.disabled = true;
     }
 
-    if (attraction.feetype == "Local Free") {
+    if (attraction.feetype === "Local Free") {
         localsEntryFreeCheckBox.checked = true;
 
-        feeLocalAdult.disabled = true;
-        feeLocalChild.disabled = true;
+        inputLocalAdultFee.disabled = true;
+        inputLocalChildFee.disabled = true;
     }
 
-    if (attraction.feetype == "All Paid") {
+    if (attraction.feetype === "All Paid") {
         allPaidCheckBox.checked = true;
     }
 
-    feeForeignAdult.value = parseFloat(attraction.feeforeign).toFixed(2);
-    feeLocalAdult.value = parseFloat(attraction.feelocal).toFixed(2);
-    feeLocalChild.value = parseFloat(obj.feechildlocal).toFixed(2);
-    feeForeignChild.value = parseFloat(attraction.feechildforeign).toFixed(2);
+    inputForeignAdultFee.value = parseFloat(attraction.feeforeignadult).toFixed(2);
+    inputLocalAdultFee.value = parseFloat(attraction.feelocaladult).toFixed(2);
+    inputLocalChildFee.value = parseFloat(attraction.feechildlocal).toFixed(2);
+    inputForeignChildFee.value = parseFloat(attraction.feechildforeign).toFixed(2);
     vehiParkingFeeInput.value = parseFloat(attraction.vehicleparkingfee).toFixed(2);
     vehiParkingFeeInput.value = parseFloat(attraction.vehicleparkingfee).toFixed(2);
 
@@ -603,62 +644,40 @@ const editVPlaceBtn = (obj) => {
     }
 
     inputNote.value = attraction.description;
-    tourDuration.value = attraction.duration;
+    inputTourDuration.value = attraction.duration;
 
-    //add button should be disabled in EDIT MODE
     attraAddBtn.disabled = true;
     attraAddBtn.style.cursor = "not-allowed";
 
-    //formrefresh ekedi disabled karapu btn eka methanin again enable karanawa
     attraUpdateBtn.disabled = false;
     attraUpdateBtn.style.cursor = "pointer";
 
+    $("#infoModalAttraction").modal("hide");
+
+    var myAttrFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myAttrFormTab.show();
+
     //disabling update button based on USER PRIVILEGES
-    if (loggedUserPrivileges.privupdate) {
-        attraUpdateBtn.disabled = false;
-    } else {
-        attraUpdateBtn.disabled = true;
-    }
+    //if (loggedUserPrivileges.privupdate) {
+    //    attraUpdateBtn.disabled = false;
+    //} else {
+    //    attraUpdateBtn.disabled = true;
+    //}
 
 }
 
-//fn for update BTN
-const updateVplaceBtn = () => {
-
-    let errors = checkAttrErrors();
-    if (errors == '') {
-        let updates = getAttrUpdates();
-        if (updates == '') {
-            alert('No Changes Detected');
-        } else {
-            let userResponse = confirm("Sure To Update ? \n \n " + updates);
-            if (userResponse) {
-                let putServiceResponce = ajaxRequest("/attraction", "PUT", attraction);
-
-                if (putServiceResponce == "OK") {
-                    alert("Successfully Updted");
-                    $('#vPlaceModal').modal('hide');
-                    refreshAttractionTable();
-                    vPlaceForm.reset();
-                    refreshAttractionsForm();
-
-                } else {
-                    alert("An Error Occured " + putServiceResponce);
-                }
-
-            } else {
-                alert('Operator Cancelled The Task')
-            }
+//clear out the form everytime a user switches to table tab
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshAttractionForm();
         }
-
-    } else {
-        alert('form has following errors \n ' + errors);
-    }
-
-}
+    });
+});
 
 //not complete
-const getAttrUpdates = () => {
+const showAttrValueChanges = () => {
 
     let updates = '';
 
@@ -708,12 +727,12 @@ const getAttrUpdates = () => {
     //     }
     // }
 
-    if (attraction.feeforeign != attractionOldObj.feeforeign) {
-        updates = updates + "Foreigner Adult Entrance Fee Has Changed To " + attraction.feeforeign + "\n";
+    if (attraction.feeforeignadult != attractionOldObj.feeforeignadult) {
+        updates = updates + "Foreigner Adult Entrance Fee Has Changed To " + attraction.feeforeignadult + "\n";
     }
 
-    if (attraction.feelocal != attractionOldObj.feelocal) {
-        updates = updates + "Local Adult Entrance Fee Has Changed To " + attraction.feelocal + "\n";
+    if (attraction.feelocaladult != attractionOldObj.feelocaladult) {
+        updates = updates + "Local Adult Entrance Fee Has Changed To " + attraction.feelocaladult + "\n";
     }
 
     if (attraction.feechildforeign != attractionOldObj.feechildforeign) {
@@ -735,38 +754,90 @@ const getAttrUpdates = () => {
     return updates;
 }
 
-//for delete btn
-const deleteVplace = (ob, row) => {
+//fn for update BTN
+const updateAttraction = async () => {
 
-    tableVPlace.children[1].children[row].style.backgroundColor = 'red';
-
-    setTimeout(function () {
-        const userConfirm = confirm('Are You Sure To Delete ?');
-
-        if (userConfirm) {
-            let deleteServerResponse = ajaxRequest("/attraction", "DELETE", ob);
-
-            if (deleteServerResponse == "OK") {
-                alert("successfully Deleted");
-                refreshAttractionTable();
-            } else {
-                alert("An Error Occured \n" + deleteServerResponse);
-            }
+    let errors = checkAttrErrors();
+    if (errors == '') {
+        let updates = showAttrValueChanges();
+        if (updates == '') {
+            alert('No changes detected to update');
         } else {
-            alert('Operator Cancelled The Task');
+
+            let userResponse = confirm("Sure To Update ? \n \n " + updates);
+
+            if (userResponse) {
+
+                try {
+                    let putServiceResponce = await ajaxPPDRequest("/attraction", "PUT", attraction);
+
+                    if (putServiceResponce == "OK") {
+                        alert("Successfully Updted");
+                        document.getElementById('formAttraction').reset();
+                        buildAttractionTable();
+                        refreshAttractionsForm();
+                        var myAttrTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                        myAttrTableTab.show();
+                    } else {
+                        alert("An Error Occured " + putServiceResponce);
+                    }
+
+                } catch (error) {
+                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                }
+
+            } else {
+                alert("User cancelled the task");
+            }
         }
-    }, 300)
+
+    } else {
+        alert('form has following errors \n ' + errors);
+    }
 
 }
 
-//get district list by province
-const getDistByProvince = () => {
+//for delete btn
+const deleteAttrRecord = async (ob) => {
 
-    const currentProvinceID = JSON.parse(inputPlaceProvince.value).id;
-    inputPlaceProvince.style.border = '2px solid lime';
-    inputPlaceDistrict.disabled = false;
-    const districts = ajaxGetRequest("district/getdistrictbyprovince/" + currentProvinceID);
-    fillDataIntoSelect(inputPlaceDistrict, " Please Select The District Now", districts, 'name');
+
+    const userConfirm = confirm('Are you sure to delete the record ' + ob.name + ' ?');
+
+    if (userConfirm) {
+
+        try {
+            const deleteServerResponse = await ajaxPPDRequest("/attraction", "DELETE", ob);
+
+            if (deleteServerResponse === "OK") {
+                alert("Record Deleted");
+                $('#infoModalAttraction').modal('hide');
+                buildAttractionTable();
+            } else {
+                alert("Delete Failed \n" + deleteServerResponse);
+            }
+
+        } catch (error) {
+            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else {
+        alert('User Cancelled The Deletion Task');
+    }
+}
+
+//get district list by province
+const getDistByProvince = async () => {
+
+    const currentProvinceID = JSON.parse(selectAttrProvince.value).id;
+    selectAttrProvince.style.border = '2px solid lime';
+    selectAttrDistrict.disabled = false;
+
+    try {
+        const districts = await ajaxGetReq("districts/byprovinceid/" + currentProvinceID);
+        fillDataIntoDynamicSelects(selectAttrDistrict, " Please Select The District Now", districts, 'name');
+    } catch (error) {
+        console.error("Failed to fetch Data : ", error);
+    }
+  
 
 }
 
