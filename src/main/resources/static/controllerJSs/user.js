@@ -26,10 +26,7 @@ const buildUserTable = async () => {
         createTable(tableUserHolderDiv, sharedTableId, users, tableColumnInfo);
 
         $(`#${sharedTableId}`).dataTable();
-        // Initialize DataTables
-        //  $(`#${sharedTableId}`).DataTable({
-        //     destroy: true, // Ensure any existing instance is destroyed
-        // });
+
     } catch (error) {
         console.error("Failed to refresh user table:", error);
         console.log("*****************");
@@ -49,21 +46,33 @@ const getEmployeeFullname = (userObj) => {
     return userObj.employee_id.fullname;
 }
 
-//to support fill main table
+
 const getUserRoles = (userObj) => {
 
     let userRoles = '';
-    userObj.roles.forEach((element, index) => {
-        if (userObj.roles.length - 1 == index) {
-            userRoles = userRoles + element.name;
-        }
-        else {
-            userRoles = userRoles + element.name + ", ";
-        }
+
+    const roleColors = {
+        Admin: '#d63031', // Bright red
+        Manager: '#00cec9', // Teal green
+        Receptionist: '#6c5ce7', // Deep purple
+        Assistant_anager: '#fdcb6e', // Soft orange-yellow
+        Developer: '#0984e3', // Sky blue
+        Intern: '#636e72', // Grayish black
+        HR: '#e84393', // Pinkish red
+        Designer: '#ff7675', // Light coral red
+        Analyst: '#00b894', // Emerald green
+    };
+
+    userObj.roles.forEach((element) => {
+        
+        const color = roleColors[element.name] || '#b2bec3'; 
+        userRoles += `<span class="rounded-pill text-white mx-1 p-2" style="background-color: ${color};">${element.name}</span>`;
+
     });
 
     return userRoles;
-}
+};
+
 
 //to support fill main table
 const getUserAccStatus = (userObj) => {
@@ -74,6 +83,10 @@ const getUserAccStatus = (userObj) => {
         return 'Inactive Account'
     }
 }
+
+const getRandomColor = () => {
+    return `hsl(${Math.random() * 360}, 70%, 60%)`; // Random hue, good contrast
+};
 
 //fn to ready the main form for accept values
 const refreshUserForm = async () => {
@@ -98,9 +111,13 @@ const refreshUserForm = async () => {
             newInput.setAttribute('id', JSON.stringify(element.name));
             newInput.setAttribute('autocomplete', 'off');
 
+            let randomColor = getRandomColor();
+
             let newLabel = document.createElement('label');
             newLabel.className = "btn , btn-outline-primary";
             newLabel.setAttribute('for', JSON.stringify(element.name));
+            //newLabel.style.backgroundColor = randomColor;
+            //newLabel.style.color = "white";
             newLabel.innerText = element.name;
             newLabel.style.minWidth = "100px";
             newLabel.style.textAlign = "center";
@@ -168,11 +185,11 @@ const refreshUserForm = async () => {
 //company ekema email ekak demu personal eka wenama thiyala 💥💥💥
 // auto generate the email
 const generateWorkEmail = () => {
-   
-    const selectedEmployee  = JSON.parse(document.getElementById('selectEmployee').value);
 
-    const fullname = selectedEmployee .fullname;
-    const empCode = selectedEmployee .emp_code;
+    const selectedEmployee = JSON.parse(document.getElementById('selectEmployee').value);
+
+    const fullname = selectedEmployee.fullname;
+    const empCode = selectedEmployee.emp_code;
 
     const convertedFullname = fullname.replace(/\s+/g, "").toLowerCase();
 

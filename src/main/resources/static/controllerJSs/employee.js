@@ -27,12 +27,7 @@ const buildEmployeeTable = async () => {
 
         $(`#${sharedTableId}`).dataTable();
 
-        // Initialize DataTables
-        //  $(`#${sharedTableId}`).DataTable({
-        //     destroy: true, // Ensure any existing instance is destroyed
-        // });
-
-    } catch (error) {
+            } catch (error) {
         console.error("Failed to build employee table:", error);
     }
 

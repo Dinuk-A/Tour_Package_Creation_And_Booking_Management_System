@@ -1,0 +1,23 @@
+const getUserRoles = (userObj) => {
+    let userRoles = '';
+
+    userObj.roles.forEach((element, index) => {
+        let backgroundColor = ''; // Default color
+
+        // Assign background colors based on specific roles
+        if (element.name === "Admin") {
+            backgroundColor = 'blue';
+        } else if (element.name === "User") {
+            backgroundColor = 'green';
+        } else if (element.name === "Manager") {
+            backgroundColor = 'orange';
+        } else {
+            backgroundColor = 'gray'; // Default color for other roles
+        }
+
+        // Append the role with the dynamic background color
+        userRoles += `<p style="background-color: ${backgroundColor}; color: white;">${element.name}</p>`;
+    });
+
+    return userRoles;
+}
