@@ -11,7 +11,12 @@ body {
   font-family: "Open Sans", sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Nunito", sans-serif;
 }
 
@@ -123,7 +128,8 @@ h2.text-info {
    ======================================================================== */
 .sidebar {
   position: fixed;
-  top: 65px; /* align with header */
+  top: 65px;
+  /* align with header */
   left: 0;
   bottom: 0;
   width: 0;
@@ -360,6 +366,7 @@ h2.text-info {
     transform: translateY(-50px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -404,7 +411,8 @@ h2.text-info {
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
-  padding: 1rem;
+  padding: 1rem !important; 
+  vertical-align: middle;
   border: none;
 }
 
@@ -420,7 +428,7 @@ h2.text-info {
 }
 
 .table tbody td {
-  padding: 1rem;
+  /*padding: 1rem;*/
   vertical-align: middle;
   font-size: 0.95rem;
   color: #424242;
@@ -472,18 +480,23 @@ h2.text-info {
   .header {
     padding: 0 1rem;
   }
+
   .logo span {
     font-size: 1.2rem;
   }
+
   h2.text-info {
     font-size: 1.3rem;
   }
+
   .main {
     padding: 1rem;
   }
+
   .table-container {
     padding: 1rem !important;
   }
+
   .nav-tabs .nav-link {
     padding: 0.75rem 1rem;
   }

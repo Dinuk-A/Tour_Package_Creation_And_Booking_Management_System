@@ -25,8 +25,8 @@ const buildAttractionTable = async () => {
             // { displayType: 'function', displayingPropertyOrFn: getCategories , colHeadName: 'Categories'},
             // { displayType: 'function', displayingPropertyOrFn: getActivities , colHeadName: 'Activities'},
             //{ displayType: 'function', displayingPropertyOrFn: getDuration, colHeadName: 'Duration' },
-            { displayType: 'function', displayingPropertyOrFn: showLocalFees, colHeadName: 'Local Fees <br/> (LKR)' },
-            { displayType: 'function', displayingPropertyOrFn: showForeignFees, colHeadName: 'Foreign Fees (LKR)' },
+            { displayType: 'function', displayingPropertyOrFn: showLocalFees, colHeadName: 'Local Fees <br class="my-0 py-0"0> (LKR)' },
+            { displayType: 'function', displayingPropertyOrFn: showForeignFees, colHeadName: 'Foreign Fees <br class="my-0 py-0"> (LKR)' },
             { displayType: 'text', displayingPropertyOrFn: 'attr_status', colHeadName: 'Status' }
 
         ]
@@ -837,7 +837,7 @@ const getDistByProvince = async () => {
     } catch (error) {
         console.error("Failed to fetch Data : ", error);
     }
-  
+
 
 }
 

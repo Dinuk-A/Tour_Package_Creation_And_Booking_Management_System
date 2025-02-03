@@ -18,20 +18,22 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
     // Add the index column first
     const indexTH = document.createElement('th');
     indexTH.innerText = '#';
+    indexTH.setAttribute('class', 'text-center');
+    //indexTH.setAttribute('style', 'vertical-align: middle;');
     tableHeadRow.appendChild(indexTH);
 
     // Add other column headers
     tableColumnInfoArray.forEach(columnObj => {
         const columnHead = document.createElement('th');
-        columnHead.innerText = columnObj.colHeadName;
-        columnHead.setAttribute('class', ('text-center py-3 col-' + columnObj.colHeadName));
+        columnHead.innerHTML = columnObj.colHeadName;
+        columnHead.setAttribute('class', ('text-center  col-' + columnObj.colHeadName));
         tableHeadRow.appendChild(columnHead);
     });
 
     // Add the button column last
     const buttonTH = document.createElement('th');
     buttonTH.innerText = 'Action';
-    buttonTH.setAttribute('class', 'text-center y-3');
+    buttonTH.setAttribute('class', 'text-center');
     tableHeadRow.appendChild(buttonTH);
 
     // Append the row to the thead
