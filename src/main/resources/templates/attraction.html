@@ -91,13 +91,14 @@
                                         class="form-control form-input me-2" style="width:35%">
 
                                     <!-- Status input -->
-                                    <select required id="selectAttrStatus" class="form-select"  onchange="staticSelectValidator(this,'attraction','attr_status')">
+                                    <select required id="selectAttrStatus" class="form-select"
+                                        onchange="staticSelectValidator(this,'attraction','attr_status')">
 
                                         <option value="" selected disabled> Select Status </option>
                                         <option value="open"> Open Site </option>
                                         <option value="permanantly_closed"> Permanantly Closed </option>
                                         <option value="temporary_closed"> Temporary Closed </option>
-                                        <option value="ifDeleted" class="d-none"> Deleted Record </option>                                     
+                                        <option value="ifDeleted" class="d-none"> Deleted Record </option>
                                     </select>
                                 </div>
                             </div>
@@ -142,7 +143,7 @@
                                             data-bs-toggle="collapse" data-bs-target="#flushCollapseOne"
                                             aria-expanded="false" aria-controls="flushCollapseOne">
 
-                                            <h5 class="text-info"> Categories : Click to view</h5>
+                                            <h5 class="text-info"> Categories : Click to Expand</h5>
                                         </button>
                                     </div>
 
@@ -308,13 +309,24 @@
                                 </div>
                             </div>
 
+                            <!-- location description, replace this somewehere else -->
+                            <div class="row mt-2">
+                                <div class="col-5">
+                                    <label for="inputNote" class="form-label fw-bold">Location Description :</label>
+                                    <textarea class="form-control" placeholder=" " id="inputNote"
+                                        onkeyup="inputValidatorText(this,'','attraction','description')"
+                                        style="height: 100px;"
+                                        aria-placeholder="Enter A Short Description About The Location"></textarea>
+                                </div>
+                            </div>
+
                             <!-- NOTE -->
                             <div class="row mt-2 border bg-light">
 
                                 <div class="col-7 pb-2">
-                                    <label for="inputNote" class="form-label fw-bold">Note :</label>
+                                    <label for="inputNote" class="form-label fw-bold">Additional Information :</label>
                                     <textarea class="form-control" placeholder=" " id="inputNote"
-                                        onkeyup="inputValidatorText(this,'','attraction','description')"
+                                        onkeyup="inputValidatorText(this,'','attraction','note')"
                                         style="height: 100px;"></textarea>
                                 </div>
 
@@ -400,7 +412,7 @@
                 <div class="modal-content shadow-lg rounded-4">
                     <!-- Modal Header -->
                     <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="infoModalLabel">Attraction Details</h5>
+                        <h5 class="modal-title" id="infoModalLabel">Attraction Full Details</h5>
                         <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -414,10 +426,18 @@
 
                                 <!-- Name and NIC -->
                                 <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Location Name:</p>
+                                    <p class="fw-bold mb-1"> Name:</p>
                                     <p id="modalAttrName" class="text-muted"></p>
-                                    <p class="fw-bold mb-1">NIC:</p>
-                                    <p id="modalEmpNIC" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1">Location:</p>
+                                    <p id="modalAttrDistrict" class="text-muted"></p>
+
+                                    <p id="modalAttrProvince" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1">Categories</p>
+                                    <p id="modalAttrCatrgories" class="text-muted"></p>
+
+                                    
                                 </div>
                             </div>
 
@@ -425,52 +445,51 @@
                             <hr>
                             <div class="row g-4">
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Employee Code:</p>
-                                    <p id="modalEmpCode" class="text-muted mb-0"></p>
+
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Designation:</p>
-                                    <p id="modalEmpDesignation" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1">Local Adult Fee:</p>
+                                    <p id="modalAttrLocalAdultFee" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Working Status:</p>
-                                    <p id="modalEmpStatus" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1">Local Child Fee:</p>
+                                    <p id="modalAttrLocalChildFee" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
                             <hr>
                             <div class="row g-4">
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Gender:</p>
-                                    <p id="modalEmpGender" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1">Foreign Adult Fee:</p>
+                                    <p id="modalAttrForeignAdultFee" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Date of Birth:</p>
-                                    <p id="modalEmpDOB" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1">Foreign Child Fee:</p>
+                                    <p id="modalAttrForeignChildFee" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
                             <hr>
                             <div class="row g-4">
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Mobile Number:</p>
-                                    <p id="modalEmpMobileNum" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1">Staying Duration:</p>
+                                    <p id="modalAttrDuration" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Land Number:</p>
-                                    <p id="modalEmpLandNum" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1">Description:</p>
+                                    <p id="modalAttrDescription" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Personal Email:</p>
-                                    <p id="modalEmpPersonalEmail" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1">Vehicle Parking Fee:</p>
+                                    <p id="modalAttrVehicleParkingFee" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
                             <hr>
                             <div class="row g-4">
                                 <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Address:</p>
-                                    <p id="modalEmpAddress" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1">Status:</p>
+                                    <p id="modalAttrStatus" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
@@ -478,11 +497,11 @@
                             <div class="row g-4">
                                 <div class="col-md-8">
                                     <p class="fw-bold mb-1">Additional Details:</p>
-                                    <p id="modalEmpNote" class="text-muted mb-0"></p>
+                                    <p id="modalAttrNote" class="text-muted mb-0"></p>
                                 </div>
 
                                 <div class="col-md-4">
-                                    <p id="modalEmpIfDeleted" class="text-danger d-none mb-0"></p>
+                                    <p id="modalAttrIfDeleted" class="text-danger d-none mb-0"></p>
                                 </div>
                             </div>
                         </div>
@@ -490,21 +509,21 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">
-                        <button class="btn btn-outline-primary" onclick="printEmployeeRecord()">
+                        <button class="btn btn-outline-primary" onclick="printAttractionRecord()">
                             Print
                         </button>
                         <div>
-                            <button id="modalEmpEditBtn" class="btn btn-outline-success me-2"
-                                onclick="refillEmployeeForm(window['currentObject'])">
-                                Edit Employee Record
+                            <button id="modalAttrEditBtn" class="btn btn-outline-success me-2"
+                                onclick="refillAttractionForm(window['currentObject'])">
+                                Edit Attraction Record
                             </button>
-                            <button id="modalEmpDeleteBtn" class="btn btn-outline-danger"
-                                onclick="deleteAttrRecordEmployeeRecord(window['currentObject'])">
+                            <button id="modalAttrDeleteBtn" class="btn btn-outline-danger"
+                                onclick="deleteAttractionRecord(window['currentObject'])">
                                 Delete Attraction Record
                             </button>
-                            <button id="modalEmpRecoverBtn" class="btn btn-outline-primary d-none"
-                                onclick="restoreEmployeeRecord()">
-                                Restore Employee Record
+                            <button id="modalAttrRecoverBtn" class="btn btn-outline-primary d-none"
+                                onclick="restoreAttractionRecord()">
+                                Restore Attraction Record
                             </button>
                         </div>
                     </div>

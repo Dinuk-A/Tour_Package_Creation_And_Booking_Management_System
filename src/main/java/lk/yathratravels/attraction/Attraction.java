@@ -35,6 +35,9 @@ public class Attraction {
     @NotNull
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "feetype")
     @NotNull
     private String feetype;
@@ -54,8 +57,8 @@ public class Attraction {
     @Column(name = "duration")
     private String duration;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "note")
+    private String note;
 
     @Column(name = "attr_status")
     private String attr_status;

@@ -482,7 +482,38 @@ const addNewAttraction = async () => {
     }
 }
 
+//fn for edit button
 const openModal = (attrObj) => {
+    document.getElementById('modalAttrName').innerText = attrObj.name || 'N/A';
+    document.getElementById('modalAttrDistrict').innerText = attrObj.district_id.name || 'N/A';
+    document.getElementById('modalAttrProvince').innerText = attrObj.district_id.province_id.name || 'N/A';
+    document.getElementById('modalAttrCatrgories').innerText = attrObj.dob || 'N/A';
+    document.getElementById('modalAttrLocalAdultFee').innerText = attrObj.feelocaladult || 'N/A';
+    document.getElementById('modalAttrLocalChildFee').innerText = attrObj.feechildlocal || 'N/A';
+    document.getElementById('modalAttrForeignAdultFee').innerText = attrObj.feeforeignadult || 'N/A';
+    document.getElementById('modalAttrForeignChildFee').innerText = attrObj.feechildforeign || 'N/A';
+    document.getElementById('modalAttrDuration').innerText = attrObj.duration || 'N/A';
+    document.getElementById('modalAttrDescription').innerText = attrObj.description || 'N/A';
+    document.getElementById('modalAttrVehicleParkingFee').innerText = attrObj.vehicleparkingfee || 'N/A';
+    document.getElementById('modalAttrStatus').innerText = attrObj.attr_status || 'N/A';
+    document.getElementById('modalAttrNote').innerText = attrObj.note || 'N/A';
+    //document.getElementById('modalAttrPersonalEmail').innerText = attrObj.email || 'N/A';
+    //document.getElementById('modalAttrPersonalEmail').innerText = attrObj.email || 'N/A';
+
+    if (attrObj.deleted_emp) {
+        document.getElementById('modalAttrIfDeleted').classList.remove('d-none');
+        document.getElementById('modalAttrIfDeleted').innerHTML =
+            'This is a deleted record. <br>Deleted at ' +
+            new Date(attrObj.deleteddatetime).toLocaleString();
+        document.getElementById('modalAttrEditBtn').disabled = true;
+        document.getElementById('modalAttrDeleteBtn').disabled = true;
+        document.getElementById('modalAttrEditBtn').classList.add('d-none');
+        document.getElementById('modalAttrDeleteBtn').classList.add('d-none');
+        document.getElementById('modalAttrRecoverBtn').classList.remove('d-none');
+    }
+
+    // Show the modal
+    $('#infoModalAttraction').modal('show');
 
 }
 
@@ -492,28 +523,31 @@ const restoreAttrRecord = () => {
 }
 
 //fn for edit btn ** FOR FORM REFILL **
-const refillAttrForm = async (obj) => {
+const refillAttractionForm = async (obj) => {
 
     attraction = JSON.parse(JSON.stringify(obj));
     attractionOldObj = JSON.parse(JSON.stringify(obj));
 
     selectAttrDistrict.disabled = false;
 
-    inputPlaceName.value = attraction.name;
+    inputPlaceName.value = obj.name;
     // selectAttrStatus.value = attraction.attrstatus_id;
 
     try {
 
         //get province list
         provinces = await ajaxGetReq("/province/all");
-        fillDataIntoSelect(selectAttrProvince, 'Please Select The Province', provinces, 'name', attraction.district_id.province_id.name);
-        selectAttrProvince.style.border = "1px solid ced4da";
+        fillDataIntoDynamicSelects(selectAttrProvince, 'Please Select The Province', provinces, 'name', obj.district_id.province_id.name);
+        //selectAttrProvince.style.border = "1px solid #ced4da";
 
         districts = await ajaxGetReq("/district/all");
-        fillDataIntoSelect(selectAttrDistrict, 'Please Select The District', districts, 'name', attraction.district_id.name);
+        fillDataIntoDynamicSelects(selectAttrDistrict, 'Please Select The District', districts, 'name', obj.district_id.name);
+
+        //override default styling gave by JS
+        selectAttrProvince.style.border = "1px solid #ced4da";
 
         //get categories list
-        categoryList = ajaxGetRequest("/category/all");
+        categoryList = await ajaxGetReq("/attrcategory/all");
         flushCollapseOne.innerHTML = "";
         categoryList.forEach(element => {
 
@@ -533,16 +567,16 @@ const refillAttrForm = async (obj) => {
 
             newInput.onchange = function () {
                 if (this.checked) {
-                    attraction.categories.push(element)
+                    obj.categories.push(element)
                 } else {
-                    let existIndex = attraction.categories.map(category => category.id).indexOf(element.id);
+                    let existIndex = obj.categories.map(category => category.id).indexOf(element.id);
                     if (existIndex != -1) {
-                        attraction.categories.splice(existIndex, 1)
+                        obj.categories.splice(existIndex, 1)
                     }
                 }
             }
 
-            let existIndex = attraction.categories.map(category => category.id).indexOf(element.id);
+            let existIndex = obj.categories.map(category => category.id).indexOf(element.id);
             if (existIndex != -1) {
                 newInput.checked = true;
             }
@@ -587,16 +621,16 @@ const refillAttrForm = async (obj) => {
     //     activityInput.onchange = function () {
 
     //         if (this.checked) {
-    //             attraction.attr_activities.push(activity);
+    //             obj.attr_activities.push(activity);
     //         } else {
-    //             let existIndex = attraction.attr_activities.map(activity => activity.id).indexOf(activity.id);
+    //             let existIndex = obj.attr_activities.map(activity => activity.id).indexOf(activity.id);
     //             if (existIndex != -1) {
-    //                 attraction.attr_activities.splice(existIndex, 1)
+    //                 obj.attr_activities.splice(existIndex, 1)
     //             }
     //         }
     //     }
 
-    //     let existIndex = attraction.attr_activities.map(activity => activity.id).indexOf(activity.id);
+    //     let existIndex = obj.attr_activities.map(activity => activity.id).indexOf(activity.id);
     //     if (existIndex != -1) {
     //         activityInput.checked = true;
     //     }
@@ -608,10 +642,9 @@ const refillAttrForm = async (obj) => {
 
     // })
 
-    //override default styling gave by JS
-    selectAttrProvince.style.border = "1px solid #ced4da";
 
-    if (attraction.feetype === "All Free") {
+
+    if (obj.feetype === "All Free") {
         allEntryFreeChkBox.checked = true;
 
         inputForeignAdultFee.disabled = true;
@@ -620,31 +653,31 @@ const refillAttrForm = async (obj) => {
         inputLocalChildFee.disabled = true;
     }
 
-    if (attraction.feetype === "Local Free") {
+    if (obj.feetype === "Local Free") {
         localsEntryFreeCheckBox.checked = true;
 
         inputLocalAdultFee.disabled = true;
         inputLocalChildFee.disabled = true;
     }
 
-    if (attraction.feetype === "All Paid") {
+    if (obj.feetype === "All Paid") {
         allPaidCheckBox.checked = true;
     }
 
-    inputForeignAdultFee.value = parseFloat(attraction.feeforeignadult).toFixed(2);
-    inputLocalAdultFee.value = parseFloat(attraction.feelocaladult).toFixed(2);
-    inputLocalChildFee.value = parseFloat(attraction.feechildlocal).toFixed(2);
-    inputForeignChildFee.value = parseFloat(attraction.feechildforeign).toFixed(2);
-    vehiParkingFeeInput.value = parseFloat(attraction.vehicleparkingfee).toFixed(2);
-    vehiParkingFeeInput.value = parseFloat(attraction.vehicleparkingfee).toFixed(2);
+    inputForeignAdultFee.value = parseFloat(obj.feeforeignadult).toFixed(2);
+    inputLocalAdultFee.value = parseFloat(obj.feelocaladult).toFixed(2);
+    inputLocalChildFee.value = parseFloat(obj.feechildlocal).toFixed(2);
+    inputForeignChildFee.value = parseFloat(obj.feechildforeign).toFixed(2);
+    vehiParkingFeeInput.value = parseFloat(obj.vehicleparkingfee).toFixed(2);
+    vehiParkingFeeInput.value = parseFloat(obj.vehicleparkingfee).toFixed(2);
 
-    if (attraction.vehicleparkingfee == 0.00) {
+    if (obj.vehicleparkingfee === 0.00) {
         freeParkingCBX.checked = true;
         vehiParkingFeeInput.disabled = true;
     }
 
-    inputNote.value = attraction.description;
-    inputTourDuration.value = attraction.duration;
+    inputNote.value = obj.description;
+    inputTourDuration.value = obj.duration;
 
     attraAddBtn.disabled = true;
     attraAddBtn.style.cursor = "not-allowed";
@@ -688,10 +721,10 @@ const showAttrValueChanges = () => {
     if (attraction.district_id.name != attractionOldObj.district_id.name) {
         updates = updates + "District Has Changed To " + attraction.district_id.name + "\n";
     }
-
-    if (attraction.attrstatus_id.name != attractionOldObj.attrstatus_id.name) {
-        updates = updates + "Status Has Changed To " + attraction.attrstatus_id.name + "\n";
-    }
+//
+//    if (attraction.attrstatus_id.name != attractionOldObj.attrstatus_id.name) {
+//        updates = updates + "Status Has Changed To " + attraction.attrstatus_id.name + "\n";
+//    }
 
     if (attraction.duration != attractionOldObj.duration) {
         updates = updates + "Duration Has Changed To " + attraction.duration + "\n";
@@ -757,7 +790,7 @@ const showAttrValueChanges = () => {
 //fn for update BTN
 const updateAttraction = async () => {
 
-    let errors = checkAttrErrors();
+    let errors = checkAttrFormErrors();
     if (errors == '') {
         let updates = showAttrValueChanges();
         if (updates == '') {
@@ -775,7 +808,7 @@ const updateAttraction = async () => {
                         alert("Successfully Updted");
                         document.getElementById('formAttraction').reset();
                         buildAttractionTable();
-                        refreshAttractionsForm();
+                        refreshAttractionForm();
                         var myAttrTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myAttrTableTab.show();
                     } else {
@@ -798,7 +831,7 @@ const updateAttraction = async () => {
 }
 
 //for delete btn
-const deleteAttrRecord = async (ob) => {
+const deleteAttractionRecord = async (ob) => {
 
 
     const userConfirm = confirm('Are you sure to delete the record ' + ob.name + ' ?');
