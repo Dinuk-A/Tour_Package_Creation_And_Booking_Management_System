@@ -53,7 +53,7 @@ public class EmployeeController {
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
 
         if (!privilegeLevelForLoggedUser.getPrvselect()) {
-            
+
             ModelAndView lost = new ModelAndView();
             lost.setViewName("lost.html");
             return lost;
@@ -222,6 +222,14 @@ public class EmployeeController {
                 }
             }
 
+            if (!employee.getDeleted_emp()) {
+                User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
+                if (relatedUserAcc != null) {
+                    relatedUserAcc.setAcc_status(true);
+                    userDao.save(relatedUserAcc);
+                }
+            }
+
             return "OK";
 
         } catch (Exception e) {
@@ -248,7 +256,6 @@ public class EmployeeController {
         }
 
         try {
-
             existingEmployee.setDeleteddatetime(LocalDateTime.now());
             existingEmployee.setDeleted_emp(true);
             employee.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());

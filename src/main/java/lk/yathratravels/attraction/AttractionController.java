@@ -156,8 +156,9 @@ public class AttractionController {
             return "Record Not Found";
         }
         try {
+            existVPlace.setDeleted_attr(true);
             existVPlace.setDeleteddatetime(LocalDateTime.now());
-            //existVPlace.setDeleteduserid(userDao.getByUName(auth.getName()).getId());
+            existVPlace.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             //AttrStatus deletedStatus = atSttsDao.getReferenceById(4);
             //existVPlace.setAttrstatus_id(deletedStatus);

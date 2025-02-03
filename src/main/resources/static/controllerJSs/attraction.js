@@ -126,7 +126,6 @@ const showForeignFees = (ob) => {
     }
 }
 
-
 //fn for refresh form
 const refreshAttractionForm = async () => {
 
@@ -500,7 +499,7 @@ const openModal = (attrObj) => {
     //document.getElementById('modalAttrPersonalEmail').innerText = attrObj.email || 'N/A';
     //document.getElementById('modalAttrPersonalEmail').innerText = attrObj.email || 'N/A';
 
-    if (attrObj.deleted_emp) {
+    if (attrObj.deleted_attr) {
         document.getElementById('modalAttrIfDeleted').classList.remove('d-none');
         document.getElementById('modalAttrIfDeleted').innerHTML =
             'This is a deleted record. <br>Deleted at ' +
@@ -518,8 +517,36 @@ const openModal = (attrObj) => {
 }
 
 //fn for restore button
-const restoreAttrRecord = () => {
+const restoreAttractionRecord = async() => {
 
+    const userConfirm = confirm("Are you sure to recover this deleted record ?");
+
+    if (userConfirm) {
+        try {
+             //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala
+            attraction = window.currentObject;
+            attraction.deleted_attr = false;
+
+            let putServiceResponse = await ajaxPPDRequest("/attraction", "PUT", attraction);
+
+            if (putServiceResponse === "OK") {
+                alert("Successfully Restored");
+                document.getElementById('formAttraction').reset();
+                //refreshAttractionForm();
+                //buildAttractionTable();
+                $("#infoModalAttraction").modal("hide");
+                window.location.reload();
+                
+            } else {
+                alert("Restore Failed \n" + putServiceResponse);
+            }
+
+        } catch (error) {
+            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else{
+        alert('Recovery process has cancelled');
+    }
 }
 
 //fn for edit btn ** FOR FORM REFILL **
@@ -832,7 +859,6 @@ const updateAttraction = async () => {
 
 //for delete btn
 const deleteAttractionRecord = async (ob) => {
-
 
     const userConfirm = confirm('Are you sure to delete the record ' + ob.name + ' ?');
 

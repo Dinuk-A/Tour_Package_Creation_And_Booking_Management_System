@@ -292,17 +292,20 @@ const restoreEmployeeRecord = async () => {
 
     if (userConfirm) {
         try {
+            //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala
             employee = window.currentObject;
             employee.deleted_emp = false;
+            
             let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
 
             if (putServiceResponse === "OK") {
                 alert("Successfully Restored");
                 document.getElementById('formEmployee').reset();
-                refreshEmployeeForm();
-                buildEmployeeTable();
+                //refreshEmployeeForm();
+                //buildEmployeeTable();
                 $("#infoModalEmployee").modal("hide");
-
+                window.location.reload();
+              
             } else {
                 alert("Restore Failed \n" + putServiceResponse);
             }

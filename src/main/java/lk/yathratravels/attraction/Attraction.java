@@ -63,6 +63,9 @@ public class Attraction {
     @Column(name = "attr_status")
     private String attr_status;
 
+    @Column(name = "deleted_attr")
+     private Boolean deleted_attr;
+
     @Column(name = "vehicleparkingfee")
     private BigDecimal vehicleparkingfee;
 
