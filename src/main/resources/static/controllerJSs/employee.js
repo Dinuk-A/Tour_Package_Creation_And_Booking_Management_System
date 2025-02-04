@@ -77,6 +77,7 @@ const refreshEmployeeForm = async () => {
         'inputAddress',
         'inputNote',
         'selectDesignation',
+        'selectEmployeementStatus'
     ];
 
     //clear out any previous styles

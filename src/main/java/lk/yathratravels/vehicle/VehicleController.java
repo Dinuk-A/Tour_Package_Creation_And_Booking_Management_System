@@ -80,4 +80,89 @@ public class VehicleController {
 
         return vehiDao.findAll(Sort.by(Direction.DESC, "id"));
     }
+
+       // POST mapping for add 
+    @PostMapping(value = "/vehicle")
+    public String saveVehicle(@RequestBody Vehicle vehicle) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // check privi here 💥
+
+        // check number plate duplications
+        Vehicle existingVehicle = vehiDao.getVehicleByNumberPlate(vehicle.getNumberplate());
+        if (existingVehicle != null) {
+            return "Save Not Completed, This Vehicle Already Exists";
+        }
+
+        try {
+            vehicle.setAddeddatetime(LocalDateTime.now());
+            vehicle.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+            vehiDao.save(vehicle);
+            return "OK";
+        } catch (Exception e) {
+            return "Save Not Completed : " + e.getMessage();
+        }
+
+    }
+
+  // put mapping for update 
+    @PutMapping(value = "/vehicle")
+    public String updateVehicle(@RequestBody Vehicle vehicle) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // check privi here 💥
+
+        // check existence
+        Vehicle existingVehicle = vehiDao.getReferenceById(vehicle.getId());
+        if (existingVehicle == null) {
+            return "Update Not Completed ; Vehicle Not Found";
+        }
+
+        // check number plate duplications
+        Vehicle existingVehicleByNumberPlate = vehiDao.getVehicleByNumberPlate(vehicle.getNumberplate());
+        if (existingVehicleByNumberPlate != null && existingVehicleByNumberPlate.getId() != vehicle.getId()) {
+            return "A Vehicle With This Number Plate Already Exists In The System";
+        }
+
+        try {
+            vehicle.setLastmodifieddatetime(LocalDateTime.now());
+            vehicle.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
+            vehiDao.save(vehicle);
+            return "OK";
+
+        } catch (Exception e) {
+            return "Update Not Completed ; " + e.getMessage();
+        }
+
+    }
+
+     // delete mapping for delete
+     @DeleteMapping(value = "/vehicle")
+     public String deleteVehicle(@RequestBody Vehicle vehicle) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // check privi here 💥
+
+         // check existence
+         Vehicle existingVehicle = vehiDao.getReferenceById(vehicle.getId());
+         if (existingVehicle == null) {
+             return "Delete Not Completed ; Vehicle Not Found";
+         }
+
+         try {
+            existingVehicle.setDeleted_vehi(true);
+            existingVehicle.setDeleteddatetime(LocalDateTime.now());
+            existingVehicle.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+            vehiDao.save(existingVehicle);
+            return "OK";
+         } catch (Exception e) {
+            return "Delete Not Completed " + e.getMessage();
+         }
+
+     } 
+
 }

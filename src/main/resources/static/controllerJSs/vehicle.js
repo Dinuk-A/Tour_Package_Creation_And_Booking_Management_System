@@ -122,7 +122,7 @@ const checkVehiFormErrors = () => {
         errors = errors + "PLEASE SELECT THE VEHICLE TYPE \n"
     }
 
-    if (vehicle.platenumber == null) {
+    if (vehicle.numberplate == null) {
         errors = errors + "PLEASE ENTER A VALID PLATE NUMBER \n";
     }
 
@@ -148,7 +148,7 @@ const addNewVehicle = async () => {
     const errors = checkVehiFormErrors();
 
     if (errors == '') {
-        const userResponse = confirm("Are You Sure To Add ?\n " + vehicle.platenumber);
+        const userResponse = confirm("Are You Sure To Add ?\n " + vehicle.numberplate);
 
         if (userResponse) {
 
@@ -185,7 +185,26 @@ const addNewVehicle = async () => {
 
 //fn for edit button, 💥
 const openModal = (vehiObj) => {
-    document.getElementById('modalEmpCode').innerText = empObj.emp_code || 'N/A';
+    document.getElementById('modalVehiNumberPlate').innerText = vehiObj.numberplate || 'N/A';
+    document.getElementById('modalVehiModalName').innerText = vehiObj.vehiclename || 'N/A';
+    document.getElementById('modalVehiPassengerSeatCount').innerText = vehiObj.passengerseats || 'N/A';    
+    document.getElementById('modalVehiType').innerText = vehiObj.vehicletype_id.name || 'N/A';
+    document.getElementById('modalVehiStatus').innerText = vehiObj.vehi_status || 'N/A';
+    document.getElementById('modalVehiNote').innerText = vehiObj.note || 'N/A';
+
+    if (vehiObj.deleted_vehi) {
+        document.getElementById('modalVehiIfDeleted').classList.remove('d-none');
+        document.getElementById('modalVehiIfDeleted').innerHTML =
+            'This is a deleted record. <br>Deleted at ' +
+            new Date(vehiObj.deleteddatetime).toLocaleString();
+        document.getElementById('modalVehiEditBtn').disabled = true;
+        document.getElementById('modalVehiDeleteBtn').disabled = true;
+        document.getElementById('modalVehiEditBtn').classList.add('d-none');
+        document.getElementById('modalVehiDeleteBtn').classList.add('d-none');
+        document.getElementById('modalVehiRecoverBtn').classList.remove('d-none');
+    }
+
+    $('#infoModalVehicle').modal('show');
 }
 
 // refill the form to edit a record
@@ -194,7 +213,7 @@ const refillVehicleForm = async (ob) => {
     vehicle = JSON.parse(JSON.stringify(ob));
     oldVehi = JSON.parse(JSON.stringify(ob));
 
-    inputNumberPlate.value = vehicle.platenumber;
+    inputNumberPlate.value = vehicle.numberplate;
     inputVehicleName.value = vehicle.vehiclename;
     inputPassengerSeatCount.value = vehicle.passengerseats;
     inputNote.value = vehicle.note;
@@ -216,8 +235,9 @@ const refillVehicleForm = async (ob) => {
     document.getElementById('selectVehicleStatus').children[2].classList.remove('d-none');
     document.getElementById('selectVehicleStatus').children[3].classList.remove('d-none');
     document.getElementById('selectVehicleStatus').children[4].classList.remove('d-none');
+    
 
-    //$("#infoModalVehicle").modal("hide");
+    $("#infoModalVehicle").modal("hide");
 
     var myVehiFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myVehiFormTab.show();
@@ -231,8 +251,8 @@ const showVehicleValueChanges = () => {
     if (vehicle.vehicletype_id.name != oldVehi.vehicletype_id.name) {
         updates = updates + oldVehi.vehicletype_id.name + " will be changed to " + vehicle.vehicletype_id.name + "\n";
     }
-    if (vehicle.platenumber != oldVehi.platenumber) {
-        updates = updates + oldVehi.platenumber + " will be changed to " + vehicle.platenumber + "\n";
+    if (vehicle.numberplate != oldVehi.numberplate) {
+        updates = updates + oldVehi.numberplate + " will be changed to " + vehicle.numberplate + "\n";
     }
 
     if (vehicle.vehiclename != oldVehi.vehiclename) {
@@ -307,7 +327,7 @@ const deleteVehicleRecord = async (ob) => {
             if (deleteServerResponse == 'OK') {
                 alert('Record Deleted');
                 $('#infoModalVehicle').modal('hide');
-                buildEmployeeTable();
+                buildVehicleTable();
             } else {
                 alert("Delete Failed \n" + deleteServerResponse);
             }
