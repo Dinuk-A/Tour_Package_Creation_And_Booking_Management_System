@@ -17,10 +17,10 @@ const buildEmployeeTable = async () => {
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'emp_code', colHeadName: 'Code' },
             { displayType: 'text', displayingPropertyOrFn: 'fullname', colHeadName: 'Full Name' },
-            { displayType: 'function', displayingPropertyOrFn: getDesignation, colHeadName: 'Designation' },
+            { displayType: 'function', displayingPropertyOrFn: showEmpDesignation, colHeadName: 'Designation' },
             { displayType: 'text', displayingPropertyOrFn: 'email', colHeadName: 'Email' },
             { displayType: 'text', displayingPropertyOrFn: 'mobilenum', colHeadName: 'Contact' },
-            { displayType: 'function', displayingPropertyOrFn: getEmployeeStatus, colHeadName: 'Status' }
+            { displayType: 'function', displayingPropertyOrFn: showEmployeeStatus, colHeadName: 'Status' }
         ]
 
         createTable(tableEmployeeHolderDiv, sharedTableId, employees, tableColumnInfo);
@@ -34,12 +34,12 @@ const buildEmployeeTable = async () => {
 }
 
 // fn to fill the table
-const getDesignation = (empObj) => {
+const showEmpDesignation = (empObj) => {
     return empObj.designation_id.name;
 }
 
 // fn to fill the table
-const getEmployeeStatus = (empObj) => {
+const showEmployeeStatus = (empObj) => {
 
     if (empObj.deleted_emp == null || empObj.deleted_emp == false) {
         if (empObj.emp_status == "Working") {

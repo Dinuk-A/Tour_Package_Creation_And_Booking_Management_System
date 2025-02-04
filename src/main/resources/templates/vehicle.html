@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
+
+<head>
+
+    <!-- link employee css -->
+    <!--<link rel="stylesheet" href="css/vehicle.css">-->
+
+    <!-- link vehicle js -->
+    <script src="controllerJSs/vehicle.js"></script>
+
+</head>
+
+<body>
+
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+
+    <main id="mainAreaID" class="main min-vh-100">
+
+        <!-- Tabs navigation panel -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- for table side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableVehicleHolderDiv" role="tab"
+                    aria-controls="tableVehicleHolderDiv" aria-selected="true">Table</a>
+            </li>
+            <!-- for form side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formVehicleHolderDiv" role="tab"
+                    aria-controls="formVehicleHolderDiv" aria-selected="false">Form</a>
+            </li>
+        </ul>
+
+        <!-- Tabs content -->
+        <div class="tab-content mt-1" id="myTabContent">
+            <!-- Table tab  -->
+            <div id="tableVehicleHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3"
+                role="tabpanel" aria-labelledby="table-tab">
+                <!-- a table will be dynamically generated in here -->
+            </div>
+
+            <!-- Form tab -->
+            <div class="tab-pane fade" id="formVehicleHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+                <div class="card mx-auto" style="width: 1100px;">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">Employee Registration Form</h3>
+                    </div>
+                    <div class="card-body" style="background-color: ivory;">
+
+                        <!-- form starts -->
+                        <form id="formVehicle" class="" onsubmit="return false">
+
+                            <div class="row mt-2">
+                                <!-- select vehicle type starts -->
+                                <div class="col-4">
+                                    <label for="selectType" class="fw-bold">Vehicle Type : </label>
+                                    <select id="selectType" class="form-control form-select"
+                                        onchange="selectDynamicVal(this, '' , 'vehicle','vehitype_id'); passCPKM(); editTypeNChargePKMBtn.disabled=false;"
+                                        required>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <!--number plate starts -->
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <label for="textLicNo" class="fw-bold form-label mb-0"> License Plate number
+                                        :</label>
+                                    <input id="textLicNo" type="text" class="form-control form-input"
+                                        onkeyup="inputFieldValidator(this,'','vehicle','licencenumber')" required>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+
+                                <!-- name -->
+                                <div class="col-8">
+                                    <label for="textManuf" class="fw-bold form-label mb-0"> Name
+                                        :</label>
+                                    <input id="textManuf" type="text" class="test form-control form-input"
+                                        onkeyup="inputFieldValidator(this,'','vehicle','vehiclename')" required>
+                                </div>
+
+
+                            </div>
+
+                            <!-- seating capacity starts -->
+                            <div class="row mt-2">
+
+                                <label for="textManuf" class="fw-bold form-label mb-0"> Seat Count
+                                    :</label>
+                                <input id="textManuf" type="text" class="test form-control form-input"
+                                    onkeyup="inputFieldValidator(this,'','vehicle','vehiclename')" required>
+                            </div>
+
+
+                            <div class="row mt-2">
+                                <!-- description starts -->
+                                <div class="col-8">
+                                    <label for="inputNote" class="fw-bold">Description</label>
+                                    <textarea id="inputNote" class="form-control" rows="5"
+                                        onkeyup="inputFieldValidator(this,'','vehicle','discription')"></textarea>
+                                </div>
+
+                                <!--select status starts -->
+                                <div class="col-4">
+                                    <label for="" class="fw-bold form-label mb-0"> Vehicle Status :</label>
+                                    <select id="selectStatus" class="form-control form-select"
+                                        onchange="selectDynamicVal(this, '' , 'vehicle','vehistatus_id')" required>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <!-- note starts -->
+                                <div class="col-8">
+                                    <label for="inputNote" class="fw-bold">Additional Information</label>
+                                    <textarea id="inputNote" class="form-control" rows="5"
+                                        onkeyup="inputFieldValidator(this,'','vehicle','discription')"></textarea>
+                                </div>
+                            </div>
+
+                            <!--3 form buttons starts -->
+                            <div class="row mt-3">
+
+                                <div class="col-4">
+                                    <button type="reset" class="btn btn-all btn-clear"
+                                        onclick="refreshVehiForm();">Clear</button>
+                                </div>
+
+                                <div class="col-8 text-end">
+                                    <button type="button" id="vehicleUpdateBtn" class="btn btn-all btn-update "
+                                        onclick="btnUpdateVehi()" style="pointer-events: all;">Update</button>
+
+                                    <button type="submit" id="vehicleAddBtn" class="btn btn-all btn-add"
+                                        onclick="btnAddVehi()" style="pointer-events: all;">Add</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+  
+
+
+       
+            <div class="card card-body bg-info bg-opacity-25">
+
+                <!-- table starts -->
+                <table id="tableVehicle" class="table table-bordered table-striped border-primary">
+                    <thead class="table-primary">
+                        <th> # </th>
+                        <th>Type</th>
+                        <th>License No.</th>
+                        <th>Brand & Name</th>
+                        <th>Seat Count</th>
+                        <th>Status</th>
+                        <th>Modify</th>
+                    </thead>
+                    <tbody class="table-light">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-1"></div>
+
+    </main>
+</body>
+
+</html>
