@@ -36,9 +36,6 @@ public class Vehicle {
     @Column(name = "passengerseats")
     private Integer passengerseats;
 
-    @Column(name = "description")
-    private String description;
-
     @Column(name = "vehi_status")
     private String vehi_status;
 

@@ -27,7 +27,7 @@ const buildEmployeeTable = async () => {
 
         $(`#${sharedTableId}`).dataTable();
 
-            } catch (error) {
+    } catch (error) {
         console.error("Failed to build employee table:", error);
     }
 
@@ -101,6 +101,7 @@ const refreshEmployeeForm = async () => {
 }
 
 //set the status as auto every time when a new form is opened
+//maybe hide entire thing and display only when updating ? 💥
 const setEmpStatusAuto = () => {
     document.getElementById('selectEmployeementStatus').value = 'Working';
     document.getElementById('selectEmployeementStatus').style.border = '2px solid lime';
@@ -284,48 +285,13 @@ const openModal = (empObj) => {
 
 };
 
-//restore employee record if its already deleted
-// or this should call a new service to set deleted_emp as false ? 💥💥💥
-const restoreEmployeeRecord = async () => {
-
-    const userConfirm = confirm("Are you sure to recover this deleted record ?");
-
-    if (userConfirm) {
-        try {
-            //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala
-            employee = window.currentObject;
-            employee.deleted_emp = false;
-            
-            let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
-
-            if (putServiceResponse === "OK") {
-                alert("Successfully Restored");
-                document.getElementById('formEmployee').reset();
-                //refreshEmployeeForm();
-                //buildEmployeeTable();
-                $("#infoModalEmployee").modal("hide");
-                window.location.reload();
-              
-            } else {
-                alert("Restore Failed \n" + putServiceResponse);
-            }
-
-        } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
-        }
-    } else {
-        alert('User cancelled the recovery task');
-    }
-
-
-}
-
 // refill the form to edit a record
 const refillEmployeeForm = async (empObj) => {
 
     employee = JSON.parse(JSON.stringify(empObj));
     oldEmployee = JSON.parse(JSON.stringify(empObj));
 
+    //doc.getelebyid yanna 💥💥💥💥
     inputFullName.value = empObj.fullname;
     inputNIC.value = empObj.nic;
     inputEmail.value = empObj.email;
@@ -359,9 +325,9 @@ const refillEmployeeForm = async (empObj) => {
     empUpdateBtn.style.cursor = "pointer";
 
     empAddBtn.disabled = true;
-    empAddBtn.style.cursor = "not-allowed";   
+    empAddBtn.style.cursor = "not-allowed";
 
-    document.getElementById('selectEmployeementStatus').style.border = '2px solid #ced4da';
+    document.getElementById('selectEmployeementStatus').style.border = '1px solid #ced4da';
     document.getElementById('selectEmployeementStatus').children[2].classList.remove('d-none');
 
     $("#infoModalEmployee").modal("hide");
@@ -488,6 +454,42 @@ const deleteEmployeeRecord = async (empObj) => {
     }
 }
 
+//restore employee record if its already deleted
+// or this should call a new service to set deleted_emp as false ? 💥💥💥
+const restoreEmployeeRecord = async () => {
+
+    const userConfirm = confirm("Are you sure to recover this deleted record ?");
+
+    if (userConfirm) {
+        try {
+            //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala
+            employee = window.currentObject;
+            employee.deleted_emp = false;
+
+            let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
+
+            if (putServiceResponse === "OK") {
+                alert("Successfully Restored");
+                document.getElementById('formEmployee').reset();
+                //refreshEmployeeForm();
+                //buildEmployeeTable();
+                $("#infoModalEmployee").modal("hide");
+                window.location.reload();
+
+            } else {
+                alert("Restore Failed \n" + putServiceResponse);
+            }
+
+        } catch (error) {
+            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else {
+        alert('User cancelled the recovery task');
+    }
+
+
+}
+
 // fn for print an employee record
 const printEmployeeRecord = () => {
     // Get the content from the modal
@@ -579,9 +581,9 @@ const printEmployeeRecord = () => {
 };
 
 
-// fn for print entire table
+// fn for print entire table 💥💥💥
 
-//check privileges before all 
+//check privileges before all 💥💥💥 
 
 
-/* settings btn ekak hadanna table walata, thiyana okkoma cols list 1 pennnawa checkbox widiyata, max 5k select krla UI eke pennanaa cols tika change krganna puluwan */
+/* in print > settings btn ekak hadanna table walata, thiyana okkoma cols list 1 pennnawa checkbox widiyata, max 5k select krla UI eke pennanaa cols tika change krganna puluwan 💥💥💥 */
