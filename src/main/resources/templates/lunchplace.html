@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
+
+<head>
+
+    <!-- link main css -->
+    <!-- <link rel="stylesheet" href="resources/css/lunchplace.css"> -->
+
+    <!-- link vehicle js -->
+    <script src="controllerJSs/lunchplace.js"></script>
+
+
+</head>
+
+<body>
+
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+
+    <main id="mainAreaID" class="main min-vh-100">
+
+        <!-- Tabs navigation panel -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- for table side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableLunchPlaceHolderDiv"
+                    role="tab" aria-controls="tableLunchPlaceHolderDiv" aria-selected="true">Table</a>
+            </li>
+            <!-- for form side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formLunchPlaceHolderDiv" role="tab"
+                    aria-controls="formLunchPlaceHolderDiv" aria-selected="false">Form</a>
+            </li>
+        </ul>
+
+        <!-- Tabs content -->
+        <div class="tab-content mt-1" id="myTabContent">
+            <!-- Table tab  -->
+            <div id="tableLunchPlaceHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3"
+                role="tabpanel" aria-labelledby="table-tab">
+                <!-- a table will be dynamically generated in here -->
+            </div>
+
+            <!-- Form tab -->
+            <div class="tab-pane fade" id="formLunchPlaceHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+                <div class="card mx-auto" style="width: 1100px;">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">Lunch Hotels Management Form</h3>
+                    </div>
+                    <div class="card-body" style="background-color: ivory;">
+
+                        <form id="formLunchPlace" onsubmit="return false">
+                            <div class="row g-3 mb-3">
+
+                                <!-- Name -->
+                                <div class="col-md-6">
+                                    <label for="inputLHPlaceName" class="form-label fw-bold">Name:</label>
+                                    <input type="text" id="inputLHPlaceName" class="form-control" required
+                                        onkeyup="inputValidatorText(this,'','lunchplace','name');">
+                                </div>
+
+                                <!-- Cost Per Head -->
+                                <div class="col-md-6">
+                                    <label for="inputCostperHead" class="form-label fw-bold">Cost Per Head:</label>
+                                    <input type="number" id="inputCostperHead" class="form-control" required
+                                        onkeyup="inputValidatorText(this,'','lunchplace','costperhead');">
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+
+                                <!-- District ID -->
+                                <div class="col-md-6">
+                                    <label for="selectLHDistrict" class="form-label fw-bold">District ID:</label>
+                                    <select id="selectLHDistrict" class="form-select mb-2"
+                                        onchange="dynamicSelectValidator(this, 'lunchplace' , 'district_id')"></select>
+                                </div>
+
+                                <!-- Contact Number -->
+                                <div class="col-md-6">
+                                    <label for="inputContactNum" class="form-label fw-bold">Contact Number:</label>
+                                    <input type="tel" id="inputContactNum" pattern="[0-9]{10}" class="form-control"
+                                        onkeyup="inputValidatorText(this,'','lunchplace','contactnum');">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="inputContactNumTwo" class="form-label fw-bold">Contact Number 2:</label>
+                                    <input type="tel" id="inputContactNumTwo" pattern="[0-9]{10}" class="form-control"
+                                        onkeyup="inputValidatorText(this,'','lunchplace','contactnumtwo');">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="inputLPEmail" class="form-label fw-bold">Contact Email:</label>
+                                    <input type="tel" id="inputLPEmail" class="form-control"
+                                        onkeyup="inputValidatorText(this,'','lunchplace','email');">
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <!-- Note -->
+                                <div class="col-md-12">
+                                    <label for="inputLHNote" class="form-label fw-bold">Note:</label>
+                                    <textarea id="inputLHNote" class="form-control" rows="3"
+                                        onkeyup="inputValidatorText(this,'','lunchplace','note');"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-4">
+                                <!-- Address -->
+                                <div class="col-md-12">
+                                    <label for="inputLHAddress" class="form-label fw-bold">Address:</label>
+                                    <textarea id="inputLHAddress" class="form-control" rows="3"
+                                        onkeyup="inputValidatorText(this,'','lunchplace','address');"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Status (if needed as a select element) -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label for="lHStatusSelect" class="form-label fw-bold">Status:</label>
+
+                                    <select required id="lHStatusSelect" class="form-select"
+                                        onchange="staticSelectValidator(this,'lunchplace','lp_status')">
+
+                                        <option value="" selected disabled> Select Status </option>
+                                        <option value="available"> Available </option>
+                                        <option value="closed"> Not In Business </option>
+                                        <option value="ifDeleted" class="d-none"> Deleted Record </option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            <!-- form buttons starts -->
+                            <div class="row g-3 mt-3">
+                                <div class="col-md-6 text-start">
+                                    <button type="reset" class="btn btn-secondary w-25">Clear</button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" id="lunchPlaceUpdateBtn" class="btn btn-warning w-100"
+                                        onclick="updateLunchPlace()">Update</button>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" id="lunchPlaceAddBtn" class="btn btn-primary w-100"
+                                        onclick="addNewLunchPlace()">Add</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal to display full details of a row -->
+        <div class="modal fade py-5" id="infoModalLunchPlace" tabindex="-1" aria-labelledby="infoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="infoModalLabel">Lunch Place Full Details</h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <div class="container">
+
+                            <!-- Employee Image and Basic Info -->
+                            <div class="row g-4 align-items-center">
+
+                                <!-- Name and NIC -->
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1"> Name:</p>
+                                    <p id="modalLPName" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1">Location:</p>
+                                    <p id="modalLPDistrict" class="text-muted"></p>
+
+                                    <p id="modalLPProvince" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1"><Address></Address></p>
+                                    <p id="modalLPAddress" class="text-muted"></p>
+
+
+                                </div>
+                            </div>
+
+                            <!-- Other Details -->
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Cost Per Head:</p>
+                                    <p id="modalLPCostPerHead" class="text-muted mb-0"></p>
+                                </div>
+                               
+                            </div>
+
+                                                     <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Contact Number:</p>
+                                    <p id="modalLPContactNum" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Contact Number #2:</p>
+                                    <p id="modalLPContactNumTwo" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Email</p>
+                                    <p id="modalLPEmail" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Status:</p>
+                                    <p id="modalLPStatus" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Additional Details:</p>
+                                    <p id="modalLPNote" class="text-muted mb-0"></p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <p id="modalLPIfDeleted" class="text-danger d-none mb-0"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex justify-content-between bg-light">
+                        <button class="btn btn-outline-primary" onclick="printLunchPlaceRecord()">
+                            Print
+                        </button>
+                        <div>
+                            <button id="modalLPEditBtn" class="btn btn-outline-success me-2"
+                                onclick="refillLunchPlaceForm(window['currentObject'])">
+                                Edit Lunch Place Record
+                            </button>
+                            <button id="modalLPDeleteBtn" class="btn btn-outline-danger"
+                                onclick="deleteLunchPlaceRecord(window['currentObject'])">
+                                Delete Lunch Place Record
+                            </button>
+                            <button id="modalLPRecoverBtn" class="btn btn-outline-primary d-none"
+                                onclick="restoreLunchPlaceRecord()">
+                                Restore Lunch Place Record
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </main>
+</body>
+
+</html>

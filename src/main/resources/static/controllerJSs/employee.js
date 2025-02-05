@@ -443,7 +443,7 @@ const deleteEmployeeRecord = async (empObj) => {
             if (deleteServerResponse === 'OK') {
                 alert('Record Deleted');
                 $('#infoModalEmployee').modal('hide');
-                buildEmployeeTable();
+                window.location.reload();
             } else {
                 alert('Delete Failed' + deleteServerResponce);
             }
@@ -463,7 +463,7 @@ const restoreEmployeeRecord = async () => {
 
     if (userConfirm) {
         try {
-            //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala
+            //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala 💥💥💥
             employee = window.currentObject;
             employee.deleted_emp = false;
 
@@ -471,10 +471,9 @@ const restoreEmployeeRecord = async () => {
 
             if (putServiceResponse === "OK") {
                 alert("Successfully Restored");
-                document.getElementById('formEmployee').reset();
-                //refreshEmployeeForm();
-                //buildEmployeeTable();
                 $("#infoModalEmployee").modal("hide");
+
+                //AN LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
                 window.location.reload();
 
             } else {
