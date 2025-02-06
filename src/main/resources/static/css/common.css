@@ -126,17 +126,17 @@ h2.text-info {
 /* ========================================================================
    Sidebar
    ======================================================================== */
+
 .sidebar {
   position: fixed;
   top: 65px;
-  /* align with header */
   left: 0;
   bottom: 0;
   width: 0;
   z-index: 996;
   transition: all 0.3s ease;
   overflow-y: auto;
-  background: #f8f9ff;
+  background: linear-gradient(135deg, #00bcd4, #00695c);
   box-shadow: 3px 0 20px rgba(43, 53, 126, 0.05);
 }
 
@@ -144,21 +144,19 @@ h2.text-info {
   width: 300px;
 }
 
-/* Sidebar Scrollbar */
 .sidebar::-webkit-scrollbar {
   width: 5px;
 }
 
 .sidebar::-webkit-scrollbar-track {
-  background: #f8f9ff;
+  background: #f1f4f8;
 }
 
 .sidebar::-webkit-scrollbar-thumb {
-  background: #dadce9;
+  background: #00796b;
   border-radius: 10px;
 }
 
-/* Sidebar Navigation Items */
 .sidebar-nav {
   padding: 1rem 0;
   margin: 0;
@@ -173,70 +171,20 @@ h2.text-info {
   display: flex;
   align-items: center;
   padding: 0.8rem 1rem;
-  color: #2b357e;
-  background: transparent;
+  color: #ffffff;
+  /*background: #4dd0e1;*/
+  background: linear-gradient(135deg, #2c3e50, #34495e);
   border-radius: 8px;
   transition: all 0.3s ease;
   text-decoration: none;
   font-weight: 500;
 }
 
-.sidebar-nav .nav-link i {
-  font-size: 1.1rem;
-  margin-right: 0.8rem;
-  color: #4776E6;
-}
-
 .sidebar-nav .nav-link:hover {
-  background: linear-gradient(to right, rgba(71, 118, 230, 0.08), rgba(71, 118, 230, 0.03));
-  color: #4776E6;
+  background: linear-gradient(135deg, #4e73df, #1cc88a);
+  color: #f1f1f1;
   transform: translateX(3px);
-}
-
-.sidebar-nav .nav-link:not(.collapsed) {
-  background: linear-gradient(to right, rgba(71, 118, 230, 0.1), rgba(71, 118, 230, 0.05));
-  color: #4776E6;
-  font-weight: 600;
-}
-
-/* Submenu */
-.nav-content {
-  padding-left: 2.2rem;
-}
-
-.nav-content a {
-  display: flex;
-  align-items: center;
-  padding: 0.7rem 1rem;
-  color: #4f5b93;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  border-left: 1px solid #e0e3f0;
-  margin: 0.2rem 0;
-}
-
-.nav-content a:hover {
-  color: #4776E6;
-  background: rgba(71, 118, 230, 0.04);
-  border-left-color: #4776E6;
-}
-
-.nav-content i {
-  font-size: 0.7rem;
-  margin-right: 0.6rem;
-}
-
-/* Dropdown Arrow in Sidebar */
-.nav-link .bi-chevron-down {
-  margin-left: auto;
-  margin-right: 0;
-  font-size: 0.8rem;
-  transition: transform 0.3s ease;
-}
-
-.nav-link:not(.collapsed) .bi-chevron-down {
-  transform: rotate(-180deg);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* ========================================================================
@@ -259,9 +207,9 @@ h2.text-info {
   transition: transform 0.2s;
 }
 
-.card:hover {
+/*.card:hover {
   transform: translateY(-5px);
-}
+}*/
 
 .card-body {
   position: relative;
@@ -295,7 +243,7 @@ h2.text-info {
 }
 
 /* ========================================================================
-   Nav Tabs (for content switching)
+   Nav Tabs (in MainArea)
    ======================================================================== */
 .nav-tabs {
   display: flex;
@@ -308,6 +256,7 @@ h2.text-info {
 .nav-tabs .nav-item {
   flex: 1;
   margin-bottom: 0;
+  transition: flex 0.3s ease;
 }
 
 .nav-tabs .nav-link {
@@ -325,8 +274,21 @@ h2.text-info {
 .nav-tabs .nav-link.active {
   background: linear-gradient(45deg, #4776E6 0%, #8E54E9 100%);
   color: white;
-  transform: translateY(-2px);
+  flex: 3;
+  scale: 1.1;
   box-shadow: 0 4px 15px rgba(71, 118, 230, 0.2);
+}
+
+.nav-tabs .nav-link.active:hover {
+  box-shadow: 0 0 12px rgba(142, 84, 233, 0.8), 0 0 20px rgba(71, 118, 230, 0.6);
+}
+
+.nav-tabs .nav-item.active {
+  flex: 3;
+}
+
+.nav-tabs .nav-item:not(.active) {
+  flex: 1;
 }
 
 .nav-tabs .nav-link:hover:not(.active) {
@@ -411,7 +373,7 @@ h2.text-info {
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.5px;
-  padding: 1rem !important; 
+  padding: 1rem !important;
   vertical-align: middle;
   border: none;
 }
