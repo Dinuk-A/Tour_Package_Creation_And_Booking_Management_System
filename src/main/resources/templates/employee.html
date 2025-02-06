@@ -254,13 +254,13 @@
                             <!-- Form Buttons -->
                             <div class="row mt-4 mb-2">
                                 <div class="col-4">
-                                    <button type="reset" class="btn btn-outline-danger fw-bold w-50"
+                                    <button type="reset" class="btn-clear w-50"
                                         onclick="refreshEmployeeForm()">Reset</button>
                                 </div>
                                 <div class="col-8 text-end">
-                                    <button type="submit" id="empUpdateBtn" class="btn btn-success fw-bold me-2"
+                                    <button type="submit" id="empUpdateBtn" class="btn-update"
                                         onclick="updateEmployee()">Update</button>
-                                    <button type="submit" id="empAddBtn" class="btn btn-primary fw-bold"
+                                    <button type="submit" id="empAddBtn" class="btn-add fw-bold"
                                         onclick="addNewEmployee()">Add</button>
                                 </div>
                             </div>
@@ -372,19 +372,19 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">
-                        <button class="btn btn-outline-primary" onclick="printEmployeeRecord()">
+                        <button class="btn-print" onclick="printEmployeeRecord()">
                             Print
                         </button>
                         <div>
-                            <button id="modalEmpEditBtn" class="btn btn-outline-success me-2"
+                            <button id="modalEmpEditBtn" class="btn-edit me-2"
                                 onclick="refillEmployeeForm(window['currentObject'])">
                                 Edit Employee Record
                             </button>
-                            <button id="modalEmpDeleteBtn" class="btn btn-outline-danger"
+                            <button id="modalEmpDeleteBtn" class="btn-delete"
                                 onclick="deleteEmployeeRecord(window['currentObject'])">
                                 Delete Employee Record
                             </button>
-                            <button id="modalEmpRecoverBtn" class="btn btn-outline-primary d-none"
+                            <button id="modalEmpRecoverBtn" class="btn-restore d-none"
                                 onclick="restoreEmployeeRecord()">
                                 Restore Employee Record
                             </button>

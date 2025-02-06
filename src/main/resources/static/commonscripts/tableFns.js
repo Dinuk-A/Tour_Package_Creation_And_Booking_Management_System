@@ -5,7 +5,7 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
 
     // Create main table tag
     const tableTag = document.createElement('table');
-    tableTag.setAttribute('class', 'table table-hover border shadow-sm');
+    tableTag.setAttribute('class', 'table');
     tableTag.setAttribute('id', uniqueIdOfTable);
 
     // Create thead
@@ -84,7 +84,7 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
 
         //create a button to insert inside this cell
         const actionButton = document.createElement('button');
-        actionButton.setAttribute('class', 'btn btn-primary btn-sm rounded-pill px-4');
+        actionButton.setAttribute('class', 'btn-view');
         actionButton.innerText = "View";
 
         //function for that button

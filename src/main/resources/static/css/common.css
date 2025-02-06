@@ -46,7 +46,6 @@ a:hover {
 }
 
 .toggle-sidebar-btn {
-  /* Consider replacing this custom button with Bootstrap’s “btn btn-link” */
   background: transparent !important;
   border: none;
   padding: 8px;
@@ -85,7 +84,6 @@ h2.text-info {
   letter-spacing: 0.3px;
 }
 
-/* Dropdown in Header */
 .dropdown-menu {
   border: none;
   border-radius: 12px;
@@ -113,7 +111,6 @@ h2.text-info {
   opacity: 0.1;
 }
 
-/* User Info inside Dropdown */
 .dropdown-menu .fw-bold {
   color: #2b357e;
   margin-bottom: 4px;
@@ -172,7 +169,6 @@ h2.text-info {
   align-items: center;
   padding: 0.8rem 1rem;
   color: #ffffff;
-  /*background: #4dd0e1;*/
   background: linear-gradient(135deg, #2c3e50, #34495e);
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -215,25 +211,6 @@ h2.text-info {
   position: relative;
 }
 
-/* Badges (note: Bootstrap already includes badge classes) */
-.badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 0.75rem;
-  padding: 5px 10px;
-  border-radius: 12px;
-}
-
-.badge.bg-primary {
-  background-color: #007bff;
-}
-
-.badge.bg-success {
-  background-color: #28a745;
-}
-
-/* Footer */
 .footer {
   padding: 20px 0;
   font-size: 14px;
@@ -381,20 +358,26 @@ h2.text-info {
 .table tbody tr {
   transition: all 0.2s ease;
   position: relative;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
 }
+
 
 .table tbody tr:hover {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-  transform: translateY(-1px);
-  background-color: #ffffff;
+  background-color: #c8e6c9 ;
+  border-top: none;
+  border-bottom: none;
+  border-top: 4px solid #81C784;
+  border-bottom: 4px solid #81C784;
 }
 
 .table tbody td {
-  /*padding: 1rem;*/
   vertical-align: middle;
   font-size: 0.95rem;
   color: #424242;
 }
+
 
 /* DataTables specific styling */
 .dataTables_wrapper {
