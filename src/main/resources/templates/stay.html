@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
+
+<head>
+    <!-- link stay css -->
+    <!-- <link rel="stylesheet" href="resources/css/stay.css"> -->
+
+    <!-- link main JS -->
+    <script src="controllerJSs/stay.js"></script>
+
+</head>
+
+<body>
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+
+    <main id="mainAreaID" class="main min-vh-100">
+
+        <!-- Tabs navigation panel -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- for table side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableStayHolderDiv" role="tab"
+                    aria-controls="tableStayHolderDiv" aria-selected="true">Table</a>
+            </li>
+            <!-- for form side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formStayHolderDiv" role="tab"
+                    aria-controls="formStayHolderDiv" aria-selected="false">
+                    <!-- onclick="setEmpStatusAuto()" -->
+                    Form</a>
+            </li>
+        </ul>
+
+        <!-- Tabs content -->
+        <div class="tab-content mt-1" id="myTabContent">
+
+            <!-- Table tab  -->
+            <div id="tableStayHolderDiv" class="tab-pane fade show active table-container p-4 bg-light rounded-3"
+                role="tabpanel" aria-labelledby="table-tab">
+                <!-- a table will be dynamically generated in here -->
+            </div>
+
+            <!-- Form tab -->
+            <div class="tab-pane fade" id="formStayHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+
+                <div class="card mx-auto" style="width: 1100px;">
+
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">Accomodation Management Form</h3>
+                    </div>
+
+                    <div class="card-body" style="background-color: ivory;">
+
+                        <form id="formStay" onsubmit="return false">
+
+                            <!-- NAME AND TYPE ROW STARTS -->
+                            <div class="row mt-2 mb-1">
+
+                                <!-- NAME -->
+                                <div class="col-7 pe-0">
+                                    <label for="inputStayName" class="form-label">Name</label>
+
+                                    <input id="inputStayName" class="form-control form-input"
+                                        onkeyup="inputValidatorText(this, '' ,'stay' ,'name' )">
+                                </div>
+
+                                <!-- TYPE -->
+                                <div class="col-5 ps-1">
+                                    <label for="selectStayType" class="form-label">Type :</label>
+
+                                    <select id="selectStayType" class="form-control form-select"
+                                        onchange="dynamicSelectValidator(this,'stay','staytype_id')"></select>
+                                </div>
+                            </div>
+
+                            <!-- ADDRESS , PROVINCE, DISTRICTS -->
+                            <div class="row mt-2 mb-1">
+
+                                <!-- ADDRESS -->
+                                <div class="col-6 pe-0">
+                                    <label for="inputStayAddress">Address : </label>
+                                    <textarea id="inputStayAddress" class="form-input form-control"
+                                        style="height: 115px;"
+                                        onkeyup="inputValidatorText(this,'','stay','address')"></textarea>
+                                </div>
+
+                                <div class="col-6 ">
+                                    <!-- PROVINCE -->
+                                    <label for="selectStayProvince" class="form-label mb-1">Province :</label>
+                                    <select id="selectStayProvince" class="form-control form-select mb-2"
+                                        onchange="getDistByProvince()"></select>
+
+                                    <!-- DISTRICT -->
+                                    <label for="selectStayDistrict" class="form-label mb-1">District :</label>
+                                    <select id="selectStayDistrict" class="form-select"
+                                        onchange="dynamicSelectValidator(this,'stay','district_id')"></select>
+                                </div>
+                            </div>
+
+                            <!-- CONTACT #1,#2, EMAIL -->
+                            <div class="row mt-2 mb-1">
+
+                                <!-- CONTACT 1 -->
+                                <div class="col-3 pe-0">
+                                    <label for="inputStayContactOne" class="form-label mb-1">Contact #1 :</label>
+
+                                    <input type="text" class="form-control form-input" id="inputStayContactOne"
+                                        onkeyup="inputValidatorText(this,'','stay','contactnumone')">
+                                </div>
+
+                                <!-- CONTACT 2 -->
+                                <div class="col-3 ps-1 ">
+                                    <label for="inputStayContactTwo" class="form-label mb-1">Contact #2 :</label>
+
+                                    <input type="text" class="form-control form-input" id="inputStayContactTwo"
+                                        onkeyup="inputValidatorText(this,'','stay','contactnumtwo')">
+                                </div>
+
+                                <!-- EMAIL -->
+                                <div class="col-6 ">
+                                    <label for="inputStayEmail" class="form-label mb-1">Email
+                                        :</label>
+
+                                    <input type="text" class="form-control form-input" id="inputStayEmail"
+                                        onkeyup="inputValidatorText(this,'','stay','email')">
+                                </div>
+
+                            </div>
+
+                            <!-- NOTE, MAX GUEST COUNT, STATUS -->
+                            <div class="row mt-2 mb-1">
+
+                                <div class="col-6 ">
+                                    <!-- MAX GUEST COUNT -->
+                                    <!--<label for="stayMaxGuestCount" class="form-label mb-1">Max Guests Count
+                                        :</label>
+
+                                    <div class="input-group">
+                                        <input type="number" id="stayMaxGuestCount" class="form-control mb-2"
+                                            onkeyup="inputValidatorText(this,'','stay','maxguestscount')">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text rounded-0"> Guests</span>
+                                        </div>
+                                    </div>-->
+
+                                    <!-- STATUS -->
+                                    <label for="selectStayStatus" class="form-label mb-1">Status :</label>
+
+                                    <select id="selectStayStatus" class="form-control form-select"
+                                        onchange="staticSelectValidator(this,'stay','stay_status')">
+                                        <option value="" disabled> Select Status </option>
+                                        <option selected value="open"> Open For Bookings </option>
+                                        <option value="permanantly_closed"> Permanantly Closed </option>
+                                        <option value="temporary_closed"> Temporary Closed </option>
+                                        <option value="ifDeleted" class="d-none"> Deleted Record </option>
+                                    </select>
+                                </div>
+
+                                <!-- NOTE -->
+                                <div class="col-6 pe-0">
+                                    <label for="inputStayNote">Note : </label>
+                                    <textarea id="inputStayNote" class="form-input form-control" style="height: 115px;"
+                                        onkeyup="inputValidatorText(this,'','stay','note')"></textarea>
+                                </div>
+
+                            </div>
+
+                            <!--3 form buttons starts -->
+                            <div class="row mt-3">
+
+                                <div class="col-3">
+                                    <button type="reset" class="btn btn-all btn-clear">Clear</button>
+                                </div>
+
+                                <div class="col-9 text-end">
+                                    <button type="button" id="stayUpdateBtn" class="btn btn-all btn-update "
+                                        onclick="updateStay()" style="pointer-events: all;">Update</button>
+
+                                    <button type="submit" id="stayAddBtn" class="btn btn-all btn-add "
+                                        onclick="addNewStay()" style="pointer-events: all;">Add</button>
+
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Modal to display full details of a row -->
+        <div class="modal fade py-5" id="infoModalStay" tabindex="-1" aria-labelledby="infoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="infoModalLabel">Accomodation Full Details</h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <div class="container">
+
+                            <!-- Employee Image and Basic Info -->
+                            <div class="row g-4 align-items-center">
+
+                                <!-- Name and NIC -->
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1"> Name:</p>
+                                    <p id="modalStayName" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1">Location:</p>
+                                    <p id="modalStayDistrict" class="text-muted"></p>
+
+                                    <p id="modalStayProvince" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1">Categories</p>
+                                    <p id="modalStayCatrgories" class="text-muted"></p>
+
+
+                                </div>
+                            </div>
+
+                            <!-- Other Details -->
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Local Adult Fee:</p>
+                                    <p id="modalStayLocalAdultFee" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Local Child Fee:</p>
+                                    <p id="modalStayLocalChildFee" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Foreign Adult Fee:</p>
+                                    <p id="modalStayForeignAdultFee" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Foreign Child Fee:</p>
+                                    <p id="modalStayForeignChildFee" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Staying Duration:</p>
+                                    <p id="modalStayDuration" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Description:</p>
+                                    <p id="modalStayDescription" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Vehicle Parking Fee:</p>
+                                    <p id="modalStayVehicleParkingFee" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Status:</p>
+                                    <p id="modalStayStatus" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Additional Details:</p>
+                                    <p id="modalStayNote" class="text-muted mb-0"></p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <p id="modalStayIfDeleted" class="text-danger d-none mb-0"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex justify-content-between bg-light">
+                        <button class="btn btn-outline-primary" onclick="printStayRecord()">
+                            Print
+                        </button>
+                        <div>
+                            <button id="modalStayEditBtn" class="btn btn-outline-success me-2"
+                                onclick="refillStayForm(window['currentObject'])">
+                                Edit Stay Record
+                            </button>
+                            <button id="modalStayDeleteBtn" class="btn btn-outline-danger"
+                                onclick="deleteStayRecord(window['currentObject'])">
+                                Delete Stay Record
+                            </button>
+                            <button id="modalStayRecoverBtn" class="btn btn-outline-primary d-none"
+                                onclick="restoreStayRecord()">
+                                Restore Stay Record
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+
+</html>

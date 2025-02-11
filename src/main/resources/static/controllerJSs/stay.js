@@ -1,0 +1,428 @@
+window.addEventListener('load', () => {
+
+    //loggedUserPrivileges = await ajaxGetReq("/privilege/bymodule/STAY");
+
+    buildStayTable();
+
+    refreshStayForm();
+});
+
+//global var to store id of the table
+let sharedTableId = "mainTableStay";
+
+//fn for create and show data in table
+const buildStayTable = async () => {
+
+    try {
+        const stays = await await ajaxGetReq("/stay/all");
+
+        const tableColumnInfo =
+
+            [
+
+                { displayType: 'text', displayingPropertyOrFn: 'name', colHeadName: 'Name' },
+                //{ displayType: 'text', displayingPropertyOrFn: showStayType, colHeadName: 'Type' },
+                { displayType: 'function', displayingPropertyOrFn: showDistNProvince, colHeadName: 'District' },
+                { displayType: 'function', displayingPropertyOrFn: showStayContacts, colHeadName: 'Contacts' },
+                { displayType: 'function', displayingPropertyOrFn: showStayStatus, colHeadName: 'Status' }
+
+            ]
+
+        createTable(tableStayHolderDiv, sharedTableId, stays, tableColumnInfo);
+
+        $(`#${sharedTableId}`).dataTable();
+
+    } catch (error) {
+        console.error("Failed to build Stay table:", error);
+    }
+
+}
+
+//fn for show district + province in table
+const showDistNProvince = (ob) => {
+    return ob.district_id.name + " <br/> " + ob.district_id.province_id.name + " Province";
+}
+
+const showStayType = () => {
+    //💥💥💥
+}
+
+const showStayContacts = (ob) => {
+    return ob.contactnumone + "<br/>" + ob.email;
+}
+
+const showStayStatus = (ob) => {
+    return ob.stay_status;
+}
+
+const refreshStayForm = async () => {
+
+    stay = new Object;
+
+    document.getElementById('formStay').reset();
+
+    try {
+        //get stay types
+        //stayTypes =await await ajaxGetReq("/staytype/all");
+        //fillDataIntoDynamicSelects(selectStayType, 'Please Select The Type', stayTypes, 'name');
+
+        //get province list
+        provinces = await await ajaxGetReq("province/all");
+        fillDataIntoDynamicSelects(selectStayProvince, 'Please Select The Province', provinces, 'name');
+
+        //get district list 
+        districts = await await ajaxGetReq("district/all");
+        fillDataIntoDynamicSelects(selectStayDistrict, 'Please Select The Provice First', districts, 'name');
+        selectStayDistrict.disabled = true;
+
+    } catch (error) {
+        console.error("Failed to fetch data : ", error);
+    }
+
+    // Array of input field IDs to reset
+    const inputTagsIds = [
+        'inputStayName',
+        'selectStayType',
+        'inputStayAddress',
+        'selectStayProvince',
+        'selectStayDistrict',
+        'inputStayContactOne',
+        'inputStayContactTwo',
+        'inputStayEmail',
+        'selectStayStatus',
+        'inputStayNote',
+    ];
+
+    //clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    //stayMaxGuestCount.style.border = "1px solid #ced4da" 💥💥;
+
+    stayUpdateBtn.disabled = true;
+    stayUpdateBtn.style.cursor = "not-allowed";
+
+    stayAddBtn.disabled = false;
+    stayAddBtn.style.cursor = "pointer";
+
+}
+
+const checkStayFormErrors = () => {
+    let errors = '';
+
+    if (stay.name == null) {
+        errors = errors + " Please Enter The Accomodation's Name \n";
+    }
+
+    if (stay.district_id == null) {
+        errors = errors + " Please Select The District \n";
+    }
+
+    //if (stay.staytype_id == null) {
+    //    errors = errors + " Please Select The Stay Type \n";
+    //}
+
+
+    if (stay.contactnumone == null) {
+        errors = errors + " Please Enter A Contact Number \n";
+    }
+
+    if (stay.email == null) {
+        errors = errors + " Please Enter The Email \n";
+    }
+
+    //if (stay.maxguestscount == null) {
+    //    errors = errors + " Please Enter The Guest Count \n";
+    //}
+
+
+    return errors;
+}
+
+
+const addNewStay = async () => {
+
+    //check errors
+    const errors = checkStayFormErrors();
+
+    if (errors == '') {
+        const userConfirm = confirm('Are You Sure To Add ? \n' + stay.name)
+
+        if (userConfirm) {
+
+            try {
+                //call POST service
+                let postServiceResponse = await ajaxPPDRequest("/stay", "POST", stay);
+
+                if (postServiceResponse === "OK") {
+                    alert('Saved Successfully');
+                    document.getElementById('formStay').reset();
+                    refreshStayForm();
+                    buildStayTable();
+                    var myStayTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    myStayTableTab.show();
+
+                } else {
+                    alert('Submit Failed ' + postServiceResponse);
+                }
+            } catch (error) {
+                // Handle errors (such as network issues or server errors)
+                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            }
+
+
+        } else {
+            //💥💥💥
+            alert('Operation Cancelled By User')
+        }
+    } else {
+        alert('Form Has Followimg Errors \n \n' + errors);
+    }
+
+}
+
+//fn for edit button
+const openModal = (stayObj) => {
+
+    document.getElementById('modalStayName').innerText = stayObj.name || 'N/A';
+    document.getElementById('modalStayDistrict').innerText = stayObj.district_id.name || 'N/A';
+    document.getElementById('modalStayProvince').innerText = stayObj.district_id.province_id.name || 'N/A';
+    document.getElementById('modalStayCatrgories').innerText = stayObj.dob || 'N/A';
+    document.getElementById('modalStayLocalAdultFee').innerText = stayObj.feelocaladult || 'N/A';
+    document.getElementById('modalStayLocalChildFee').innerText = stayObj.feechildlocal || 'N/A';
+    document.getElementById('modalStayForeignAdultFee').innerText = stayObj.feeforeignadult || 'N/A';
+    document.getElementById('modalStayForeignChildFee').innerText = stayObj.feechildforeign || 'N/A';
+    document.getElementById('modalStayDuration').innerText = stayObj.duration || 'N/A';
+    document.getElementById('modalStayDescription').innerText = stayObj.description || 'N/A';
+    document.getElementById('modalStayVehicleParkingFee').innerText = stayObj.vehicleparkingfee || 'N/A';
+    document.getElementById('modalStayStatus').innerText = stayObj.attr_status || 'N/A';
+    document.getElementById('modalStayNote').innerText = stayObj.note || 'N/A';
+
+
+    if (stayObj.deleted_attr) {
+        document.getElementById('modalStayIfDeleted').classList.remove('d-none');
+        document.getElementById('modalStayIfDeleted').innerHTML =
+            'This is a deleted record. <br>Deleted at ' +
+            new Date(stayObj.deleteddatetime).toLocaleString();
+        document.getElementById('modalStayEditBtn').disabled = true;
+        document.getElementById('modalStayDeleteBtn').disabled = true;
+        document.getElementById('modalStayEditBtn').classList.add('d-none');
+        document.getElementById('modalStayDeleteBtn').classList.add('d-none');
+        document.getElementById('modalStayRecoverBtn').classList.remove('d-none');
+    }
+
+    // Show the modal
+    $('#infoModalStay').modal('show');
+
+}
+
+//fn for restore button
+const restoreStayRecord = async () => {
+
+    const userConfirm = confirm("Are you sure to recover this deleted record ?");
+
+    if (userConfirm) {
+        try {
+            //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala 💥💥💥
+            stay = window.currentObject;
+            stay.deleted_stay = false;
+
+            let putServiceResponse = await ajaxPPDRequest("/stay", "PUT", stay);
+
+            if (putServiceResponse === "OK") {
+                alert("Successfully Restored");
+                document.getElementById('formStay').reset();
+                $("#infoModalStay").modal("hide");
+                window.location.reload();
+
+            } else {
+                alert("Restore Failed \n" + putServiceResponse);
+            }
+
+        } catch (error) {
+            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else {
+        alert('Recovery process has cancelled');
+    }
+}
+
+const refillStayForm = async (ob) => {
+
+    stay = JSON.parse(JSON.stringify(ob));
+    stayOldObj = JSON.parse(JSON.stringify(ob));
+
+    selectStayDistrict.disabled = false;
+
+    inputStayName.value = stay.name;
+    selectStayType.value = stay.staytype_id;
+    inputStayAddress.value = stay.address;
+    inputStayContactOne.value = stay.contactnumone;
+    inputStayContactTwo.value = stay.contactnumtwo;
+    inputStayEmail.value = stay.email;
+    inputStayNote.value = stay.note;
+    //stayMaxGuestCount.value = stay.maxguestscount 💥💥
+
+    try {
+
+        //get stay types
+        //stayTypes = await ajaxGetReq("/staytype/all");
+        //fillDataIntoDynamicSelects(selectStayType, 'Please Select The Type', stayTypes, 'name', stay.staytype_id.name);
+
+        provinces = await ajaxGetReq("province/all");
+        fillDataIntoDynamicSelects(selectStayProvince, 'Please Select The Province', provinces, 'name', stay.district_id.province_id.name)
+        selectStayProvince.style.border = "1px solid ced4da";
+
+        districts = await ajaxGetReq("district/all");
+        fillDataIntoDynamicSelects(selectStayDistrict, 'Please Select The District', districts, 'name', stay.district_id.name);
+
+    } catch (error) {
+        console.error("Failed to fetch Data : ", error);
+    }
+
+    stayAddBtn.disabled = true;
+    stayAddBtn.style.cursor = "not-allowed";
+
+    stayUpdateBtn.disabled = false;
+    stayUpdateBtn.style.cursor = "pointer";
+}
+
+//clear out the form everytime a user switches to table tab
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshStayForm();
+        }
+    });
+});
+
+const showAttrValueChanges = () => {
+
+    let updates = "";
+
+    if (stay.name != stayOldObj.name) {
+        updates = updates + "Name have changed to " + stay.name + "\n";
+    }
+
+    if (stay.address != stayOldObj.address) {
+        updates = updates + "Address have changed to " + stay.address + "\n";
+    }
+
+    if (stay.contactnumone != stayOldObj.contactnumone) {
+        updates = updates + "Contact Number #1 have changed to " + stay.contactnumone + "\n";
+    }
+
+    if (stay.contactnumtwo != stayOldObj.contactnumtwo) {
+        updates = updates + "Contact Number #2 have changed to " + stay.contactnumtwo + "\n";
+    }
+
+    if (stay.email != stayOldObj.email) {
+        updates = updates + "Email have changed to " + stay.email + "\n";
+    }
+    //
+    //    if (stay.maxguestscount != stayOldObj.maxguestscount) {
+    //        updates = updates + "Max guests count have changed to " + stay.maxguestscount + "\n";
+    //    }
+
+    if (stay.note != stayOldObj.note) {
+        updates = updates + "Note have changed to " + stay.note + "\n";
+    }
+
+    if (stay.district_id.name != stayOldObj.district_id.name) {
+        updates = updates + "District have changed to " + stay.district_id.name + "\n";
+    }
+
+
+
+    //if (stay.staytype_id.name != stayOldObj.staytype_id.name) {
+    //    updates = updates + "Stay type have changed to " + stay.staytype_id.name + "\n";
+    //}
+
+    return updates
+
+}
+
+//fn for update BTN
+const updateStay = async () => {
+
+    let errors = checkStayFormErrors();
+    if (errors == "") {
+        let updates = showAttrValueChanges();
+        if (updates == "") {
+            alert("No changes detected");
+        } else {
+            let userConfirm = confirm("Are you sure to proceed ? \n \n" + updates);
+
+            if (userConfirm) {
+
+                try {
+                    let putServiceResponce = await ajaxPPDRequest("/stay", "PUT", stay);
+
+                    if (putServiceResponce == "OK") {
+                        alert("Successfully Updted");
+                        document.getElementById('formStay').reset();
+                        refreshStayForm();
+                        buildStayTable();
+                        var myStayTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                        myStayTableTab.show();
+
+                    } else {
+                        alert("An Error Occured " + putServiceResponce);
+                    }
+                } catch (error) {
+                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                }
+
+            } else {
+                alert("Operation cancelled by the Operator");
+            }
+        }
+    } else {
+        alert("form has following errors \n" + errors);
+    }
+}
+
+//for delete btn
+const deleteStayRecord = async (ob) => {
+
+    const userConfirm = confirm('Are you sure to delete the record ? ' + ob.name + ' ?');
+
+    if (userConfirm) {
+
+        try {
+            let deleteServerResponse = await ajaxPPDRequest("/stay", "DELETE", ob);
+            if (deleteServerResponse === "OK") {
+                alert('Deleted succesfully')
+                buildStayTable();
+            } else {
+                alert("Delete Failed \n" + deleteServerResponse);
+            }
+        } catch (error) {
+            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+
+    }
+}
+
+//get district list based on selected province
+const getDistByProvince = async () => {
+
+    const currentProvinceID = JSON.parse(selectStayProvince.value).id;
+    selectStayProvince.style.border = '2px solid lime';
+    selectStayDistrict.disabled = false;
+
+    try {
+        const districts = await ajaxGetReq("districts/byprovinceid/" + currentProvinceID);
+        fillDataIntoDynamicSelects(selectStayDistrict, " Please Select The District Now", districts, 'name');
+    } catch (error) {
+        console.error("Failed to fetch Data : ", error);
+    }
+
+
+}

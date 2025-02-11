@@ -21,10 +21,10 @@ const buildAttractionTable = async () => {
         const tableColumnInfo = [
 
             { displayType: 'text', displayingPropertyOrFn: 'name', colHeadName: 'Name' },
-            { displayType: 'function', displayingPropertyOrFn: getDistNProvince, colHeadName: 'District' },
-            // { displayType: 'function', displayingPropertyOrFn: getCategories , colHeadName: 'Categories'},
+            { displayType: 'function', displayingPropertyOrFn: showDistNProvince, colHeadName: 'District' },
+            // { displayType: 'function', displayingPropertyOrFn: showCategories , colHeadName: 'Categories'},
             // { displayType: 'function', displayingPropertyOrFn: getActivities , colHeadName: 'Activities'},
-            //{ displayType: 'function', displayingPropertyOrFn: getDuration, colHeadName: 'Duration' },
+            //{ displayType: 'function', displayingPropertyOrFn: showDuration, colHeadName: 'Duration' },
             { displayType: 'function', displayingPropertyOrFn: showLocalFees, colHeadName: 'Local Fees <br class="my-0 py-0"0> (LKR)' },
             { displayType: 'function', displayingPropertyOrFn: showForeignFees, colHeadName: 'Foreign Fees <br class="my-0 py-0"> (LKR)' },
             { displayType: 'text', displayingPropertyOrFn: 'attr_status', colHeadName: 'Status' }
@@ -43,12 +43,12 @@ const buildAttractionTable = async () => {
 }
 
 //fn for show district + province in table
-const getDistNProvince = (ob) => {
+const showDistNProvince = (ob) => {
     return ob.district_id.name + " <br/> " + ob.district_id.province_id.name + " Province";
 }
 
 //get category list in table
-const getCategories = (ob) => {
+const showCategories = (ob) => {
 
     let categories = '';
     for (const index in ob.categories) {
@@ -93,7 +93,7 @@ const getCategories = (ob) => {
 // }
 
 //fn for get Duration + " Hours" in table
-const getDuration = (ob) => {
+const showDuration = (ob) => {
     return ob.duration + " Hours";
 }
 
@@ -181,7 +181,7 @@ const refreshAttractionForm = async () => {
         });
 
     } catch (error) {
-        console.error("Failed to fetch Designations : ", error);
+        console.error("Failed to fetch data : ", error);
     }
 
     //districts will be generated based on selected province
@@ -238,7 +238,6 @@ const refreshAttractionForm = async () => {
     // Array of input field IDs to reset
     const inputTagsIds = [
         'inputPlaceName',
-
         'selectAttrDistrict',
         'inputForeignAdultFee',
         'inputLocalAdultFee',
@@ -249,7 +248,7 @@ const refreshAttractionForm = async () => {
         'vehiParkingFeeInput',
     ];
 
-    // 'selectAttrStatus',
+    // 'selectAttrStatus' 💥💥,
 
     //clear out any previous styles
     inputTagsIds.forEach((fieldID) => {
@@ -474,6 +473,7 @@ const addNewAttraction = async () => {
             }
 
         } else {
+            //💥💥💥
             alert('User cancelled the task');
         }
     } else {
@@ -517,13 +517,13 @@ const openModal = (attrObj) => {
 }
 
 //fn for restore button
-const restoreAttractionRecord = async() => {
+const restoreAttractionRecord = async () => {
 
     const userConfirm = confirm("Are you sure to recover this deleted record ?");
 
     if (userConfirm) {
         try {
-             //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala
+            //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala
             attraction = window.currentObject;
             attraction.deleted_attr = false;
 
@@ -536,7 +536,7 @@ const restoreAttractionRecord = async() => {
                 //buildAttractionTable();
                 $("#infoModalAttraction").modal("hide");
                 window.location.reload();
-                
+
             } else {
                 alert("Restore Failed \n" + putServiceResponse);
             }
@@ -544,7 +544,7 @@ const restoreAttractionRecord = async() => {
         } catch (error) {
             alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
-    } else{
+    } else {
         alert('Recovery process has cancelled');
     }
 }
@@ -748,10 +748,10 @@ const showAttrValueChanges = () => {
     if (attraction.district_id.name != attractionOldObj.district_id.name) {
         updates = updates + "District Has Changed To " + attraction.district_id.name + "\n";
     }
-//
-//    if (attraction.attrstatus_id.name != attractionOldObj.attrstatus_id.name) {
-//        updates = updates + "Status Has Changed To " + attraction.attrstatus_id.name + "\n";
-//    }
+    //
+    //    if (attraction.attrstatus_id.name != attractionOldObj.attrstatus_id.name) {
+    //        updates = updates + "Status Has Changed To " + attraction.attrstatus_id.name + "\n";
+    //    }
 
     if (attraction.duration != attractionOldObj.duration) {
         updates = updates + "Duration Has Changed To " + attraction.duration + "\n";
