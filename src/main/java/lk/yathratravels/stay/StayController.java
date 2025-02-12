@@ -1,12 +1,9 @@
 package lk.yathratravels.stay;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.security.core.Authentication;
-import jakarta.transaction.Transactional;
-import lk.yathratravels.employee.Employee;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
 import lk.yathratravels.user.User;
@@ -118,9 +113,12 @@ public class StayController {
         }
 
         try {
+            System.out.println("this runs 1");
             existStay.setDeleted_stay(true);
             existStay.setDeleteddatetime(LocalDateTime.now());
             existStay.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());
+            System.out.println("this runs 2");
+            stayDao.save(existStay);
             return "OK";
         } catch (Exception e) {
             return "Delete Not Completed : " + e.getMessage();

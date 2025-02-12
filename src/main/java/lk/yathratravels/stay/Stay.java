@@ -24,7 +24,8 @@ import lombok.NoArgsConstructor;
 
 public class Stay {
 
-    // stay type hadanna 💥💥💥
+    // website URL ekak optional💥💥💥
+    // star ratings optional only for hotells💥💥💥
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +66,10 @@ public class Stay {
     @ManyToOne
     @JoinColumn(name = "district_id", referencedColumnName = "id")
     private District district_id;
+
+    @ManyToOne
+    @JoinColumn(name = "stay_type_id", referencedColumnName = "id")
+    private StayType stay_type_id;
 
     @Column(name = "stay_status")
     private String stay_status;

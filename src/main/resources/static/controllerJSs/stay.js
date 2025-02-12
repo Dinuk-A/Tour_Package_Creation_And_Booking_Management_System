@@ -57,14 +57,14 @@ const showStayStatus = (ob) => {
 
 const refreshStayForm = async () => {
 
-    stay = new Object;
+    stay = new Object();
 
     document.getElementById('formStay').reset();
 
     try {
         //get stay types
-        //stayTypes =await await ajaxGetReq("/staytype/all");
-        //fillDataIntoDynamicSelects(selectStayType, 'Please Select The Type', stayTypes, 'name');
+        stayTypes = await await ajaxGetReq("/staytype/all");
+        fillDataIntoDynamicSelects(selectStayType, 'Please Select The Type', stayTypes, 'name');
 
         //get province list
         provinces = await await ajaxGetReq("province/all");
@@ -123,7 +123,7 @@ const checkStayFormErrors = () => {
         errors = errors + " Please Select The District \n";
     }
 
-    //if (stay.staytype_id == null) {
+    //if (stay.stay_type_id == null) {
     //    errors = errors + " Please Select The Stay Type \n";
     //}
 
@@ -199,12 +199,11 @@ const openModal = (stayObj) => {
     document.getElementById('modalStayForeignChildFee').innerText = stayObj.feechildforeign || 'N/A';
     document.getElementById('modalStayDuration').innerText = stayObj.duration || 'N/A';
     document.getElementById('modalStayDescription').innerText = stayObj.description || 'N/A';
-    document.getElementById('modalStayVehicleParkingFee').innerText = stayObj.vehicleparkingfee || 'N/A';
-    document.getElementById('modalStayStatus').innerText = stayObj.attr_status || 'N/A';
+    document.getElementById('modalStayStatus').innerText = stayObj.stay_status || 'N/A';
     document.getElementById('modalStayNote').innerText = stayObj.note || 'N/A';
 
 
-    if (stayObj.deleted_attr) {
+    if (stayObj.deleted_stay) {
         document.getElementById('modalStayIfDeleted').classList.remove('d-none');
         document.getElementById('modalStayIfDeleted').innerHTML =
             'This is a deleted record. <br>Deleted at ' +
@@ -260,7 +259,7 @@ const refillStayForm = async (ob) => {
     selectStayDistrict.disabled = false;
 
     inputStayName.value = stay.name;
-    selectStayType.value = stay.staytype_id;
+    selectStayType.value = stay.stay_type_id;
     inputStayAddress.value = stay.address;
     inputStayContactOne.value = stay.contactnumone;
     inputStayContactTwo.value = stay.contactnumtwo;
@@ -271,14 +270,14 @@ const refillStayForm = async (ob) => {
     try {
 
         //get stay types
-        //stayTypes = await ajaxGetReq("/staytype/all");
-        //fillDataIntoDynamicSelects(selectStayType, 'Please Select The Type', stayTypes, 'name', stay.staytype_id.name);
+        stayTypes = await ajaxGetReq("/staytype/all");
+        fillDataIntoDynamicSelects(selectStayType, 'Please Select The Type', stayTypes, 'name', stay.stay_type_id.name);
 
-        provinces = await ajaxGetReq("province/all");
+        provinces = await ajaxGetReq("/province/all");
         fillDataIntoDynamicSelects(selectStayProvince, 'Please Select The Province', provinces, 'name', stay.district_id.province_id.name)
         selectStayProvince.style.border = "1px solid ced4da";
 
-        districts = await ajaxGetReq("district/all");
+        districts = await ajaxGetReq("/district/all");
         fillDataIntoDynamicSelects(selectStayDistrict, 'Please Select The District', districts, 'name', stay.district_id.name);
 
     } catch (error) {
@@ -290,6 +289,11 @@ const refillStayForm = async (ob) => {
 
     stayUpdateBtn.disabled = false;
     stayUpdateBtn.style.cursor = "pointer";
+
+    $("#infoModalStay").modal("hide");
+
+    var myStayFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myStayFormTab.show();
 }
 
 //clear out the form everytime a user switches to table tab
@@ -302,46 +306,50 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-const showAttrValueChanges = () => {
+const showStayValueChanges = () => {
 
     let updates = "";
 
     if (stay.name != stayOldObj.name) {
-        updates = updates + "Name have changed to " + stay.name + "\n";
+        updates = updates + "Name will be changed to " + stay.name + "\n";
     }
 
     if (stay.address != stayOldObj.address) {
-        updates = updates + "Address have changed to " + stay.address + "\n";
+        updates = updates + "Address will be changed to " + stay.address + "\n";
+    }
+
+    if (stay.stay_status != stayOldObj.stay_status) {
+        updates = updates + " Status will be changed to " + stay.stay_status + "\n";
     }
 
     if (stay.contactnumone != stayOldObj.contactnumone) {
-        updates = updates + "Contact Number #1 have changed to " + stay.contactnumone + "\n";
+        updates = updates + "Contact Number #1 will be changed to " + stay.contactnumone + "\n";
     }
 
     if (stay.contactnumtwo != stayOldObj.contactnumtwo) {
-        updates = updates + "Contact Number #2 have changed to " + stay.contactnumtwo + "\n";
+        updates = updates + "Contact Number #2 will be changed to " + stay.contactnumtwo + "\n";
     }
 
     if (stay.email != stayOldObj.email) {
-        updates = updates + "Email have changed to " + stay.email + "\n";
+        updates = updates + "Email will be changed to " + stay.email + "\n";
     }
     //
     //    if (stay.maxguestscount != stayOldObj.maxguestscount) {
-    //        updates = updates + "Max guests count have changed to " + stay.maxguestscount + "\n";
+    //        updates = updates + "Max guests count will be changed to " + stay.maxguestscount + "\n";
     //    }
 
     if (stay.note != stayOldObj.note) {
-        updates = updates + "Note have changed to " + stay.note + "\n";
+        updates = updates + "Note will be changed to " + stay.note + "\n";
     }
 
     if (stay.district_id.name != stayOldObj.district_id.name) {
-        updates = updates + "District have changed to " + stay.district_id.name + "\n";
+        updates = updates + "District will be changed to " + stay.district_id.name + "\n";
     }
 
 
 
-    //if (stay.staytype_id.name != stayOldObj.staytype_id.name) {
-    //    updates = updates + "Stay type have changed to " + stay.staytype_id.name + "\n";
+    //if (stay.stay_type_id.name != stayOldObj.stay_type_id.name) {
+    //    updates = updates + "Stay type will be changed to " + stay.stay_type_id.name + "\n";
     //}
 
     return updates
@@ -353,7 +361,7 @@ const updateStay = async () => {
 
     let errors = checkStayFormErrors();
     if (errors == "") {
-        let updates = showAttrValueChanges();
+        let updates = showStayValueChanges();
         if (updates == "") {
             alert("No changes detected");
         } else {
@@ -398,8 +406,9 @@ const deleteStayRecord = async (ob) => {
         try {
             let deleteServerResponse = await ajaxPPDRequest("/stay", "DELETE", ob);
             if (deleteServerResponse === "OK") {
-                alert('Deleted succesfully')
-                buildStayTable();
+                alert('Deleted succesfully');
+                $('#infoModalStay').modal('hide');
+                window.location.reload();
             } else {
                 alert("Delete Failed \n" + deleteServerResponse);
             }
@@ -407,9 +416,10 @@ const deleteStayRecord = async (ob) => {
             alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
 
+    } else {
+        alert("User cancelled the task")
     }
 }
-
 //get district list based on selected province
 const getDistByProvince = async () => {
 

@@ -258,6 +258,7 @@ public class EmployeeController {
             existingEmployee.setDeleteddatetime(LocalDateTime.now());
             existingEmployee.setDeleted_emp(true);
             employee.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());
+            
             employeeDao.save(existingEmployee);
 
             User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
