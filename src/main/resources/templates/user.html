@@ -137,9 +137,10 @@
                             </div>
 
                             <!-- acc status  -->
-                            <div class="row mt-2 mx-auto mb-2">
+                            <div class="row mt-2 row mt-2  d-flex align-items-center justify-content-center mb-2">
 
-                                <label for="accStatus" class="form-label fw-bold mb-0"> User Account Status: </label>
+                                <label for="accStatus" class="form-label fw-bold mb-0 ms-3"> User Account Status:
+                                </label>
 
                                 <input type="radio" class="btn-check" id="userAccActive" autocomplete="off"
                                     name="accStatus" onchange="if (this.checked) {
@@ -148,8 +149,9 @@
                             user.acc_status = false;
                         }">
 
-                                <label class="btn btn-outline-success rounded-start w-50 ms-1"
-                                    for="userAccActive">Account
+                                <label class="btn btn-outline-success rounded-start  ms-1" style="
+                                max-width: 320px !important;
+                            " for="userAccActive">Account
                                     is
                                     active</label>
 
@@ -160,7 +162,9 @@
                                 user.acc_status = true;
                             }">
 
-                                <label class="btn  btn-outline-danger w-48 ms-2" for="userAccInactive">Account is not
+                                <label class="btn  btn-outline-danger ms-2" for="userAccInactive" style="
+                                max-width: 320px !important;
+                            ">Account is not
                                     active</label>
 
 
@@ -169,18 +173,19 @@
                             <!--3 form buttons starts -->
                             <div class="row mt-4 mb-2">
 
-                                <div class="col-3">
-                                    <button type="button" id="btnClear" class="btn fw-bold" onclick="refreshUserform()">
-                                        Clear </button>
+                                <div class="col-4">
+                                    <button type="button" id="btnClear" class="btn-clear fw-bold"
+                                        onclick="refreshUserform()">
+                                        Reset Form </button>
                                 </div>
                                 <div class="col-8 text-end">
-                                    <button id="userUpdateBtn" type="submit" class="btn fw-bold me-2"
+                                    <button id="userUpdateBtn" type="submit" class="btn-update fw-bold me-2"
                                         onclick="updateUser()" style="pointer-events: all;">
-                                        Update </button>
+                                        Update User</button>
 
-                                    <button id="userAddBtn" type="submit" class="btn fw-bold" onclick="addNewUser()"
+                                    <button id="userAddBtn" type="submit" class="btn-add fw-bold" onclick="addNewUser()"
                                         style="pointer-events: all;">
-                                        Add </button>
+                                        Add New User </button>
                                 </div>
                             </div>
                         </form>
@@ -195,7 +200,7 @@
         <div class="modal fade py-5" id="infoModalUser" tabindex="-1" aria-labelledby="infoModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-md">
-                <div class="modal-content shadow-lg">
+                <div class="modal-content shadow-lg" style="width: 550px;">
                     <!-- Modal Header -->
                     <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title fw-bold" id="infoModalLabel">User Account Information</h5>
@@ -212,7 +217,7 @@
                                     <p class="fw-bold text-primary mb-0">Employee Code:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserEmpCode" class="text-muted mb-0"></p>
+                                    <p id="modalUserEmpCode" class="  mb-0"></p>
                                 </div>
                             </div>
 
@@ -222,7 +227,7 @@
                                     <p class="fw-bold text-primary mb-0">Employee Name:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserEmpName" class="text-muted mb-0"></p>
+                                    <p id="modalUserEmpName" class="  mb-0"></p>
                                 </div>
                             </div>
 
@@ -232,17 +237,17 @@
                                     <p class="fw-bold text-primary mb-0">Username:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserUsername" class="text-muted mb-0"></p>
+                                    <p id="modalUserUsername" class="  mb-0"></p>
                                 </div>
                             </div>
 
                             <!-- Email -->
                             <div class="row mb-3">
                                 <div class="col-4">
-                                    <p class="fw-bold text-primary mb-0">Email:</p>
+                                    <p class="fw-bold text-primary mb-0">Work Email:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserCompanyEmail" class="text-muted mb-0"></p>
+                                    <p id="modalUserCompanyEmail" class="  mb-0"></p>
                                 </div>
                             </div>
 
@@ -252,7 +257,7 @@
                                     <p class="fw-bold text-primary mb-0">Role(s):</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserRoles" class="text-muted mb-0"></p>
+                                    <p id="modalUserRoles" class="  mb-0"></p>
                                 </div>
                             </div>
 
@@ -262,7 +267,7 @@
                                     <p class="fw-bold text-primary mb-0">Account Created Date:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserAccCreatedDate" class="text-muted mb-0"></p>
+                                    <p id="modalUserAccCreatedDate" class="  mb-0"></p>
                                 </div>
                             </div>
 
@@ -272,7 +277,7 @@
                                     <p class="fw-bold text-primary mb-0">Account Status:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserAccStatus" class="text-muted mb-0"></p>
+                                    <p id="modalUserAccStatus" class="  mb-0"></p>
                                 </div>
                             </div>
 
@@ -282,7 +287,7 @@
                                     <p class="fw-bold text-primary mb-0">Additional Information:</p>
                                 </div>
                                 <div class="col-8">
-                                    <p id="modalUserNote" class="text-muted mb-0"></p>
+                                    <p id="modalUserNote" class="  mb-0"></p>
                                 </div>
                             </div>
                         </div>
@@ -290,15 +295,15 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">
-                        <button class="btn btn-outline-primary" onclick="printUserRecord()">
-                            Print
+                        <button class="btn-print fw-bold" onclick="printUserRecord()">
+                            Print Record
                         </button>
                         <div>
-                            <button class="btn btn-success me-2" onclick="refillUserForm(window['currentObject'])">
-                                Edit
+                            <button class="btn-edit fw-bold me-2" onclick="refillUserForm(window['currentObject'])">
+                                Edit User
                             </button>
-                            <button class="btn btn-danger d-none" onclick="deleteUserRecord(window['currentObject'])">
-                                Delete
+                            <button class="btn-delete fw-bold" onclick="deleteUserRecord(window['currentObject'])">
+                                Delete User
                             </button>
                         </div>
                     </div>

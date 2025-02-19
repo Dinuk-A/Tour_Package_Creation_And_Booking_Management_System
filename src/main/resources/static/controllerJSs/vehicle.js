@@ -43,7 +43,7 @@ const showVehicleStatus = (vehiObj) => {
 
     if (vehiObj.deleted_vehi == null || vehiObj.deleted_vehi == false) {
         if (vehiObj.vehi_status === "Available") {
-            return "Available For Tours";
+            return "<p class='bg-success text-white'> Available For Tours </p>";
         }
         if (vehiObj.vehi_status === "On Tour") {
             return "On A Tour";
@@ -55,7 +55,7 @@ const showVehicleStatus = (vehiObj) => {
             return "Not In Service";
         }
     } else if (vehiObj.deleted_vehi != null && vehiObj.deleted_vehi == true) {
-        return '<p class="text-danger"> Deleted Record </p>'
+        return '<p class="text-white bg-danger p-1"> Deleted Record </p>'
     }
 
 }
@@ -187,7 +187,7 @@ const addNewVehicle = async () => {
 const openModal = (vehiObj) => {
     document.getElementById('modalVehiNumberPlate').innerText = vehiObj.numberplate || 'N/A';
     document.getElementById('modalVehiModalName').innerText = vehiObj.vehiclename || 'N/A';
-    document.getElementById('modalVehiPassengerSeatCount').innerText = vehiObj.passengerseats || 'N/A';    
+    document.getElementById('modalVehiPassengerSeatCount').innerText = vehiObj.passengerseats || 'N/A';
     document.getElementById('modalVehiType').innerText = vehiObj.vehicletype_id.name || 'N/A';
     document.getElementById('modalVehiStatus').innerText = vehiObj.vehi_status || 'N/A';
     document.getElementById('modalVehiNote').innerText = vehiObj.note || 'N/A';
@@ -235,7 +235,7 @@ const refillVehicleForm = async (ob) => {
     document.getElementById('selectVehicleStatus').children[2].classList.remove('d-none');
     document.getElementById('selectVehicleStatus').children[3].classList.remove('d-none');
     document.getElementById('selectVehicleStatus').children[4].classList.remove('d-none');
-    
+
 
     $("#infoModalVehicle").modal("hide");
 

@@ -55,7 +55,8 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
         // Data columns
         tableColumnInfoArray.forEach(columnObj => {
             const cell = document.createElement('td');
-            cell.setAttribute('class', 'text-center justify-content-center');
+            cell.setAttribute('class', 'text-center');
+            //text-center justify-content-center
 
             //different scenarios for different display types
             switch (columnObj.displayType) {

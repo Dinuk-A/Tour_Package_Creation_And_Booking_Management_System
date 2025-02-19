@@ -132,16 +132,16 @@
                             <div class="row mt-3 mb-2">
 
                                 <div class="col-4">
-                                    <button type="reset" class="btn btn-outline-danger fw-bold w-50"
-                                        onclick="refreshVehicleForm();">Reset</button>
+                                    <button type="reset" class="btn-clear fw-bold"
+                                        onclick="refreshVehicleForm();">Reset Form</button>
                                 </div>
 
                                 <div class="col-8 text-end">
-                                    <button type="button" id="vehicleUpdateBtn" class="btn btn-all btn-update fw-bold "
+                                    <button type="button" id="vehicleUpdateBtn" class=" btn-update fw-bold "
                                         onclick="updateVehicle()">Update</button>
 
-                                    <button type="submit" id="vehicleAddBtn" class="btn btn-all btn-primary fw-bold"
-                                        onclick="addNewVehicle()">Add</button>
+                                    <button type="submit" id="vehicleAddBtn" class="btn-add fw-bold"
+                                        onclick="addNewVehicle()">Add New Vehicle</button>
                                 </div>
                             </div>
                         </form>
@@ -153,90 +153,90 @@
 
         </div>
 
-         <!-- Modal to display full details of a row -->
-         <div class="modal fade py-5" id="infoModalVehicle" tabindex="-1" aria-labelledby="infoModalLabel"
-         aria-hidden="true">
-         <div class="modal-dialog modal-lg">
-             <div class="modal-content shadow-lg rounded-4">
-                 <!-- Modal Header -->
-                 <div class="modal-header bg-primary text-white">
-                     <h5 class="modal-title" id="infoModalLabel">Yathra Vehicle Record</h5>
-                     <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
-                         aria-label="Close"></button>
-                 </div>
+        <!-- Modal to display full details of a row -->
+        <div class="modal fade py-5" id="infoModalVehicle" tabindex="-1" aria-labelledby="infoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="infoModalLabel">Yathra Vehicle Record</h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
 
-                 <!-- Modal Body -->
-                 <div class="modal-body">
-                     <div class="container">
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <div class="container">
 
-                         <!-- Employee Image and Basic Info -->
-                         <div class="row g-4 align-items-center">
-                                                         
-                             <!-- Name and NIC -->
-                             <div class="col-md-8">
-                                 <p class="fw-bold mb-1">Numbr plate:</p>
-                                 <p id="modalVehiNumberPlate" class="text-muted"></p>
-                                 <p class="fw-bold mb-1">Modal name:</p>
-                                 <p id="modalVehiModalName" class="text-muted"></p>
-                             </div>
-                         </div>
+                            <!-- Employee Image and Basic Info -->
+                            <div class="row g-4 align-items-center">
 
-                         <!-- Other Details -->
-                         <hr>
-                         <div class="row g-4">
-                             <div class="col-md-4">
-                                 <p class="fw-bold mb-1">Vehicle Type:</p>
-                                 <p id="modalVehiType" class="text-muted mb-0"></p>
-                             </div>
-                             <div class="col-md-4">
-                                 <p class="fw-bold mb-1">Passenger Seat Count:</p>
-                                 <p id="modalVehiPassengerSeatCount" class="text-muted mb-0"></p>
-                             </div>
-                             <div class="col-md-4">
-                                 <p class="fw-bold mb-1">Vehicke Status:</p>
-                                 <p id="modalVehiStatus" class="text-muted mb-0"></p>
-                             </div>
-                         </div>
-
-                         <hr>
-                         <div class="row g-4">
-                             <div class="col-md-4">
-                                 <p class="fw-bold mb-1">Additional Information:</p>
-                                 <p id="modalVehiNote" class="text-muted mb-0"></p>
-                             </div>
-
-                             <div class="col-md-4">
-                                <p id="modalVehiIfDeleted" class="text-danger d-none mb-0"></p>
+                                <!-- Name and NIC -->
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Numbr plate:</p>
+                                    <p id="modalVehiNumberPlate" class="text-muted"></p>
+                                    <p class="fw-bold mb-1">Modal name:</p>
+                                    <p id="modalVehiModalName" class="text-muted"></p>
+                                </div>
                             </div>
-                             
-                         </div>
-                        
-                     </div>
-                 </div>
 
-                 <!-- Modal Footer -->
-                 <div class="modal-footer d-flex justify-content-between bg-light">
-                     <button class="btn btn-outline-primary" onclick="printVehicleRecord()">
-                         Print Vehicle Record
-                     </button>
-                     <div>
-                         <button id="modalVehiEditBtn" class="btn btn-outline-success me-2"
-                             onclick="refillVehicleForm(window['currentObject'])">
-                             Edit Vehicle Record
-                         </button>
-                         <button id="modalVehiDeleteBtn" class="btn btn-outline-danger"
-                             onclick="deleteVehicleRecord(window['currentObject'])">
-                             Delete Vehicle Record
-                         </button>
-                         <button id="modalVehiRecoverBtn" class="btn btn-outline-primary d-none"
-                             onclick="restoreVehicleRecord()">
-                             Restore Vehicle Record
-                         </button>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </div>
+                            <!-- Other Details -->
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Vehicle Type:</p>
+                                    <p id="modalVehiType" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Passenger Seat Count:</p>
+                                    <p id="modalVehiPassengerSeatCount" class="text-muted mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Vehicke Status:</p>
+                                    <p id="modalVehiStatus" class="text-muted mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Additional Information:</p>
+                                    <p id="modalVehiNote" class="text-muted mb-0"></p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <p id="modalVehiIfDeleted" class="text-danger d-none mb-0"></p>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex justify-content-between bg-light">
+                        <button class="btn-print fw-bold" onclick="printVehicleRecord()">
+                            Print Record
+                        </button>
+                        <div>
+                            <button id="modalVehiEditBtn" class="btn-edit me-2 fw-bold"
+                                onclick="refillVehicleForm(window['currentObject'])">
+                                Edit Vehicle
+                            </button>
+                            <button id="modalVehiDeleteBtn" class="btn-delete fw-bold"
+                                onclick="deleteVehicleRecord(window['currentObject'])">
+                                Delete Vehicle
+                            </button>
+                            <button id="modalVehiRecoverBtn" class="btn-restore d-none fw-bold"
+                                onclick="restoreVehicleRecord()">
+                                Restore Vehicle
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </main>
 </body>

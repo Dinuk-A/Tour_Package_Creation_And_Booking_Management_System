@@ -48,7 +48,7 @@ const showEmployeeStatus = (empObj) => {
             return "Resigned"
         }
     } else if (empObj.deleted_emp != null && empObj.deleted_emp == true) {
-        return '<p class="text-danger"> Deleted Record </p>'
+        return '<p class="text-white bg-danger text-center my-0 p-2" > Deleted Record </p>'
     }
 }
 

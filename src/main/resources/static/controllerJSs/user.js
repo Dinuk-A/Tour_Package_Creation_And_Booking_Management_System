@@ -55,11 +55,11 @@ const getUserRoles = (userObj) => {
         Admin: '#d63031', // Bright red
         Manager: '#00cec9', // Teal green
         Receptionist: '#6c5ce7', // Deep purple
-        Assistant_anager: '#fdcb6e', // Soft orange-yellow
+        Assistant_Manager: '#fdcb6e', // Soft orange-yellow
         Developer: '#0984e3', // Sky blue
         Intern: '#636e72', // Grayish black
         HR: '#e84393', // Pinkish red
-        Designer: '#ff7675', // Light coral red
+        Executive: '#ff7675', // Light coral red
         Analyst: '#00b894', // Emerald green
     };
 
@@ -77,11 +77,11 @@ const getUserRoles = (userObj) => {
 //to support fill main table
 const getUserAccStatus = (userObj) => {
     if (userObj.acc_status) {
-        return 'Active Account'
-
+        return `<p class="bg-success text-white mx-1 p-2" style="background-color:lime;">Active Account</p>`
+       
     } else {
-        return 'Inactive Account'
-    }
+        return `<p class="bg-danger text-white mx-1 p-2" style="background-color:lime;">Inactive Account</p>`
+            }
 }
 
 const getRandomColor = () => {
