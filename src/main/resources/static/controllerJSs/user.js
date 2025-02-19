@@ -16,7 +16,7 @@ const buildUserTable = async () => {
 
         const tableColumnInfo = [
             { displayType: 'function', displayingPropertyOrFn: getEmployeeCode, colHeadName: 'Emp Code' },
-            { displayType: 'function', displayingPropertyOrFn: getEmployeeFullname, colHeadName: 'Name' },
+            //{ displayType: 'function', displayingPropertyOrFn: getEmployeeFullname, colHeadName: 'Name' },
             { displayType: 'text', displayingPropertyOrFn: 'username', colHeadName: 'Username' },
             { displayType: 'text', displayingPropertyOrFn: 'work_email', colHeadName: 'Office Email' },
             { displayType: 'function', displayingPropertyOrFn: getUserRoles, colHeadName: 'Role(s)' },
@@ -42,9 +42,9 @@ const getEmployeeCode = (userObj) => {
 }
 
 //to support fill main table
-const getEmployeeFullname = (userObj) => {
-    return userObj.employee_id.fullname;
-}
+//const getEmployeeFullname = (userObj) => {
+//    return userObj.employee_id.fullname;
+//}
 
 
 const getUserRoles = (userObj) => {

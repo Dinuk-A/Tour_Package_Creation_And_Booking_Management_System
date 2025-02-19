@@ -137,15 +137,15 @@
                             <!-- form buttons starts -->
                             <div class="row g-3 mt-3">
                                 <div class="col-md-6 text-start">
-                                    <button type="reset" class="btn btn-secondary w-25">Clear</button>
+                                    <button type="reset" class="btn-clear w-25">Reset Form</button>
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="button" id="lunchPlaceUpdateBtn" class="btn btn-warning w-100"
+                                    <button type="button" id="lunchPlaceUpdateBtn" class="btn-update w-100"
                                         onclick="updateLunchPlace()">Update</button>
                                 </div>
                                 <div class="col-md-3">
-                                    <button type="submit" id="lunchPlaceAddBtn" class="btn btn-primary w-100"
-                                        onclick="addNewLunchPlace()">Add</button>
+                                    <button type="submit" id="lunchPlaceAddBtn" class="btn-add w-100"
+                                        onclick="addNewLunchPlace()">Add New Record</button>
                                 </div>
                             </div>
                         </form>
@@ -245,21 +245,21 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">
-                        <button class="btn btn-outline-primary" onclick="printLunchPlaceRecord()">
-                            Print
+                        <button class="btn-print fw-bold" onclick="printLunchPlaceRecord()">
+                            Print Record
                         </button>
                         <div>
-                            <button id="modalLPEditBtn" class="btn btn-outline-success me-2"
+                            <button id="modalLPEditBtn" class="btn-edit fw-bold me-2"
                                 onclick="refillLunchPlaceForm(window['currentObject'])">
-                                Edit Lunch Place Record
+                                Edit Record
                             </button>
-                            <button id="modalLPDeleteBtn" class="btn btn-outline-danger"
+                            <button id="modalLPDeleteBtn" class="btn-delete fw-bold"
                                 onclick="deleteLunchPlaceRecord(window['currentObject'])">
-                                Delete Lunch Place Record
+                                Delete Record
                             </button>
-                            <button id="modalLPRecoverBtn" class="btn btn-outline-primary d-none"
+                            <button id="modalLPRecoverBtn" class="btn-restore fw-bold d-none"
                                 onclick="restoreLunchPlaceRecord()">
-                                Restore Lunch Place Record
+                                Restore Record
                             </button>
                         </div>
                     </div>

@@ -43,7 +43,7 @@ const showVehicleStatus = (vehiObj) => {
 
     if (vehiObj.deleted_vehi == null || vehiObj.deleted_vehi == false) {
         if (vehiObj.vehi_status === "Available") {
-            return "<p class='bg-success text-white'> Available For Tours </p>";
+            return "<p class='bg-success text-white my-0'> Available For Tours </p>";
         }
         if (vehiObj.vehi_status === "On Tour") {
             return "On A Tour";
