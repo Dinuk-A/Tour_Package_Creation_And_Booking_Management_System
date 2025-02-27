@@ -5,15 +5,9 @@
 
 <head>
 
-    <!-- link attraction js -->
-    <script src="controllerJSs/attraction.js"></script>
-
-    <style>
-        .w-33 {
-            width: 32.5% !important;
-        }
-    </style>
-
+    <!-- link activity js -->
+    <script src="controllerJSs/activity.js"></script>
+   
 </head>
 
 <body>
@@ -27,13 +21,13 @@
         <ul class="nav nav-tabs pe-0" id="myTab" role="tablist">
             <!-- for table side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableAttractionHolderDiv"
-                    role="tab" aria-controls="tableAttractionHolderDiv" aria-selected="true">Table</a>
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableActivityHolderDiv"
+                    role="tab" aria-controls="tableActivityHolderDiv" aria-selected="true">Table</a>
             </li>
             <!-- for form side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formAttractionHolderDiv" role="tab"
-                    aria-controls="formAttractionHolderDiv" aria-selected="false">
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formActivityHolderDiv" role="tab"
+                    aria-controls="formActivityHolderDiv" aria-selected="false">
                     <!-- onclick="setEmpStatusAuto()" -->
                     Form</a>
             </li>
@@ -43,44 +37,44 @@
         <div class="tab-content mt-1" id="myTabContent">
 
             <!-- Table tab  -->
-            <div id="tableAttractionHolderDiv" class="tab-pane fade show active table-container p-4 bg-light rounded-3"
+            <div id="tableActivityHolderDiv" class="tab-pane fade show active table-container p-4 bg-light rounded-3"
                 role="tabpanel" aria-labelledby="table-tab">
                 <!-- a table will be dynamically generated in here -->
             </div>
 
             <!-- Form tab -->
-            <div class="tab-pane fade" id="formAttractionHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+            <div class="tab-pane fade" id="formActivityHolderDiv" role="tabpanel" aria-labelledby="form-tab">
 
                 <div class="card mx-auto" style="width: 1100px;">
 
                     <div class="card-header bg-primary text-white text-center">
-                        <h3 class="mb-0">Attraction Management Form</h3>
+                        <h3 class="mb-0">Activity Management Form</h3>
                     </div>
 
                     <div class="card-body" style="background-color: ivory;">
 
-                        <form id="formAttraction" onsubmit="return false">
+                        <form id="formActivity" onsubmit="return false">
 
                             <!-- NAME AND STATUS ROW -->
                             <div class="mb-2">
                                 <div class="input-group">
                                     <!-- Name Label -->
-                                    <label class="form-label" for="inputPlaceName" style="width:65%">Name :</label>
+                                    <label class="form-label" for="inputActivityName" style="width:65%">Name :</label>
 
                                     <!-- Status label -->
-                                    <label for="selectAttrStatus" class="form-label">Status: </label>
+                                    <label for="selectActivityStatus" class="form-label">Status: </label>
 
                                 </div>
 
                                 <div class="input-group">
                                     <!-- Name Input -->
-                                    <input id="inputPlaceName"
-                                        onkeyup="inputValidatorText(this, '' ,'attraction' ,'name' )" type="text"
+                                    <input id="inputActivityName"
+                                        onkeyup="inputValidatorText(this, '' ,'activity' ,'name' )" type="text"
                                         class="form-control form-input me-2" style="width:35%">
 
                                     <!-- Status input -->
-                                    <select required id="selectAttrStatus" class="form-select"
-                                        onchange="staticSelectValidator(this,'attraction','attr_status')">
+                                    <select required id="selectActivityStatus" class="form-select"
+                                        onchange="staticSelectValidator(this,'activity','activity_status')">
 
                                         <option value="" selected disabled> Select Status </option>
                                         <option value="open"> Open Site </option>
@@ -95,11 +89,11 @@
                             <div class="mb-2">
                                 <div class="input-group">
                                     <!-- Label for PROVINCE -->
-                                    <label class="form-label w-50" for="selectAttrProvince">Province
+                                    <label class="form-label w-50" for="selectActivityProvince">Province
                                     </label>
 
                                     <!-- Label for DISTRICT -->
-                                    <label for="selectAttrDistrict" class="form-label w-50">District
+                                    <label for="selectActivityDistrict" class="form-label w-50">District
                                     </label>
 
                                 </div>
@@ -107,13 +101,13 @@
                                 <div class="input-group">
 
                                     <!-- SELECT PROVINCE -->
-                                    <select id="selectAttrProvince" class="form-control form-select"
+                                    <select id="selectActivityProvince" class="form-control form-select"
                                         onchange="getDistByProvince()">
                                     </select>
 
                                     <!-- SELECT DISTRICT -->
-                                    <select id="selectAttrDistrict" class="ms-3 form-control form-select"
-                                        onchange="dynamicSelectValidator(this,'attraction','district_id')">
+                                    <select id="selectActivityDistrict" class="ms-3 form-control form-select"
+                                        onchange="dynamicSelectValidator(this,'activity','district_id')">
 
                                     </select>
                                 </div>
@@ -180,7 +174,7 @@
                                         <!-- CB 1 -->
                                         <input type="radio" class="btn-check" id="allEntryFreeChkBox" autocomplete="off"
                                             name="entranceFees" value="All Free"
-                                            onchange="allEntryFree(); attraction.feetype = this.value ">
+                                            onchange="allEntryFree(); activity.feetype = this.value ">
 
                                         <label class="btn btn-outline-success w-33 rounded-start"
                                             for="allEntryFreeChkBox">All
@@ -189,7 +183,7 @@
                                         <!--CB 2  -->
                                         <input type="radio" class="btn-check" id="localsEntryFreeCheckBox"
                                             autocomplete="off" value="Local Free" name="entranceFees"
-                                            onchange="localsEntryFree(); attraction.feetype = this.value">
+                                            onchange="localsEntryFree(); activity.feetype = this.value">
 
                                         <label class="ms-1 btn btn-outline-warning w-33"
                                             for="localsEntryFreeCheckBox">Local
@@ -198,7 +192,7 @@
                                         <!-- CB 3 -->
                                         <input type="radio" class="btn-check" id="allPaidCheckBox" autocomplete="off"
                                             name="entranceFees" value="All Paid"
-                                            onchange="allPaid(); attraction.feetype = this.value">
+                                            onchange="allPaid(); activity.feetype = this.value">
                                         <!-- checked -->
 
                                         <label class="btn ms-1 btn-outline-danger w-33" for="allPaidCheckBox">All
@@ -229,7 +223,7 @@
                                                     <input type="number" id="inputLocalAdultFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feelocaladult')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','activity','feelocaladult')">
                                                 </div>
 
 
@@ -247,7 +241,7 @@
                                                     <input type="text" id="inputLocalChildFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildlocal')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','activity','feechildlocal')">
                                                 </div>
 
 
@@ -271,7 +265,7 @@
                                                     <input type="text" id="inputForeignAdultFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feeforeignadult')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','activity','feeforeignadult')">
                                                 </div>
                                             </div>
 
@@ -286,7 +280,7 @@
                                                     <input type="number" id="inputForeignChildFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildforeign')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','activity','feechildforeign')">
                                                 </div>
 
 
@@ -302,7 +296,7 @@
                                 <div class="col-5">
                                     <label for="inputNote" class="form-label fw-bold">Location Description :</label>
                                     <textarea class="form-control" placeholder=" " id="inputNote"
-                                        onkeyup="inputValidatorText(this,'','attraction','description')"
+                                        onkeyup="inputValidatorText(this,'','activity','description')"
                                         style="height: 100px;"
                                         aria-placeholder="Enter A Short Description About The Location"></textarea>
                                 </div>
@@ -314,7 +308,7 @@
                                 <div class="col-7 pb-2">
                                     <label for="inputNote" class="form-label fw-bold">Additional Information :</label>
                                     <textarea class="form-control" placeholder=" " id="inputNote"
-                                        onkeyup="inputValidatorText(this,'','attraction','note')"
+                                        onkeyup="inputValidatorText(this,'','activity','note')"
                                         style="height: 100px;"></textarea>
                                 </div>
 
@@ -334,7 +328,7 @@
                                                 </span>
                                                 <input type="number" id="vehiParkingFeeInput"
                                                     class="form-control form-input p-1 text-center " placeholder=""
-                                                    onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','vehicleparkingfee')">
+                                                    onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','activity','vehicleparkingfee')">
 
                                             </div>
                                         </div>
@@ -356,7 +350,7 @@
                                         <div class="input-group mt-1">
                                             <input type="number" class="form-control form-input p-1 text-center"
                                                 id="inputTourDuration" placeholder=""
-                                                onkeyup="inputValidatorText(this,'^(?!0*$)\\d+(\\.\\d{1,2})?$','attraction','duration')">
+                                                onkeyup="inputValidatorText(this,'^(?!0*$)\\d+(\\.\\d{1,2})?$','activity','duration')">
                                             <span class="input-group-text p-1 pb-0 w-50 text-center">
                                                 <h6>Hours</h6>
                                             </span>
@@ -372,15 +366,15 @@
 
                                 <div class="col-3">
                                     <button type="reset" class="btn btn-all btn-clear"
-                                        onclick="refreshAttractionForm()"> Clear</button>
+                                        onclick="refreshActivityForm()"> Clear</button>
                                 </div>
 
                                 <div class="col-9 text-end">
-                                    <button type="button" id="attraUpdateBtn" class="btn btn-all btn-update "
-                                        onclick="updateAttraction()" style="pointer-events: all;">Update</button>
+                                    <button type="button" id="activityaUpdateBtn" class="btn btn-all btn-update "
+                                        onclick="updateActivity()" style="pointer-events: all;">Update</button>
 
-                                    <button type="submit" id="attraAddBtn" class="btn btn-all btn-add "
-                                        onclick="addNewAttraction()" style="pointer-events: all;">Add</button>
+                                    <button type="submit" id="activityaAddBtn" class="btn btn-all btn-add "
+                                        onclick="addNewActivity()" style="pointer-events: all;">Add</button>
                                 </div>
                             </div>
 
@@ -394,13 +388,13 @@
         </div>
 
         <!-- Modal to display full details of a row -->
-        <div class="modal fade py-5" id="infoModalAttraction" tabindex="-1" aria-labelledby="infoModalLabel"
+        <div class="modal fade py-5" id="infoModalActivity" tabindex="-1" aria-labelledby="infoModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content shadow-lg rounded-4">
                     <!-- Modal Header -->
                     <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="infoModalLabel">Attraction Full Details</h5>
+                        <h5 class="modal-title" id="infoModalLabel">Activity Full Details</h5>
                         <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -415,15 +409,15 @@
                                 <!-- Name and NIC -->
                                 <div class="col-md-8">
                                     <p class="fw-bold mb-1"> Name:</p>
-                                    <p id="modalAttrName" class="text-muted"></p>
+                                    <p id="modalActivityName" class="text-muted"></p>
 
                                     <p class="fw-bold mb-1">Location:</p>
-                                    <p id="modalAttrDistrict" class="text-muted"></p>
+                                    <p id="modalActivityDistrict" class="text-muted"></p>
 
-                                    <p id="modalAttrProvince" class="text-muted"></p>
+                                    <p id="modalActivityProvince" class="text-muted"></p>
 
                                     <p class="fw-bold mb-1">Categories</p>
-                                    <p id="modalAttrCatrgories" class="text-muted"></p>
+                                    <p id="modalActivityCatrgories" class="text-muted"></p>
 
 
                                 </div>
@@ -437,11 +431,11 @@
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Local Adult Fee:</p>
-                                    <p id="modalAttrLocalAdultFee" class="text-muted mb-0"></p>
+                                    <p id="modalActivityLocalAdultFee" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Local Child Fee:</p>
-                                    <p id="modalAttrLocalChildFee" class="text-muted mb-0"></p>
+                                    <p id="modalActivityLocalChildFee" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
@@ -449,11 +443,11 @@
                             <div class="row g-4">
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Foreign Adult Fee:</p>
-                                    <p id="modalAttrForeignAdultFee" class="text-muted mb-0"></p>
+                                    <p id="modalActivityForeignAdultFee" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Foreign Child Fee:</p>
-                                    <p id="modalAttrForeignChildFee" class="text-muted mb-0"></p>
+                                    <p id="modalActivityForeignChildFee" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
@@ -461,15 +455,15 @@
                             <div class="row g-4">
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Staying Duration:</p>
-                                    <p id="modalAttrDuration" class="text-muted mb-0"></p>
+                                    <p id="modalActivityDuration" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Description:</p>
-                                    <p id="modalAttrDescription" class="text-muted mb-0"></p>
+                                    <p id="modalActivityDescription" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Vehicle Parking Fee:</p>
-                                    <p id="modalAttrVehicleParkingFee" class="text-muted mb-0"></p>
+                                    <p id="modalActivityVehicleParkingFee" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
@@ -477,7 +471,7 @@
                             <div class="row g-4">
                                 <div class="col-md-8">
                                     <p class="fw-bold mb-1">Status:</p>
-                                    <p id="modalAttrStatus" class="text-muted mb-0"></p>
+                                    <p id="modalActivityStatus" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
@@ -485,11 +479,11 @@
                             <div class="row g-4">
                                 <div class="col-md-8">
                                     <p class="fw-bold mb-1">Additional Details:</p>
-                                    <p id="modalAttrNote" class="text-muted mb-0"></p>
+                                    <p id="modalActivityNote" class="text-muted mb-0"></p>
                                 </div>
 
                                 <div class="col-md-4">
-                                    <p id="modalAttrIfDeleted" class="text-danger d-none mb-0"></p>
+                                    <p id="modalActivityIfDeleted" class="text-danger d-none mb-0"></p>
                                 </div>
                             </div>
                         </div>
@@ -497,21 +491,21 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">
-                        <button class="btn btn-outline-primary" onclick="printAttractionRecord()">
+                        <button class="btn btn-outline-primary" onclick="printActivityRecord()">
                             Print
                         </button>
                         <div>
-                            <button id="modalAttrEditBtn" class="btn btn-outline-success me-2"
-                                onclick="refillAttractionForm(window['currentObject'])">
-                                Edit Attraction Record
+                            <button id="modalActivityEditBtn" class="btn btn-outline-success me-2"
+                                onclick="refillActivityForm(window['currentObject'])">
+                                Edit Activity Record
                             </button>
-                            <button id="modalAttrDeleteBtn" class="btn btn-outline-danger"
-                                onclick="deleteAttractionRecord(window['currentObject'])">
-                                Delete Attraction Record
+                            <button id="modalActivityDeleteBtn" class="btn btn-outline-danger"
+                                onclick="deleteActivityRecord(window['currentObject'])">
+                                Delete Activity Record
                             </button>
-                            <button id="modalAttrRecoverBtn" class="btn btn-outline-primary d-none"
-                                onclick="restoreAttractionRecord()">
-                                Restore Attraction Record
+                            <button id="modalActivityRecoverBtn" class="btn btn-outline-primary d-none"
+                                onclick="restoreActivityRecord()">
+                                Restore Activity Record
                             </button>
                         </div>
                     </div>

@@ -1,7 +1,6 @@
 package lk.yathratravels.attraction;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import lk.yathratravels.privilege.Privilege;
-import lk.yathratravels.privilege.PrivilegeController;
 import lk.yathratravels.privilege.PrivilegeServices;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
@@ -94,16 +92,17 @@ public class AttractionController {
     public String saveVPlace(@RequestBody Attraction vplace) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//
-//        Privilege loggedUserPrivilege = prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ATTRACTION");
-//
-//        if (!loggedUserPrivilege.getPrivinsert()) {
-//            return "Save Not Completed You Dont Have Permission";
-//        }
+        //
+        // Privilege loggedUserPrivilege =
+        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ATTRACTION");
+        //
+        // if (!loggedUserPrivilege.getPrivinsert()) {
+        // return "Save Not Completed You Dont Have Permission";
+        // }
 
         try {
             vplace.setAddeddatetime(LocalDateTime.now());
-            //vplace.setAddeduserid(userDao.getByUName(auth.getName()).getId());
+             vplace.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             attractionDao.save(vplace);
 
@@ -113,16 +112,18 @@ public class AttractionController {
         }
     }
 
+    // update an attraction row
     @PutMapping(value = "/attraction")
     public String updateVPlace(@RequestBody Attraction vplace) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-//        Privilege loggedUserPrivilege = prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ATTRACTION");
-//
-//        if (!loggedUserPrivilege.getPrivupdate()) {
-//            return "Update Not Completed You Dont Have Permission";
-//        }
+        // Privilege loggedUserPrivilege =
+        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ATTRACTION");
+        //
+        // if (!loggedUserPrivilege.getPrivupdate()) {
+        // return "Update Not Completed You Dont Have Permission";
+        // }
 
         // check existence
 
@@ -130,7 +131,7 @@ public class AttractionController {
 
         try {
             vplace.setLastmodifieddatetime(LocalDateTime.now());
-            //vplace.setLastmodifieduserid(userDao.getByUName(auth.getName()).getId());
+             vplace.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             attractionDao.save(vplace);
             return "OK";
@@ -144,11 +145,12 @@ public class AttractionController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-//        Privilege loggedUserPrivilege = prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ATTRACTION");
-//
-//        if (!loggedUserPrivilege.getPrivdelete()) {
-//            return "Delete Not Completed : You Dont Have Permission";
-//        }
+        // Privilege loggedUserPrivilege =
+        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ATTRACTION");
+        //
+        // if (!loggedUserPrivilege.getPrivdelete()) {
+        // return "Delete Not Completed : You Dont Have Permission";
+        // }
 
         // check existence
         Attraction existVPlace = attractionDao.getReferenceById(vplace.getId());
@@ -160,8 +162,8 @@ public class AttractionController {
             existVPlace.setDeleteddatetime(LocalDateTime.now());
             existVPlace.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());
 
-            //AttrStatus deletedStatus = atSttsDao.getReferenceById(4);
-            //existVPlace.setAttrstatus_id(deletedStatus);
+            // AttrStatus deletedStatus = atSttsDao.getReferenceById(4);
+            // existVPlace.setAttrstatus_id(deletedStatus);
             attractionDao.save(existVPlace);
 
             return "OK";
