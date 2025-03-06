@@ -237,6 +237,134 @@
                     <div class="modal-body">
                         <div class="container">
 
+                            <!-- Basic Information -->
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1">Name:</p>
+                                    <p id="modalActivityName" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1">Type:</p>
+                                    <p id="modalActivityType" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1">Duration:</p>
+                                    <p id="modalActivityDuration" class="text-muted"></p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1">Location:</p>
+                                    <p id="modalActivityLocation" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1">District:</p>
+                                    <p id="modalActivityDistrict" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1">Province:</p>
+                                    <p id="modalActivityProvince" class="text-muted"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- Contact Information -->
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Contact One:</p>
+                                    <p id="modalActivityContactOne" class="text-muted"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Contact Two:</p>
+                                    <p id="modalActivityContactTwo" class="text-muted"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Email:</p>
+                                    <p id="modalActivityEmail" class="text-muted"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- Pricing Information -->
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1">Adult Fee:</p>
+                                    <p id="modalActivityAdultFee" class="text-muted"></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1">Child Fee:</p>
+                                    <p id="modalActivityChildFee" class="text-muted"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- Additional Information -->
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Description:</p>
+                                    <p id="modalActivityDescription" class="text-muted"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Status:</p>
+                                    <p id="modalActivityStatus" class="text-muted"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- Additional Details and Deleted Info -->
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Additional Details:</p>
+                                    <p id="modalActivityNote" class="text-muted"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p id="modalActivityIfDeleted" class="text-danger d-none mb-0"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex justify-content-between bg-light">
+                        <button class="btn btn-outline-primary" onclick="printActivityRecord()">
+                            Print
+                        </button>
+                        <div>
+                            <button id="modalActivityEditBtn" class="btn btn-outline-success me-2"
+                                onclick="refillActivityForm(window['currentObject'])">
+                                Edit Activity Record
+                            </button>
+                            <button id="modalActivityDeleteBtn" class="btn btn-outline-danger"
+                                onclick="deleteActivityRecord(window['currentObject'])">
+                                Delete Activity Record
+                            </button>
+                            <button id="modalActivityRecoverBtn" class="btn btn-outline-primary d-none"
+                                onclick="restoreActivityRecord()">
+                                Restore Activity Record
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal to display full details of a row -->
+        <div class="modal fade py-5" id="infoModalActivityOri" tabindex="-1" aria-labelledby="infoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="infoModalLabel">Activity Full Details</h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <div class="container">
+
                             <!-- Employee Image and Basic Info -->
                             <div class="row g-4 align-items-center">
 
@@ -277,7 +405,7 @@
                             </div>
 
                             <hr>
-                            
+
 
                             <hr>
                             <div class="row g-4">
@@ -289,7 +417,7 @@
                                     <p class="fw-bold mb-1">Description:</p>
                                     <p id="modalActivityDescription" class="text-muted mb-0"></p>
                                 </div>
-                                
+
                             </div>
 
                             <hr>

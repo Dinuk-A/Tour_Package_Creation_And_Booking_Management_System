@@ -181,11 +181,11 @@ const checkActFormErrors = () => {
 };
 
 //check if num1 and 2 are same
-const checkDuplicatedNumbers=(thisInput,otherInput,attributeName)=>{
+const checkDuplicatedNumbers = (thisInput, otherInput, attributeName) => {
     if (thisInput.value == otherInput.value) {
         alert("both numbers cant be same");
-    } else{
-        inputValidatorText(thisInput,'^[0][0-9]{9}$','activity',attributeName)
+    } else {
+        inputValidatorText(thisInput, '^[0][0-9]{9}$', 'activity', attributeName)
     }
 }
 
@@ -222,23 +222,23 @@ const addNewActivity = async () => {
     }
 }
 
-//fn for edit button,
-//current way === this will open the same form but with filled values
+// Function to open the modal and populate all fields
 const openModal = (actObj) => {
-
     document.getElementById('modalActivityName').innerText = actObj.act_name || 'N/A';
     document.getElementById('modalActivityLocation').innerText = actObj.location || 'N/A';
-    document.getElementById('modalActivityDistrict').innerText = actObj.district_id.name || 'N/A';
-    document.getElementById('modalActivityProvince').innerText = actObj.district_id.province_id.name || 'N/A';
+    document.getElementById('modalActivityDistrict').innerText = actObj.district_id?.name || 'N/A';
+    document.getElementById('modalActivityProvince').innerText = actObj.district_id?.province_id?.name || 'N/A';
+    document.getElementById('modalActivityType').innerText = actObj.act_type.name || 'N/A';
     document.getElementById('modalActivityAdultFee').innerText = actObj.price_adult || 'N/A';
     document.getElementById('modalActivityChildFee').innerText = actObj.price_child || 'N/A';
     document.getElementById('modalActivityDuration').innerText = actObj.duration || 'N/A';
     document.getElementById('modalActivityDescription').innerText = actObj.description || 'N/A';
     document.getElementById('modalActivityNote').innerText = actObj.note || 'N/A';
-    document.getElementById('modalActDesignation').innerText = actObj.designation_id.name || 'N/A';
     document.getElementById('modalActivityStatus').innerText = actObj.act_status || 'N/A';
+    document.getElementById('modalActivityContactOne').innerText = actObj.contactone || 'N/A';
+    document.getElementById('modalActivityContactTwo').innerText = actObj.contacttwo || 'N/A';
+    document.getElementById('modalActivityEmail').innerText = actObj.act_email || 'N/A';
 
-   
     if (actObj.deleted_act) {
         document.getElementById('modalActivityIfDeleted').classList.remove('d-none');
         document.getElementById('modalActivityIfDeleted').innerHTML =
@@ -249,12 +249,20 @@ const openModal = (actObj) => {
         document.getElementById('modalActivityEditBtn').classList.add('d-none');
         document.getElementById('modalActivityDeleteBtn').classList.add('d-none');
         document.getElementById('modalActivityRecoverBtn').classList.remove('d-none');
+    } else {
+        document.getElementById('modalActivityIfDeleted').classList.add('d-none');
+        document.getElementById('modalActivityEditBtn').disabled = false;
+        document.getElementById('modalActivityDeleteBtn').disabled = false;
+        document.getElementById('modalActivityEditBtn').classList.remove('d-none');
+        document.getElementById('modalActivityDeleteBtn').classList.remove('d-none');
+        document.getElementById('modalActivityRecoverBtn').classList.add('d-none');
     }
 
-    // Show the modal
     $('#infoModalActivity').modal('show');
-
 };
+
+
+
 
 
 
