@@ -7,7 +7,7 @@
 
     <!-- link activity js -->
     <script src="controllerJSs/activity.js"></script>
-   
+
 </head>
 
 <body>
@@ -21,14 +21,13 @@
         <ul class="nav nav-tabs pe-0" id="myTab" role="tablist">
             <!-- for table side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableActivityHolderDiv"
-                    role="tab" aria-controls="tableActivityHolderDiv" aria-selected="true">Table</a>
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableActivityHolderDiv" role="tab"
+                    aria-controls="tableActivityHolderDiv" aria-selected="true">Table</a>
             </li>
             <!-- for form side -->
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formActivityHolderDiv" role="tab"
-                    aria-controls="formActivityHolderDiv" aria-selected="false">
-                    <!-- onclick="setEmpStatusAuto()" -->
+                    aria-controls="formActivityHolderDiv" aria-selected="false" onclick="setActivityStatusAuto()">
                     Form</a>
             </li>
         </ul>
@@ -55,325 +54,160 @@
 
                         <form id="formActivity" onsubmit="return false">
 
-                            <!-- NAME AND STATUS ROW -->
-                            <div class="mb-2">
-                                <div class="input-group">
-                                    <!-- Name Label -->
-                                    <label class="form-label" for="inputActivityName" style="width:65%">Name :</label>
-
-                                    <!-- Status label -->
-                                    <label for="selectActivityStatus" class="form-label">Status: </label>
-
+                            <!-- Activity Name and Type -->
+                            <div class="row mb-2">
+                                <div class="col-8">
+                                    <label for="inputActivityName" class="form-label fw-bold mb-0">Activity Name
+                                        :</label>
+                                    <input id="inputActivityName" type="text" class="form-control"
+                                        placeholder="Enter Activity Name"
+                                        onkeyup="inputValidatorText(this,'','activity','act_name')" required>
                                 </div>
 
-                                <div class="input-group">
-                                    <!-- Name Input -->
-                                    <input id="inputActivityName"
-                                        onkeyup="inputValidatorText(this, '' ,'activity' ,'name' )" type="text"
-                                        class="form-control form-input me-2" style="width:35%">
-
-                                    <!-- Status input -->
-                                    <select required id="selectActivityStatus" class="form-select"
-                                        onchange="staticSelectValidator(this,'activity','activity_status')">
-
-                                        <option value="" selected disabled> Select Status </option>
-                                        <option value="open"> Open Site </option>
-                                        <option value="permanantly_closed"> Permanantly Closed </option>
-                                        <option value="temporary_closed"> Temporary Closed </option>
-                                        <option value="ifDeleted" class="d-none"> Deleted Record </option>
+                                <div class="col-4">
+                                    <label for="selectActivityType" class="form-label fw-bold mb-0">Category
+                                        :</label>
+                                    <select id="selectActivityType" class="form-select" required
+                                        onchange="dynamicSelectValidator(this,'activity','act_type_id')">
                                     </select>
+                                </div>
+
+                            </div>
+
+                            <!-- Short Description and Provider name -->
+                            <div class="row mb-2">
+                                <div class="col-7">
+                                    <label for="inputShortDescription" class="form-label fw-bold mb-0">Short Description
+                                        :</label>
+                                    <textarea id="inputShortDescription" class="form-control" rows="3"
+                                        placeholder="Enter Short Description"
+                                        onkeyup="inputValidatorText(this,'','activity','description')"></textarea>
+                                </div>
+                                <div class="col-5">
+                                    <label for="inputProviderName" class="form-label fw-bold mb-0">Provider Name
+                                        :</label>
+                                    <input id="inputProviderName" type="text" class="form-control"
+                                        placeholder="Enter Provider Name"
+                                        onkeyup="inputValidatorText(this,'','activity','act_provider')" required>
                                 </div>
                             </div>
 
-                            <!-- Province and District starts -->
-                            <div class="mb-2">
-                                <div class="input-group">
-                                    <!-- Label for PROVINCE -->
-                                    <label class="form-label w-50" for="selectActivityProvince">Province
-                                    </label>
-
-                                    <!-- Label for DISTRICT -->
-                                    <label for="selectActivityDistrict" class="form-label w-50">District
-                                    </label>
-
-                                </div>
-
-                                <div class="input-group">
-
-                                    <!-- SELECT PROVINCE -->
-                                    <select id="selectActivityProvince" class="form-control form-select"
+                            <!-- Province, District, Location -->
+                            <div class="row mb-2">
+                                <div class="col-3">
+                                    <label for="selectActivityProvince" class="form-label fw-bold mb-0">Province
+                                        :</label>
+                                    <select id="selectActivityProvince" class="form-select" required
                                         onchange="getDistByProvince()">
                                     </select>
+                                </div>
 
-                                    <!-- SELECT DISTRICT -->
-                                    <select id="selectActivityDistrict" class="ms-3 form-control form-select"
+                                <div class="col-3">
+                                    <label for="selectActivityDistrict" class="form-label fw-bold mb-0">District
+                                        :</label>
+                                    <select id="selectActivityDistrict" class="form-select" required
                                         onchange="dynamicSelectValidator(this,'activity','district_id')">
+                                    </select>
+                                </div>
 
+                                <div class="col-6">
+                                    <label for="inputActivityLocation" class="form-label fw-bold mb-0">Location
+                                        :</label>
+                                    <input id="inputActivityLocation" type="text" class="form-control"
+                                        placeholder="Enter Address" required
+                                        onkeyup="inputValidatorText(this,'','activity','location')">
+                                </div>
+                            </div>
+
+                            <!-- Email and Contact Numbers -->
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <label for="inputActivityEmail" class="form-label fw-bold mb-0">Email :</label>
+                                    <input id="inputActivityEmail" type="email" class="form-control"
+                                        placeholder="Enter Email" required
+                                        onkeyup="inputValidatorText(this,'','activity','email')">
+                                </div>
+                                <div class="col-3">
+                                    <label for="inputContact1" class="form-label fw-bold mb-0">Contact #1 :</label>
+                                    <input id="inputContact1" type="text" class="form-control"
+                                        placeholder="Contact Number 1" required
+                                        onkeyup="inputContact2.disabled=false; checkDuplicatedNumbers(inputContact1,inputContact2,'contactone');">
+                                </div>
+                                <div class="col-3">
+                                    <label for="inputContact2" class="form-label fw-bold mb-0">Contact #2 :</label>
+                                    <input disabled id="inputContact2" type="text" class="form-control"
+                                        placeholder="Contact Number 2"
+                                        onkeyup="checkDuplicatedNumbers(inputContact2,inputContact1,'contacttwo')">
+                                </div>
+                            </div>
+
+                            <!-- Duration, Adult Price, Child Price -->
+                            <div class="row mb-2">
+                                <div class="col-4">
+                                    <label for="inputActivityDuration" class="form-label fw-bold mb-0">Duration
+                                        :</label>
+                                    <div class="input-group">
+                                        <input id="inputActivityDuration" type="number" class="form-control"
+                                            placeholder="Enter Duration" required
+                                            onkeyup="inputValidatorText(this,'','activity','duration')">
+                                        <span class="input-group-text">Minutes</span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <label for="inputAdultPrice" class="form-label fw-bold mb-0">Adult Price :</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">LKR</span>
+                                        <input id="inputAdultPrice" type="number" class="form-control"
+                                            placeholder="Adult Price" required
+                                            onkeyup="inputValidatorText(this,'','activity','price_adult')">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <label for="inputChildPrice" class="form-label fw-bold mb-0">Child Price :</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">LKR</span>
+                                        <input id="inputChildPrice" type="number" class="form-control"
+                                            placeholder="Child Price"
+                                            onkeyup="inputValidatorText(this,'','activity','price_child')" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Info and Status -->
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label for="inputAdditionalInfo" class="form-label fw-bold mb-0">Additional Info
+                                        :</label>
+                                    <textarea id="inputAdditionalInfo" rows="3" class="form-control"
+                                        placeholder="Enter Additional Info"
+                                        onkeyup="inputValidatorText(this,'','activity','note')"></textarea>
+                                </div>
+                                <div class="col-4">
+                                    <label for="selectActivityStatus" class="form-label fw-bold mb-0">Status :</label>
+                                    <select id="selectActivityStatus" class="form-select" required
+                                        onchange="staticSelectValidator(this,'activity','activity_status')">
+                                        <option value="" selected disabled>Select Status</option>
+                                        <option value="available"> Operating </option>
+                                        <option value="permanantly_closed"> Permanantly Closed </option>
+                                        <option value="temporary_closed"> Temporary Closed </option>
+                                        <option value="ifDeleted" class="d-none"> Deleted Activity </option>
                                     </select>
                                 </div>
                             </div>
 
-                            <!--TYPES accordion starts -->
-                            <div class="mb-2 w-100 border p-3 accordion accordion-flush mt-2" id="accordionForTypes">
-
-                                <div class="accordion-item ">
-
-                                    <!-- <h5 class="accordion-header mb-2"> -->
-                                    <div class="accordion-header mb-2">
-
-                                        <button class="p-0 accordion-button collapsed fw-bold " type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#flushCollapseOne"
-                                            aria-expanded="false" aria-controls="flushCollapseOne">
-
-                                            <h5 class="text-info"> Categories : Click to Expand</h5>
-                                        </button>
-                                    </div>
-
-                                    <div id="flushCollapseOne" class="accordion-collapse collapse ps-4"
-                                        data-bs-parent="#accordionForTypes">
-                                        <div class="accordion-body bg-light d-flex justify-content-between">
-
-                                            <!-- this will be filled by a JS -->
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <!-- Activities accordion starts-->
-                            <!-- <div class="mb-2 w-100 border p-3 accordion accordion-flush mt-2"
-                                id="acc#accordionForActivities">
-                                <div class="accordion-item ">
-                                    <h5 class="accordion-header mb-2">
-                                        <button class="p-0 accordion-button collapsed fw-bold " type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#flushCollapseTwo"
-                                            aria-expanded="false" aria-controls="flushCollapseTwo">
-                                            <h5 class="text-info"> Nearby Activities : Click to view</h5>
-                                        </button>
-                                    </h5>
-                                    <div id="flushCollapseTwo" class="accordion-collapse collapse ps-4"
-                                        data-bs-parent="#accordionForActivities">
-                                        <div class="accordion-body bg-light d-flex justify-content-between">
-
-                                           
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div> -->
-
-                            <!-- Entrance Fees Section -->
-                            <div class="mb-2">
-                                <div class="row">
-                                    <h5>Entrance Fees</h5>
-
-                                    <!-- 3 Check Boxes for Entrance Fees -->
-                                    <div class="input-group">
-
-                                        <!-- CB 1 -->
-                                        <input type="radio" class="btn-check" id="allEntryFreeChkBox" autocomplete="off"
-                                            name="entranceFees" value="All Free"
-                                            onchange="allEntryFree(); activity.feetype = this.value ">
-
-                                        <label class="btn btn-outline-success w-33 rounded-start"
-                                            for="allEntryFreeChkBox">All
-                                            Free</label>
-
-                                        <!--CB 2  -->
-                                        <input type="radio" class="btn-check" id="localsEntryFreeCheckBox"
-                                            autocomplete="off" value="Local Free" name="entranceFees"
-                                            onchange="localsEntryFree(); activity.feetype = this.value">
-
-                                        <label class="ms-1 btn btn-outline-warning w-33"
-                                            for="localsEntryFreeCheckBox">Local
-                                            Free</label>
-
-                                        <!-- CB 3 -->
-                                        <input type="radio" class="btn-check" id="allPaidCheckBox" autocomplete="off"
-                                            name="entranceFees" value="All Paid"
-                                            onchange="allPaid(); activity.feetype = this.value">
-                                        <!-- checked -->
-
-                                        <label class="btn ms-1 btn-outline-danger w-33" for="allPaidCheckBox">All
-                                            Paid</label>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="mb-2">
-                                <!--INPUT ENTRANCE FEES -->
-                                <div class="row">
-
-                                    <div class="col-6 bg-light border">
-
-                                        <h5 class="mt-1">Local Fees</h5>
-
-                                        <!-- Local ADULT -->
-                                        <div class="row mt-1 mb-3">
-                                            <div class="col-6">
-
-                                                <label class="form-label  mb-0">Local Adult</label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6>LKR</h6>
-                                                    </span>
-                                                    <input type="number" id="inputLocalAdultFee"
-                                                        class="form-control form-input w-85 p-1 text-center"
-                                                        placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','activity','feelocaladult')">
-                                                </div>
-
-
-                                            </div>
-
-                                            <!-- Local CHILD -->
-                                            <div class="col-6">
-
-                                                <label class="form-label mb-0">Local Children</label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6>LKR</h6>
-                                                    </span>
-                                                    <input type="text" id="inputLocalChildFee"
-                                                        class="form-control form-input w-85 p-1 text-center"
-                                                        placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','activity','feechildlocal')">
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-6 bg-light border">
-
-                                        <h5 class="mt-1">Foreign Fees</h5>
-
-                                        <!-- Foreign ADULT -->
-                                        <div class="row mt-1 mb-3 ">
-                                            <div class="col-6">
-                                                <label class="form-label  mb-0">Foreign Adult</label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6>LKR</h6>
-                                                    </span>
-                                                    <input type="text" id="inputForeignAdultFee"
-                                                        class="form-control form-input w-85 p-1 text-center"
-                                                        placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','activity','feeforeignadult')">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-6">
-
-                                                <label class="form-label mb-0">Foreign Children</label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6>LKR</h6>
-                                                    </span>
-                                                    <input type="number" id="inputForeignChildFee"
-                                                        class="form-control form-input w-85 p-1 text-center"
-                                                        placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','activity','feechildforeign')">
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <!-- location description, replace this somewehere else -->
-                            <div class="row mt-2">
-                                <div class="col-5">
-                                    <label for="inputNote" class="form-label fw-bold">Location Description :</label>
-                                    <textarea class="form-control" placeholder=" " id="inputNote"
-                                        onkeyup="inputValidatorText(this,'','activity','description')"
-                                        style="height: 100px;"
-                                        aria-placeholder="Enter A Short Description About The Location"></textarea>
-                                </div>
-                            </div>
-
-                            <!-- NOTE -->
-                            <div class="row mt-2 border bg-light">
-
-                                <div class="col-7 pb-2">
-                                    <label for="inputNote" class="form-label fw-bold">Additional Information :</label>
-                                    <textarea class="form-control" placeholder=" " id="inputNote"
-                                        onkeyup="inputValidatorText(this,'','activity','note')"
-                                        style="height: 100px;"></textarea>
-                                </div>
-
-                                <div class="col-5 ms-0 me-0">
-
-                                    <div class="row w-100 mb-2">
-                                        <div class="col-8">
-                                            <!-- PARKING FEE STARTS -->
-                                            <label for="vehiParkingFeeInput" class="form-label mb-0">Parking
-                                                Fee
-                                                :
-                                            </label>
-
-                                            <div class="input-group mb-1">
-                                                <span class="input-group-text p-1 pb-0">
-                                                    <h6>LKR</h6>
-                                                </span>
-                                                <input type="number" id="vehiParkingFeeInput"
-                                                    class="form-control form-input p-1 text-center " placeholder=""
-                                                    onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','activity','vehicleparkingfee')">
-
-                                            </div>
-                                        </div>
-
-                                        <div class="col-4 my-auto">
-                                            <input type="checkbox" class="btn-check" id="freeParkingCBX"
-                                                onchange="freeParkingCheckBox(); ">
-
-                                            <label class="btn btn-outline-success rounded-start"
-                                                for="freeParkingCBX">Free</label>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row w-100 mt-2">
-                                        <!-- DURATION -->
-                                        <label for="inputTourDuration" class="form-label mb-0"> Tour Duration </label>
-
-                                        <div class="input-group mt-1">
-                                            <input type="number" class="form-control form-input p-1 text-center"
-                                                id="inputTourDuration" placeholder=""
-                                                onkeyup="inputValidatorText(this,'^(?!0*$)\\d+(\\.\\d{1,2})?$','activity','duration')">
-                                            <span class="input-group-text p-1 pb-0 w-50 text-center">
-                                                <h6>Hours</h6>
-                                            </span>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                            </div>
-
-                            <!--3 form buttons starts -->
+                            <!--3 Form Buttons  -->
                             <div class="row mt-3">
 
                                 <div class="col-3">
-                                    <button type="reset" class="btn btn-all btn-clear"
-                                        onclick="refreshActivityForm()"> Clear</button>
+                                    <button type="reset" class="btn btn-all btn-clear" onclick="refreshActivityForm()">
+                                        Clear</button>
                                 </div>
 
                                 <div class="col-9 text-end">
-                                    <button type="button" id="activityaUpdateBtn" class="btn btn-all btn-update "
+                                    <button type="button" id="activityUpdateBtn" class="btn btn-all btn-update "
                                         onclick="updateActivity()" style="pointer-events: all;">Update</button>
 
-                                    <button type="submit" id="activityaAddBtn" class="btn btn-all btn-add "
+                                    <button type="submit" id="activityAddBtn" class="btn btn-all btn-add "
                                         onclick="addNewActivity()" style="pointer-events: all;">Add</button>
                                 </div>
                             </div>
@@ -412,12 +246,15 @@
                                     <p id="modalActivityName" class="text-muted"></p>
 
                                     <p class="fw-bold mb-1">Location:</p>
+
+                                    <p id="modalActivityLocation" class="text-muted"></p>
+
                                     <p id="modalActivityDistrict" class="text-muted"></p>
 
                                     <p id="modalActivityProvince" class="text-muted"></p>
 
-                                    <p class="fw-bold mb-1">Categories</p>
-                                    <p id="modalActivityCatrgories" class="text-muted"></p>
+                                    <p class="fw-bold mb-1">Type</p>
+                                    <p id="modalActivityType" class="text-muted"></p>
 
 
                                 </div>
@@ -430,41 +267,29 @@
 
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Local Adult Fee:</p>
-                                    <p id="modalActivityLocalAdultFee" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1"> Adult Fee:</p>
+                                    <p id="modalActivityAdultFee" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Local Child Fee:</p>
-                                    <p id="modalActivityLocalChildFee" class="text-muted mb-0"></p>
-                                </div>
-                            </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Foreign Adult Fee:</p>
-                                    <p id="modalActivityForeignAdultFee" class="text-muted mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Foreign Child Fee:</p>
-                                    <p id="modalActivityForeignChildFee" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1"> Child Fee:</p>
+                                    <p id="modalActivityChildFee" class="text-muted mb-0"></p>
                                 </div>
                             </div>
 
                             <hr>
+                            
+
+                            <hr>
                             <div class="row g-4">
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Staying Duration:</p>
+                                    <p class="fw-bold mb-1">Activity Duration:</p>
                                     <p id="modalActivityDuration" class="text-muted mb-0"></p>
                                 </div>
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Description:</p>
                                     <p id="modalActivityDescription" class="text-muted mb-0"></p>
                                 </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Vehicle Parking Fee:</p>
-                                    <p id="modalActivityVehicleParkingFee" class="text-muted mb-0"></p>
-                                </div>
+                                
                             </div>
 
                             <hr>

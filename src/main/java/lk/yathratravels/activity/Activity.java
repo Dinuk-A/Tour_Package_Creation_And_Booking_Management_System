@@ -55,6 +55,10 @@ public class Activity {
     @NotNull
     private String location;
 
+    @Column(name = "duration")
+    @NotNull
+    private String duration;
+
     @Column(name = "price_adult")
     @NotNull
     private BigDecimal price_adult;
@@ -98,6 +102,7 @@ public class Activity {
 
     @ManyToOne
     @JoinColumn(name = "act_type_id", referencedColumnName = "id")
+    @NotNull
     private ActType act_type_id;
 
 }
