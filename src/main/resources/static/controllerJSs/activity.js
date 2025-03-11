@@ -451,7 +451,62 @@ const updateActivity = async () => {
     }
 }
 
+//fn to delete an employee record
+const deleteActivityRecord = async (actObj) => {
+    const userConfirm = confirm("Are you sure to delete the activity " + actObj.act_name + " ?");
+    if (userConfirm) {
+        try {
+            const deleteServerResponse = await ajaxPPDRequest("/activity", "DELETE", actObj);
 
+            if (deleteServerResponse === 'OK') {
+                alert('Record Deleted');
+                $('#infoModalActivity').modal('hide');
+                window.location.reload();
+            } else {
+                alert('Delete Failed' + deleteServerResponce);
+            }
+        } catch (error) {
+            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else {
+        alert("User cancelled the task")
+    }
+}
+
+//restore employee record if its already deleted
+// or this should call a new service to set deleted_emp as false ? 💥💥💥
+const restoreActivityRecord = async () => {
+
+    const userConfirm = confirm("Are you sure to recover this deleted record ?");
+
+    if (userConfirm) {
+        try {
+            //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala 💥💥💥
+            activity = window.currentObject;
+            activity.deleted_act = false;
+
+            let putServiceResponse = await ajaxPPDRequest("/activity", "PUT", activity);
+
+            if (putServiceResponse === "OK") {
+                alert("Successfully Restored");
+                $("#infoModalActivity").modal("hide");
+
+                //AN LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
+                window.location.reload();
+
+            } else {
+                alert("Restore Failed \n" + putServiceResponse);
+            }
+
+        } catch (error) {
+            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else {
+        alert('User cancelled the recovery task');
+    }
+
+
+}
 
 
 
