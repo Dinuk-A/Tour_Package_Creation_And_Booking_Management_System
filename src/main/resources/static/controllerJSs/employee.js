@@ -99,6 +99,9 @@ const refreshEmployeeForm = async () => {
     document.getElementById('previewEmployeeImg').src = 'images/employee.png';
     document.getElementById('fileInputEmpPhoto').files = null;
     document.getElementById('previewEmployeeImg').style.border = "1px solid #ced4da";
+
+    document.getElementById('selectEmployeementStatus').children[2].removeAttribute('class','d-none');
+
 }
 
 //set the status as auto every time when a new form is opened
@@ -260,7 +263,7 @@ const resetModal = () => {
 
     // Hide the recover button
     document.getElementById('modalEmpRecoverBtn').classList.add('d-none');
-    console.log("fn running");
+
 }
 
 //fn for edit button,
