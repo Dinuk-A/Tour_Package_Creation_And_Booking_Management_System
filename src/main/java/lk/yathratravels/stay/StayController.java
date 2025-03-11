@@ -3,6 +3,8 @@ package lk.yathratravels.stay;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,7 +64,7 @@ public class StayController {
 
     @GetMapping(value = "/stay/all", produces = "application/json")
     public List<Stay> getAllStays() {
-        return stayDao.findAll();
+        return stayDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
     @GetMapping(value = "/stay/bydistrict/{givenDistrict}", produces = "application/json")

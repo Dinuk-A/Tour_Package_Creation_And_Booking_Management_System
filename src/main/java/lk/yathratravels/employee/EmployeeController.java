@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -75,7 +77,7 @@ public class EmployeeController {
     // get all employee list from DB
     @GetMapping(value = "/emp/all", produces = "application/json")
     public List<Employee> getAllEmployees() {
-        return employeeDao.findAll();
+        return employeeDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
     // get employees who dont have an user account
@@ -145,10 +147,10 @@ public class EmployeeController {
 
                 newUserAcc.setEmployee_id(savedEmployee);
                 newUserAcc.setAddeddatetime(LocalDateTime.now());
-                newUserAcc.setNote("Automatically Created By The System, Will Activate After Manager's Supervision");
+                newUserAcc.setNote("Automatically Created By The System");
 
                 // not yet activated
-                newUserAcc.setAcc_status(false);
+                newUserAcc.setAcc_status(true);
 
                 userDao.save(newUserAcc);
 
@@ -222,7 +224,7 @@ public class EmployeeController {
                     }
                 }
 
-                //this if is outside the scope of main if
+                //this if was outside the scope of main if
                 if (employee.getEmp_status().equals("Working")) {
 
                     User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());

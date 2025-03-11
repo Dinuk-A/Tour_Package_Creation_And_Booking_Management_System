@@ -3,6 +3,8 @@ package lk.yathratravels.employee;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -14,7 +16,7 @@ public class DesignationController {
 
     @GetMapping(value = "/desig/all", produces = "application/json")
     public List<Designation> getAllDesignations() {
-        return designationDao.findAll();
+        return designationDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
 }
