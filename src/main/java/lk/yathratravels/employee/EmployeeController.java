@@ -211,7 +211,9 @@ public class EmployeeController {
             employeeDao.save(employee);
 
             if (employee.getDesignation_id().getNeeduseracc()) {
-                if (employee.getEmp_status().equals("Resigned") || employee.getDeleted_emp()) {
+                if (employee.getEmp_status().equals("Resigned")) {
+
+                    // || employee.getDeleted_emp() was also inside above 2nd if
 
                     User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
                     if (relatedUserAcc != null) {
@@ -219,16 +221,27 @@ public class EmployeeController {
                         userDao.save(relatedUserAcc);
                     }
                 }
-            }
 
-            if (!employee.getDeleted_emp()) {               
+                //this if is outside the scope of main if
+                if (employee.getEmp_status().equals("Working")) {
 
-                User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
-                if (relatedUserAcc != null) {
-                    relatedUserAcc.setAcc_status(true);
-                    userDao.save(relatedUserAcc);
+                    User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
+                    if (relatedUserAcc != null) {
+                        relatedUserAcc.setAcc_status(true);
+                        userDao.save(relatedUserAcc);
+                    }
                 }
-            }
+            }        
+            
+            // original
+            // if (!employee.getDeleted_emp()) {
+            //
+            // User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
+            // if (relatedUserAcc != null) {
+            // relatedUserAcc.setAcc_status(true);
+            // userDao.save(relatedUserAcc);
+            // }
+            // }
 
             return "OK";
 
