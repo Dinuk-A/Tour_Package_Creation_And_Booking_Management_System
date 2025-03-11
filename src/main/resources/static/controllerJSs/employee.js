@@ -245,9 +245,28 @@ const addNewEmployee = async () => {
     }
 }
 
+//clear modal content without refreshing , to aid show new content in modal
+const resetModal = () => {
+
+    // Hide the deleted record message    
+    document.getElementById('modalEmpIfDeleted').innerText = '';
+    document.getElementById('modalEmpIfDeleted').classList.add('d-none');
+
+    // Enable and show edit/delete buttons
+    document.getElementById('modalEmpEditBtn').disabled = false;
+    document.getElementById('modalEmpDeleteBtn').disabled = false;
+    document.getElementById('modalEmpEditBtn').classList.remove('d-none');
+    document.getElementById('modalEmpDeleteBtn').classList.remove('d-none');
+
+    // Hide the recover button
+    document.getElementById('modalEmpRecoverBtn').classList.add('d-none');
+    console.log("fn running");
+}
+
 //fn for edit button,
-//current way === this will open the same form but with filled values
 const openModal = (empObj) => {
+
+    resetModal();
 
     document.getElementById('modalEmpCode').innerText = empObj.emp_code || 'N/A';
     document.getElementById('modalEmpFullName').innerText = empObj.fullname || 'N/A';
@@ -329,7 +348,7 @@ const refillEmployeeForm = async (empObj) => {
     empAddBtn.style.cursor = "not-allowed";
 
     document.getElementById('selectEmployeementStatus').style.border = '1px solid #ced4da';
-    document.getElementById('selectEmployeementStatus').children[2].classList.remove('d-none');
+    //document.getElementById('selectEmployeementStatus').children[2].classList.remove('d-none');
 
     $("#infoModalEmployee").modal("hide");
 
@@ -579,6 +598,8 @@ const printEmployeeRecord = () => {
     // Close the print window after printing
     printWindow.onafterprint = () => printWindow.close();
 };
+
+
 
 
 // fn for print entire table 💥💥💥

@@ -125,7 +125,7 @@
                                     <label for="inputActivityEmail" class="form-label fw-bold mb-0">Email :</label>
                                     <input id="inputActivityEmail" type="email" class="form-control"
                                         placeholder="Enter Email" required
-                                        onkeyup="inputValidatorText(this,'','activity','email')">
+                                        onkeyup="inputValidatorText(this,'','activity','act_email')">
                                 </div>
                                 <div class="col-3">
                                     <label for="inputContact1" class="form-label fw-bold mb-0">Contact #1 :</label>
@@ -230,7 +230,7 @@
                     <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title" id="infoModalLabel">Activity Full Details</h5>
                         <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                            aria-label="Close" ></button>
                     </div>
 
                     <!-- Modal Body -->
@@ -242,6 +242,9 @@
                                 <div class="col-md-6">
                                     <p class="fw-bold mb-1">Name:</p>
                                     <p id="modalActivityName" class="text-muted"></p>
+                                    
+                                    <p class="fw-bold mb-1">Name:</p>
+                                    <p id="modalActivityProviderName" class="text-muted"></p>
 
                                     <p class="fw-bold mb-1">Type:</p>
                                     <p id="modalActivityType" class="text-muted"></p>
@@ -325,19 +328,19 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">
-                        <button class="btn btn-outline-primary" onclick="printActivityRecord()">
+                        <button class="btn-print fw-bold" onclick="printActivityRecord()">
                             Print
                         </button>
                         <div>
-                            <button id="modalActivityEditBtn" class="btn btn-outline-success me-2"
+                            <button id="modalActivityEditBtn" class="btn-edit me-2 fw-bold"
                                 onclick="refillActivityForm(window['currentObject'])">
                                 Edit Activity Record
                             </button>
-                            <button id="modalActivityDeleteBtn" class="btn btn-outline-danger"
+                            <button id="modalActivityDeleteBtn" class="btn-delete fw-bold"
                                 onclick="deleteActivityRecord(window['currentObject'])">
                                 Delete Activity Record
                             </button>
-                            <button id="modalActivityRecoverBtn" class="btn btn-outline-primary d-none"
+                            <button id="modalActivityRecoverBtn" class="btn-restore d-none fw-bold"
                                 onclick="restoreActivityRecord()">
                                 Restore Activity Record
                             </button>

@@ -138,43 +138,43 @@ const checkActFormErrors = () => {
     let errors = "";
 
     if (activity.act_name == null) {
-        errors += "Activity Name cannot be actty \n";
+        errors += "Activity Name cannot be empty \n";
     }
 
     if (activity.description == null) {
-        errors += "Description cannot be actty \n";
+        errors += "Description cannot be empty \n";
     }
 
     if (activity.act_provider == null) {
-        errors += "Activity Provider Name cannot be actty \n";
+        errors += "Activity Provider Name cannot be empty \n";
     }
 
     if (activity.contactone == null) {
-        errors += "contact one cannot be actty \n";
+        errors += "contact one cannot be empty \n";
     }
 
     if (activity.location == null) {
-        errors += "Address cannot be actty \n";
+        errors += "Address cannot be empty \n";
     }
 
     if (activity.price_adult == null) {
-        errors += "Price for adults cannot be actty \n";
+        errors += "Price for adults cannot be empty \n";
     }
 
     if (activity.price_child == null) {
-        errors += "Price for children cannot be actty \n";
+        errors += "Price for children cannot be empty \n";
     }
 
     if (activity.act_status == null) {
-        errors += "Status cannot be actty \n";
+        errors += "Status cannot be empty \n";
     }
 
     if (activity.district_id == null) {
-        errors += "District cannot be actty \n";
+        errors += "District cannot be empty \n";
     }
 
     if (activity.act_type_id == null) {
-        errors += "Activity Type cannot be actty \n";
+        errors += "Activity Type cannot be empty \n";
     }
 
     return errors;
@@ -225,10 +225,11 @@ const addNewActivity = async () => {
 // Function to open the modal and populate all fields
 const openModal = (actObj) => {
     document.getElementById('modalActivityName').innerText = actObj.act_name || 'N/A';
+    document.getElementById('modalActivityProviderName').innerText = actObj.act_provider || 'N/A';
     document.getElementById('modalActivityLocation').innerText = actObj.location || 'N/A';
     document.getElementById('modalActivityDistrict').innerText = actObj.district_id?.name || 'N/A';
     document.getElementById('modalActivityProvince').innerText = actObj.district_id?.province_id?.name || 'N/A';
-    document.getElementById('modalActivityType').innerText = actObj.act_type.name || 'N/A';
+    document.getElementById('modalActivityType').innerText = actObj.act_type_id.name || 'N/A';
     document.getElementById('modalActivityAdultFee').innerText = actObj.price_adult || 'N/A';
     document.getElementById('modalActivityChildFee').innerText = actObj.price_child || 'N/A';
     document.getElementById('modalActivityDuration').innerText = actObj.duration || 'N/A';
@@ -260,6 +261,74 @@ const openModal = (actObj) => {
 
     $('#infoModalActivity').modal('show');
 };
+
+// refill the form to edit a record
+const refillActivityForm = async (actObj) => {
+
+    activity = JSON.parse(JSON.stringify(actObj));
+    oldActivity = JSON.parse(JSON.stringify(actObj));
+
+    inputActivityName.value = actObj.act_name;
+    //selectActivityType.value = actObj.act_type_id.name;
+    inputShortDescription.value = actObj.description;
+    inputProviderName.value = actObj.act_provider;
+    //selectActivityProvince.value = actObj.district_id?.province_id?.name;
+    //selectActivityDistrict.value = actObj.district_id?.name;
+    inputActivityLocation.value = actObj.location;
+    inputActivityEmail.value = actObj.act_email;
+    inputContact1.value = actObj.contactone;
+    inputContact2.value = actObj.contacttwo;
+    inputActivityDuration.value = actObj.duration;
+    inputAdultPrice.value = actObj.price_adult;
+    inputChildPrice.value = actObj.price_child;
+    inputAdditionalInfo.value = actObj.note;
+    selectActivityStatus.value = actObj.act_status;
+
+    try {
+        const act_types = await ajaxGetReq("/acttype/all");
+        fillDataIntoDynamicSelects(selectActivityType, 'Please Select Activity Type', act_types, 'name', actObj.act_type_id.name);
+
+        //get province list
+        provinces = await ajaxGetReq("/province/all");
+        fillDataIntoDynamicSelects(selectActivityProvince, 'Please Select The Province', provinces, 'name', actObj.district_id.province_id.name);
+
+        districts = await ajaxGetReq("/district/all");
+        fillDataIntoDynamicSelects(selectActivityDistrict, 'Please Select The District', districts, 'name', actObj.district_id.name);
+    } catch (error) {
+        console.error("Failed to fetch Data : ", error);
+    }
+
+    document.getElementById('inputContact2').disabled = false;
+    document.getElementById('selectActivityStatus').style.border = '1px solid #ced4da';
+    
+    //document.getElementById('selectActivityStatus').children[4].classList.remove('d-none');
+
+
+    activityUpdateBtn.disabled = false;
+    activityUpdateBtn.style.cursor = "pointer";
+
+    activityAddBtn.disabled = true;
+    activityAddBtn.style.cursor = "not-allowed";
+
+    $("#infoModalActivity").modal("hide");
+
+    var myActFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myActFormTab.show();
+
+}
+
+//clear out the form everytime a user switches to table tab
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshActivityForm();
+        }
+    });
+});
+
+
+
 
 
 
