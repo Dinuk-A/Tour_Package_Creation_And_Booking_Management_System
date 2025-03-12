@@ -107,4 +107,12 @@ public class CommonMethods {
         return lostView;
     }
 
+    //UI for testing frontend features
+    @GetMapping(value = "/test")
+    public ModelAndView testUI(){
+        ModelAndView testView = new ModelAndView();
+        testView.setViewName("test.html");
+        return testView;
+    }
+
 }
