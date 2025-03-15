@@ -1,6 +1,7 @@
 package lk.yathratravels.activity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -70,12 +71,11 @@ public class ActivityController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // Privilege loggedUserPrivilege =
-        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ACTIVITY");
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "ACTIVITY");
 
-        // if (!loggedUserPrivilege.getPrivselect()) {
-        // return new ArrayList<Activity>();
-        // }
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<Activity>();
+        }
 
         return activityDao.findAll(Sort.by(Direction.DESC, "id"));
     }
@@ -91,6 +91,12 @@ public class ActivityController {
     public String saveActivity(@RequestBody Activity act) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "ACTIVITY");
+
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "Activity Save Not Completed; You Dont Have Permission";
+        }
 
         try {
             act.setAddeddatetime(LocalDateTime.now());
@@ -110,6 +116,12 @@ public class ActivityController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "ACTIVITY");
+
+        if (!privilegeLevelForLoggedUser.getPrvupdate()) {
+            return "Activity Update Not Completed; You Dont Have Permission";
+        }
+
         try {
             act.setLastmodifieddatetime(LocalDateTime.now());
             act.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
@@ -121,11 +133,17 @@ public class ActivityController {
         }
     }
 
-    //delete an activity record
+    // delete an activity record
     @DeleteMapping(value = "/activity")
     public String deleteActivity(@RequestBody Activity act) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "ACTIVITY");
+
+        if (!privilegeLevelForLoggedUser.getPrvdelete()) {
+            return "Activity Delete Not Completed; You Dont Have Permission";
+        }
 
         // check existence
         Activity existAct = activityDao.getReferenceById(act.getId());
@@ -136,7 +154,7 @@ public class ActivityController {
             existAct.setDeleted_act(true);
             existAct.setDeleteddatetime(LocalDateTime.now());
             existAct.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());
-            
+
             activityDao.save(existAct);
 
             return "OK";

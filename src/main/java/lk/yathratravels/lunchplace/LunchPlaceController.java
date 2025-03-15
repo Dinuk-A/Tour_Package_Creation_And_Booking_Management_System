@@ -63,7 +63,13 @@ public class LunchPlaceController {
     @GetMapping(value = "/lunchplace/all", produces = "application/JSON")
     public List<LunchPlace> getLunchPlaceAllData() {
 
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+           Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "LUNCHPLACE");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<LunchPlace>();
+        }
 
         return lunchPlaceDao.findAll(Sort.by(Direction.DESC, "id"));
     }
@@ -78,6 +84,13 @@ public class LunchPlaceController {
     public String saveLunchPlace(@RequestBody LunchPlace lp) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "LUNCHPLACE");
+
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "Lunch Place Save Not Completed; You Dont Have Permission";
+        }
+
         try {
 
             lp.setAddeddatetime(LocalDateTime.now());
@@ -96,6 +109,12 @@ public class LunchPlaceController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "LUNCHPLACE");
+
+        if (!privilegeLevelForLoggedUser.getPrvupdate()) {
+            return "Lunch Place Update Not Completed; You Dont Have Permission";
+        }
+
         try {
             lp.setLastmodifieddatetime(LocalDateTime.now());
             lp.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
@@ -110,6 +129,12 @@ public class LunchPlaceController {
     public String deleteLhotelRecord(@RequestBody LunchPlace lp) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "LUNCHPLACE");
+
+        if (!privilegeLevelForLoggedUser.getPrvdelete()) {
+            return "Lunch Place Delete Not Completed; You Dont Have Permission";
+        }
 
         LunchPlace existingLP = lunchPlaceDao.getReferenceById(lp.getId());
         if (existingLP == null) {

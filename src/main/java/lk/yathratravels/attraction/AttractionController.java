@@ -1,6 +1,7 @@
 package lk.yathratravels.attraction;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,13 +72,12 @@ public class AttractionController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // Privilege loggedUserPrivilege =
-        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ATTRACTION");
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "ATTRACTION");
 
-        // if (!loggedUserPrivilege.getPrivselect()) {
-        // return new ArrayList<Attraction>();
-        // }
-
+          if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<Attraction>();
+        }
+       
         return attractionDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
@@ -92,13 +92,12 @@ public class AttractionController {
     public String saveVPlace(@RequestBody Attraction vplace) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //
-        // Privilege loggedUserPrivilege =
-        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ATTRACTION");
-        //
-        // if (!loggedUserPrivilege.getPrivinsert()) {
-        // return "Save Not Completed You Dont Have Permission";
-        // }
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "ATTRACTION");
+      
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "Attraction Save Not Completed; You Dont Have Permission";
+        }
 
         try {
             vplace.setAddeddatetime(LocalDateTime.now());
@@ -118,13 +117,12 @@ public class AttractionController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // Privilege loggedUserPrivilege =
-        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ATTRACTION");
-        //
-        // if (!loggedUserPrivilege.getPrivupdate()) {
-        // return "Update Not Completed You Dont Have Permission";
-        // }
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "ATTRACTION");
 
+        if (!privilegeLevelForLoggedUser.getPrvupdate()) {
+            return "Attraction Update Not Completed; You Dont Have Permission";
+        }
+       
         // check existence
 
         // duplications
@@ -145,12 +143,11 @@ public class AttractionController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // Privilege loggedUserPrivilege =
-        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "ATTRACTION");
-        //
-        // if (!loggedUserPrivilege.getPrivdelete()) {
-        // return "Delete Not Completed : You Dont Have Permission";
-        // }
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "ATTRACTION");
+
+        if (!privilegeLevelForLoggedUser.getPrvdelete()) {
+            return "Attraction Delete Not Completed; You Dont Have Permission";
+        }
 
         // check existence
         Attraction existVPlace = attractionDao.getReferenceById(vplace.getId());

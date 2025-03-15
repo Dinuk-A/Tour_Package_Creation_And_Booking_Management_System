@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import lk.yathratravels.employee.Employee;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
 
@@ -68,6 +69,14 @@ public class UserController {
     @GetMapping(value = "/user/all", produces = "application/json")
     public List<User> getAllUsers() {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "USER");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<User>();
+        }
+
         return userDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
@@ -84,12 +93,11 @@ public class UserController {
         // authentication and authorization
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // Privilege loggedUserPrivilege =
-        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "USER");
-        //
-        // if (!loggedUserPrivilege.getPrivinsert()) {
-        // return "Save Not Completed You Dont Have Permission";
-        // }
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "USER");
+
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "User Save Not Completed; You Dont Have Permission";
+        }
 
         // duplications #01 === by employee ecord
         User existingUserEmployee = userDao.getUserByEmployeeID(user.getEmployee_id().getId());
@@ -127,20 +135,19 @@ public class UserController {
     @PutMapping(value = "/user")
     public String updateUser(@RequestBody User user) {
 
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //
-        // Privilege loggedUserPrivilege =
-        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "USER");
-        //
-        // if (!loggedUserPrivilege.getPrivupdate()) {
-        // return "Update not completed you dont have permission";
-        // }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "USER");
+
+        if (!privilegeLevelForLoggedUser.getPrvupdate()) {
+            return "User Update Not Completed; You Dont Have Permission";
+        }
 
         // meka and thawa modules wala existing recs wala ids check karanna edit karanna
         // ena object eke console log eken
         User existingUser = userDao.getReferenceById(user.getId());
 
-        // admin wisin user kenekge pw change krna ekata ;ogic ejaj hithanna
+        // admin wisin user kenekge pw change krna ekata ;ogic ejaj hithanna 💥💥
         // me parana yathra eken, me logic eka epa
 
         // if (user.getPassword() != null) {
@@ -169,12 +176,11 @@ public class UserController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // Privilege loggedUserPrivilege =
-        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "USER");
-        //
-        // if (!loggedUserPrivilege.getPrivdelete()) {
-        // return "Delete Not Completed : You Dont Have Permission";
-        // }
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "USER");
+
+        if (!privilegeLevelForLoggedUser.getPrvdelete()) {
+            return "User Delete Not Completed; You Dont Have Permission";
+        }
 
         // exist
         User existingUser = userDao.getReferenceById(user.getId());

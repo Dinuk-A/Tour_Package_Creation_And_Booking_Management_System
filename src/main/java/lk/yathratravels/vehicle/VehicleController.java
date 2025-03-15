@@ -1,6 +1,5 @@
 package lk.yathratravels.vehicle;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -69,25 +67,27 @@ public class VehicleController {
     @GetMapping(value = "/vehicle/all", produces = "application/json")
     public List<Vehicle> getAllVehicles() {
 
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "TRANSPORT");
 
-        // Privilege loggedUserPrivilege =
-        // prvcntrler.getPrivilegesByUserAndModule(auth.getName(), "TRANSPORT");
-
-        // if (!loggedUserPrivilege.getPrivselect()) {
-        // return new ArrayList<Vehicle>();
-        // }
+           if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<Vehicle>();
+        }
 
         return vehiDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
-       // POST mapping for add 
+    // POST mapping for add
     @PostMapping(value = "/vehicle")
     public String saveVehicle(@RequestBody Vehicle vehicle) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // check privi here 💥
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "TRANSPORT");
+
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "Vehicle Save Not Completed; You Dont Have Permission";
+        }
 
         // check number plate duplications
         Vehicle existingVehicle = vehiDao.getVehicleByNumberPlate(vehicle.getNumberplate());
@@ -106,13 +106,17 @@ public class VehicleController {
 
     }
 
-  // put mapping for update 
+    // put mapping for update
     @PutMapping(value = "/vehicle")
     public String updateVehicle(@RequestBody Vehicle vehicle) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // check privi here 💥
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "TRANSPORT");
+
+        if (!privilegeLevelForLoggedUser.getPrvupdate()) {
+            return "Vehicle Update Not Completed; You Dont Have Permission";
+        }
 
         // check existence
         Vehicle existingVehicle = vehiDao.getReferenceById(vehicle.getId());
@@ -138,31 +142,35 @@ public class VehicleController {
 
     }
 
-     // delete mapping for delete
-     @DeleteMapping(value = "/vehicle")
-     public String deleteVehicle(@RequestBody Vehicle vehicle) {
+    // delete mapping for delete
+    @DeleteMapping(value = "/vehicle")
+    public String deleteVehicle(@RequestBody Vehicle vehicle) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // check privi here 💥
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "TRANSPORT");
 
-         // check existence
-         Vehicle existingVehicle = vehiDao.getReferenceById(vehicle.getId());
-         if (existingVehicle == null) {
-             return "Delete Not Completed ; Vehicle Not Found";
-         }
+        if (!privilegeLevelForLoggedUser.getPrvdelete()) {
+            return "Vehicle Delete Not Completed; You Dont Have Permission";
+        }
 
-         try {
+        // check existence
+        Vehicle existingVehicle = vehiDao.getReferenceById(vehicle.getId());
+        if (existingVehicle == null) {
+            return "Delete Not Completed ; Vehicle Not Found";
+        }
+
+        try {
             existingVehicle.setDeleted_vehi(true);
             existingVehicle.setDeleteddatetime(LocalDateTime.now());
             existingVehicle.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             vehiDao.save(existingVehicle);
             return "OK";
-         } catch (Exception e) {
+        } catch (Exception e) {
             return "Delete Not Completed " + e.getMessage();
-         }
+        }
 
-     } 
+    }
 
 }

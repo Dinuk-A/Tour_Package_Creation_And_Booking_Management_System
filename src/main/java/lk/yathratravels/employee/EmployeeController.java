@@ -1,6 +1,7 @@
 package lk.yathratravels.employee;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -77,6 +78,15 @@ public class EmployeeController {
     // get all employee list from DB
     @GetMapping(value = "/emp/all", produces = "application/json")
     public List<Employee> getAllEmployees() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<Employee>();
+        }
+
         return employeeDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
@@ -92,6 +102,12 @@ public class EmployeeController {
     public String saveEmployee(@RequestBody Employee employee) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
+
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "Employee Save Not Completed; You Dont Have Permission";
+        }
 
         // check duplications with entered nic
         if (employeeDao.getEmployeeByNIC(employee.getNic()) != null) {
@@ -170,6 +186,12 @@ public class EmployeeController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
+
+        if (!privilegeLevelForLoggedUser.getPrvupdate()) {
+            return "Employee Update Not Completed; You Dont Have Permission";
+        }
+
         // storing this updating employee record's ID for duplication completions
         Integer idOfUpdatingEmployee = employee.getId();
 
@@ -224,7 +246,7 @@ public class EmployeeController {
                     }
                 }
 
-                //this if was outside the scope of main if
+                // this if was outside the scope of main if
                 if (employee.getEmp_status().equals("Working")) {
 
                     User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
@@ -233,8 +255,8 @@ public class EmployeeController {
                         userDao.save(relatedUserAcc);
                     }
                 }
-            }        
-            
+            }
+
             // original
             // if (!employee.getDeleted_emp()) {
             //
@@ -260,6 +282,12 @@ public class EmployeeController {
     public String deleteEmployee(@RequestBody Employee employee) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
+
+        if (!privilegeLevelForLoggedUser.getPrvdelete()) {
+            return "Employee Delete Not Completed; You Dont Have Permission";
+        }
 
         // get the existing employee record by his ID(same as this passing ID)
         Employee existingEmployee = employeeDao.getReferenceById(employee.getId());
