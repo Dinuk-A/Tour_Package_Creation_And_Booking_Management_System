@@ -101,7 +101,7 @@ const createPriviTableCustomFn = (dataContainer) => {
 
         //create an EDIT button to insert inside this cell
         const editButton = document.createElement('button');
-        editButton.setAttribute('class', 'btn btn-info');
+        editButton.setAttribute('class', 'btn-edit fw-bold');
         editButton.innerText = "Edit";
 
         //function for edit button
@@ -115,7 +115,7 @@ const createPriviTableCustomFn = (dataContainer) => {
 
         //create an DELETE button to insert inside this cell
         const deleteButton = document.createElement('button');
-        deleteButton.setAttribute('class', 'ms-1 btn btn-danger');
+        deleteButton.setAttribute('class', 'ms-1 btn-delete fw-bold');
         deleteButton.innerText = "Delete";
 
         //function for delete button
