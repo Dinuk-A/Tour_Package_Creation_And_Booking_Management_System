@@ -49,7 +49,8 @@ const getEmployeeCode = (userObj) => {
 
 const getUserRoles = (userObj) => {
 
-    let userRoles = '';
+    //let userRoles = '';
+    let userRoles = '<div class="role-container" style="max-width: 300px;">';
 
     const roleColors = {
         Admin: '#d63031', // Bright red
@@ -66,10 +67,10 @@ const getUserRoles = (userObj) => {
     userObj.roles.forEach((element) => {
         
         const color = roleColors[element.name] || '#b2bec3'; 
-        userRoles += `<span class="rounded-pill text-white mx-1 p-2" style="background-color: ${color};">${element.name}</span>`;
+        userRoles += `<span class="rounded-pill text-white p-2" style="background-color: ${color};">${element.name}</span>`;
 
     });
-
+    userRoles += '</div>';
     return userRoles;
 };
 
@@ -77,10 +78,10 @@ const getUserRoles = (userObj) => {
 //to support fill main table
 const getUserAccStatus = (userObj) => {
     if (userObj.acc_status) {
-        return `<p class="bg-success text-white mx-1 p-2" style="background-color:lime;">Active Account</p>`
+        return `<p class="bg-success text-white mx-1 p-2 my-auto" style="background-color:lime;">Active Account</p>`
        
     } else {
-        return `<p class="bg-danger text-white mx-1 p-2" style="background-color:lime;">Inactive Account</p>`
+        return `<p class="bg-danger text-white mx-1 p-2 my-auto" style="background-color:lime;">Inactive Account</p>`
             }
 }
 

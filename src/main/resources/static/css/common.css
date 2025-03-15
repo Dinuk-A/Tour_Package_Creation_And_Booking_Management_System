@@ -378,6 +378,18 @@ h2.text-info {
   color: #424242;
 }
 
+.table tbody td .role-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.table tbody td .role-container span {
+  white-space: nowrap;
+}
+
 
 /* DataTables specific styling */
 .dataTables_wrapper {
