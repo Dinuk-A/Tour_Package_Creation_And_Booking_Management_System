@@ -4,22 +4,29 @@
 <head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
 
 <head>
-
-
     <!-- Make sure jQuery is loaded before SmartWizard -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- SmartWizard CSS should be loaded after Bootstrap CSS -->
     <link rel="stylesheet" href="libs/smartwiz/css/smart_wizard_all.min.css">
-</head>
+
+ </head>
 
 <body>
     <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
     <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
     <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+    <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
 
-    <main id="mainAreaID" class="main min-vh-100">
+    <main id="mainAreaID" class="main">
+
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dolorum ipsum a tenetur asperiores veritatis amet
             explicabo sunt in nemo.</p>
+
+        <button onclick="showAlertModal('catcatcatct')">click me</button>
+
+        <p>vfdgdfgdf gfgdf g g g gg g dgd gf gdf gf gf gdf gg fdg gfgdfg g dgfg dgd g gdaz</p>
+
+        <button onclick="showAlertModal('jjjjjj  vksf ')">click me</button>
 
         <div class="container mt-5">
             <div class="card">
@@ -255,6 +262,9 @@
             </div>
         </div>
 
+        <button onclick="showAlertModal('ffgfdgfggd')">click me</button>
+
+
         <!-- SmartWizard JS should be loaded after jQuery -->
         <script src="libs/smartwiz/js/jquery.smartWizard.min.js"></script>
         <script>
@@ -262,7 +272,7 @@
             $(document).ready(function () {
                 // Initialize SmartWizard with proper settings
                 $('#smartwizard').smartWizard({
-                    selected: 0, // Start from Step 1
+                    //selected: 0, 
                     theme: 'arrows', // Choose from 'default', 'arrows', 'dots', 'progress'
                     justified: true, // Navigation menu will be justified
                     autoAdjustHeight: false, // Set to false to avoid height calculation errors

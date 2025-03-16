@@ -477,7 +477,7 @@ const addNewAttraction = async () => {
             alert('User cancelled the task');
         }
     } else {
-        alert('Form Has Followimg Errors \n \n' + errors);
+        showAlertModal('Form Has Followimg Errors \n \n' + errors);
     }
 }
 

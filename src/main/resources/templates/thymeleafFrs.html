@@ -19,6 +19,9 @@
     <!-- button css -->
     <link rel="stylesheet" href="css/buttons.css">
 
+    <!-- custom alert css -->
+    <link rel="stylesheet" href="css/customAlert.css">
+
     <!-- link table common fuction js file -->
     <script src="commonscripts/tableFns.js"></script>
 
@@ -30,6 +33,9 @@
 
     <!-- for user info change portal -->
     <script src="commonscripts/useredit.js"></script>
+
+    <!-- for custom alert js -->
+    <script src="commonscripts/customAlert.js"></script>
 
     <!-- link jquery  -->
     <script src="libs/jQuery.js"></script>
@@ -340,4 +346,12 @@
 
         </div>
     </div>
+</div>
+
+<!-- modal for use as a custom alert box -->
+<div th:fragment="customAlertFragment" class="alert-modal" id="customAlertModal">
+    <p class="alert-modal-title">Warning</p> 
+    <img id="alertIcon" src="images/warning.png" alt="Alert Icon">
+    <p id="alertMsg">This is a custom alert!</p>
+    <button onclick="closeAlertModal()">OK</button>
 </div>

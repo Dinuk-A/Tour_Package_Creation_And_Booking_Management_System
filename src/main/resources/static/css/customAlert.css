@@ -1,0 +1,55 @@
+/* Custom Alert Box */
+.alert-modal {
+    display: none;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #343A40;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    width: 450px;
+    min-height: 120px;
+    max-height: 300px;
+    text-align: left;
+    transition: top 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0;
+    color: #BDBDBD;
+    font-family: Arial, sans-serif;
+    position: fixed !important;
+    overflow-y: auto;
+}
+
+.alert-modal-title {
+    font-size: 18px; /* Slightly larger */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 8px;
+    color: #ddd; /* Softer white */
+}
+
+#alertIcon {
+    width: 32px;    
+    height: auto;
+    display: block;
+    margin: 0 auto 10px auto;    
+}
+
+/* Custom OK Button */
+.alert-modal button {
+    position: absolute;
+    right: 15px;
+    bottom: 10px;
+    padding: 8px 15px;
+    border: 2px solid #1A3A1A;
+    cursor: pointer;
+    border-radius: 45px;
+    background: #A5D6A7;
+    color: #1A3A1A;
+    font-size: 14px;
+    font-weight: bold;
+    width: 70px;
+    height: 40px;
+    text-align: center;
+}

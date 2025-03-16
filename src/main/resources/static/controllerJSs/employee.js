@@ -227,7 +227,8 @@ const addNewEmployee = async () => {
                 const postServerResponse = await ajaxPPDRequest("/emp", "POST", employee);
 
                 if (postServerResponse === 'OK') {
-                    alert('Saved Successfully');
+                    //alert('Saved Successfully');
+                    showAlertModal('Saved Successfully');
                     document.getElementById('formEmployee').reset();
                     refreshEmployeeForm();
                     buildEmployeeTable();
@@ -244,7 +245,7 @@ const addNewEmployee = async () => {
             alert('User cancelled the task');
         }
     } else {
-        alert('Form has following errors:  \n' + errors);
+        showAlertModal('Form has following errors: \n \n' + errors);
     }
 }
 
