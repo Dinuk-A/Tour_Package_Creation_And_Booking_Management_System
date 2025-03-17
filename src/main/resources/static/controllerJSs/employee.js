@@ -228,7 +228,7 @@ const addNewEmployee = async () => {
 
                 if (postServerResponse === 'OK') {
                     //alert('Saved Successfully');
-                    showAlertModal('Saved Successfully');
+                    showAlertModal('suc','Saved Successfully');
                     document.getElementById('formEmployee').reset();
                     refreshEmployeeForm();
                     buildEmployeeTable();
@@ -239,13 +239,14 @@ const addNewEmployee = async () => {
                 }
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         } else {
-            alert('User cancelled the task');
+            showAlertModal('inf','User cancelled the task');
         }
     } else {
-        showAlertModal('Form has following errors: \n \n' + errors);
+        //showAlertModal('war',' \n' + errors);
+        showAlertModal('war', errors);
     }
 }
 

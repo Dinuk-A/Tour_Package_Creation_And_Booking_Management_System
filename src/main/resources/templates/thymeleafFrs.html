@@ -348,12 +348,22 @@
     </div>
 </div>
 
-<!-- modal for use as a custom alert box -->
+<!-- modal for use as a custom alert -->
 <div th:fragment="customAlertFragment" class="alert-modal" id="customAlertModal">
-    <p class="alert-modal-title">Warning</p> 
+    <p id="alertTitle">Alert</p>
     <img id="alertIcon" src="images/warning.png" alt="Alert Icon">
     <p id="alertMsg">This is a custom alert!</p>
     <div class="alert-footer">
         <button onclick="closeAlertModal()">OK</button>
+    </div>
+</div>
+
+<!-- modal for use as a custom alert -->
+<div th:fragment="customConfirmFragment" class="confirm-modal" id="customConfirmModal">
+    <img id="confirmIcon" src="images/warning.png">
+    <p id="confirmMsg">This is a custom confirm!</p>
+    <div class="confirm-footer">
+        <button id="btnConfirmOk">OK</button>
+        <button id="btnConfirmCancel">Cancel</button>
     </div>
 </div>

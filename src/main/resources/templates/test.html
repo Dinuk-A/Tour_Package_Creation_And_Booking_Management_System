@@ -9,24 +9,25 @@
     <!-- SmartWizard CSS should be loaded after Bootstrap CSS -->
     <link rel="stylesheet" href="libs/smartwiz/css/smart_wizard_all.min.css">
 
- </head>
+</head>
 
 <body>
     <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
     <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
     <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
     <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
+    <div th:replace="~{thymeleafFrs :: customConfirmFragment}"></div>
 
     <main id="mainAreaID" class="main">
 
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dolorum ipsum a tenetur asperiores veritatis amet
             explicabo sunt in nemo.</p>
 
-        <button onclick="showAlertModal('catcatcatct')">click me</button>
+        <button onclick="handleConfirm()">click me</button>
 
         <p>vfdgdfgdf gfgdf g g g gg g dgd gf gdf gf gf gdf gg fdg gfgdfg g dgfg dgd g gdaz</p>
 
-        <button onclick="showAlertModal('jjjjjj  vksf ')">click me</button>
+        <button onclick="handleConfirm()">click me</button>
 
         <div class="container mt-5">
             <div class="card">
@@ -262,12 +263,27 @@
             </div>
         </div>
 
-        <button onclick="showAlertModal('ffgfdgfggd')">click me</button>
+        <button onclick="customConfirm('ffgfdgfggd')">click me</button>
 
 
         <!-- SmartWizard JS should be loaded after jQuery -->
         <script src="libs/smartwiz/js/jquery.smartWizard.min.js"></script>
+
+
         <script>
+
+            //test custom confirm
+            const handleConfirm = async () => {
+                const userResponse = await customConfirm('Are you sure to add?');
+
+                if (userResponse) {
+                    console.log("User clicked OK.");
+                } else {
+                    console.log("User clicked Cancel.");
+                }
+            };
+
+
             // Wait for document to fully load
             $(document).ready(function () {
                 // Initialize SmartWizard with proper settings
