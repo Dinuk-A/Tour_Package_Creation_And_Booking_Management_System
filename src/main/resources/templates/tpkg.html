@@ -4,10 +4,10 @@
 <head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
 
 <head>
-    <!-- link employee css -->
+    <!-- link tpkg css -->
     <!--<link rel="stylesheet" href="css/tpkg.css">-->
 
-    <!-- link employee js -->
+    <!-- link tpkg js -->
     <script src="controllerJSs/tpkg.js"></script>
 
 </head>
@@ -21,114 +21,266 @@
 
     <main id="mainAreaID" class="main">
 
-        <div class="container mt-5">
-            <!-- Tour Package Form -->
-            <h2>Create Tour Package</h2>
-            <form id="tourPackageForm" onsubmit="return false" >
-                <!-- Tour Package Name -->
-                <div class="mb-3">
-                    <label for="tourPackageName" class="form-label">Tour Package Name</label>
-                    <input type="text" class="form-control" id="tourPackageName" placeholder="Enter Tour Package Name"
-                        required>
-                </div>
+        <!-- Tabs navigation panel -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- for table side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableTpkgHolderDiv" role="tab"
+                    aria-controls="tableTpkgHolderDiv" aria-selected="true">Table</a>
+            </li>
+            <!-- for form side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formTpkgHolderDiv" role="tab"
+                    aria-controls="formTpkgHolderDiv" aria-selected="false" onclick="setTpkgStatusAuto()">Form</a>
+            </li>
+        </ul>
 
-                <!-- Add a New Day -->
-                <div class="mb-3">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#addDayModal">Add a New Day</button>
-                </div>
+        <!-- Tabs content -->
+        <div class="tab-content mt-1" id="myTabContent">
+            <!-- Table tab  -->
+            <div id="tableTpkgHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3" role="tabpanel"
+                aria-labelledby="table-tab">
+                <!-- a table will be dynamically generated in here -->
+            </div>
 
-                <!-- Select Existing Day Plan -->
-                <div class="mb-3">
-                    <label for="existingDayPlans" class="form-label">Select Existing Day Plan</label>
-                    <select class="form-select" id="existingDayPlans" required>
-                       
-                    </select>
-                </div>
+            <!-- Form tab -->
+            <div class="tab-pane fade" id="formTpkgHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+                <div class="card mx-auto" style="width: 1100px;">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">Tour Package Creation Form</h3>
+                    </div>
+                    <div class="card-body" style="background-color: ivory;">
 
-                <button type="submit" class="btn btn-success">Save Tour Package</button>
-            </form>
+                        <form id="formTpkg" onsubmit="return false">
 
-            <!-- Modal to Add a New Day -->
-            <div class="modal fade" id="addDayModal" aria-hidden="true" aria-labelledby="staticBackdropLabel"
-            data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addDayModalLabel">Add a New Day</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.location.reload()"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="addDayForm" onsubmit="return false">
-                                <!-- Day Name -->
-                                <div class="mb-3">
-                                    <label for="dayName" class="form-label">Day Name</label>
-                                    <input type="text" class="form-control" id="dayName" placeholder="Enter Day Name"
-                                        required onchange="inputValidatorText(this,'','dayplan','daytitle')">
+                            <!-- pkg type to deteermine whats next -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Package type</legend>
+
+                                <div class="row">
+                                    <!-- for web site or custom -->
+                                    <div class="col-md-6">
+
+                                        <!-- for customer -->
+                                        <div class="row mx-auto">
+                                            <input type="radio" class="btn-check" id="customTP" autocomplete="off"
+                                                name="packageType" onchange="changesDependTypeOri();">
+                                            <label class="btn btn-outline-success rounded-start me-2"
+                                                for="customTP">Custom
+                                                Package</label>
+                                        </div>
+
+                                        <!-- for web site -->
+                                        <div class="row mt-1 mx-auto">
+                                            <input type="radio" class="btn-check" id="forWebSite" autocomplete="off"
+                                                name="packageType" onchange=" changesDependTypeOri(); ">
+                                            <label class="btn btn-outline-primary " for="forWebSite">Show in
+                                                Website</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- singke day or multi -->
+                                    <div class="col-md-6">
+
+                                        <!-- for single day tours -->
+                                        <div class="row mx-auto">
+                                            <input type="radio" class="btn-check" id="oneDayTour" autocomplete="off"
+                                                name="pkgDaysType" onchange="">
+                                            <label class="btn btn-outline-success rounded-start me-2"
+                                                for="oneDayTour">Single Day</label>
+                                        </div>
+
+                                        <!-- for multiple day tours -->
+                                        <div class="row mt-1 mx-auto">
+                                            <input type="radio" class="btn-check" id="multiDayTour" autocomplete="off"
+                                                name="pkgDaysType" onchange="">
+                                            <label class="btn btn-outline-primary " for="multiDayTour">Multi Day</label>
+                                        </div>
+
+                                    </div>
                                 </div>
 
-                                <!-- Select Attractions -->
-                                <div class="row mt-2">
+                            </fieldset>
 
-                                    <div class="col-5">
+                            <!-- title and code(hidden, only appear on edit) -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Basic Information</legend>
 
-                                        <label for="allPlaces" class="form-label">All Places</label>
+                                <div class="row">
+                                    <!-- title -->
+                                    <div class="col-md-8">
 
-                                        <!-- LEFT SELECT -->
-                                        <select class="form-select" size="8" id="allPlaces"></select>
-
-
-                                    </div>
-
-                                    <!-- buttons -->
-                                    <div class="col-2">
-
-                                        <div class="row mt-5">
-                                            <button class="btn btn-primary fw-bold  btn-pill" id="passOne"
-                                                onclick="addOne()"> + </button>
-                                        </div>
-
-                                        <div class="row mt-2">
-                                            <button class="btn btn-dark fw-bold" id="passAll" onclick="addAll()">
-                                                Add
-                                                All </button>
-                                        </div>
-
-                                        <div class="row mt-2">
-                                            <button class="btn btn-danger fw-bold " id="removeSelectedOne"
-                                                onclick="removeOne()"> -
-                                            </button>
-
-                                        </div>
-
-                                        <div class="row mt-2">
-                                            <button class="btn btn-success fw-bold " id="removeSelectedAll"
-                                                onclick="removeAll()">
-                                                Remove All </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- RIGHT SELECT -->
-                                    <div class="col-5">
-
-                                        <label for="passedVPlaces" class="form-label">Selected
-                                            Places</label>
-                                        <select size="8" id="passedVPlaces" class="form-select"></select>
+                                        <label for="inputPkgTitle" class="form-label fw-bold mb-0"> Package Title
+                                            <span class="text-danger"> * </span> :</label>
+                                        <input id="inputPkgTitle" type="text" class="form-control"
+                                            placeholder="Enter A Title for The Package"
+                                            onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')" required>
 
                                     </div>
+                                    <!-- code  -->
+                                    <div class="col-md-4">
 
+                                        <label for="inputPkgCode" class="form-label fw-bold mb-0"> Package Code
+                                            <span class="text-danger"> * </span> :</label>
+                                        <input id="inputPkgCode" type="text" class="form-control"
+                                            onkeyup="inputValidatorText(this,'','tpkg' , 'pkgcode')" required>
+
+                                    </div>
                                 </div>
 
-                            </form>
+                            </fieldset>
+
+                            <!-- add fieldsets later -->
+                            <!-- day plans select/create -->
+                            <div class="row mt-2">
+
+                                <!-- btn to create a new day plan  💥💥💥-->
+                                <div class="col-4"><button type="button">Create New Day Plan</button></div>
+
+                                <!-- import existing days -->
+                                <!-- 💥💥💥a type and search here -->
+                                <div class="col-8"></div>
+                                
+
+
+                            </div>
+
+                            <!--  -->
+                            <div class="row mt-2">
+
+                            </div>
+
+
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal to display full details of a row -->
+        <div class="modal fade py-5" id="infoModalTpkg" tabindex="-1" aria-labelledby="infoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="infoModalLabel">Yathra Tpkg Record</h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"
+                            onclick="resetModal()"></button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <div class="container">
+                            <!-- Tpkg Image and Basic Info -->
+                            <div class="row g-4 align-items-center">
+                                <!-- Image -->
+                                <div class="col-md-4 text-center">
+                                    <img id="modalPreviewTpkgImg" src="images/tpkg.png" alt="Preview"
+                                        class="img-thumbnail rounded-circle shadow-sm"
+                                        style="height: 150px; width: 150px;">
+                                </div>
+                                <!-- Name and NIC -->
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Full Name:</p>
+                                    <p id="modalEmpFullName" class=" "></p>
+                                    <p class="fw-bold mb-1">NIC:</p>
+                                    <p id="modalEmpNIC" class=" "></p>
+                                </div>
+                            </div>
+
+                            <!-- Other Details -->
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Tpkg Code:</p>
+                                    <p id="modalEmpCode" class="  mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Designation:</p>
+                                    <p id="modalEmpDesignation" class="  mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Working Status:</p>
+                                    <p id="modalEmpStatus" class="  mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Gender:</p>
+                                    <p id="modalEmpGender" class="  mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Date of Birth:</p>
+                                    <p id="modalEmpDOB" class="  mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Mobile Number:</p>
+                                    <p id="modalEmpMobileNum" class="  mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Land Number:</p>
+                                    <p id="modalEmpLandNum" class="  mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Personal Email:</p>
+                                    <p id="modalEmpPersonalEmail" class="  mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Address:</p>
+                                    <p id="modalEmpAddress" class="  mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Additional Details:</p>
+                                    <p id="modalEmpNote" class="  mb-0"></p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <p id="modalEmpIfDeleted" class="text-danger d-none mb-0"></p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" id="saveDayButton" onclick="addNewDay()">Save Day</button>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex 
+                 justify-content-between bg-light">
+                        <button class="btn-print fw-bold" onclick="printTpkgRecord()">
+                            Print Record
+                        </button>
+                        <div>
+                            <button id="modalEmpEditBtn" class="btn-edit me-2 fw-bold"
+                                onclick="refillTpkgForm(window['currentObject'])">
+                                Edit Tpkg
+                            </button>
+                            <button id="modalEmpDeleteBtn" class="btn-delete fw-bold"
+                                onclick="deleteTpkgRecord(window['currentObject'])">
+                                Delete Tpkg
+                            </button>
+                            <button id="modalEmpRecoverBtn" class="btn-restore d-none fw-bold"
+                                onclick="restoreTpkgRecord()">
+                                Restore Tpkg
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
 
     </main>
