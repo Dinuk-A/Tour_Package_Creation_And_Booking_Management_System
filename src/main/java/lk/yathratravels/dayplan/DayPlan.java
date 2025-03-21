@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lk.yathratravels.activity.Activity;
 import lk.yathratravels.attraction.Attraction;
+import lk.yathratravels.attraction.District;
 import lk.yathratravels.lunchplace.LunchPlace;
 import lk.yathratravels.stay.Stay;
 import lombok.AllArgsConstructor;
@@ -47,6 +48,12 @@ public class DayPlan {
 
     @Column(name = "is_template")
     private Boolean is_template;
+
+    // 💥💥💥 meka wenuwata mulinma add karana attr or actv eke district eka
+    // ganna(0th index from that array)
+    @ManyToOne
+    @JoinColumn(name = "start_district_id", referencedColumnName = "id")
+    private District start_district_id;
 
     @Column(name = "note")
     private String note;
@@ -110,27 +117,3 @@ public class DayPlan {
     @Column(name = "deleteduserid")
     private Integer deleteduserid;
 }
-
-/*
- * 
- * dpcode varchar(15)
- * note text
- * end_stay_id int
- * dp_status varchar(45)
- * deleted_dp tinyint
- * addeddatetime datetime
- * lastmodifieddatetime datetime
- * deleteddatetime datetime
- * addeduserid int
- * lastmodifieduserid int
- * deleteduserid int
- * foreignadulttktcost decimal(10,2)
- * foreignchildtktcost decimal(10,2)
- * localadulttktcost decimal(10,2)
- * localchildtktcost decimal(10,2)
- * totalkmcount decimal(10,2)
- * totalvehiparkcost varchar(45)
- * totalcost decimal(10,2)
- * lunchplace_id int
- * istemplate tinyint
- */

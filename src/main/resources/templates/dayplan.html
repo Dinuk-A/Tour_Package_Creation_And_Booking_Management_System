@@ -5,7 +5,7 @@
 
 <head>
     <!-- link dayplan css -->
-    <link rel="stylesheet" href="css/dayplan.css">
+    <!--<link rel="stylesheet" href="css/dayplan.css">-->
 
     <!-- link dayplan js -->
     <script src="controllerJSs/dayplan.js"></script>
@@ -30,7 +30,7 @@
             <!-- for form side -->
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formDayPlanHolderDiv" role="tab"
-                    aria-controls="formDayPlanHolderDiv" aria-selected="false" onclick="setDPStatusAuto()">Form</a>
+                    aria-controls="formDayPlanHolderDiv" aria-selected="false">Form</a>
             </li>
         </ul>
 
@@ -54,41 +54,46 @@
 
                             <!-- isTemplate?  -->
                             <div class="row">
-                                <input type="radio" class="btn-check" id="dpTemplate" autocomplete="off"
-                                    name="dpTemplateOrNot" value="FD" onchange="">
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" id="dpTemplate" autocomplete="off"
+                                        name="dpTemplateOrNot" value="true" onchange="handleDayTypeRadio(this)">
 
-                                <label class="btn btn-outline-success rounded-start" for="firstDayCB">Template</label>
+                                    <label class="btn btn-outline-success rounded-start" for="dpTemplate">As A
+                                        Template</label>
+                                </div>
 
-                                <input type="radio" class="btn-check" id="dpNotTemplate" autocomplete="off"
-                                    name="dpTemplateOrNot" value="MD" onchange="">
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" id="dpNotTemplate" autocomplete="off"
+                                        name="dpTemplateOrNot" value="false" onchange="handleDayTypeRadio(this)">
 
-                                <label class="ms-1 btn btn-outline-warning " for="middleDayCB">Not a Template</label>
+                                    <label class="ms-1 btn btn-outline-warning " for="dpNotTemplate">In A
+                                        Package</label>
+                                </div>
                             </div>
 
                             <!-- 3 cbs -->
                             <div class="row border bg-light mt-2">
                                 <h5 class="mt-2 mb-1">Day Type</h5>
 
-                                <!-- 3 Check Boxes for Entrance Fees -->
                                 <div class="input-group mt-2 mb-2">
 
                                     <!-- CB 1 -->
                                     <input type="radio" class="btn-check" id="firstDayCB" autocomplete="off"
-                                        name="dayTypeOfPlan" value="FD" onchange="selectDayType(this);">
+                                        name="dpDayType" value="FD" onchange="selectDayType(this);">
 
                                     <label class="btn btn-outline-success w-33 rounded-start" for="firstDayCB">First
                                         Day</label>
 
                                     <!--CB 2  -->
                                     <input type="radio" class="btn-check" id="middleDayCB" autocomplete="off"
-                                        name="dayTypeOfPlan" value="MD" onchange="selectDayType(this);">
+                                        name="dpDayType" value="MD" onchange="selectDayType(this);">
 
                                     <label class="ms-1 btn btn-outline-warning w-33" for="middleDayCB">Middle
                                         Day</label>
 
                                     <!-- CB 3 -->
                                     <input type="radio" class="btn-check" id="lastDayCB" autocomplete="off"
-                                        name="dayTypeOfPlan" value="LD" onchange="selectDayType(this);">
+                                        name="dpDayType" value="LD" onchange="selectDayType(this);">
 
                                     <label class="btn ms-1 btn-outline-danger w-33" for="lastDayCB">Last Day</label>
                                 </div>
@@ -145,78 +150,46 @@
 
                                                     <!-- select province -->
                                                     <div class="col-6">
-                                                        <label for="dpStartProvinceSelect"
-                                                            class="form-label mb-1">Province
+                                                        <label for="selectDPStartProv" class="form-label mb-1">Province
                                                             :</label>
-                                                        <select id="dpStartProvinceSelect"
+                                                        <select id="selectDPStartProv"
                                                             class="form-control form-select mb-2"
-                                                            onchange="getDistByProvince(dpStartProvinceSelect,dpStartDistrictSelect)"></select>
+                                                            onchange="getDistByProvince(selectDPStartProv,selectDPStartDist)"></select>
                                                     </div>
 
                                                     <!-- select district -->
                                                     <div class="col-6">
-                                                        <label for="dpStartDistrictSelect"
-                                                            class="form-label mb-1">District
+                                                        <label for="selectDPStartDist" class="form-label mb-1">District
                                                             :</label>
-                                                        <select id="dpStartDistrictSelect" class="form-select"
-                                                            onchange="getStayByDistrict(dpStartDistrictSelect,dpStartStaySelect); selectDynamicVal(this,'','dayplan','start_district_id');"></select>
+                                                        <select id="selectDPStartDist" class="form-select"
+                                                            onchange="getStayByDistrict(selectDPStartDist,dpStartStaySelect); selectDynamicVal(this,'','dayplan','start_district_id');"></select>
                                                     </div>
                                                 </div>
 
-                                                <!-- START location or accomadation -->
-                                                <div class="row">
 
-                                                    <!-- if a hotel SELECT-->
-                                                    <div class="col-6">
-
-                                                        <label for="dpStartStaySelect"
-                                                            class="form-label mb-1">Accomadation
-                                                            :</label>
-                                                        <select id="dpStartStaySelect" class="form-select" onchange="selectDynamicVal(this,'','dayplan','start_stay_id'); if (this.value != null) {
-                                                     startLocationText.disabled = true; startLocationText.value=''; dayplan.startlocation=null;
-                                                 };"></select>
-                                                    </div>
-
-                                                    <!-- location TEXT -->
-                                                    <div class="col-6">
-                                                        <label for="startLocationText" class="form-label mb-1">Location
-                                                            :<span><small class="text-info">(if
-                                                                    not an accomadation or not in
-                                                                    list)</small></span></label>
-
-                                                        <input id="startLocationText" class="form-control form-input"
-                                                            type="text" onkeyup="inputFieldValidator(this,'','dayplan','startlocation'); if (this.value != null) {
-                                                dpStartStaySelect.disabled = true; dpStartStaySelect.value=''; dayplan.start_stay_id=null;
-                                                 };">
-                                                    </div>
-
-                                                </div>
 
                                             </div>
 
                                             <!-- visiting places -->
                                             <div class="row border mt-2 mb-2 pb-2 bg-light">
-                                                <h5 class="mt-2 mb-1">List Of Visiting Places Covered In This Day
+                                                <h5 class="mt-2 mb-1">List of Visiting Places to Covered in This Day
                                                 </h5>
 
                                                 <div class="row">
                                                     <!-- select province -->
                                                     <div class="col-6">
-                                                        <label for="dpPlaceProvinceSelect"
-                                                            class="form-label mb-1">Province
+                                                        <label for="selectVPProv" class="form-label mb-1">Province
                                                             :</label>
-                                                        <select id="dpPlaceProvinceSelect"
-                                                            class="form-control form-select mb-2"
-                                                            onchange="getDistByProvince(dpPlaceProvinceSelect,dpPlaceDistrictSelect); "></select>
+                                                        <select id="selectVPProv" class="form-control form-select mb-2"
+                                                            onchange="getDistByProvince(selectVPProv,selectVPDist); "></select>
                                                     </div>
 
                                                     <!-- select district -->
                                                     <div class="col-6">
-                                                        <label for="dpPlaceDistrictSelect"
-                                                            class="form-label mb-1">District
+                                                        <label for="selectVPDist" class="form-label mb-1">District
                                                             :</label>
-                                                        <select id="dpPlaceDistrictSelect" class="form-select"
-                                                            onchange="dpPlaceDistrictSelect.style.border='2px solid green'; getVPlacesByDistrict(); "></select>
+                                                        <select id="selectVPDist" class="form-select"
+                                                            onchange="selectVPDist.style.border='2px solid green'; getVPlacesByDistrict(); "></select>
                                                     </div>
                                                 </div>
 
@@ -224,10 +197,10 @@
 
                                                     <div class="col-5">
 
-                                                        <label for="allPlaces" class="form-label">All Places</label>
+                                                        <label for="allVPs" class="form-label">All Places</label>
 
                                                         <!-- LEFT SELECT -->
-                                                        <select class="form-select" size="8" id="allPlaces"></select>
+                                                        <select class="form-select" size="8" id="allVPs"></select>
 
 
                                                     </div>
@@ -264,10 +237,9 @@
                                                     <!-- RIGHT SELECT -->
                                                     <div class="col-5">
 
-                                                        <label for="passedVPlaces" class="form-label">Selected
+                                                        <label for="selectedVPs" class="form-label">Selected
                                                             Places</label>
-                                                        <select size="8" id="passedVPlaces"
-                                                            class="form-select"></select>
+                                                        <select size="8" id="selectedVPs" class="form-select"></select>
 
                                                     </div>
 
@@ -284,40 +256,31 @@
 
                                                     <!-- select province -->
                                                     <div class="col-6">
-                                                        <label for="dpLunchProvinceSelect"
-                                                            class="form-label mb-1">Province :</label>
-                                                        <select id="dpLunchProvinceSelect"
-                                                            class="form-control form-select mb-2"
-                                                            onchange="getDistByProvince(dpLunchProvinceSelect,dpLunchDistrictSelect);"></select>
+                                                        <label for="selectLPProv" class="form-label mb-1">Province
+                                                            :</label>
+                                                        <select id="selectLPProv" class="form-control form-select mb-2"
+                                                            onchange="getDistByProvince(selectLPProv,selectLPDist);"></select>
                                                     </div>
 
                                                     <!-- select district -->
                                                     <div class="col-6">
-                                                        <label for="dpLunchDistrictSelect"
-                                                            class="form-label mb-1">District :</label>
-                                                        <select disabled id="dpLunchDistrictSelect" class="form-select"
-                                                            onchange="getLunchHotelByDistrict(dpLunchDistrictSelect,dpLunchHotelSelect)"></select>
+                                                        <label for="selectLPDist" class="form-label mb-1">District
+                                                            :</label>
+                                                        <select disabled id="selectLPDist" class="form-select"
+                                                            onchange="getLunchHotelByDistrict(selectLPDist,selectDPLunch)"></select>
                                                     </div>
                                                 </div>
 
                                                 <div class="row">
                                                     <!-- select lunch hotel -->
                                                     <div class="col-6">
-                                                        <label for="dpLunchHotelSelect" class="form-label mb-1">Lunch
+                                                        <label for="selectDPLunch" class="form-label mb-1">Lunch
                                                             Hotel:
                                                             :</label>
-                                                        <select id="dpLunchHotelSelect" class="form-select"
+                                                        <select id="selectDPLunch" class="form-select"
                                                             onchange="selectDynamicVal(this,'','dayplan','lunch_hotel_id'); "></select>
                                                     </div>
-                                                    <!-- button to add new records -->
-                                                    <div class="col-6 my-auto">
 
-                                                        <button type="button" class="btn btn-success"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#modalToAddNewLunchHotels">New Lunch
-                                                            Location
-                                                        </button>
-                                                    </div>
                                                 </div>
 
                                             </div>
@@ -331,47 +294,36 @@
 
                                                     <!-- select province -->
                                                     <div class="col-6">
-                                                        <label for="dpEndProvinceSelect"
-                                                            class="form-label mb-1">Province :</label>
-                                                        <select id="dpEndProvinceSelect"
+                                                        <label for="selectDPEndProv" class="form-label mb-1">Province
+                                                            :</label>
+                                                        <select id="selectDPEndProv"
                                                             class="form-control form-select mb-2"
-                                                            onchange="getDistByProvince(dpEndProvinceSelect,dpEndDistrictSelect);"></select>
+                                                            onchange="getDistByProvince(selectDPEndProv,selectDPEndDist);"></select>
                                                     </div>
 
                                                     <!-- select district -->
                                                     <div class="col-6">
-                                                        <label for="dpEndDistrictSelect"
-                                                            class="form-label mb-1">District :</label>
-                                                        <select id="dpEndDistrictSelect" class="form-select"
-                                                            onchange="getStayByDistrict(dpEndDistrictSelect,dpEndStaySelect); selectDynamicVal(this,'','dayplan','end_district_id');"></select>
+                                                        <label for="selectDPEndDist" class="form-label mb-1">District
+                                                            :</label>
+                                                        <select id="selectDPEndDist" class="form-select"
+                                                            onchange="getStayByDistrict(selectDPEndDist,selectDPEndStay); selectDynamicVal(this,'','dayplan','end_district_id');"></select>
                                                     </div>
                                                 </div>
 
-                                                <!--END location or accomadation -->
+                                                <!--END accomadation -->
                                                 <div class="row">
 
                                                     <!-- if a hotel SELECT-->
                                                     <div class="col-6">
 
-                                                        <label for="dpEndStaySelect"
+                                                        <label for="selectDPEndStay"
                                                             class="form-label mb-1">Accomadation :</label>
-                                                        <select id="dpEndStaySelect" class="form-select" onchange="selectDynamicVal(this,'','dayplan','end_stay_id'); if (this.value != null) {
+                                                        <select id="selectDPEndStay" class="form-select" onchange="selectDynamicVal(this,'','dayplan','end_stay_id'); if (this.value != null) {
                                             endLocationText.disabled = true; endLocationText.value ='';  dayplan.endlocation = null;
                                         };"></select>
                                                     </div>
 
-                                                    <!-- location TEXT -->
-                                                    <div class="col-6">
-                                                        <label for="endLocationText" class="form-label mb-1">Location :
-                                                            <span><small class="text-info">(if
-                                                                    not an accomadation or not in
-                                                                    list)</small></span></label>
 
-                                                        <input id="endLocationText" class="form-control form-input"
-                                                            onkeyup="inputFieldValidator(this,'','dayplan','endlocation'); if (this.value != null) {
-                                            dpEndStaySelect.disabled = true; dpEndStaySelect.value ='';  dayplan.end_stay_id = null;
-                                        };">
-                                                    </div>
                                                 </div>
                                             </div>
 
@@ -411,14 +363,15 @@
                                                         <div class="col-6">
 
                                                             <label class="form-label mb-0 fw-bold text-success"
-                                                                for="totalLocalAdultTktCost">Local
+                                                                for="dpTotalLocalAdultTktCost">Local
                                                                 Adult</label>
 
                                                             <div class="input-group">
                                                                 <span class="input-group-text p-1 pb-0">
                                                                     <h6>LKR</h6>
                                                                 </span>
-                                                                <input disabled type="text" id="totalLocalAdultTktCost"
+                                                                <input disabled type="text"
+                                                                    id="dpTotalLocalAdultTktCost"
                                                                     class="form-control form-input w-85 p-1 text-center"
                                                                     placeholder=""
                                                                     onchange="inputFieldValidator(this,'','dayplan','totallocaladultticketcost')">
@@ -431,14 +384,15 @@
                                                         <div class="col-6">
 
                                                             <label class="form-label mb-0 fw-bold text-success"
-                                                                for="totalLocalChildTktCost">Local
+                                                                for="dpTotalLocalChildTktCost">Local
                                                                 Children</label>
 
                                                             <div class="input-group">
                                                                 <span class="input-group-text p-1 pb-0">
                                                                     <h6>LKR</h6>
                                                                 </span>
-                                                                <input disabled type="text" id="totalLocalChildTktCost"
+                                                                <input disabled type="text"
+                                                                    id="dpTotalLocalChildTktCost"
                                                                     class="form-control form-input w-85 p-1 text-center"
                                                                     placeholder=""
                                                                     onchange="inputFieldValidator(this,'','dayplan','totallocalchildticketcost')">
@@ -454,7 +408,7 @@
                                                         <!-- Foreign ADULT -->
                                                         <div class="col-6">
                                                             <label class="form-label mb-0 fw-bold text-primary"
-                                                                for="totalForeignAdultTktCost">Foreign
+                                                                for="dpTotalForeignAdultTktCost">Foreign
                                                                 Adult</label>
 
                                                             <div class="input-group">
@@ -462,7 +416,7 @@
                                                                     <h6>LKR</h6>
                                                                 </span>
                                                                 <input disabled type="text"
-                                                                    id="totalForeignAdultTktCost"
+                                                                    id="dpTotalForeignAdultTktCost"
                                                                     class="form-control form-input w-85 p-1 text-center"
                                                                     placeholder=""
                                                                     onchange="inputFieldValidator(this,'','dayplan','totalforeignadultticketcost')">
@@ -472,7 +426,7 @@
                                                         <!-- foreign CHILD -->
                                                         <div class="col-6">
                                                             <label class="form-label mb-0 fw-bold text-primary"
-                                                                for="totalForeignChildTktCost">Foreign
+                                                                for="dpTotalForeignChildTktCost">Foreign
                                                                 Children</label>
 
                                                             <div class="input-group">
@@ -480,7 +434,7 @@
                                                                     <h6>LKR</h6>
                                                                 </span>
                                                                 <input disabled type="text"
-                                                                    id="totalForeignChildTktCost"
+                                                                    id="dpTotalForeignChildTktCost"
                                                                     class="form-control form-input w-85 p-1 text-center"
                                                                     placeholder=""
                                                                     onchange="inputFieldValidator(this,'','dayplan','totalforeignchildticketcost')">
@@ -499,7 +453,7 @@
 
                                                 <div class="col-3">
                                                     <!-- total vehicle parking fee -->
-                                                    <label class="form-label mb-0" for="totalVehiParkingFeesInput">Total
+                                                    <label class="form-label mb-0" for="dpTotalVehiParkingCost">Total
                                                         Parking Fees
                                                     </label>
 
@@ -507,23 +461,18 @@
                                                         <span class="input-group-text p-1 pb-0">
                                                             <h6>LKR</h6>
                                                         </span>
-                                                        <input disabled type="text" id="totalVehiParkingFeesInput"
+                                                        <input disabled type="text" id="dpTotalVehiParkingCost"
                                                             class="form-control form-input w-85 p-1 text-center"
                                                             placeholder="" oninput="">
                                                     </div>
                                                 </div>
 
-                                                <!-- button for calc total -->
-                                                <div class="col-3">
-                                                    <button class="btn btn-primary"
-                                                        onclick="calcTotalCostPerDay();">Calculate Total Per
-                                                        Day</button>
-                                                </div>
+
 
                                                 <div class="col-3">
 
                                                     <!-- total cost for day -->
-                                                    <label class="form-label mb-0" for="totalCostForToday">Total
+                                                    <label class="form-label mb-0" for="dpTotalCostForToday">Total
                                                         Cost For Day
                                                     </label>
 
@@ -531,33 +480,12 @@
                                                         <span class="input-group-text p-1 pb-0">
                                                             <h6>LKR</h6>
                                                         </span>
-                                                        <input disabled type="text" id="totalCostForToday"
+                                                        <input disabled type="text" id="dpTotalCostForToday"
                                                             class="form-control form-input w-85 p-1 text-center"
                                                             placeholder="">
                                                     </div>
 
                                                     <!-- totallocostfortoday -->
-                                                </div>
-
-
-                                                <div class="col-3">
-
-                                                    <label class="form-label mb-0" for="discountedPriceForToday">Total
-                                                        Discounted Price For Day
-                                                    </label>
-
-                                                    <div class="input-group">
-                                                        <span class="input-group-text p-1 pb-0">
-                                                            <h6>LKR</h6>
-                                                        </span>
-                                                        <input disabled type="text" id="discountedPriceForToday"
-                                                            class="form-control form-input w-85 p-1 text-center"
-                                                            placeholder="">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-4">
-
                                                 </div>
 
                                             </div>
@@ -583,23 +511,27 @@
 
                                     <!-- status -->
                                     <div class="row">
-                                        <label for="dpStatusSelect" class="form-label mb-1">Status
+                                        <label for="dpSelectStatus" class="form-label mb-1">Status
                                             :</label>
-                                        <select id="dpStatusSelect" class="form-select"
-                                            onchange="selectDynamicVal(this,'','dayplan','dpstatus_id')"></select>
+                                        <select id="dpSelectStatus" class="form-select"
+                                            onchange="staticSelectValidator(this , 'dayplan' , 'dp_status')">
+                                            <option value="" selected disabled> Select Status </option>
+                                            <option value="active"> Active </option>
+                                            <option value="ifDeleted" class="d-none"> Deleted </option>
+                                        </select>
 
                                     </div>
 
                                     <!-- total distance covered for thsi day(manual entry) -->
                                     <div class="row mt-1">
-                                        <label for="totalKMcount" class="form-label mb-0">Distance
+                                        <label for="dpTotalKMcount" class="form-label mb-0">Distance
                                             Covered
                                             :
                                         </label>
 
                                         <div class="input-group">
 
-                                            <input type="text" id="totalKMcount"
+                                            <input type="text" id="dpTotalKMcount"
                                                 class="form-control form-input w-85 p-1 text-center" placeholder=""
                                                 onkeyup="inputFieldValidator(this,'','dayplan','kmcountforday')">
                                             <span class="input-group-text p-1 pb-0">
@@ -607,6 +539,20 @@
                                             </span>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Buttons -->
+                            <div class="row mt-4 mb-2">
+                                <div class="col-4">
+                                    <button type="reset" class="btn-clear w-50" onclick="refreshDayPlanForm()">Reset
+                                        Form</button>
+                                </div>
+                                <div class="col-8 text-end">
+                                    <button type="submit" id="dpUpdateBtn" class="btn-update fw-bold"
+                                        onclick="updateDayPlan()">Update Day Plan</button>
+                                    <button type="submit" id="dpAddBtn" class="btn-add fw-bold"
+                                        onclick="addNewDayPlan()">Add New Day Plan</button>
                                 </div>
                             </div>
 
@@ -634,12 +580,7 @@
                         <div class="container">
                             <!-- DayPlan Image and Basic Info -->
                             <div class="row g-4 align-items-center">
-                                <!-- Image -->
-                                <div class="col-md-4 text-center">
-                                    <img id="modalPreviewDayPlanImg" src="images/dayplan.png" alt="Preview"
-                                        class="img-thumbnail rounded-circle shadow-sm"
-                                        style="height: 150px; width: 150px;">
-                                </div>
+
                                 <!-- Name and NIC -->
                                 <div class="col-md-8">
                                     <p class="fw-bold mb-1">Full Name:</p>
