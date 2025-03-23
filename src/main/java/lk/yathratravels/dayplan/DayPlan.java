@@ -74,6 +74,7 @@ public class DayPlan {
 
     @Column(name = "localchildtktcost")
     private BigDecimal localchildtktcost;
+    
     // ****TICKETS COSTS ENDS
 
     @Column(name = "totalkmcount")
@@ -83,8 +84,8 @@ public class DayPlan {
     private BigDecimal totalvehiparkcost;
 
     // total cost for today modification
-    @Column(name = "totallocostfortoday")
-    private BigDecimal totallocostfortoday;
+    //@Column(name = "totallocostfortoday")
+    //private BigDecimal totallocostfortoday;
 
     @ManyToOne
     @JoinColumn(name = "end_stay_id", referencedColumnName = "id")

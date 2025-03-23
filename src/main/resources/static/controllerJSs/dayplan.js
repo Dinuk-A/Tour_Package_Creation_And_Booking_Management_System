@@ -15,7 +15,7 @@ const buildDayPlanTable = async () => {
         const dayplans = await ajaxGetReq("/dayplan/all");
 
         const tableColumnInfo = [
-            { displayType: 'text', displayingPropertyOrFn: 'dp_code', colHeadName: 'Code' },
+            { displayType: 'text', displayingPropertyOrFn: 'dayplancode', colHeadName: 'Code' },
             { displayType: 'text', displayingPropertyOrFn: 'daytitle', colHeadName: 'Title' },
             { displayType: 'function', displayingPropertyOrFn: showDayType, colHeadName: 'Type' },
             { displayType: 'function', displayingPropertyOrFn: showDayPlanStatus, colHeadName: 'Status' }
@@ -58,7 +58,8 @@ const refreshDayPlanForm = async () => {
 
     dayplan = new Object();
 
-    dayplan.vplaces = [];
+    //dayplan.vplaces = [];
+    dayplan.vplaces = new Array();
     dayplan.activities = [];
 
     document.getElementById('formDayPlan').reset();
@@ -66,7 +67,7 @@ const refreshDayPlanForm = async () => {
     try {
         const allProvinces = await ajaxGetReq("/province/all");
 
-        fillDataIntoDynamicSelects(selectDPStartProv, 'Select Province', allProvinces, 'name');
+        //fillDataIntoDynamicSelects(selectDPStartProv, 'Select Province', allProvinces, 'name');
 
         fillDataIntoDynamicSelects(selectVPProv, 'Select Province', allProvinces, 'name');
 
@@ -113,7 +114,7 @@ const refreshDayPlanForm = async () => {
 
     // show EMPTY district selects, before filtered by province
     districts = [];
-    fillDataIntoDynamicSelects(selectDPStartDist, 'Select The Province First', districts, 'name');
+    //fillDataIntoDynamicSelects(selectDPStartDist, 'Select The Province First', districts, 'name');
     fillDataIntoDynamicSelects(selectVPDist, 'Select The Province First', districts, 'name');
     fillDataIntoDynamicSelects(selectLPDist, 'Select The Province First', districts, 'name');
     fillDataIntoDynamicSelects(selectDPEndDist, 'Select The Province First', districts, 'name');
@@ -168,28 +169,36 @@ const calcTktCost = (vpCostType, dpInputFieldID, dpPropertName) => {
 //for add a single location
 const addOne = () => {
 
-    let isPlaceAlreadyExist = false;
-    let selectedPlace = JSON.parse(allVPs.value);
+    const allVPsBox = document.getElementById('allVPs');
+    const selectedVPsBox = document.getElementById('selectedVPs');
+
+    let selectedPlace = JSON.parse(allVPsBox.value);
+    let isPlaceAlreadySelected = false;
 
     for (const vplz of dayplan.vplaces) {
         if (selectedPlace.id == vplz.id) {
-            isPlaceAlreadyExist = true;
+            isPlaceAlreadySelected = true;
             break;
         }
     }
-    if (isPlaceAlreadyExist) {
+
+    if (isPlaceAlreadySelected) {
         alert('this place is already selected')
     } else {
-        let selectedPlace = JSON.parse(allVPs.value);
 
         dayplan.vplaces.push(selectedPlace);
-        fillDataIntoDynamicSelects(passedVPlaces, 'Selected Places', dayplan.vplaces, 'name')
+        fillDataIntoDynamicSelects(selectedVPsBox, '', dayplan.vplaces, 'name');
 
-        let existIndex = vplaces.map(place => place.name).indexOf(selectedPlace.name);
-        if (existIndex != -1) {
-            vplaces.splice(existIndex, 1)
-        }
-        fillDataIntoDynamicSelects(allVPs, 'Please Select The Place', vplaces, 'name');
+        let updatedVpByDist = vpByDist.filter(vp => vp.id != selectedPlace.id);
+        fillDataIntoDynamicSelects(allVPsBox, '', updatedVpByDist, 'name');
+
+        //opt 2 💥
+        //let existIndex = vpByDist.map(place => place.name).indexOf(selectedPlace.name);
+        //if (existIndex != -1) {
+        //    vpByDist.splice(existIndex, 1);
+        //}
+        //fillDataIntoDynamicSelects(allVPsBox, '', vpByDist, 'name');
+        //opt 2 ends 
 
         //CALC TOTAL TKT COSTS AND VEHICLE PARKING COSTS 
         calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "foreignadulttktcost");
@@ -203,24 +212,26 @@ const addOne = () => {
 }
 //for add all locations 
 const addAll = () => {
-    for (const lvplz of vplaces) {
-        let rightsideisPlaceAlreadyExist = false;
 
-        for (const rvplz of dayplan.vplaces) {
-            if (lvplz.id == rvplz.id) {
-                rightsideisPlaceAlreadyExist = true;
+    for (const leftVplz of vpByDist) {
+
+        let isPlaceAlreadySelected = false;
+
+        for (const rightVplz of dayplan.vplaces) {
+            if (leftVplz.id == rightVplz.id) {
+                isPlaceAlreadySelected = true;
                 break;
             }
         }
 
-        if (!rightsideisPlaceAlreadyExist) {
-            dayplan.vplaces.push(lvplz);
-            fillDataIntoDynamicSelects(passedVPlaces, 'Selected Places', dayplan.vplaces, 'name')
+        if (!isPlaceAlreadySelected) {
+            dayplan.vplaces.push(leftVplz);
+            fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name')
         }
     }
 
     vplaces = [];
-    fillDataIntoDynamicSelects(allVPs, 'Please Select The Place', vplaces, 'name');
+    fillDataIntoDynamicSelects(allVPs, '', vplaces, 'name');
 
     //CALC TOTAL TKT COSTS AND VEHICLE PARKING COSTS 
     calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "foreignadulttktcost");
@@ -235,16 +246,16 @@ const addAll = () => {
 //for remove a single location
 const removeOne = () => {
 
-    let selectedPlaceToRemove = JSON.parse(passedVPlaces.value);
+    fillDataIntoDynamicSelects(allVPs, '', vpByDist, 'name');
 
-    fillDataIntoDynamicSelects(allVPs, 'Please Select The Place', vplaces, 'name');
+    let selectedPlaceToRemove = JSON.parse(selectedVPs.value);    
 
-    let existIndex = dayplan.vplaces.map(place => place.name).indexOf(selectedPlaceToRemove.name);  //dayplan.vplaces array eke thiynawada balanawa selected option eke name eka (selectedPlaceToRemove.name) ; passe eke index eka gannawa; 
+    let existIndex = dayplan.vplaces.map(place => place.name).indexOf(selectedPlaceToRemove.name);  
     if (existIndex != -1) {
-        dayplan.vplaces.splice(existIndex, 1)   //exist nam(ehema namak thiyanawa nam) right side eke list ekenma remove karanawa
+        dayplan.vplaces.splice(existIndex, 1)  
     }
 
-    fillDataIntoDynamicSelects(passedVPlaces, 'Selected Places', dayplan.vplaces, 'name');
+    fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name');
 
     //CALC TOTAL TKT COSTS AND VEHICLE PARKING COSTS 
     calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "foreignadulttktcost");
@@ -260,7 +271,7 @@ const removeOne = () => {
 const removeAll = () => {
 
     dayplan.vplaces = [];
-    fillDataIntoDynamicSelects(passedVPlaces, '', dayplan.vplaces, 'name');
+    fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name');
 
     //CALC TOTAL TKT COSTS AND VEHICLE PARKING COSTS 
     calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "foreignadulttktcost");
@@ -283,7 +294,7 @@ const getDistByProvince = async (provinceSelectid, districtSelectId) => {
         console.error("Failed to fetch districts:", error);
     }
     provinceSelectid.style.border = '2px solid lime';
-    districtSelectId.disabled = false;  
+    districtSelectId.disabled = false;
 
 }
 
@@ -295,9 +306,9 @@ const getVPlacesByDistrict = async () => {
 
     try {
         vpByDist = await ajaxGetReq("/attraction/bydistrict/" + selectedDistrict);
-        fillDataIntoDynamicSelects(allVPs, 'Please Select The Place', vpByDist, 'name');
+        fillDataIntoDynamicSelects(allVPs, '', vpByDist, 'name');
     } catch (error) {
-        console.error('getVPlacesByDistrict failed')
+        console.error('get V PlacesByDistrict failed')
     }
 
 }
@@ -530,7 +541,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
         if (event.target.id === 'table-tab') {
             console.log("Switching to table tab - clearing form");
-            refreshEmployeeForm();
+            refreshDayPlanForm();
         }
     });
 });
@@ -783,7 +794,7 @@ const duplicateDayPlan = (obj) => {
     dpStartDistrictSelect.disabled = false;
 
     //REFILL PASSED VPLACES
-    fillDataIntoDynamicSelects(passedVPlaces, 'Please Select The Place', dayplan.vplaces, 'name')
+    fillDataIntoDynamicSelects(selectedVPs, 'Please Select The Place', dayplan.vplaces, 'name')
 
     //refill start stay
     if (dayplan.start_stay_id != null) {

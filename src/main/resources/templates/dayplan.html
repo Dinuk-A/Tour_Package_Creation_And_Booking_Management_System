@@ -106,13 +106,13 @@
                                     <label for="dpTitle" class="form-label mb-0">Title :</label>
 
                                     <input id="dpTitle" class="form-control form-input"
-                                        onkeyup="inputFieldValidator(this, '', 'dayplan' , 'daytitle')">
+                                        onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle')">
                                 </div>
 
                                 <div class="col-4 d-none">
                                     <label for="dpCode" class="form-label mb-0">Code <span><small
-                                                class="text-info">(This was generated
-                                                automatically)</small></span>
+                                                class="text-info">(This code was generated
+                                                by the system)</small></span>
                                         :</label>
 
                                     <input id="dpCode" class="form-control form-input" disabled>
@@ -142,13 +142,13 @@
                                         <div class="accordion-body ">
 
                                             <!-- starting points -->
-                                            <div class="row border mt-2 mb-2 pb-2 bg-light" id="startingPointDivId">
-                                                <h5 class="mt-2 mb-1">Start / Pickup Location</h5>
+                                            <!--<div class="row border mt-2 mb-2 pb-2 bg-light" id="startingPointDivId">
+                                                <h5 class="mt-2 mb-1">Start / Pickup Location</h5>-->
 
-                                                <!-- province & district -->
-                                                <div class="row">
+                                            <!-- province & district -->
+                                            <!--<div class="row">
 
-                                                    <!-- select province -->
+                                                   
                                                     <div class="col-6">
                                                         <label for="selectDPStartProv" class="form-label mb-1">Province
                                                             :</label>
@@ -157,18 +157,18 @@
                                                             onchange="getDistByProvince(selectDPStartProv,selectDPStartDist)"></select>
                                                     </div>
 
-                                                    <!-- select district -->
+                                                    
                                                     <div class="col-6">
                                                         <label for="selectDPStartDist" class="form-label mb-1">District
                                                             :</label>
                                                         <select id="selectDPStartDist" class="form-select"
-                                                            onchange="getStayByDistrict(selectDPStartDist,dpStartStaySelect); selectDynamicVal(this,'','dayplan','start_district_id');"></select>
+                                                            onchange="dynamicSelectValidator(this,'dayplan','start_district_id');"></select>
                                                     </div>
-                                                </div>
+                                                </div>-->
 
 
 
-                                            </div>
+                                            <!--</div>-->
 
                                             <!-- visiting places -->
                                             <div class="row border mt-2 mb-2 pb-2 bg-light">
@@ -195,17 +195,13 @@
 
                                                 <div class="row mt-2">
 
+                                                    <!-- LEFT side -->
                                                     <div class="col-5">
-
                                                         <label for="allVPs" class="form-label">All Places</label>
-
-                                                        <!-- LEFT SELECT -->
                                                         <select class="form-select" size="8" id="allVPs"></select>
-
-
                                                     </div>
 
-
+                                                    <!-- btns 4 -->
                                                     <div class="col-2">
 
                                                         <div class="row mt-5">
@@ -224,7 +220,6 @@
                                                             <button class="btn btn-danger fw-bold "
                                                                 id="removeSelectedOne" onclick="removeOne()"> -
                                                             </button>
-
                                                         </div>
 
                                                         <div class="row mt-2">
@@ -232,15 +227,14 @@
                                                                 id="removeSelectedAll" onclick="removeAll()">
                                                                 Remove All </button>
                                                         </div>
+
                                                     </div>
 
-                                                    <!-- RIGHT SELECT -->
+                                                    <!-- RIGHT side -->
                                                     <div class="col-5">
-
                                                         <label for="selectedVPs" class="form-label">Selected
                                                             Places</label>
                                                         <select size="8" id="selectedVPs" class="form-select"></select>
-
                                                     </div>
 
                                                 </div>
@@ -278,7 +272,7 @@
                                                             Hotel:
                                                             :</label>
                                                         <select id="selectDPLunch" class="form-select"
-                                                            onchange="selectDynamicVal(this,'','dayplan','lunch_hotel_id'); "></select>
+                                                            onchange="dynamicSelectValidator(this,'dayplan','lunchplace_id'); "></select>
                                                     </div>
 
                                                 </div>
@@ -306,7 +300,7 @@
                                                         <label for="selectDPEndDist" class="form-label mb-1">District
                                                             :</label>
                                                         <select id="selectDPEndDist" class="form-select"
-                                                            onchange="getStayByDistrict(selectDPEndDist,selectDPEndStay); selectDynamicVal(this,'','dayplan','end_district_id');"></select>
+                                                            onchange="getStayByDistrict(selectDPEndDist,selectDPEndStay)"></select>
                                                     </div>
                                                 </div>
 
@@ -318,15 +312,11 @@
 
                                                         <label for="selectDPEndStay"
                                                             class="form-label mb-1">Accomadation :</label>
-                                                        <select id="selectDPEndStay" class="form-select" onchange="selectDynamicVal(this,'','dayplan','end_stay_id'); if (this.value != null) {
-                                            endLocationText.disabled = true; endLocationText.value ='';  dayplan.endlocation = null;
-                                        };"></select>
+                                                        <select id="selectDPEndStay" class="form-select"
+                                                            onchange="dynamicSelectValidator(this,'dayplan','end_stay_id'); "></select>
                                                     </div>
-
-
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -346,6 +336,7 @@
                                             <h5 class="text-primary"> Daily Costs :
                                                 Click to view
                                             </h5>
+
                                         </button>
                                     </h5>
 
@@ -355,7 +346,7 @@
                                         <div class="accordion-body bg-light">
 
                                             <!-- test total ticket cost for the whole day -->
-                                            <h5 class="fw-bold">Total Tickets Cost(per Entity)</h5>
+                                            <h5 class="fw-bold">Total Tickets Cost(per head)</h5>
                                             <div class="row">
                                                 <div class="col-6 border">
                                                     <div class="row mt-1 mb-3">
@@ -374,7 +365,7 @@
                                                                     id="dpTotalLocalAdultTktCost"
                                                                     class="form-control form-input w-85 p-1 text-center"
                                                                     placeholder=""
-                                                                    onchange="inputFieldValidator(this,'','dayplan','totallocaladultticketcost')">
+                                                                    onchange="inputValidatorText(this,'','dayplan','localadulttktcost')">
                                                             </div>
 
 
@@ -395,7 +386,7 @@
                                                                     id="dpTotalLocalChildTktCost"
                                                                     class="form-control form-input w-85 p-1 text-center"
                                                                     placeholder=""
-                                                                    onchange="inputFieldValidator(this,'','dayplan','totallocalchildticketcost')">
+                                                                    onchange="inputValidatorText(this,'','dayplan','localchildtktcost')">
                                                             </div>
 
 
@@ -419,7 +410,7 @@
                                                                     id="dpTotalForeignAdultTktCost"
                                                                     class="form-control form-input w-85 p-1 text-center"
                                                                     placeholder=""
-                                                                    onchange="inputFieldValidator(this,'','dayplan','totalforeignadultticketcost')">
+                                                                    onchange="inputValidatorText(this,'','dayplan','foreignadulttktcost')">
                                                             </div>
                                                         </div>
 
@@ -437,7 +428,7 @@
                                                                     id="dpTotalForeignChildTktCost"
                                                                     class="form-control form-input w-85 p-1 text-center"
                                                                     placeholder=""
-                                                                    onchange="inputFieldValidator(this,'','dayplan','totalforeignchildticketcost')">
+                                                                    onchange="inputValidatorText(this,'','dayplan','foreignchildtktcost')">
                                                             </div>
 
 
@@ -463,15 +454,15 @@
                                                         </span>
                                                         <input disabled type="text" id="dpTotalVehiParkingCost"
                                                             class="form-control form-input w-85 p-1 text-center"
-                                                            placeholder="" oninput="">
+                                                            placeholder=""
+                                                            oninput="inputValidatorText(this,'','dayplan','totalvehiparkcost')">
                                                     </div>
                                                 </div>
 
 
+                                                <!-- total cost for day -->
+                                                <!--<div class="col-3">
 
-                                                <div class="col-3">
-
-                                                    <!-- total cost for day -->
                                                     <label class="form-label mb-0" for="dpTotalCostForToday">Total
                                                         Cost For Day
                                                     </label>
@@ -485,8 +476,9 @@
                                                             placeholder="">
                                                     </div>
 
-                                                    <!-- totallocostfortoday -->
-                                                </div>
+                                                  
+                                                </div>-->
+                                                  <!-- totallocostfortoday -->
 
                                             </div>
 
@@ -502,7 +494,7 @@
                                     <label for="dpNote" class="form-label mb-1">Note :</label>
 
                                     <textarea class="form-control" placeholder=" " id="dpNote"
-                                        onkeyup="inputFieldValidator(this,'','dayplan','note')"
+                                        onkeyup="inputValidatorText(this,'','dayplan','note')"
                                         style="height: 100px;"></textarea>
                                 </div>
 
@@ -533,7 +525,7 @@
 
                                             <input type="text" id="dpTotalKMcount"
                                                 class="form-control form-input w-85 p-1 text-center" placeholder=""
-                                                onkeyup="inputFieldValidator(this,'','dayplan','kmcountforday')">
+                                                onkeyup="inputValidatorText(this,'','dayplan','totalkmcount')">
                                             <span class="input-group-text p-1 pb-0">
                                                 <h6>KM</h6>
                                             </span>

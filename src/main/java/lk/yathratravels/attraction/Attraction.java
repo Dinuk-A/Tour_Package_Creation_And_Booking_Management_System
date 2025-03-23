@@ -99,7 +99,7 @@ public class Attraction {
     // day plans walata attr based on district gennaganna hadapu query ekata
     // >>>attrListByDistrict
     public Attraction(Integer id, String name, BigDecimal feelocaladult, BigDecimal feeforeignadult, BigDecimal feechildlocal,
-            BigDecimal feechildforeign, BigDecimal vehicleparkingfee) {
+            BigDecimal feechildforeign, BigDecimal vehicleparkingfee, District district_id) {
 
         this.id = id;
         this.name = name;
@@ -108,6 +108,7 @@ public class Attraction {
         this.feechildlocal = feechildlocal;
         this.feechildforeign = feechildforeign;
         this.vehicleparkingfee = vehicleparkingfee;
+        this.district_id = district_id;
 
     }
 }

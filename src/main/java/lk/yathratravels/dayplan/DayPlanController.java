@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import lk.yathratravels.activity.Activity;
+import lk.yathratravels.attraction.Attraction;
+import lk.yathratravels.attraction.District;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
 import lk.yathratravels.user.User;
@@ -111,9 +114,32 @@ public class DayPlanController {
 
         try {
 
+            // set start dist id from vplaces or activities
+
+            // if both activities and vplaces have data
+            if (!dplan.getVplaces().isEmpty() && !dplan.getActivities().isEmpty()) {
+
+                Attraction firstVPlace = dplan.getVplaces().iterator().next();
+                dplan.setStart_district_id(firstVPlace.getDistrict_id());
+
+                // if only vplaces have data
+            } else if (!dplan.getVplaces().isEmpty() && dplan.getActivities().isEmpty()) {
+
+                Attraction firstVPlace = dplan.getVplaces().iterator().next();
+                dplan.setStart_district_id(firstVPlace.getDistrict_id());
+
+                // if only activities have data
+            } else if (!dplan.getVplaces().isEmpty() && dplan.getActivities().isEmpty()) {
+
+                Activity firstActivity = dplan.getActivities().iterator().next();
+                dplan.setStart_district_id(firstActivity.getDistrict_id());
+                
+            }
+
             // IF ekak dala dayplan template walata wenama code ekak hadanna 💥💥💥
 
-            //or custom dp elkakata nam, inquiry ekath ekka sambanda code ekak hadanna 💥💥💥
+            // or custom dp elkakata nam, inquiry ekath ekka sambanda code ekak hadanna
+            // 💥💥💥
 
             // Generate the dayplancode
             String nextCode;
@@ -163,7 +189,7 @@ public class DayPlanController {
     }
 
     // to simulate the deletion of dayplan data
-     // 💥💥💥 not finished
+    // 💥💥💥 not finished
     @DeleteMapping(value = "/dayplan")
     public String deleteDayPlan(@RequestBody DayPlan dplan) {
 
@@ -185,7 +211,7 @@ public class DayPlanController {
         try {
             existDayPlan.setDeleted_dp(true);
             existDayPlan.setDeleteddatetime(LocalDateTime.now());
-            existDayPlan.setDeleteduserid(userDao.getUserByUsername (auth.getName()).getId());
+            existDayPlan.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());
             daoDP.save(existDayPlan);
             return "OK";
 
