@@ -115,6 +115,7 @@ public class DayPlanController {
         try {
 
             // set start dist id from vplaces or activities
+            //remove activities after attr == type == activity 💥💥
 
             // if both activities and vplaces have data
             if (!dplan.getVplaces().isEmpty() && !dplan.getActivities().isEmpty()) {
@@ -133,6 +134,7 @@ public class DayPlanController {
 
                 Activity firstActivity = dplan.getActivities().iterator().next();
                 dplan.setStart_district_id(firstActivity.getDistrict_id());
+
                 
             }
 

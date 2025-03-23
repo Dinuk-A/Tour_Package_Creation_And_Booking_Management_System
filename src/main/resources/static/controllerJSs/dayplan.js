@@ -501,10 +501,10 @@ const openModal = (dpObj) => {
 };
 
 // refill the form to edit a record
-const refillEmployeeForm = async (dpObj) => {
+const refillDayPlanForm = async (dpObj) => {
 
-    employee = JSON.parse(JSON.stringify(dpObj));
-    oldEmployee = JSON.parse(JSON.stringify(dpObj));
+    dayplan = JSON.parse(JSON.stringify(dpObj));
+    oldDayplan = JSON.parse(JSON.stringify(dpObj));
 
     //doc.getelebyid yanna 💥💥💥💥
     inputFullName.value = dpObj.fullname;
@@ -515,7 +515,7 @@ const refillEmployeeForm = async (dpObj) => {
     inputAddress.value = dpObj.address;
     inputNote.value = dpObj.note;
     dateDateOfBirth.value = dpObj.dob;
-    selectEmployeementStatus.value = dpObj.emp_status;
+    selectDayplanmentStatus.value = dpObj.emp_status;
 
     if (dpObj.gender == "Male") {
         radioMale.checked = true;
@@ -523,10 +523,10 @@ const refillEmployeeForm = async (dpObj) => {
         radioFemale.checked = true;
     }
 
-    if (employee.emp_photo != null) {
-        previewEmployeeImg.src = atob(employee.emp_photo);
+    if (dayplan.emp_photo != null) {
+        previewDayplanImg.src = atob(dayplan.emp_photo);
     } else {
-        previewEmployeeImg.src = "images/employee.png";
+        previewDayplanImg.src = "images/dayplan.png";
     }
 
     try {
@@ -542,10 +542,10 @@ const refillEmployeeForm = async (dpObj) => {
     empAddBtn.disabled = true;
     empAddBtn.style.cursor = "not-allowed";
 
-    document.getElementById('selectEmployeementStatus').style.border = '1px solid #ced4da';
-    //document.getElementById('selectEmployeementStatus').children[2].classList.remove('d-none');
+    document.getElementById('selectDayPlanStatus').style.border = '1px solid #ced4da';
+    //document.getElementById('selectDayplanmentStatus').children[2].classList.remove('d-none');
 
-    $("#infoModalEmployee").modal("hide");
+    $("#infoModalDayplan").modal("hide");
 
     var myEmpFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myEmpFormTab.show();
@@ -567,49 +567,49 @@ const showEmpValueChanges = () => {
 
     let updates = "";
 
-    if (employee.fullname != oldEmployee.fullname) {
-        updates = updates + " Full Name will be changed to " + employee.fullname + "\n";
+    if (dayplan.fullname != oldDayplan.fullname) {
+        updates = updates + " Full Name will be changed to " + dayplan.fullname + "\n";
     }
-    if (employee.nic != oldEmployee.nic) {
-        updates = updates + " NIC will be changed to " + employee.nic + "\n";
+    if (dayplan.nic != oldDayplan.nic) {
+        updates = updates + " NIC will be changed to " + dayplan.nic + "\n";
     }
-    if (employee.mobilenum != oldEmployee.mobilenum) {
-        updates = updates + " Mobile Number will be changed to " + employee.mobilenum + "\n";
+    if (dayplan.mobilenum != oldDayplan.mobilenum) {
+        updates = updates + " Mobile Number will be changed to " + dayplan.mobilenum + "\n";
     }
-    if (employee.landnum != oldEmployee.landnum) {
-        updates = updates + " Land Number will be changed to " + employee.landnum + "\n";
+    if (dayplan.landnum != oldDayplan.landnum) {
+        updates = updates + " Land Number will be changed to " + dayplan.landnum + "\n";
     }
-    if (employee.email != oldEmployee.email) {
-        updates = updates + " Email will be changed to " + employee.email + "\n";
+    if (dayplan.email != oldDayplan.email) {
+        updates = updates + " Email will be changed to " + dayplan.email + "\n";
     }
-    if (employee.dob != oldEmployee.dob) {
-        updates = updates + " DOB will be changed to " + employee.dob + "\n";
+    if (dayplan.dob != oldDayplan.dob) {
+        updates = updates + " DOB will be changed to " + dayplan.dob + "\n";
     }
-    if (employee.gender != oldEmployee.gender) {
-        updates = updates + " Gender will be changed to " + employee.gender + "\n";
+    if (dayplan.gender != oldDayplan.gender) {
+        updates = updates + " Gender will be changed to " + dayplan.gender + "\n";
     }
-    if (employee.address != oldEmployee.address) {
-        updates = updates + " Address will be changed to " + employee.address + "\n";
+    if (dayplan.address != oldDayplan.address) {
+        updates = updates + " Address will be changed to " + dayplan.address + "\n";
     }
-    if (employee.designation_id.name != oldEmployee.designation_id.name) {
-        updates = updates + " Designation will be changed to " + employee.designation_id.name + "\n";
+    if (dayplan.designation_id.name != oldDayplan.designation_id.name) {
+        updates = updates + " Designation will be changed to " + dayplan.designation_id.name + "\n";
     }
-    if (employee.emp_status != oldEmployee.emp_status) {
-        updates = updates + " Status will be changed to " + employee.emp_status + "\n";
+    if (dayplan.emp_status != oldDayplan.emp_status) {
+        updates = updates + " Status will be changed to " + dayplan.emp_status + "\n";
     }
-    if (employee.note != oldEmployee.note) {
-        updates = updates + " Note will be changed to " + employee.note + "\n";
+    if (dayplan.note != oldDayplan.note) {
+        updates = updates + " Note will be changed to " + dayplan.note + "\n";
     }
 
-    if (employee.emp_photo != oldEmployee.emp_photo) {
-        updates = updates + " Employee Photo has changed";
+    if (dayplan.emp_photo != oldDayplan.emp_photo) {
+        updates = updates + " Dayplan Photo has changed";
     }
 
     return updates;
 }
 
 //fn for update button
-const updateEmployee = async () => {
+const updateDayplan = async () => {
 
     const errors = checkEmpFormErrors();
     if (errors == "") {
@@ -622,13 +622,13 @@ const updateEmployee = async () => {
             if (userConfirm) {
 
                 try {
-                    let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
+                    let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", dayplan);
 
                     if (putServiceResponse === "OK") {
                         alert("Successfully Updated");
-                        document.getElementById('formEmployee').reset();
-                        refreshEmployeeForm();
-                        buildEmployeeTable();
+                        document.getElementById('formDayplan').reset();
+                        refreshDayplanForm();
+                        buildDayplanTable();
                         var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myEmpTableTab.show();
                     } else {
@@ -647,16 +647,16 @@ const updateEmployee = async () => {
     }
 }
 
-//fn to delete an employee record
-const deleteEmployeeRecord = async (dpObj) => {
-    const userConfirm = confirm("Are you sure to delete the employee " + dpObj.emp_code + " ?");
+//fn to delete an dayplan record
+const deleteDayplanRecord = async (dpObj) => {
+    const userConfirm = confirm("Are you sure to delete the dayplan " + dpObj.emp_code + " ?");
     if (userConfirm) {
         try {
             const deleteServerResponse = await ajaxPPDRequest("/emp", "DELETE", dpObj);
 
             if (deleteServerResponse === 'OK') {
                 alert('Record Deleted');
-                $('#infoModalEmployee').modal('hide');
+                $('#infoModalDayplan').modal('hide');
                 window.location.reload();
             } else {
                 alert('Delete Failed' + deleteServerResponce);
@@ -669,23 +669,23 @@ const deleteEmployeeRecord = async (dpObj) => {
     }
 }
 
-//restore employee record if its already deleted
+//restore dayplan record if its already deleted
 // or this should call a new service to set deleted_emp as false ? 💥💥💥
-const restoreEmployeeRecord = async () => {
+const restoreDayplanRecord = async () => {
 
     const userConfirm = confirm("Are you sure to recover this deleted record ?");
 
     if (userConfirm) {
         try {
             //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala 💥💥💥
-            employee = window.currentObject;
-            employee.deleted_emp = false;
+            dayplan = window.currentObject;
+            dayplan.deleted_emp = false;
 
-            let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
+            let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", dayplan);
 
             if (putServiceResponse === "OK") {
                 alert("Successfully Restored");
-                $("#infoModalEmployee").modal("hide");
+                $("#infoModalDayplan").modal("hide");
 
                 //AN LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
                 window.location.reload();
