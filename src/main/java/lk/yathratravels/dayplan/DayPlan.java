@@ -39,6 +39,10 @@ public class DayPlan {
     @Column(name = "daytitle")
     @NotNull
     private String daytitle;
+    
+    @Column(name = "dayplancode")
+    @NotNull
+    private String dayplancode;
 
     @Column(name = "dp_status")
     private String dp_status;
