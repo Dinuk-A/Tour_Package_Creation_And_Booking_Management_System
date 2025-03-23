@@ -248,11 +248,11 @@ const removeOne = () => {
 
     fillDataIntoDynamicSelects(allVPs, '', vpByDist, 'name');
 
-    let selectedPlaceToRemove = JSON.parse(selectedVPs.value);    
+    let selectedPlaceToRemove = JSON.parse(selectedVPs.value);
 
-    let existIndex = dayplan.vplaces.map(place => place.name).indexOf(selectedPlaceToRemove.name);  
+    let existIndex = dayplan.vplaces.map(place => place.name).indexOf(selectedPlaceToRemove.name);
     if (existIndex != -1) {
-        dayplan.vplaces.splice(existIndex, 1)  
+        dayplan.vplaces.splice(existIndex, 1)
     }
 
     fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name');
@@ -443,65 +443,81 @@ const resetModal = () => {
 }
 
 //fn for edit button,
-const openModal = (empObj) => {
+const openModal = (dpObj) => {
 
     resetModal();
 
-    document.getElementById('modalEmpCode').innerText = empObj.emp_code || 'N/A';
-    document.getElementById('modalEmpFullName').innerText = empObj.fullname || 'N/A';
-    document.getElementById('modalEmpNIC').innerText = empObj.nic || 'N/A';
-    document.getElementById('modalEmpDOB').innerText = empObj.dob || 'N/A';
-    document.getElementById('modalEmpPersonalEmail').innerText = empObj.email || 'N/A';
-    document.getElementById('modalEmpWorkEmail').innerText = empObj.email || 'N/A';
-    document.getElementById('modalEmpMobileNum').innerText = empObj.mobilenum || 'N/A';
-    document.getElementById('modalEmpLandNum').innerText = empObj.landnum || 'N/A';
-    document.getElementById('modalEmpAddress').innerText = empObj.address || 'N/A';
-    document.getElementById('modalEmpGender').innerText = empObj.gender || 'N/A';
-    document.getElementById('modalEmpNote').innerText = empObj.note || 'N/A';
-    document.getElementById('modalEmpDesignation').innerText = empObj.designation_id.name || 'N/A';
-    document.getElementById('modalEmpStatus').innerText = empObj.emp_status || 'N/A';
-
-    if (empObj.emp_photo != null) {
-        document.getElementById('modalPreviewEmployeeImg').src = atob(empObj.emp_photo)
-    } else {
-        document.getElementById('modalPreviewEmployeeImg').src = 'images/employee.png';
+    if (dpObj.is_template) {
+        document.getElementById('modalDPIsTemplateOrNot').innerText = 'This is a Template';
     }
+    document.getElementById('modalDPCode').innerText = dpObj.dayplancode || 'N/A';
+    document.getElementById('modalDPTitle').innerText = dpObj.daytitle || 'N/A';
 
-    if (empObj.deleted_emp) {
-        document.getElementById('modalEmpIfDeleted').classList.remove('d-none');
-        document.getElementById('modalEmpIfDeleted').innerHTML =
+    //find another way 💥💥💥
+    let dpAttrs = '';
+    dpObj.vplaces.forEach((element, index) => {
+        if (dpObj.vplaces.length - 1 == index) {
+            dpAttrs = dpAttrs + element.name;
+        }
+        else {
+            dpAttrs = dpAttrs + element.name + ", ";
+        }
+    });
+
+    document.getElementById('modalDPAttractions').innerText = dpAttrs || 'N/A';
+
+
+    document.getElementById('modalDPLunch').innerText = dpObj.lunchplace_id.name || 'N/A';
+
+    document.getElementById('modalDPStay').innerText = dpObj.end_stay_id.name || 'N/A';
+
+    document.getElementById('modalDPTktLocalAdult').innerText = dpObj.localadulttktcost || 'N/A';
+    document.getElementById('modalDPTktLocalChild').innerText = dpObj.localchildtktcost.toFixed(2) || 'N/A';
+    document.getElementById('modalDPTktForeignAdult').innerText = dpObj.foreignadulttktcost || 'N/A';
+    document.getElementById('modalDPTktForeignChild').innerText = dpObj.foreignchildtktcost || 'N/A';
+
+    document.getElementById('modalDPParkingFee').innerText = dpObj.totalvehiparkcost.toFixed(2) || 'N/A';
+    document.getElementById('modalDPTotalDistance').innerText = dpObj.totalkmcount + ' KM' || 'N/A';
+    document.getElementById('modalDPNote').innerText = dpObj.note || 'N/A';
+    document.getElementById('modalDPStatus').innerText = dpObj.dp_status || 'N/A';
+
+
+
+    if (dpObj.deleted_dp) {
+        document.getElementById('modalDPIfDeleted').classList.remove('d-none');
+        document.getElementById('modalDPIfDeleted').innerHTML =
             'This is a deleted record. <br>Deleted at ' +
-            new Date(empObj.deleteddatetime).toLocaleString();
-        document.getElementById('modalEmpEditBtn').disabled = true;
-        document.getElementById('modalEmpDeleteBtn').disabled = true;
-        document.getElementById('modalEmpEditBtn').classList.add('d-none');
-        document.getElementById('modalEmpDeleteBtn').classList.add('d-none');
-        document.getElementById('modalEmpRecoverBtn').classList.remove('d-none');
+            new Date(dpObj.deleteddatetime).toLocaleString();
+        document.getElementById('modalDPEditBtn').disabled = true;
+        document.getElementById('modalDPDeleteBtn').disabled = true;
+        document.getElementById('modalDPEditBtn').classList.add('d-none');
+        document.getElementById('modalDPDeleteBtn').classList.add('d-none');
+        document.getElementById('modalDPRecoverBtn').classList.remove('d-none');
     }
 
     // Show the modal
-    $('#infoModalEmployee').modal('show');
+    $('#infoModalDayPlan').modal('show');
 
 };
 
 // refill the form to edit a record
-const refillEmployeeForm = async (empObj) => {
+const refillEmployeeForm = async (dpObj) => {
 
-    employee = JSON.parse(JSON.stringify(empObj));
-    oldEmployee = JSON.parse(JSON.stringify(empObj));
+    employee = JSON.parse(JSON.stringify(dpObj));
+    oldEmployee = JSON.parse(JSON.stringify(dpObj));
 
     //doc.getelebyid yanna 💥💥💥💥
-    inputFullName.value = empObj.fullname;
-    inputNIC.value = empObj.nic;
-    inputEmail.value = empObj.email;
-    inputMobile.value = empObj.mobilenum;
-    inputLand.value = empObj.landnum;
-    inputAddress.value = empObj.address;
-    inputNote.value = empObj.note;
-    dateDateOfBirth.value = empObj.dob;
-    selectEmployeementStatus.value = empObj.emp_status;
+    inputFullName.value = dpObj.fullname;
+    inputNIC.value = dpObj.nic;
+    inputEmail.value = dpObj.email;
+    inputMobile.value = dpObj.mobilenum;
+    inputLand.value = dpObj.landnum;
+    inputAddress.value = dpObj.address;
+    inputNote.value = dpObj.note;
+    dateDateOfBirth.value = dpObj.dob;
+    selectEmployeementStatus.value = dpObj.emp_status;
 
-    if (empObj.gender == "Male") {
+    if (dpObj.gender == "Male") {
         radioMale.checked = true;
     } else {
         radioFemale.checked = true;
@@ -515,7 +531,7 @@ const refillEmployeeForm = async (empObj) => {
 
     try {
         designations = await ajaxGetReq("/desig/all");
-        fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name', empObj.designation_id.name);
+        fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name', dpObj.designation_id.name);
     } catch (error) {
         console.error("Failed to fetch Designations : ", error);
     }
@@ -632,11 +648,11 @@ const updateEmployee = async () => {
 }
 
 //fn to delete an employee record
-const deleteEmployeeRecord = async (empObj) => {
-    const userConfirm = confirm("Are you sure to delete the employee " + empObj.emp_code + " ?");
+const deleteEmployeeRecord = async (dpObj) => {
+    const userConfirm = confirm("Are you sure to delete the employee " + dpObj.emp_code + " ?");
     if (userConfirm) {
         try {
-            const deleteServerResponse = await ajaxPPDRequest("/emp", "DELETE", empObj);
+            const deleteServerResponse = await ajaxPPDRequest("/emp", "DELETE", dpObj);
 
             if (deleteServerResponse === 'OK') {
                 alert('Record Deleted');
