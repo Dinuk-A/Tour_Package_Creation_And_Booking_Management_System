@@ -58,7 +58,6 @@ const refreshDayPlanForm = async () => {
 
     dayplan = new Object();
 
-    //dayplan.vplaces = [];
     dayplan.vplaces = new Array();
     dayplan.activities = [];
 
@@ -210,6 +209,7 @@ const addOne = () => {
     }
 
 }
+
 //for add all locations 
 const addAll = () => {
 
@@ -582,10 +582,10 @@ const refillDayPlanForm = async (dpObj) => {
 
     document.getElementById('dpSelectStatus').style.border = '1px solid #ced4da';
 
-    $("#infoModalDayplan").modal("hide");
+    $("#infoModalDayPlan").modal("hide");
 
-    var myEmpFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
-    myEmpFormTab.show();
+    var myDPFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myDPFormTab.show();
 
 }
 
@@ -600,57 +600,41 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //show value changes before update
-const showEmpValueChanges = () => {
+const showDPValueChanges = () => {
 
     let updates = "";
 
-    if (dayplan.fullname != oldDayplan.fullname) {
-        updates = updates + " Full Name will be changed to " + dayplan.fullname + "\n";
+    if (dayplan.daytitle != oldDayplan.daytitle) {
+        updates = updates + " Full Name will be changed to " + dayplan.daytitle + "\n";
     }
-    if (dayplan.nic != oldDayplan.nic) {
-        updates = updates + " NIC will be changed to " + dayplan.nic + "\n";
-    }
-    if (dayplan.mobilenum != oldDayplan.mobilenum) {
-        updates = updates + " Mobile Number will be changed to " + dayplan.mobilenum + "\n";
-    }
-    if (dayplan.landnum != oldDayplan.landnum) {
-        updates = updates + " Land Number will be changed to " + dayplan.landnum + "\n";
-    }
-    if (dayplan.email != oldDayplan.email) {
-        updates = updates + " Email will be changed to " + dayplan.email + "\n";
-    }
-    if (dayplan.dob != oldDayplan.dob) {
-        updates = updates + " DOB will be changed to " + dayplan.dob + "\n";
-    }
-    if (dayplan.gender != oldDayplan.gender) {
-        updates = updates + " Gender will be changed to " + dayplan.gender + "\n";
-    }
-    if (dayplan.address != oldDayplan.address) {
-        updates = updates + " Address will be changed to " + dayplan.address + "\n";
-    }
-    if (dayplan.designation_id.name != oldDayplan.designation_id.name) {
-        updates = updates + " Designation will be changed to " + dayplan.designation_id.name + "\n";
-    }
-    if (dayplan.emp_status != oldDayplan.emp_status) {
-        updates = updates + " Status will be changed to " + dayplan.emp_status + "\n";
+    if (dayplan.end_stay_id != oldDayplan.end_stay_id) {
+        updates = updates + " end_stay_id will be changed to " + dayplan.end_stay_id.name + "\n";
     }
     if (dayplan.note != oldDayplan.note) {
-        updates = updates + " Note will be changed to " + dayplan.note + "\n";
+        updates = updates + " note Number will be changed to " + dayplan.note + "\n";
     }
-
-    if (dayplan.emp_photo != oldDayplan.emp_photo) {
-        updates = updates + " Dayplan Photo has changed";
+    if (dayplan.lunchplace_id != oldDayplan.lunchplace_id) {
+        updates = updates + " lunchplace_id Number will be changed to " + dayplan.lunchplace_id.name + "\n";
+    }
+    if (dayplan.dp_status != oldDayplan.dp_status) {
+        updates = updates + " dp_status will be changed to " + dayplan.email + "\n";
+    }
+    if (dayplan.totalkmcount != oldDayplan.totalkmcount) {
+        updates = updates + " totalkmcount will be changed to " + dayplan.email + "\n";
+    }
+    if (dayplan.vplaces.length != oldDayplan.vplaces.length) {
+        updates = updates + "visiting places list changed";
     }
 
     return updates;
 }
 
 //fn for update button
-const updateDayplan = async () => {
+const updateDayPlan = async () => {
 
-    const errors = checkEmpFormErrors();
+    const errors = checkDPFormErrors();
     if (errors == "") {
-        let updates = showEmpValueChanges();
+        let updates = showDPValueChanges();
         if (updates == "") {
             alert("No changes detected to update");
         } else {
@@ -659,15 +643,15 @@ const updateDayplan = async () => {
             if (userConfirm) {
 
                 try {
-                    let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", dayplan);
+                    let putServiceResponse = await ajaxPPDRequest("/dayplan", "PUT", dayplan);
 
                     if (putServiceResponse === "OK") {
-                        alert("Successfully Updated");
-                        document.getElementById('formDayplan').reset();
+                        showAlertModal('suc','Saved Successfully');
+                        document.getElementById('formDayPlan').reset();
                         refreshDayplanForm();
-                        buildDayplanTable();
-                        var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
-                        myEmpTableTab.show();
+                        buildDayPlanTable();
+                        var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                        myDPTableTab.show();
                     } else {
                         alert("Update Failed \n" + putServiceResponse);
                     }
@@ -676,11 +660,11 @@ const updateDayplan = async () => {
                     alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
             } else {
-                alert("User cancelled the task");
+                showAlertModal('inf','User cancelled the task');
             }
         }
     } else {
-        alert("Form has following errors: \n" + errors);
+        showAlertModal('war', errors);
     }
 }
 
