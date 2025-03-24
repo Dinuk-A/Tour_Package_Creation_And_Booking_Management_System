@@ -669,15 +669,15 @@ const updateDayPlan = async () => {
 }
 
 //fn to delete an dayplan record
-const deleteDayplanRecord = async (dpObj) => {
+const deleteDayPlanRecord = async (dpObj) => {
     const userConfirm = confirm("Are you sure to delete the dayplan " + dpObj.emp_code + " ?");
     if (userConfirm) {
         try {
-            const deleteServerResponse = await ajaxPPDRequest("/emp", "DELETE", dpObj);
+            const deleteServerResponse = await ajaxPPDRequest("/dayplan", "DELETE", dpObj);
 
             if (deleteServerResponse === 'OK') {
                 alert('Record Deleted');
-                $('#infoModalDayplan').modal('hide');
+                $('#infoModalDayPlan').modal('hide');
                 window.location.reload();
             } else {
                 alert('Delete Failed' + deleteServerResponce);
@@ -692,7 +692,7 @@ const deleteDayplanRecord = async (dpObj) => {
 
 //restore dayplan record if its already deleted
 // or this should call a new service to set deleted_emp as false ? 💥💥💥
-const restoreDayplanRecord = async () => {
+const restoreDayPlanRecord = async () => {
 
     const userConfirm = confirm("Are you sure to recover this deleted record ?");
 
@@ -700,13 +700,13 @@ const restoreDayplanRecord = async () => {
         try {
             //mehema hari madi, me tika backend eke karanna trykaranna /restore kiyala URL ekak hadala 💥💥💥
             dayplan = window.currentObject;
-            dayplan.deleted_emp = false;
+            dayplan.deleted_dp = false;
 
-            let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", dayplan);
+            let putServiceResponse = await ajaxPPDRequest("/dayplan", "PUT", dayplan);
 
             if (putServiceResponse === "OK") {
                 alert("Successfully Restored");
-                $("#infoModalDayplan").modal("hide");
+                $("#infoModalDayPlan").modal("hide");
 
                 //AN LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
                 window.location.reload();
