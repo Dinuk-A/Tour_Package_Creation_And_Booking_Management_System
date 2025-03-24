@@ -506,44 +506,81 @@ const refillDayPlanForm = async (dpObj) => {
     dayplan = JSON.parse(JSON.stringify(dpObj));
     oldDayplan = JSON.parse(JSON.stringify(dpObj));
 
+    //dpTemplate.disabled = true;
+    //dpNotTemplate.disabled = true;    
+    firstDayCB.disabled = true;
+    middleDayCB.disabled = true;
+    lastDayCB.disabled = true;
+
     //doc.getelebyid yanna 💥💥💥💥
-    inputFullName.value = dpObj.fullname;
-    inputNIC.value = dpObj.nic;
-    inputEmail.value = dpObj.email;
-    inputMobile.value = dpObj.mobilenum;
-    inputLand.value = dpObj.landnum;
-    inputAddress.value = dpObj.address;
-    inputNote.value = dpObj.note;
-    dateDateOfBirth.value = dpObj.dob;
-    selectDayplanmentStatus.value = dpObj.emp_status;
+    document.getElementById('dpTotalKMcount').value = dayplan.totalkmcount;
+    document.getElementById('dpTitle').value = dayplan.daytitle;
+    document.getElementById('dpSelectStatus').value = dayplan.dp_status;
+    document.getElementById('dpNote').value = dayplan.note;
+    document.getElementById('dpTotalVehiParkingCost').value = dayplan.totalvehiparkcost;
+    document.getElementById('dpTotalForeignChildTktCost').value = dayplan.foreignchildtktcost;
+    document.getElementById('dpTotalForeignAdultTktCost').value = dayplan.foreignadulttktcost;
+    document.getElementById('dpTotalLocalChildTktCost').value = dayplan.localchildtktcost;
+    document.getElementById('dpTotalLocalAdultTktCost').value = dayplan.localadulttktcost;
 
-    if (dpObj.gender == "Male") {
-        radioMale.checked = true;
+    if (dayplan.dayplancode.substring(0, 2) == "FD") {
+        firstDayCB.checked = true;
+
+    } else if (dayplan.dayplancode.substring(0, 2) == "MD") {
+        middleDayCB.checked = true;
+
     } else {
-        radioFemale.checked = true;
+        lastDayCB.checked = true;
     }
 
-    if (dayplan.emp_photo != null) {
-        previewDayplanImg.src = atob(dayplan.emp_photo);
-    } else {
-        previewDayplanImg.src = "images/dayplan.png";
+    if (dayplan.is_template) {
+        dpTemplate.checked = true;
+    } else if (!dayplan.is_template) {
+        dpNotTemplate.checked = true;
     }
 
-    try {
-        designations = await ajaxGetReq("/desig/all");
-        fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name', dpObj.designation_id.name);
-    } catch (error) {
-        console.error("Failed to fetch Designations : ", error);
+    if (oldDayplan.lunchplace_id != null) {
+
+        try {
+            const lhs = await ajaxGetReq("/lunchplace/all");
+            fillDataIntoDynamicSelects(selectDPLunch, '', lhs, 'name', dayplan.lunchplace_id.name);
+
+            const allProvinces = await ajaxGetReq("/province/all");
+            fillDataIntoDynamicSelects(selectLPProv, 'Select Province', allProvinces, 'name', dayplan.lunchplace_id.district_id.province_id.name);
+
+            const allDistricts = await ajaxGetReq("/district/all");
+            fillDataIntoDynamicSelects(selectLPDist, 'Select District', allDistricts, 'name', dayplan.lunchplace_id.district_id.name);
+
+        } catch (error) {
+            console.error('error fetching previous lunch place info')
+        }
     }
 
-    empUpdateBtn.disabled = false;
-    empUpdateBtn.style.cursor = "pointer";
+    if (oldDayplan.end_stay_id != null) {
+        try {
+            const allStays = await ajaxGetReq("/stay/all");
+            fillDataIntoDynamicSelects(selectDPEndStay, '', allStays, 'name', dayplan.end_stay_id.name);
 
-    empAddBtn.disabled = true;
-    empAddBtn.style.cursor = "not-allowed";
+            const allProvinces = await ajaxGetReq("/province/all");
+            fillDataIntoDynamicSelects(selectDPEndProv, 'Select Province', allProvinces, 'name', dayplan.end_stay_id.district_id.province_id.name);
 
-    document.getElementById('selectDayPlanStatus').style.border = '1px solid #ced4da';
-    //document.getElementById('selectDayplanmentStatus').children[2].classList.remove('d-none');
+            const allDistricts = await ajaxGetReq("/district/all");
+            fillDataIntoDynamicSelects(selectDPEndDist, 'Select District', allDistricts, 'name', dayplan.end_stay_id.district_id.name);
+
+        } catch (error) {
+            console.error('error fetching previous stay place info')
+        }
+    }
+
+    fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name')
+
+    dpUpdateBtn.disabled = false;
+    dpUpdateBtn.style.cursor = "pointer";
+
+    dpAddBtn.disabled = true;
+    dpAddBtn.style.cursor = "not-allowed";
+
+    document.getElementById('dpSelectStatus').style.border = '1px solid #ced4da';
 
     $("#infoModalDayplan").modal("hide");
 
