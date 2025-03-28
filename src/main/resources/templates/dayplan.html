@@ -56,23 +56,23 @@
                             <div class="row">
                                 <div class="col-6">
                                     <input type="radio" class="btn-check" id="dpTemplate" autocomplete="off"
-                                        name="dpTemplateOrNot" value="true" onchange="handleDayTypeRadio(this)">
+                                        name="dpTemplateOrNot" value="true" onchange="handleDayTypeRadio(this); handleChangesBasedDPType();">
 
-                                    <label class="btn btn-outline-success rounded-start" for="dpTemplate">As A
-                                        Template</label>
+                                    <label class="btn btn-outline-success rounded-start" for="dpTemplate">To use as a
+                                        template</label>
                                 </div>
 
                                 <div class="col-6">
                                     <input type="radio" class="btn-check" id="dpNotTemplate" autocomplete="off"
-                                        name="dpTemplateOrNot" value="false" onchange="handleDayTypeRadio(this)">
+                                        name="dpTemplateOrNot" value="false" onchange="handleDayTypeRadio(this); handleChangesBasedDPType();">
 
-                                    <label class="ms-1 btn btn-outline-warning " for="dpNotTemplate">In A
-                                        Package</label>
+                                    <label class="ms-1 btn btn-outline-warning " for="dpNotTemplate">For a custom
+                                        package</label>
                                 </div>
                             </div>
 
                             <!-- 3 cbs -->
-                            <div class="row border bg-light mt-2">
+                            <div class="row border bg-light mt-2" id="DayTypeCBsRow">
                                 <h5 class="mt-2 mb-1">Day Type</h5>
 
                                 <div class="input-group mt-2 mb-2">
@@ -272,7 +272,7 @@
                                                             Hotel:
                                                             :</label>
                                                         <select id="selectDPLunch" class="form-select"
-                                                            onchange="dynamicSelectValidator(this,'dayplan','lunchplace_id'); "></select>
+                                                            onchange="dynamicSelectValidator(this,'dayplan','lunchplace_id');" disabled></select>
                                                     </div>
 
                                                 </div>
@@ -313,7 +313,7 @@
                                                         <label for="selectDPEndStay"
                                                             class="form-label mb-1">Accomadation :</label>
                                                         <select id="selectDPEndStay" class="form-select"
-                                                            onchange="dynamicSelectValidator(this,'dayplan','end_stay_id'); "></select>
+                                                            onchange="dynamicSelectValidator(this,'dayplan','end_stay_id');" disabled></select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -508,8 +508,10 @@
                                         <select id="dpSelectStatus" class="form-select"
                                             onchange="staticSelectValidator(this , 'dayplan' , 'dp_status')">
                                             <option value="" selected disabled> Select Status </option>
-                                            <option value="active"> Active </option>
-                                            <option value="ifDeleted" class="d-none"> Deleted </option>
+                                            <option value="draft"> Draft </option>
+                                            <option value="confirmed"> Added to a Package </option>
+                                            <option value="completed"> Tour Completed </option>
+                                            <option value="ifDeleted" class="d-none"> Deleted Record</option>
                                         </select>
 
                                     </div>

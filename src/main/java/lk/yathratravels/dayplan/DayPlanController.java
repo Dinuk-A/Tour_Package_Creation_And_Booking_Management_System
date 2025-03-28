@@ -115,31 +115,16 @@ public class DayPlanController {
         try {
 
             // set start dist id from vplaces or activities
-            //remove activities after attr == type == activity 💥💥
+            // remove activities after attr == type == activity 💥💥
 
-            // if both activities and vplaces have data
-            if (!dplan.getVplaces().isEmpty() && !dplan.getActivities().isEmpty()) {
-
-                Attraction firstVPlace = dplan.getVplaces().iterator().next();
-                dplan.setStart_district_id(firstVPlace.getDistrict_id());
-
-                // if only vplaces have data
-            } else if (!dplan.getVplaces().isEmpty() && dplan.getActivities().isEmpty()) {
+            // if activities have data
+            if (!dplan.getVplaces().isEmpty()) {
 
                 Attraction firstVPlace = dplan.getVplaces().iterator().next();
                 dplan.setStart_district_id(firstVPlace.getDistrict_id());
 
-                // if only activities have data
-            } else if (!dplan.getVplaces().isEmpty() && dplan.getActivities().isEmpty()) {
-
-                Activity firstActivity = dplan.getActivities().iterator().next();
-                dplan.setStart_district_id(firstActivity.getDistrict_id());
-
-                
             }
-
-            // IF ekak dala dayplan template walata wenama code ekak hadanna 💥💥💥
-
+           
             // or custom dp elkakata nam, inquiry ekath ekka sambanda code ekak hadanna
             // 💥💥💥
 
@@ -152,6 +137,10 @@ public class DayPlanController {
             } else {
                 nextCode = dplan.getDayplancode() + dplan.getStart_district_id().getName().substring(0, 3).toUpperCase()
                         + (codeCountByDistrict.size() + 1);
+            }
+
+            if (dplan.getIs_template()) {
+                dplan.setNote("This is a template only, use and customize this when creating tour packages");
             }
 
             dplan.setDayplancode(nextCode);
