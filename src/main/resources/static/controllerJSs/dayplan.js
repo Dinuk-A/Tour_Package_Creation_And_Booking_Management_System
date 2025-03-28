@@ -40,23 +40,22 @@ const showDayType = (dpObj) => {
     }
 }
 
-//to fill main table
-const showDayPlanStatusOri = (dpObj) => {
-    if (dpObj.deleted_dp == null || dpObj.deleted_dp == false) {
-        if (dpObj.dp_status == "active") {
-            return "Active"
-        } else {
-            return "Deleted Record"
-        }
-    } else if (dpObj.deleted_dp != null && dpObj.deleted_dp == true) {
-        return '<p class="text-white bg-danger text-center my-0 p-2" > Deleted Record </p>'
-    }
-}
 
 const showDayPlanStatus = (dpObj) => {
 
     if (dpObj.deleted_dp == null || dpObj.deleted_dp == false) {
+
         return dpObj.dp_status
+        //if (dpObj.dp_status == "Draft") {
+        //    return "Draft"
+        //}
+        //if (dpObj.dp_status == "Confirmed") {
+        //    return "Confirmed"
+        //}
+        //if (dpObj.dp_status == "Completed") {
+        //    return "Completed"
+        //}
+
     } else if (dpObj.deleted_dp != null && dpObj.deleted_dp == true) {
         return '<p class="text-white bg-danger text-center my-0 p-2" > Deleted Record </p>'
     }
@@ -68,7 +67,6 @@ const refreshDayPlanForm = async () => {
     dayplan = new Object();
 
     dayplan.vplaces = new Array();
-    dayplan.activities = [];
 
     document.getElementById('formDayPlan').reset();
 
@@ -149,14 +147,16 @@ const selectDayType = (feild) => {
     dayplan.dayplancode = feild.value;
 }
 
-//💥
-const setDPStatus = () => {
-
-}
 
 //handle isTemplate or not
 const handleDayTypeRadio = (fieldId) => {
     dayplan.is_template = fieldId.value;
+}
+
+//set status auto
+const setDayPlanStatus = () => {
+    document.getElementById('dpSelectStatus').classList.add = 'd-none';
+    dayplan.dp_status = 'Draft';
 }
 
 //handle changes based on dp type
@@ -445,8 +445,8 @@ const checkDPFormErrors = () => {
         }
 
 
-        if (dayplan.vplaces == null && dayplan.activities) {
-            errors += "At least select one of actiities or attractions  \n";
+        if (dayplan.vplaces == 0) {
+            errors += "At least select one attraction  \n";
         }
 
         if (dayplan.totalkmcount == null) {
@@ -471,8 +471,8 @@ const checkDPFormErrors = () => {
             errors += " Name cannot be empty \n";
         }
 
-        if (dayplan.vplaces == null && dayplan.activities) {
-            errors += "At least select one of actiities or attractions  \n";
+        if (dayplan.vplaces.length == 0) {
+            errors += "At least select one attraction  \n";
         }
 
         if (dayplan.totalkmcount == null) {
@@ -619,20 +619,20 @@ const openModal = (dpObj) => {
 // refill the form to edit a record
 const refillDayPlanForm = async (dpObj) => {
 
-    if (dpObj.dp_status == "completed") {
+    if (dpObj.dp_status == "Completed") {
         alert("tour for this day plan is already completed, hence cant edit")
     } else {
 
         dayplan = JSON.parse(JSON.stringify(dpObj));
         oldDayplan = JSON.parse(JSON.stringify(dpObj));
 
-        //dpTemplate.disabled = true;
-        //dpNotTemplate.disabled = true;    
+        //cant edit these
+        dpTemplate.disabled = true;
+        dpNotTemplate.disabled = true;
         firstDayCB.disabled = true;
         middleDayCB.disabled = true;
         lastDayCB.disabled = true;
 
-        //doc.getelebyid yanna 💥💥💥💥
         document.getElementById('dpTotalKMcount').value = dayplan.totalkmcount;
         document.getElementById('dpTitle').value = dayplan.daytitle;
         document.getElementById('dpSelectStatus').value = dayplan.dp_status;
@@ -649,7 +649,7 @@ const refillDayPlanForm = async (dpObj) => {
         } else if (dayplan.dayplancode.substring(0, 2) == "MD") {
             middleDayCB.checked = true;
 
-        } else {
+        } else if (dayplan.dayplancode.substring(0, 2) == "LD") {
             lastDayCB.checked = true;
         }
 
@@ -692,7 +692,7 @@ const refillDayPlanForm = async (dpObj) => {
             }
         }
 
-        fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name')
+        fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name');
 
         dpUpdateBtn.disabled = false;
         dpUpdateBtn.style.cursor = "pointer";
@@ -706,6 +706,7 @@ const refillDayPlanForm = async (dpObj) => {
 
         var myDPFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
         myDPFormTab.show();
+
     }
 
 }

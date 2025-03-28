@@ -30,7 +30,7 @@
             <!-- for form side -->
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formDayPlanHolderDiv" role="tab"
-                    aria-controls="formDayPlanHolderDiv" aria-selected="false">Form</a>
+                    aria-controls="formDayPlanHolderDiv" aria-selected="false" onclick="setDayPlanStatus()">Form</a>
             </li>
         </ul>
 
@@ -508,9 +508,9 @@
                                         <select id="dpSelectStatus" class="form-select"
                                             onchange="staticSelectValidator(this , 'dayplan' , 'dp_status')">
                                             <option value="" selected disabled> Select Status </option>
-                                            <option value="draft"> Draft </option>
-                                            <option value="confirmed"> Added to a Package </option>
-                                            <option value="completed"> Tour Completed </option>
+                                            <option value="Draft"> Draft </option>
+                                            <option value="Confirmed"> Added to a Package </option>
+                                            <option value="Completed"> Tour Completed </option>
                                             <option value="ifDeleted" class="d-none"> Deleted Record</option>
                                         </select>
 
