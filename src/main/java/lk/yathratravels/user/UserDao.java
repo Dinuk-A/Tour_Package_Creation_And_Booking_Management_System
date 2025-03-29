@@ -16,9 +16,14 @@ public interface UserDao extends JpaRepository<User, Integer> {
     public User getUserByEmail(String email);
 
     // FILTER THE USER BY GIVEN USER NAME
-    @Query(value = "select u from User u where u.username=?1")
-    public User getUserByUsername(String username);
+    // 💥ORIGINAL
+    // @Query(value = "select u from User u where u.username=?1")
+    // public User getUserByUsername(String username);
 
+    // modified to support case sensitivity
+    @Query(value = "SELECT * FROM user WHERE BINARY username = ?1", nativeQuery = true)
+    public User getUserByUsername(String username);
+    
     // GET ONLY THE USERNAME, BY GIVEN USER ID >>> THIS WILL BE USED FOR PRINT
     // MODULES
     // NEW CONSTRUCTOR MADE IN USER ENTITY TO REDUCE UNNECESSARY DATA LOAD

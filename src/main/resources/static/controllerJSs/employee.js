@@ -2,6 +2,7 @@ window.addEventListener('load', () => {
 
     buildEmployeeTable();
     refreshEmployeeForm();
+    restrictBirthDays();
 
 })
 
@@ -100,8 +101,22 @@ const refreshEmployeeForm = async () => {
     document.getElementById('fileInputEmpPhoto').files = null;
     document.getElementById('previewEmployeeImg').style.border = "1px solid #ced4da";
 
-    document.getElementById('selectEmployeementStatus').children[2].removeAttribute('class','d-none');
+    document.getElementById('selectEmployeementStatus').children[2].removeAttribute('class', 'd-none');
 
+}
+
+//only can select bdays before 16 years
+const restrictBirthDays = () => {
+    let dateInput = document.getElementById("dateDateOfBirth");
+
+    if (dateInput) {
+        let today = new Date();
+        let maxYear = today.getFullYear() - 16; // 16 years before today
+        let minYear = 1950;
+
+        dateInput.min = `${minYear}-01-01`;
+        dateInput.max = `${maxYear}-12-31`;
+    }
 }
 
 //set the status as auto every time when a new form is opened
@@ -228,7 +243,7 @@ const addNewEmployee = async () => {
 
                 if (postServerResponse === 'OK') {
                     //alert('Saved Successfully');
-                    showAlertModal('suc','Saved Successfully');
+                    showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formEmployee').reset();
                     refreshEmployeeForm();
                     buildEmployeeTable();
@@ -239,10 +254,10 @@ const addNewEmployee = async () => {
                 }
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         } else {
-            showAlertModal('inf','User cancelled the task');
+            showAlertModal('inf', 'User cancelled the task');
         }
     } else {
         //showAlertModal('war',' \n' + errors);

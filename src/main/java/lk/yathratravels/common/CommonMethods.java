@@ -42,15 +42,15 @@ public class CommonMethods {
 
         User sysAdmin = new User();
         sysAdmin.setUsername("Admin");
-        sysAdmin.setWork_email("admindinuka101@yathra.com");
+        sysAdmin.setWork_email("admin101@yathra.com");
         sysAdmin.setPassword(bCryptPasswordEncoder.encode("12345"));
         sysAdmin.setAcc_status(true);
         sysAdmin.setAddeddatetime(LocalDateTime.now());
 
-        sysAdmin.setEmployee_id(employeeDao.getReferenceById(7));
+        sysAdmin.setEmployee_id(employeeDao.getReferenceById(1));
 
         Set<Role> roles = new HashSet<Role>();
-        roles.add(roleDao.getReferenceById(1));
+        roles.add(roleDao.getReferenceById(5));
         sysAdmin.setRoles(roles);
 
         userDao.save(sysAdmin);

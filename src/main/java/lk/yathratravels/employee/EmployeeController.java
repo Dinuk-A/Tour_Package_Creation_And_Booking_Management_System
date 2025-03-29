@@ -129,7 +129,7 @@ public class EmployeeController {
             String nextEmpCode = employeeDao.getNextEmpCode();
 
             if (nextEmpCode.equals(null) || nextEmpCode.equals("")) {
-                employee.setEmp_code("00001");
+                employee.setEmp_code("0001");
             } else {
                 employee.setEmp_code(nextEmpCode);
             }

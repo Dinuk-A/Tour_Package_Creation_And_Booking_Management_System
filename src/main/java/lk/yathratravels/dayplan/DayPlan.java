@@ -99,9 +99,9 @@ public class DayPlan {
     @JoinTable(name = "dayplan_has_attraction", joinColumns = @JoinColumn(name = "dayplan_id"), inverseJoinColumns = @JoinColumn(name = "attraction_id"))
     private Set<Attraction> vplaces;
 
-    @ManyToMany
-    @JoinTable(name = "dayplan_has_activity", joinColumns = @JoinColumn(name = "dayplan_id"), inverseJoinColumns = @JoinColumn(name = "activity_id"))
-    private Set<Activity> activities;
+    //@ManyToMany
+    //@JoinTable(name = "dayplan_has_activity", joinColumns = @JoinColumn(name = "dayplan_id"), inverseJoinColumns = @JoinColumn(name = "activity_id"))
+    //private Set<Activity> activities;
 
     // common 6
     @Column(name = "addeddatetime")

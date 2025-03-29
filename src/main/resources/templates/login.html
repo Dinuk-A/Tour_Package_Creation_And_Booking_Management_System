@@ -12,19 +12,25 @@
     <!-- link bootsrtap js file -->
     <script src="libs/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
 
+    <!-- for custom alert js -->
+    <script src="commonscripts/customAlert.js"></script>
+
+    <!-- custom alert css -->
+    <link rel="stylesheet" href="css/customAlert.css">
+
     <!-- link main css -->
     <link rel="stylesheet" href="css/login.css">
-
-    <!-- link login js -->
-    <!-- <script src="controllerJSs/login.js"></script> -->
 
 </head>
 
 <body>
+
+    <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-8 card flex-row mx-auto">
-                <div class="img-left d-none d-md-flex align-items-center justify-content-center">                   
+                <div class="img-left d-none d-md-flex align-items-center justify-content-center">
                     <img src="images/ylogo2.png" alt="Logo" class="img-fluid">
                 </div>
 
@@ -32,7 +38,7 @@
                     <h4 class="title text-center mt-4">Log Into Account</h4>
 
                     <form action="login" method="post" class="form-box px-3">
-                        
+
                         <div class="form-input">
                             <input name="username" type="text" placeholder="Username" autocomplete="off" required>
                         </div>
@@ -45,14 +51,28 @@
                             <button type="submit" class="col-12 btn btn-primary mx-auto">Login</button>
                         </div>
 
-                        <div class="text-danger fw-bold text-center" th:if="${param.error}">
+                        <!-- replaced by the alert -->
+                        <!--<div class="text-danger fw-bold text-center" th:if="${param.error}">
                             Invalid Username & Password!
-                        </div>
+                        </div>-->
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const modal = document.getElementById("customAlertModal");
+
+            if (urlParams.has("error")) {
+                showAlertModal("err", "Invalid Username or Password! \n Please try again.");
+            }
+        });
+
+    </script>
+
 </body>
 
 </html>
