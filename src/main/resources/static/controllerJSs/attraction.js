@@ -208,6 +208,14 @@ const refreshAttractionForm = async () => {
 
 }
 
+//set status auto
+const setAttrStatusAuto = () => {
+    document.getElementById('selectAttrStatus').value = 'open';
+    document.getElementById('selectAttrStatus').style.border = '2px solid lime';
+    document.getElementById('selectAttrStatus').children[4].setAttribute('class', 'd-none');
+    attraction.attr_status = 'open';
+}
+
 //fn for if no entrance fee for all
 const allEntryFree = () => {
 
@@ -238,23 +246,23 @@ const allEntryFree = () => {
         inputForeignChildFee.style.border = "1px solid #ced4da"
 
     }
-    //    else {  
-    //
-    //        inputForeignAdultFee.disabled = false;
-    //        inputLocalAdultFee.disabled = false;
-    //        inputForeignChildFee.disabled = false;
-    //        inputLocalChildFee.disabled = false;
-    //
-    //        inputForeignAdultFee.value = "";
-    //        inputLocalAdultFee.value = "";
-    //        inputForeignChildFee.value = "";
-    //        inputLocalChildFee.value = "";
-    //
-    //               attraction.feeforeignadult = null;
-    //        attraction.feelocaladult = null;
-    //        attraction.feechildlocal = null;
-    //        attraction.feechildforeign = null;
-    //    }
+    else {
+
+        inputForeignAdultFee.disabled = false;
+        inputLocalAdultFee.disabled = false;
+        inputForeignChildFee.disabled = false;
+        inputLocalChildFee.disabled = false;
+
+        inputForeignAdultFee.value = "";
+        inputLocalAdultFee.value = "";
+        inputForeignChildFee.value = "";
+        inputLocalChildFee.value = "";
+
+        attraction.feeforeignadult = null;
+        attraction.feelocaladult = null;
+        attraction.feechildlocal = null;
+        attraction.feechildforeign = null;
+    }
 }
 
 //fn for if only locals are free
@@ -275,8 +283,10 @@ const localsEntryFree = () => {
         inputLocalAdultFee.value = "0.00";
         inputLocalChildFee.value = "0.00";
 
+        attraction.feeforeignadult = 0.00;
         attraction.feelocaladult = 0.00;
         attraction.feechildlocal = 0.00;
+        attraction.feechildforeign = 0.00;
 
         inputLocalAdultFee.style.border = "1px solid #ced4da"
         inputLocalChildFee.style.border = "1px solid #ced4da"
@@ -284,18 +294,18 @@ const localsEntryFree = () => {
         inputForeignChildFee.style.border = "1px solid #ced4da"
 
     }
-    //    else {
-    //
-    //        inputLocalAdultFee.disabled = false;
-    //        inputLocalChildFee.disabled = false;
-    //
-    //        inputLocalAdultFee.value = "";
-    //        inputLocalChildFee.value = "";
-    //
-    //              attraction.feelocaladult = null;
-    //        attraction.feechildlocal = null;
-    //
-    //    }
+    else {
+
+        inputLocalAdultFee.disabled = false;
+        inputLocalChildFee.disabled = false;
+
+        inputLocalAdultFee.value = "";
+        inputLocalChildFee.value = "";
+
+        attraction.feelocaladult = null;
+        attraction.feechildlocal = null;
+
+    }
 
 }
 
@@ -386,6 +396,10 @@ const checkAttrFormErrors = () => {
         }
     }
 
+    if (!document.getElementById('allPaidCheckBox').checked && !document.getElementById('localsEntryFreeCheckBox').checked && !document.getElementById('allEntryFreeChkBox').checked) {
+        errors = errors + " Please Enter All Entrance Fees \n";
+    }
+
     return errors;
 }
 
@@ -425,7 +439,7 @@ const addNewAttraction = async () => {
             showAlertModal('inf', 'User cancelled the task');
         }
     } else {
-        showAlertModal('err', 'Form Has Followimg Errors \n \n' + errors);
+        showAlertModal('err', errors);
     }
 }
 
