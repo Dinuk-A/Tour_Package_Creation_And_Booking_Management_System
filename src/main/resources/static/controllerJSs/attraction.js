@@ -128,24 +128,37 @@ const refreshAttractionForm = async () => {
         flushCollapseOne.innerHTML = "";
         categoryList.forEach(element => {
 
+            let id = element.name.replace(/\s+/g, '-');
+
             let newInput = document.createElement('input');
             newInput.type = "checkbox";
             newInput.classList.add("btn-check");
-            newInput.setAttribute('id', JSON.stringify(element.name));
+            newInput.setAttribute('id', id);
             newInput.setAttribute('autocomplete', 'off');
 
             let newLabel = document.createElement('label');
             newLabel.className = "btn , btn-outline-primary me-2 my-1";
-            newLabel.setAttribute('for', JSON.stringify(element.name));
+            newLabel.setAttribute('for', id);
             newLabel.innerText = element.name;
             newLabel.style.minWidth = "100px";
             newLabel.style.textAlign = "center";
+            newLabel.style.borderRadius = "8px"; 
+            newLabel.style.transition = "all 0.3s ease-in-out";
 
             newInput.onchange = function () {
                 if (this.checked) {
                     attraction.categories.push(element)
                     console.log('checked ' + element.name);
+
+                    newLabel.style.backgroundColor = "lime";
+                    newLabel.style.color = "white";
+                    newLabel.style.borderColor = "green";
+
                 } else {
+
+                    newLabel.style.backgroundColor = "";
+                    newLabel.style.color = "";
+                    newLabel.style.borderColor = "";
 
                     const attrCatIdOnly = attraction.categories.map(atrCat => atrCat.id);
                     const indexOfCurrentPoppingElement = attrCatIdOnly.indexOf(element.id);
@@ -205,6 +218,13 @@ const refreshAttractionForm = async () => {
             field.value = '';
         }
     });
+    
+    inputLocalAdultFee.value = "0.00"
+    inputLocalChildFee.value = "0.00"
+    inputForeignAdultFee.value = "0.00"
+    inputForeignChildFee.value = "0.00"
+    
+    vehiParkingFeeInput.value = "0.00"
 
 }
 
