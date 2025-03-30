@@ -56,7 +56,7 @@ const getUserRoles = (userObj) => {
         Admin: '#d63031', // Bright red
         Manager: '#00cec9', // Teal green
         Receptionist: '#6c5ce7', // Deep purple
-        Assistant_Manager: '#fdcb6e', // Soft orange-yellow
+        "Assistant Manager": '#fdcb6e', // Soft orange-yellow
         Developer: '#0984e3', // Sky blue
         Intern: '#636e72', // Grayish black
         HR: '#e84393', // Pinkish red

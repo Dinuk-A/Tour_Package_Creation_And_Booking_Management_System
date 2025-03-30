@@ -16,7 +16,13 @@ public class DesignationController {
 
     @GetMapping(value = "/desig/all", produces = "application/json")
     public List<Designation> getAllDesignations() {
-        return designationDao.findAll(Sort.by(Direction.DESC, "id"));
+        return designationDao.findAll(Sort.by(Direction.ASC, "id"));
+    }
+
+    // designations without admin
+    @GetMapping(value = "/desig/exceptadmin", produces = "application/json")
+    public List<Designation> getDesignationsWOAdmin() {
+        return designationDao.getDesigsExceptAdmin();
     }
 
 }

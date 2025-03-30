@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface RoleDao extends JpaRepository<Role, Integer>{
 
     //get all the roles except Admin
-    @Query(value = "select r from Role r where r.name <> 'Admin' ")  
+    @Query(value = "select r from Role r where r.name <> 'System_Admin' ")  
     public List<Role> getAllRolesExceptAdmin();
 
     //get a role by passing its name

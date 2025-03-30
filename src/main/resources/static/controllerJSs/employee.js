@@ -61,7 +61,7 @@ const refreshEmployeeForm = async () => {
     document.getElementById('formEmployee').reset();
 
     try {
-        const designations = await ajaxGetReq("/desig/all")
+        const designations = await ajaxGetReq("/desig/exceptadmin")
         fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name');
     } catch (error) {
         console.error("Failed to fetch Designations : ", error);
@@ -186,14 +186,14 @@ const imgValidatorEmpPic = (fileInputID, object, imgProperty, previewId) => {
         // Validate file size (1 MB max)
         const maxSizeInBytes = 1 * 1024 * 1024;
         if (file.size > maxSizeInBytes) {
-            alert("The file size exceeds 1 MB. Please select a smaller file.");
+            showAlertModal('war', 'The file size exceeds 1 MB. Please select a smaller file.');
             //return false;
         }
 
         // Validate file type (JPEG, JPG, PNG)
         const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
         if (!allowedTypes.includes(file.type)) {
-            alert("Invalid file type. Only JPEG, JPG, and PNG files are allowed.");
+            showAlertModal('war', "Invalid file type. Only JPEG, JPG, and PNG files are allowed.");
             //return false;
         }
 
@@ -224,7 +224,7 @@ const clearEmpImg = () => {
             document.getElementById('previewEmployeeImg').style.border = "1px solid #ced4da";
 
         } else {
-            alert("User Cancelled The Deletion Task")
+            showAlertModal("inf", "User Cancelled The Deletion Task")
         }
     }
 }
@@ -242,7 +242,6 @@ const addNewEmployee = async () => {
                 const postServerResponse = await ajaxPPDRequest("/emp", "POST", employee);
 
                 if (postServerResponse === 'OK') {
-                    //alert('Saved Successfully');
                     showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formEmployee').reset();
                     refreshEmployeeForm();
@@ -250,17 +249,15 @@ const addNewEmployee = async () => {
                     var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                     myEmpTableTab.show();
                 } else {
-                    alert('Submit Failed ' + postServerResponse);
+                    showAlertModal('err', 'Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
-                // Handle errors (such as network issues or server errors)
                 showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         } else {
             showAlertModal('inf', 'User cancelled the task');
         }
     } else {
-        //showAlertModal('war',' \n' + errors);
         showAlertModal('war', errors);
     }
 }
@@ -355,7 +352,7 @@ const refillEmployeeForm = async (empObj) => {
     }
 
     try {
-        designations = await ajaxGetReq("/desig/all");
+        designations = await ajaxGetReq("/desig/exceptadmin");
         fillDataIntoDynamicSelects(selectDesignation, 'Select Designation', designations, 'name', empObj.designation_id.name);
     } catch (error) {
         console.error("Failed to fetch Designations : ", error);
@@ -440,7 +437,7 @@ const updateEmployee = async () => {
     if (errors == "") {
         let updates = showEmpValueChanges();
         if (updates == "") {
-            alert("No changes detected to update");
+            showAlertModal('war', "No changes detected to update");
         } else {
             let userConfirm = confirm("Are you sure to proceed ? \n \n" + updates);
 
@@ -450,25 +447,25 @@ const updateEmployee = async () => {
                     let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
 
                     if (putServiceResponse === "OK") {
-                        alert("Successfully Updated");
+                        showAlertModal('suc', "Successfully Updated");
                         document.getElementById('formEmployee').reset();
                         refreshEmployeeForm();
                         buildEmployeeTable();
                         var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myEmpTableTab.show();
                     } else {
-                        alert("Update Failed \n" + putServiceResponse);
+                        showAlertModal('err', "Update Failed \n" + putServiceResponse);
                     }
 
                 } catch (error) {
-                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
             } else {
-                alert("User cancelled the task");
+                showAlertModal('inf', "User cancelled the task");
             }
         }
     } else {
-        alert("Form has following errors: \n" + errors);
+        showAlertModal('err', errors);
     }
 }
 
@@ -480,17 +477,17 @@ const deleteEmployeeRecord = async (empObj) => {
             const deleteServerResponse = await ajaxPPDRequest("/emp", "DELETE", empObj);
 
             if (deleteServerResponse === 'OK') {
-                alert('Record Deleted');
+                showAlertModal('inf', 'Record Deleted');
                 $('#infoModalEmployee').modal('hide');
                 window.location.reload();
             } else {
-                alert('Delete Failed' + deleteServerResponce);
+                showAlertModal('err', 'Delete Failed' + deleteServerResponce);
             }
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert("User cancelled the task")
+        showAlertModal('inf', "User cancelled the task")
     }
 }
 
@@ -509,21 +506,21 @@ const restoreEmployeeRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/emp", "PUT", employee);
 
             if (putServiceResponse === "OK") {
-                alert("Successfully Restored");
+                showAlertModal('suc', "Successfully Restored");
                 $("#infoModalEmployee").modal("hide");
 
                 //AN LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
                 window.location.reload();
 
             } else {
-                alert("Restore Failed \n" + putServiceResponse);
+                showAlertModal('err', "Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert('User cancelled the recovery task');
+        showAlertModal('inf', 'User cancelled the recovery task');
     }
 
 
