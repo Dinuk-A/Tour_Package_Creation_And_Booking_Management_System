@@ -106,28 +106,34 @@ const refreshUserForm = async () => {
         dynamicUserRoles.classList.add("d-flex", "flex-wrap", "gap-2");
 
         rolesList.forEach(element => {
+            let idAttribute = element.name.replace(/\s+/g, '-');
+            
             let newInput = document.createElement('input');
             newInput.type = "checkbox";
             newInput.classList.add("btn-check");
-            newInput.setAttribute('id', JSON.stringify(element.name));
+            newInput.setAttribute('id', idAttribute);
             newInput.setAttribute('autocomplete', 'off');
-
-            //let randomColor = getRandomColor();
 
             let newLabel = document.createElement('label');
             newLabel.className = "btn , btn-outline-primary";
-            newLabel.setAttribute('for', JSON.stringify(element.name));
-            //newLabel.style.backgroundColor = randomColor;
-            //newLabel.style.color = "white";
+            newLabel.setAttribute('for', idAttribute);
             newLabel.innerText = element.name;
             newLabel.style.minWidth = "100px";
             newLabel.style.textAlign = "center";
+            newLabel.style.borderRadius = "8px";
+            newLabel.style.transition = "all 0.3s ease-in-out";
 
             newInput.onchange = function () {
                 if (this.checked) {
                     console.log('checked ' + element.name);
                     user.roles.push(element);
+                    newLabel.style.backgroundColor = "lime";
+                    newLabel.style.color = "white";
+                    newLabel.style.borderColor = "green";
                 } else {
+                    newLabel.style.backgroundColor = "";
+                    newLabel.style.color = "";
+                    newLabel.style.borderColor = "";
                     console.log('un checked ' + element.name);
                     const roleIDsOnly = user.roles.map(r => r.id);
                     const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
@@ -330,24 +336,34 @@ const refillUserForm = async (userObj) => {
         //dynamicUserRoles.classList.add("d-flex", "flex-wrap", "gap-2");
         rolesList.forEach(element => {
 
+            let idAttribute = element.name.replace(/\s+/g, '-');
+
             let newInput = document.createElement('input');
             newInput.type = "checkbox";
             newInput.classList.add("btn-check");
-            newInput.setAttribute('id', JSON.stringify(element.name));
+            newInput.setAttribute('id', idAttribute);
             newInput.setAttribute('autocomplete', 'off');
 
             let newLabel = document.createElement('label');
-            newLabel.className = "btn , btn-outline-primary";
-            newLabel.setAttribute('for', JSON.stringify(element.name));
+            newLabel.className = "btn , btn-outline-primary me-2 my-1";
+            newLabel.setAttribute('for', idAttribute);
             newLabel.innerText = element.name;
             newLabel.style.minWidth = "100px";
             newLabel.style.textAlign = "center";
+            newLabel.style.borderRadius = "8px";
+            newLabel.style.transition = "all 0.3s ease-in-out";
 
             newInput.onchange = function () {
                 if (this.checked) {
                     user.roles.push(element)
                     console.log('checked ' + element.name);
+                    newLabel.style.backgroundColor = "lime";
+                    newLabel.style.color = "white";
+                    newLabel.style.borderColor = "green";
                 } else {
+                    newLabel.style.backgroundColor = "";
+                    newLabel.style.color = "";
+                    newLabel.style.borderColor = "";
                     console.log('un checked ' + element.name);
                     const roleIDsOnly = user.roles.map(r => r.id);
                     const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);

@@ -128,17 +128,17 @@ const refreshAttractionForm = async () => {
         flushCollapseOne.innerHTML = "";
         categoryList.forEach(element => {
 
-            let id = element.name.replace(/\s+/g, '-');
+            let idAttribute = element.name.replace(/\s+/g, '-');
 
             let newInput = document.createElement('input');
             newInput.type = "checkbox";
             newInput.classList.add("btn-check");
-            newInput.setAttribute('id', id);
+            newInput.setAttribute('id', idAttribute);
             newInput.setAttribute('autocomplete', 'off');
 
             let newLabel = document.createElement('label');
             newLabel.className = "btn , btn-outline-primary me-2 my-1";
-            newLabel.setAttribute('for', id);
+            newLabel.setAttribute('for', idAttribute);
             newLabel.innerText = element.name;
             newLabel.style.minWidth = "100px";
             newLabel.style.textAlign = "center";
@@ -149,7 +149,6 @@ const refreshAttractionForm = async () => {
                 if (this.checked) {
                     attraction.categories.push(element)
                     console.log('checked ' + element.name);
-
                     newLabel.style.backgroundColor = "lime";
                     newLabel.style.color = "white";
                     newLabel.style.borderColor = "green";
@@ -159,7 +158,6 @@ const refreshAttractionForm = async () => {
                     newLabel.style.backgroundColor = "";
                     newLabel.style.color = "";
                     newLabel.style.borderColor = "";
-
                     const attrCatIdOnly = attraction.categories.map(atrCat => atrCat.id);
                     const indexOfCurrentPoppingElement = attrCatIdOnly.indexOf(element.id);
 
@@ -560,15 +558,17 @@ const refillAttractionForm = async (obj) => {
         flushCollapseOne.innerHTML = "";
         categoryList.forEach(element => {
 
+            let idAttribute = element.name.replace(/\s+/g, '-');
+
             let newInput = document.createElement('input');
             newInput.type = "checkbox";
             newInput.classList.add("btn-check");
-            newInput.setAttribute('id', JSON.stringify(element.name));
+            newInput.setAttribute('id', idAttribute);
             newInput.setAttribute('autocomplete', 'off');
 
             let newLabel = document.createElement('label');
             newLabel.className = "btn , btn-outline-primary me-2 my-1";
-            newLabel.setAttribute('for', JSON.stringify(element.name));
+            newLabel.setAttribute('for', idAttribute);
             newLabel.innerText = element.name;
             newLabel.style.minWidth = "100px";
             newLabel.style.textAlign = "center";
