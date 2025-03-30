@@ -89,7 +89,7 @@ const createPriviTableCustomFn = (dataContainer) => {
                 //more cases needed
 
                 default:
-                    alert("error creating table");
+                    showAlertModal('err',"error creating table");
                     break;
             }
             row.appendChild(cell);
@@ -342,21 +342,21 @@ const addPrivileges = async () => {
                 const postServerResponse = await ajaxPPDRequest("/privilege", "POST", privilege);
 
                 if (postServerResponse === 'OK') {
-                    alert('Saved Successfully');
+                    showAlertModal('suc','Saved Successfully');
                     document.getElementById('formPrivilege').reset();
                     buildPriviTable();
                     refreshPrivilegeForm();
                 } else {
-                    alert('Submit Failed ' + postServerResponse);
+                    showAlertModal('err','Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
-                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         } else {
-            alert("user cancelled the task")
+            showAlertModal('inf',"user cancelled the task")
         }
     } else {
-        alert("Form has following errors \n " + errors)
+        showAlertModal('err', errors)
     }
 }
 
@@ -453,7 +453,7 @@ const updatePrivileges = async () => {
 
         let updates = showValueChanges();
         if (updates == "") {
-            alert("No changes detected to update");
+            showAlertModal('err',"No changes detected to update");
         } else {
 
             let userConfirm = confirm("Are you sure to update following record? \n \n" + updates);
@@ -464,25 +464,25 @@ const updatePrivileges = async () => {
                     let putServiceResponse = await ajaxPPDRequest("/privilege", "PUT", privilege);
 
                     if (putServiceResponse === "OK") {
-                        alert("Successfully Updated");
+                        showAlertModal('suc',"Successfully Updated");
                         buildPriviTable();
                         document.getElementById('formPrivilege').reset();
                         refreshPrivilegeForm();
 
                     } else {
-                        alert("Update Failed \n" + putServiceResponse);
+                        showAlertModal('err',"Update Failed \n" + putServiceResponse);
                     }
 
                 } catch (error) {
-                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
 
             } else {
-                alert("User cancelled the task");
+                showAlertModal('inf',"User cancelled the task");
             }
         }
     } else {
-        alert("Form has following errors \n" + errors);
+        showAlertModal('err', errors);
     }
 }
 
@@ -496,17 +496,17 @@ const deletePriviRecord = async (prvObj) => {
         try {
             const deleteServerResponse = await ajaxPPDRequest("/privilege", "DELETE", prvObj);
             if (deleteServerResponse === 'OK') {
-                alert('Record Deleted');
+                showAlertModal('suc','Record Deleted');
 
             } else {
-                alert('Delete Failed' + deleteServerResponce);
+                showAlertModal('err','Delete Failed' + deleteServerResponce);
             }
 
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert("User cancelled the task")
+        showAlertModal('inf',"User cancelled the task")
     }
 
 }
@@ -522,4 +522,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //print entire table module vise or ???
-const printPrivi = (prvObj) => { alert('test print ') }
+const printPrivi = (prvObj) => { showAlertModal('inf','test print ') }

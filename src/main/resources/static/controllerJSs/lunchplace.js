@@ -133,7 +133,7 @@ const addNewLunchPlace = async () => {
                 let postServiceResponse = await ajaxPPDRequest("/lunchplace", "POST", lunchplace);
 
                 if (postServiceResponse == "OK") {
-                    alert('Saved Successfully');
+                    showAlertModal('suc','Saved Successfully');
                     document.getElementById('formLunchPlace').reset();
                     refreshLunchPlaceForm();
                     buildLunchPlaceTable();
@@ -141,19 +141,19 @@ const addNewLunchPlace = async () => {
                     myLPTableTab.show();
 
                 } else {
-                    alert('Submit Failed ' + postServerResponse);
+                    showAlertModal('err','Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
 
 
         } else {
-            alert('Operation Cancelled By User')
+            showAlertModal('inf','Operation Cancelled By User')
         }
     } else {
-        alert('Form Has Followimg Errors \n \n' + errors);
+        showAlertModal('err', errors);
     }
 
 }
@@ -264,7 +264,7 @@ const updateLunchPlace = async () => {
     if (errors == "") {
         let updates = showLPValueChanges();
         if (updates == "") {
-            alert("No changes detected");
+            showAlertModal('err',"No changes detected");
         } else {
             let userConfirm = confirm("Are you sure to proceed ? \n \n" + updates);
 
@@ -274,25 +274,25 @@ const updateLunchPlace = async () => {
                     let putServiceResponce = await ajaxPPDRequest("/lunchplace", "PUT", lunchplace);
 
                     if (putServiceResponce == "OK") {
-                        alert("Successfully Updted");
+                        showAlertModal('suc',"Successfully Updted");
                         document.getElementById('formLunchPlace').reset();
                         refreshLunchPlaceForm();
                         buildLunchPlaceTable();
                         var myLPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myLPTableTab.show();
                     } else {
-                        alert("An Error Occured " + putServiceResponce);
+                        showAlertModal('err',"An Error Occured " + putServiceResponce);
                     }
                 } catch (error) {
-                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
 
             } else {
-                alert("Operation cancelled by the Operator");
+                showAlertModal('inf',"Operation cancelled by the Operator");
             }
         }
     } else {
-        alert("Form has following errors: \n" + errors);
+        showAlertModal('err', errors);
     }
 }
 
@@ -304,18 +304,18 @@ const deleteLunchPlaceRecord = async (ob) => {
         try {
             let deleteServerResponse = await ajaxPPDRequest("/lunchplace", "DELETE", ob);
             if (deleteServerResponse == "OK") {
-                alert('Deleted succesfully')
+                showAlertModal('suc','Deleted succesfully')
                 $('#infoModalEmployee').modal('hide');
                 window.location.reload();
             } else {
-                alert("Delete Failed \n" + deleteServerResponse);
+                showAlertModal('err',"Delete Failed \n" + deleteServerResponse);
             }
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
 
     } else {
-        alert("User cancelled the task")
+        showAlertModal('inf',"User cancelled the task")
     }
 }
 
@@ -331,21 +331,21 @@ const restoreLunchPlaceRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/lunchplace", "PUT", lunchplace);
 
             if (putServiceResponse === "OK") {
-                alert("Successfully Restored");
+                showAlertModal('suc',"Successfully Restored");
                 $("#infoModalLunchplace").modal("hide");
 
                 //AN LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
                 window.location.reload();
 
             } else {
-                alert("Restore Failed \n" + putServiceResponse);
+                showAlertModal('err',"Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert('User cancelled the recovery task');
+        showAlertModal('inf','User cancelled the recovery task');
     }
 
 }

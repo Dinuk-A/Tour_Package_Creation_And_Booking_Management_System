@@ -160,7 +160,7 @@ const addNewStay = async () => {
                 let postServiceResponse = await ajaxPPDRequest("/stay", "POST", stay);
 
                 if (postServiceResponse === "OK") {
-                    alert('Saved Successfully');
+                    showAlertModal('suc','Saved Successfully');
                     document.getElementById('formStay').reset();
                     refreshStayForm();
                     buildStayTable();
@@ -168,20 +168,20 @@ const addNewStay = async () => {
                     myStayTableTab.show();
 
                 } else {
-                    alert('Submit Failed ' + postServiceResponse);
+                    showAlertModal('err','Submit Failed ' + postServiceResponse);
                 }
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
 
 
         } else {
             //💥💥💥
-            alert('Operation Cancelled By User')
+            showAlertModal('inf','Operation Cancelled By User')
         }
     } else {
-        alert('Form Has Followimg Errors \n \n' + errors);
+        showAlertModal('err', errors);
     }
 
 }
@@ -234,20 +234,20 @@ const restoreStayRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/stay", "PUT", stay);
 
             if (putServiceResponse === "OK") {
-                alert("Successfully Restored");
+                showAlertModal('suc',"Successfully Restored");
                 document.getElementById('formStay').reset();
                 $("#infoModalStay").modal("hide");
                 window.location.reload();
 
             } else {
-                alert("Restore Failed \n" + putServiceResponse);
+                showAlertModal('err',"Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert('Recovery process has cancelled');
+        showAlertModal('inf','Recovery process has cancelled');
     }
 }
 
@@ -363,7 +363,7 @@ const updateStay = async () => {
     if (errors == "") {
         let updates = showStayValueChanges();
         if (updates == "") {
-            alert("No changes detected");
+            showAlertModal('err',"No changes detected");
         } else {
             let userConfirm = confirm("Are you sure to proceed ? \n \n" + updates);
 
@@ -373,7 +373,7 @@ const updateStay = async () => {
                     let putServiceResponce = await ajaxPPDRequest("/stay", "PUT", stay);
 
                     if (putServiceResponce == "OK") {
-                        alert("Successfully Updted");
+                        showAlertModal('suc',"Successfully Updted");
                         document.getElementById('formStay').reset();
                         refreshStayForm();
                         buildStayTable();
@@ -381,18 +381,18 @@ const updateStay = async () => {
                         myStayTableTab.show();
 
                     } else {
-                        alert("An Error Occured " + putServiceResponce);
+                        showAlertModal('err',"An Error Occured " + putServiceResponce);
                     }
                 } catch (error) {
-                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
 
             } else {
-                alert("Operation cancelled by the Operator");
+                showAlertModal('inf',"Operation cancelled by the Operator");
             }
         }
     } else {
-        alert("form has following errors \n" + errors);
+        showAlertModal('err',errors);
     }
 }
 
@@ -406,18 +406,18 @@ const deleteStayRecord = async (ob) => {
         try {
             let deleteServerResponse = await ajaxPPDRequest("/stay", "DELETE", ob);
             if (deleteServerResponse === "OK") {
-                alert('Deleted succesfully');
+                showAlertModal('suc','Deleted succesfully');
                 $('#infoModalStay').modal('hide');
                 window.location.reload();
             } else {
-                alert("Delete Failed \n" + deleteServerResponse);
+                showAlertModal('err',"Delete Failed \n" + deleteServerResponse);
             }
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
 
     } else {
-        alert("User cancelled the task")
+        showAlertModal('inf',"User cancelled the task")
     }
 }
 //get district list based on selected province

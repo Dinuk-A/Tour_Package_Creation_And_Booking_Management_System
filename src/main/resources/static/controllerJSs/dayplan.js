@@ -247,7 +247,7 @@ const addOne = () => {
     }
 
     if (isPlaceAlreadySelected) {
-        alert('this place is already selected')
+        showAlertModal('err','this place is already selected')
     } else {
 
         dayplan.vplaces.push(selectedPlace);
@@ -520,25 +520,25 @@ const addNewDayPlan = async () => {
                 const postServerResponse = await ajaxPPDRequest("/dayplan", "POST", dayplan);
 
                 if (postServerResponse === 'OK') {
-                    showAlertModal('suc', 'Saved Successfully');
+                    showAlertModalModal('suc', 'Saved Successfully');
                     document.getElementById('formDayPlan').reset();
                     refreshDayPlanForm();
                     buildDayPlanTable();
                     var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                     myDPTableTab.show();
                 } else {
-                    alert('Submit Failed ' + postServerResponse);
+                    showAlertModal('err','Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showshowAlertModalModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         } else {
-            showAlertModal('inf', 'User cancelled the task');
+            showshowAlertModalModal('inf', 'User cancelled the task');
         }
     } else {
-        //showAlertModal('war',' \n' + errors);
-        showAlertModal('war', errors);
+        //showshowAlertModalModal('war',' \n' + errors);
+        showshowAlertModalModal('war', errors);
     }
 }
 
@@ -620,7 +620,7 @@ const openModal = (dpObj) => {
 const refillDayPlanForm = async (dpObj) => {
 
     if (dpObj.dp_status == "Completed") {
-        alert("tour for this day plan is already completed, hence cant edit")
+        showAlertModal('err',"tour for this day plan is already completed, hence cant edit")
     } else {
 
         dayplan = JSON.parse(JSON.stringify(dpObj));
@@ -758,7 +758,7 @@ const updateDayPlan = async () => {
     if (errors == "") {
         let updates = showDPValueChanges();
         if (updates == "") {
-            alert("No changes detected to update");
+            showAlertModal('err',"No changes detected to update");
         } else {
             let userConfirm = confirm("Are you sure to proceed ? \n \n" + updates);
 
@@ -768,25 +768,25 @@ const updateDayPlan = async () => {
                     let putServiceResponse = await ajaxPPDRequest("/dayplan", "PUT", dayplan);
 
                     if (putServiceResponse === "OK") {
-                        showAlertModal('suc', 'Saved Successfully');
+                        showshowAlertModalModal('suc', 'Saved Successfully');
                         document.getElementById('formDayPlan').reset();
                         refreshDayPlanForm();
                         buildDayPlanTable();
                         var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myDPTableTab.show();
                     } else {
-                        alert("Update Failed \n" + putServiceResponse);
+                        showAlertModal('err',"Update Failed \n" + putServiceResponse);
                     }
 
                 } catch (error) {
-                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
             } else {
-                showAlertModal('inf', 'User cancelled the task');
+                showshowAlertModalModal('inf', 'User cancelled the task');
             }
         }
     } else {
-        showAlertModal('war', errors);
+        showshowAlertModalModal('war', errors);
     }
 }
 
@@ -798,17 +798,17 @@ const deleteDayPlanRecord = async (dpObj) => {
             const deleteServerResponse = await ajaxPPDRequest("/dayplan", "DELETE", dpObj);
 
             if (deleteServerResponse === 'OK') {
-                alert('Record Deleted');
+                showAlertModal('suc','Record Deleted');
                 $('#infoModalDayPlan').modal('hide');
                 window.location.reload();
             } else {
-                alert('Delete Failed' + deleteServerResponce);
+                showAlertModal('err','Delete Failed' + deleteServerResponce);
             }
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert("User cancelled the task")
+        showAlertModal('inf',"User cancelled the task")
     }
 }
 
@@ -827,21 +827,21 @@ const restoreDayPlanRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/dayplan", "PUT", dayplan);
 
             if (putServiceResponse === "OK") {
-                alert("Successfully Restored");
+                showAlertModal('suc',"Successfully Restored");
                 $("#infoModalDayPlan").modal("hide");
 
                 //AN LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
                 window.location.reload();
 
             } else {
-                alert("Restore Failed \n" + putServiceResponse);
+                showAlertModal('err',"Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert('User cancelled the recovery task');
+        showAlertModal('inf','User cancelled the recovery task');
     }
 
 
@@ -986,14 +986,14 @@ const saveAsNewDayPlan = () => {
 
     let postServiceResponse = ajaxRequest("/dayplan/saveasnew", "POST", dayplan);
     if (new RegExp("^[A-Z]{5}[0-9]{1,3}$").test(postServiceResponse)) {
-        alert("Succesfully Saved ! \n New Code : " + postServiceResponse);
+        showAlertModal('suc',"Succesfully Saved ! \n New Code : " + postServiceResponse);
         formDayPlan.reset();
         refreshDayPlanForm();
         refreshDayPlanTable();
 
         $('#mainDayPlanFormModal').modal('hide');
     } else {
-        alert("An Error Occured " + postServiceResponse);
+        showAlertModal('err',"An Error Occured " + postServiceResponse);
     }
 
 }

@@ -157,7 +157,7 @@ const addNewVehicle = async () => {
                 const postServerResponse = await ajaxPPDRequest("/vehicle", "POST", vehicle);
 
                 if (postServerResponse === "OK") {
-                    alert('Saved Successfully');
+                    showAlertModal('suc','Saved Successfully');
                     document.getElementById('formVehicle').reset();
                     refreshVehicleForm();
                     buildVehicleTable();
@@ -165,19 +165,19 @@ const addNewVehicle = async () => {
                     myVehiTableTab.show();
 
                 } else {
-                    alert('Submit Failed ' + postServerResponse);
+                    showAlertModal('err','Submit Failed ' + postServerResponse);
                 }
 
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         }
         else {
-            alert('User cancelled the task');
+            showAlertModal('inf','User cancelled the task');
         }
     } else {
-        alert('Form has following errors:  \n' + errors);
+        showAlertModal('err', errors);
     }
 
 
@@ -284,7 +284,7 @@ const updateVehicle = async () => {
         //check updates
         let updates = showVehicleValueChanges();
         if (updates == '') {
-            alert('No Changes Detected');
+            showAlertModal('err','No Changes Detected');
         } else {
             let userResponse = confirm("Are You Sure To Proceed? \n \n " + updates);
 
@@ -293,24 +293,24 @@ const updateVehicle = async () => {
                 try {
                     let putServiceResponse = await ajaxPPDRequest("/vehicle", "PUT", vehicle);
                     if (putServiceResponse === "OK") {
-                        alert("Successfully Updted");
+                        showAlertModal('suc',"Successfully Updted");
                         document.getElementById('formVehicle').reset();
                         refreshVehicleForm();
                         buildVehicleTable();
                         var myVehiTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myVehiTableTab.show();
                     } else {
-                        alert("Update Failed \n" + putServiceResponse);
+                        showAlertModal('err',"Update Failed \n" + putServiceResponse);
                     }
                 } catch (error) {
-                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
             } else {
-                alert("User cancelled the task");
+                showAlertModal('inf',"User cancelled the task");
             }
         }
     } else {
-        alert("Form has following errors: \n" + errors);
+        showAlertModal('err', errors);
     }
 }
 
@@ -325,17 +325,17 @@ const deleteVehicleRecord = async (ob) => {
             let deleteServerResponse = await ajaxPPDRequest("/vehicle", "DELETE", ob);
 
             if (deleteServerResponse == 'OK') {
-                alert('Record Deleted');
+                showAlertModal('suc','Record Deleted');
                 $('#infoModalVehicle').modal('hide');
                 buildVehicleTable();
             } else {
-                alert("Delete Failed \n" + deleteServerResponse);
+                showAlertModal('err',"Delete Failed \n" + deleteServerResponse);
             }
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert("User cancelled the task");
+        showAlertModal('inf',"User cancelled the task");
     }
 }
 
@@ -352,20 +352,20 @@ const restoreVehicleRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/vehicle", "PUT", vehicle);
 
             if (putServiceResponse === "OK") {
-                alert("Successfully Restored");
+                showAlertModal('suc',"Successfully Restored");
                 document.getElementById('formVehicle').reset();
                 $("#infoModalVehicle").modal("hide");
                 window.location.reload();
 
             } else {
-                alert("Restore Failed \n" + putServiceResponse);
+                showAlertModal('err',"Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert('User cancelled the recovery task');
+        showAlertModal('inf','User cancelled the recovery task');
     }
 
 

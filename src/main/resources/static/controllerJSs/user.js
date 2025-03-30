@@ -259,24 +259,24 @@ const addNewUser = async () => {
             try {
                 let postServerResponse = await ajaxPPDRequest("/user", "POST", user);
                 if (postServerResponse === 'OK') {
-                    alert('Saved Successfully');
+                    showAlertModal('suc','Saved Successfully');
                     document.getElementById('formUser').reset();
                     refreshUserForm();
                     buildUserTable();
                     var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                     myEmpTableTab.show();
                 } else {
-                    alert('Submit Failed ' + postServerResponse);
+                    showAlertModal('err','Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
-                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
 
         } else {
-            alert('User cancelled the task');
+            showAlertModal('inf','User cancelled the task');
         }
     } else {
-        alert('Form has following errors ' + errors);
+        showAlertModal('err' , errors);
     }
 }
 
@@ -399,7 +399,7 @@ const refillUserForm = async (userObj) => {
 
     $("#infoModalUser").modal("hide");
 
-    //edit karanna nodima inna mechchara dura noya, alert ekak danna 💥💥
+    //edit karanna nodima inna mechchara dura noya, showAlertModal ekak danna 💥💥
     //    if (privileges.privupdate) {
     //        userUpdateBtn.disabled = false;
     //        userUpdateBtn.style.cursor="pointer"
@@ -484,7 +484,7 @@ const updateUser = async () => {
     if (errors == '') {
         let updates = showUserValueChanges();
         if (updates == '') {
-            alert('No changes detected to update')
+            showAlertModal('war','No changes detected to update')
         } else {
             let userResponse = confirm("Are you sure to proceed ? \n \n" + updates);
             if (userResponse) {
@@ -493,25 +493,25 @@ const updateUser = async () => {
                     let putServiceResponse = await ajaxPPDRequest("/user", "PUT", user);
 
                     if (putServiceResponse === "OK") {
-                        alert("Successfully Updated");
+                        showAlertModal('suc',"Successfully Updated");
                         document.getElementById('formUser').reset();
                         refreshUserForm();
                         buildUserTable();
                         var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myEmpTableTab.show();
                     } else {
-                        alert("Update Failed \n" + putServiceResponse);
+                        showAlertModal('err',"Update Failed \n" + putServiceResponse);
                     }
                 } catch (error) {
-                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
             } else {
-                alert("User cancelled the task");
+                showAlertModal('inf',"User cancelled the task");
 
             }
         }
     } else {
-        alert('Form has following errors ' + errors)
+        showAlertModal('err ' , errors)
     }
 }
 
@@ -526,16 +526,16 @@ const deleteUserRecord = async (userObj) => {
             const deleteServerResponse = await ajaxPPDRequest("/user", "DELETE", userObj);
 
             if (deleteServerResponse === 'OK') {
-                alert('Record Deleted');
+                showAlertModal('suc','Record Deleted');
 
             } else {
-                alert('Delete Failed' + deleteServerResponce);
+                showAlertModal('err','Delete Failed' + deleteServerResponce);
             }
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert("User cancelled the task")
+        showAlertModal('inf',"User cancelled the task")
     }
 }
 

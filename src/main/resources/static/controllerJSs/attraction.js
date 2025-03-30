@@ -456,7 +456,7 @@ const addNewAttraction = async () => {
                 const postServiceResponse = await ajaxPPDRequest("/attraction", "POST", attraction);
 
                 if (postServiceResponse === "OK") {
-                    alert('Saved Successfully');
+                    showAlertModal('suc','Saved Successfully');
                     document.getElementById('formAttraction').reset();
                     refreshAttractionForm();
                     buildAttractionTable();
@@ -464,20 +464,20 @@ const addNewAttraction = async () => {
                     myAttrTableTab.show();
 
                 } else {
-                    alert('Submit Failed ' + postServiceResponse);
+                    showAlertModal('err','Submit Failed ' + postServiceResponse);
                 }
 
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
 
         } else {
             //💥💥💥
-            alert('User cancelled the task');
+            showAlertModal('inf','User cancelled the task');
         }
     } else {
-        showAlertModal('Form Has Followimg Errors \n \n' + errors);
+        showshowAlertModalModal('err','Form Has Followimg Errors \n \n' + errors);
     }
 }
 
@@ -530,7 +530,7 @@ const restoreAttractionRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/attraction", "PUT", attraction);
 
             if (putServiceResponse === "OK") {
-                alert("Successfully Restored");
+                showAlertModal('suc',"Successfully Restored");
                 document.getElementById('formAttraction').reset();
                 //refreshAttractionForm();
                 //buildAttractionTable();
@@ -538,14 +538,14 @@ const restoreAttractionRecord = async () => {
                 window.location.reload();
 
             } else {
-                alert("Restore Failed \n" + putServiceResponse);
+                showAlertModal('err',"Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert('Recovery process has cancelled');
+        showAlertModal('inf','Recovery process has cancelled');
     }
 }
 
@@ -821,7 +821,7 @@ const updateAttraction = async () => {
     if (errors == '') {
         let updates = showAttrValueChanges();
         if (updates == '') {
-            alert('No changes detected to update');
+            showAlertModal('No changes detected to update');
         } else {
 
             let userResponse = confirm("Sure To Update ? \n \n " + updates);
@@ -832,27 +832,27 @@ const updateAttraction = async () => {
                     let putServiceResponce = await ajaxPPDRequest("/attraction", "PUT", attraction);
 
                     if (putServiceResponce == "OK") {
-                        alert("Successfully Updted");
+                        showAlertModal('suc',"Successfully Updated");
                         document.getElementById('formAttraction').reset();
                         buildAttractionTable();
                         refreshAttractionForm();
                         var myAttrTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myAttrTableTab.show();
                     } else {
-                        alert("An Error Occured " + putServiceResponce);
+                        showAlertModal('err',"An Error Occured " + putServiceResponce);
                     }
 
                 } catch (error) {
-                    alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
 
             } else {
-                alert("User cancelled the task");
+                showAlertModal('inf',"User cancelled the task");
             }
         }
 
     } else {
-        alert('form has following errors \n ' + errors);
+        showAlertModal('err','form has following errors \n ' + errors);
     }
 
 }
@@ -868,18 +868,18 @@ const deleteAttractionRecord = async (ob) => {
             const deleteServerResponse = await ajaxPPDRequest("/attraction", "DELETE", ob);
 
             if (deleteServerResponse === "OK") {
-                alert("Record Deleted");
+                showAlertModal('suc',"Record Deleted");
                 $('#infoModalAttraction').modal('hide');
                 buildAttractionTable();
             } else {
-                alert("Delete Failed \n" + deleteServerResponse);
+                showAlertModal('err',"Delete Failed \n" + deleteServerResponse);
             }
 
         } catch (error) {
-            alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        alert('User Cancelled The Deletion Task');
+        showAlertModal('inf','User Cancelled The Deletion Task');
     }
 }
 
