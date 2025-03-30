@@ -65,8 +65,8 @@ const getUserRoles = (userObj) => {
     };
 
     userObj.roles.forEach((element) => {
-        
-        const color = roleColors[element.name] || '#b2bec3'; 
+
+        const color = roleColors[element.name] || '#b2bec3';
         userRoles += `<span class="rounded-pill text-white p-2" style="background-color: ${color};">${element.name}</span>`;
 
     });
@@ -79,10 +79,10 @@ const getUserRoles = (userObj) => {
 const getUserAccStatus = (userObj) => {
     if (userObj.acc_status) {
         return `<p class="bg-success text-white mx-1 p-2 my-auto" style="background-color:lime;">Active Account</p>`
-       
+
     } else {
         return `<p class="bg-danger text-white mx-1 p-2 my-auto" style="background-color:lime;">Inactive Account</p>`
-            }
+    }
 }
 
 const getRandomColor = () => {
@@ -112,7 +112,7 @@ const refreshUserForm = async () => {
             newInput.setAttribute('id', JSON.stringify(element.name));
             newInput.setAttribute('autocomplete', 'off');
 
-            let randomColor = getRandomColor();
+            //let randomColor = getRandomColor();
 
             let newLabel = document.createElement('label');
             newLabel.className = "btn , btn-outline-primary";
@@ -259,24 +259,24 @@ const addNewUser = async () => {
             try {
                 let postServerResponse = await ajaxPPDRequest("/user", "POST", user);
                 if (postServerResponse === 'OK') {
-                    showAlertModal('suc','Saved Successfully');
+                    showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formUser').reset();
                     refreshUserForm();
                     buildUserTable();
                     var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                     myEmpTableTab.show();
                 } else {
-                    showAlertModal('err','Submit Failed ' + postServerResponse);
+                    showAlertModal('err', 'Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
-                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
 
         } else {
-            showAlertModal('inf','User cancelled the task');
+            showAlertModal('inf', 'User cancelled the task');
         }
     } else {
-        showAlertModal('err' , errors);
+        showAlertModal('err', errors);
     }
 }
 
@@ -327,6 +327,7 @@ const refillUserForm = async (userObj) => {
 
         rolesList = await ajaxGetReq("/role/exceptadmin");
         dynamicUserRoles.innerHTML = "";
+        //dynamicUserRoles.classList.add("d-flex", "flex-wrap", "gap-2");
         rolesList.forEach(element => {
 
             let newInput = document.createElement('input');
@@ -347,14 +348,13 @@ const refillUserForm = async (userObj) => {
                     user.roles.push(element)
                     console.log('checked ' + element.name);
                 } else {
-
+                    console.log('un checked ' + element.name);
                     const roleIDsOnly = user.roles.map(r => r.id);
                     const indexOfCurrentPoppingElement = roleIDsOnly.indexOf(element.id);
 
                     if (indexOfCurrentPoppingElement != -1) {
                         user.roles.splice(indexOfCurrentPoppingElement, 1);
                     }
-                    console.log('un checked ' + element.name);
                 }
             }
 
@@ -484,7 +484,7 @@ const updateUser = async () => {
     if (errors == '') {
         let updates = showUserValueChanges();
         if (updates == '') {
-            showAlertModal('war','No changes detected to update')
+            showAlertModal('war', 'No changes detected to update')
         } else {
             let userResponse = confirm("Are you sure to proceed ? \n \n" + updates);
             if (userResponse) {
@@ -493,25 +493,25 @@ const updateUser = async () => {
                     let putServiceResponse = await ajaxPPDRequest("/user", "PUT", user);
 
                     if (putServiceResponse === "OK") {
-                        showAlertModal('suc',"Successfully Updated");
+                        showAlertModal('suc', "Successfully Updated");
                         document.getElementById('formUser').reset();
                         refreshUserForm();
                         buildUserTable();
                         var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myEmpTableTab.show();
                     } else {
-                        showAlertModal('err',"Update Failed \n" + putServiceResponse);
+                        showAlertModal('err', "Update Failed \n" + putServiceResponse);
                     }
                 } catch (error) {
-                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
             } else {
-                showAlertModal('inf',"User cancelled the task");
+                showAlertModal('inf', "User cancelled the task");
 
             }
         }
     } else {
-        showAlertModal('err ' , errors)
+        showAlertModal('err ', errors)
     }
 }
 
@@ -526,16 +526,16 @@ const deleteUserRecord = async (userObj) => {
             const deleteServerResponse = await ajaxPPDRequest("/user", "DELETE", userObj);
 
             if (deleteServerResponse === 'OK') {
-                showAlertModal('suc','Record Deleted');
+                showAlertModal('suc', 'Record Deleted');
 
             } else {
-                showAlertModal('err','Delete Failed' + deleteServerResponce);
+                showAlertModal('err', 'Delete Failed' + deleteServerResponce);
             }
         } catch (error) {
-            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        showAlertModal('inf',"User cancelled the task")
+        showAlertModal('inf', "User cancelled the task")
     }
 }
 

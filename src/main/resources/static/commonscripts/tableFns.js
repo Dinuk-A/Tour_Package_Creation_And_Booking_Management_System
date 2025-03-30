@@ -73,7 +73,7 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
                 //more cases needed
 
                 default:
-                    alert("error creating table");
+                    showAlertModal('err',"error creating table");
                     break;
             }
             row.appendChild(cell);

@@ -214,7 +214,7 @@ const refreshPrivilegeForm = async () => {
 
     try {
         // Get ROLES list for select element
-        roles = await ajaxGetReq("role/all");
+        roles = await ajaxGetReq("role/exceptadmin");
         fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name');
         selectRole.disabled = false;
 
@@ -367,7 +367,7 @@ const refillPriviForm = async (prvObj) => {
     oldPrivOb = JSON.parse(JSON.stringify(prvObj));
 
     try {
-        roles = await ajaxGetReq("role/all");
+        roles = await ajaxGetReq("role/exceptadmin");
         fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name', prvObj.role_id.name);
         selectRole.disabled = false;
 

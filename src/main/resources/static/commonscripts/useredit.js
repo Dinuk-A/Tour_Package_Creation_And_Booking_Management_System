@@ -54,14 +54,14 @@ const submitUserAccChanges =async () => {
         let updateServicesResponces = await ajaxPPDRequest("/edituserinfo", "PUT", loggedUser);
 
     if (updateServicesResponces == 'OK') {
-        alert('User Profile Changed Successfully! \n ');
+        showAlertModal('suc','User Profile Changed Successfully! \n ');
         window.location.assign("/logout");
     } else {
-        alert('User Info Change Failed \n' +
+        alert('err','User Info Change Failed \n' +
             updateServicesResponces);
     }
     } catch (error) {
-        alert('An error occurred: ' + (error.responseText || error.statusText || error.message));
+        alert('suc','An error occurred: ' + (error.responseText || error.statusText || error.message));
     }
     
 }
