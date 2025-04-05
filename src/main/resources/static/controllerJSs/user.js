@@ -78,12 +78,20 @@ const getUserRoles = (userObj) => {
 //to support fill main table
 const getUserAccStatus = (userObj) => {
     if (userObj.acc_status) {
-        return `<p class="bg-success text-white mx-1 p-2 my-auto" style="background-color:lime;">Active Account</p>`
-
+        return `
+            <p class="text-white mx-1 px-3 py-1 my-auto d-inline-block"
+               style="background-color: #2ecc71; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+               ✅ Active
+            </p>`;
     } else {
-        return `<p class="bg-danger text-white mx-1 p-2 my-auto" style="background-color:lime;">Inactive Account</p>`
+        return `
+            <p class="text-white mx-1 px-3 py-1 my-auto d-inline-block"
+               style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+               ❌ Inactive
+            </p>`;
     }
 }
+
 
 const getRandomColor = () => {
     return `hsl(${Math.random() * 360}, 70%, 60%)`; // Random hue, good contrast
@@ -330,6 +338,7 @@ const refillUserForm = async (userObj) => {
         empListWOUserAcc.push(user.employee_id);
         fillMultDataIntoDynamicSelects(selectEmployee, "Select Employee", empListWOUserAcc, 'emp_code', 'fullname', user.employee_id.fullname);
         inputUserName.disabled = true;
+        selectEmployee.disabled = true;
 
         rolesList = await ajaxGetReq("/role/exceptadmin");
         dynamicUserRoles.innerHTML = "";

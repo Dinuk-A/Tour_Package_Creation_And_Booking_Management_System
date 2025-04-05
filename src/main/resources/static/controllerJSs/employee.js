@@ -40,7 +40,7 @@ const showEmpDesignation = (empObj) => {
 }
 
 // fn to fill the table
-const showEmployeeStatus = (empObj) => {
+const showEmployeeStatusOri = (empObj) => {
 
     if (empObj.deleted_emp == null || empObj.deleted_emp == false) {
         if (empObj.emp_status == "Working") {
@@ -52,6 +52,33 @@ const showEmployeeStatus = (empObj) => {
         return '<p class="text-white bg-danger text-center my-0 p-2" > Deleted Record </p>'
     }
 }
+
+const showEmployeeStatus = (empObj) => {
+
+    if (empObj.deleted_emp == null || empObj.deleted_emp == false) {
+        if (empObj.emp_status == "Working") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #27ae60; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Working
+                </p>`;
+        } else {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Resigned
+                </p>`;
+        }
+    } else if (empObj.deleted_emp != null && empObj.deleted_emp == true) {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               ❌ Deleted Record
+            </p>`;
+    }
+}
+
+
 
 //fn to ready the main form for accept values
 const refreshEmployeeForm = async () => {

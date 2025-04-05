@@ -1,5 +1,6 @@
 package lk.yathratravels.vehicle;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -39,6 +40,12 @@ public class Vehicle {
     @Column(name = "vehi_status")
     private String vehi_status;
 
+    @Column(name = "luggage_capacity")
+    private String luggage_capacity;
+
+    @Column(name = "cost_per_km")
+    private BigDecimal cost_per_km;
+
     @ManyToOne
     @JoinColumn(name = "vehicletype_id", referencedColumnName = "id")
     private VehicleType vehicletype_id;
@@ -68,3 +75,10 @@ public class Vehicle {
     @Column(name = "deleteduserid")
     private Integer deleteduserid;
 }
+
+// ac_available boolean ❌❌❌
+// fuel_type (Petrol / Diesel / Hybrid / Electric) ❌❌❌
+// assigned_driver_id (linked to employee table) ❌❌❌
+// last_service_date
+// next_service_due
+// insurance_expiry_date

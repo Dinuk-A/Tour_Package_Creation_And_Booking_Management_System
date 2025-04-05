@@ -43,22 +43,43 @@ const showVehicleStatus = (vehiObj) => {
 
     if (vehiObj.deleted_vehi == null || vehiObj.deleted_vehi == false) {
         if (vehiObj.vehi_status === "Available") {
-            return "<p class='bg-success text-white my-0'> Available For Tours </p>";
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #27ae60; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Available For Tours
+                </p>`;
         }
         if (vehiObj.vehi_status === "On Tour") {
-            return "On A Tour";
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #2980b9; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   On A Tour
+                </p>`;
         }
         if (vehiObj.vehi_status === "Under Maintenance") {
-            return "Under Maintenance";
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #8e44ad; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Under Maintenance
+                </p>`;
         }
         if (vehiObj.vehi_status === "Not In Service") {
-            return "Not In Service";
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #7f8c8d; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Not In Service
+                </p>`;
         }
     } else if (vehiObj.deleted_vehi != null && vehiObj.deleted_vehi == true) {
-        return '<p class="text-white bg-danger p-1"> Deleted Record </p>'
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               ❌ Deleted Record
+            </p>`;
     }
 
 }
+
 
 //fn to ready the main form for accept values
 const refreshVehicleForm = async () => {
@@ -84,6 +105,8 @@ const refreshVehicleForm = async () => {
         'inputPassengerpassengerseats',
         'selectVehicleStatus',
         'inputNote',
+        'inputVehiCostPerKM',
+        'inputVehiLuggageCapacity'
 
     ];
 
@@ -134,6 +157,14 @@ const checkVehiFormErrors = () => {
         errors = errors + "PLEASE ENTER THE MAXIMUM PASSENGER'S SEAT COUNT \n";
     }
 
+    if (vehicle.luggage_capacity == null) {
+        errors = errors + "PLEASE ENTER THE MAXIMUM LUGGAGE CAPACITY \n";
+    }
+
+    if (vehicle.cost_per_km == null) {
+        errors = errors + "PLEASE ENTER THE ESTIMATED COST PER KILOMETER AMOUNT \n";
+    }
+
     if (vehicle.vehi_status == null) {
         errors = errors + "PLEASE SELECT THE VEHICLE STATUS \n"
     }
@@ -157,7 +188,7 @@ const addNewVehicle = async () => {
                 const postServerResponse = await ajaxPPDRequest("/vehicle", "POST", vehicle);
 
                 if (postServerResponse === "OK") {
-                    showAlertModal('suc','Saved Successfully');
+                    showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formVehicle').reset();
                     refreshVehicleForm();
                     buildVehicleTable();
@@ -165,16 +196,16 @@ const addNewVehicle = async () => {
                     myVehiTableTab.show();
 
                 } else {
-                    showAlertModal('err','Submit Failed ' + postServerResponse);
+                    showAlertModal('err', 'Submit Failed ' + postServerResponse);
                 }
 
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         }
         else {
-            showAlertModal('inf','User cancelled the task');
+            showAlertModal('inf', 'User cancelled the task');
         }
     } else {
         showAlertModal('err', errors);
@@ -183,13 +214,15 @@ const addNewVehicle = async () => {
 
 }
 
-//fn for edit button, 💥
+//fn for edit button
 const openModal = (vehiObj) => {
     document.getElementById('modalVehiNumberPlate').innerText = vehiObj.numberplate || 'N/A';
     document.getElementById('modalVehiModalName').innerText = vehiObj.vehiclename || 'N/A';
     document.getElementById('modalVehiPassengerSeatCount').innerText = vehiObj.passengerseats || 'N/A';
     document.getElementById('modalVehiType').innerText = vehiObj.vehicletype_id.name || 'N/A';
     document.getElementById('modalVehiStatus').innerText = vehiObj.vehi_status || 'N/A';
+    document.getElementById('modalVehiLuggageCapacity').innerText = vehiObj.luggage_capacity || 'N/A';
+    document.getElementById('modalVehiCostPerKM').innerText = vehiObj.cost_per_km || 'N/A';
     document.getElementById('modalVehiNote').innerText = vehiObj.note || 'N/A';
 
     if (vehiObj.deleted_vehi) {
@@ -217,6 +250,8 @@ const refillVehicleForm = async (ob) => {
     inputVehicleName.value = vehicle.vehiclename;
     inputPassengerSeatCount.value = vehicle.passengerseats;
     inputNote.value = vehicle.note;
+    inputVehiLuggageCapacity.value = vehicle.luggage_capacity;
+    inputVehiCostPerKM.value = vehicle.cost_per_km;
 
     try {
         vTypes = await ajaxGetReq("/vehitypes/all");
@@ -231,10 +266,11 @@ const refillVehicleForm = async (ob) => {
     vehicleAddBtn.disabled = true;
     vehicleAddBtn.style.cursor = "not-allowed";
 
-    document.getElementById('selectVehicleStatus').style.border = '1px solid #ced4da';
-    document.getElementById('selectVehicleStatus').children[2].classList.remove('d-none');
-    document.getElementById('selectVehicleStatus').children[3].classList.remove('d-none');
-    document.getElementById('selectVehicleStatus').children[4].classList.remove('d-none');
+    let statusSelectElement = document.getElementById('selectVehicleStatus');
+    statusSelectElement.style.border = '1px solid #ced4da';
+    statusSelectElement.children[2].classList.remove('d-none');
+    statusSelectElement.children[3].classList.remove('d-none');
+    statusSelectElement.children[4].classList.remove('d-none');
 
 
     $("#infoModalVehicle").modal("hide");
@@ -257,6 +293,14 @@ const showVehicleValueChanges = () => {
 
     if (vehicle.vehiclename != oldVehi.vehiclename) {
         updates = updates + oldVehi.vehiclename + " will be changed to " + vehicle.vehiclename + "\n"
+    }
+
+    if (vehicle.luggage_capacity != oldVehi.luggage_capacity) {
+        updates = updates + oldVehi.luggage_capacity + " will be changed to " + vehicle.luggage_capacity + "\n"
+    }
+
+    if (vehicle.cost_per_km != oldVehi.cost_per_km) {
+        updates = updates + oldVehi.cost_per_km + " will be changed to " + vehicle.cost_per_km + "\n"
     }
 
     if (vehicle.passengerseats != oldVehi.passengerseats) {
@@ -284,7 +328,7 @@ const updateVehicle = async () => {
         //check updates
         let updates = showVehicleValueChanges();
         if (updates == '') {
-            showAlertModal('err','No Changes Detected');
+            showAlertModal('err', 'No Changes Detected');
         } else {
             let userResponse = confirm("Are You Sure To Proceed? \n \n " + updates);
 
@@ -293,20 +337,20 @@ const updateVehicle = async () => {
                 try {
                     let putServiceResponse = await ajaxPPDRequest("/vehicle", "PUT", vehicle);
                     if (putServiceResponse === "OK") {
-                        showAlertModal('suc',"Successfully Updted");
+                        showAlertModal('suc', "Successfully Updted");
                         document.getElementById('formVehicle').reset();
                         refreshVehicleForm();
                         buildVehicleTable();
                         var myVehiTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myVehiTableTab.show();
                     } else {
-                        showAlertModal('err',"Update Failed \n" + putServiceResponse);
+                        showAlertModal('err', "Update Failed \n" + putServiceResponse);
                     }
                 } catch (error) {
-                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
             } else {
-                showAlertModal('inf',"User cancelled the task");
+                showAlertModal('inf', "User cancelled the task");
             }
         }
     } else {
@@ -325,17 +369,17 @@ const deleteVehicleRecord = async (ob) => {
             let deleteServerResponse = await ajaxPPDRequest("/vehicle", "DELETE", ob);
 
             if (deleteServerResponse == 'OK') {
-                showAlertModal('suc','Record Deleted');
+                showAlertModal('suc', 'Record Deleted');
                 $('#infoModalVehicle').modal('hide');
                 buildVehicleTable();
             } else {
-                showAlertModal('err',"Delete Failed \n" + deleteServerResponse);
+                showAlertModal('err', "Delete Failed \n" + deleteServerResponse);
             }
         } catch (error) {
-            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        showAlertModal('inf',"User cancelled the task");
+        showAlertModal('inf', "User cancelled the task");
     }
 }
 
@@ -352,20 +396,20 @@ const restoreVehicleRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/vehicle", "PUT", vehicle);
 
             if (putServiceResponse === "OK") {
-                showAlertModal('suc',"Successfully Restored");
+                showAlertModal('suc', "Successfully Restored");
                 document.getElementById('formVehicle').reset();
                 $("#infoModalVehicle").modal("hide");
                 window.location.reload();
 
             } else {
-                showAlertModal('err',"Restore Failed \n" + putServiceResponse);
+                showAlertModal('err', "Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {
-            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        showAlertModal('inf','User cancelled the recovery task');
+        showAlertModal('inf', 'User cancelled the recovery task');
     }
 
 

@@ -26,7 +26,4 @@ public class VehicleType {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "chargeperkm")
-    private String chargeperkm;
-
 }
