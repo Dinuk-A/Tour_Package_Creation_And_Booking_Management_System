@@ -51,6 +51,7 @@ const createPriviTableCustomFn = (dataContainer) => {
     // Add the button column last
     const buttonTH = document.createElement('th');
     buttonTH.innerText = 'Action';
+    buttonTH.classList = 'text-center justify-content-center';
     tableHeadRow.appendChild(buttonTH);
 
     // Append the row to the thead
@@ -86,10 +87,8 @@ const createPriviTableCustomFn = (dataContainer) => {
                     cell.innerHTML = columnObj.displayingPropertyOrFn(record)
                     break;
 
-                //more cases needed
-
                 default:
-                    showAlertModal('err',"error creating table");
+                    showAlertModal('err', "error creating table");
                     break;
             }
             row.appendChild(cell);
@@ -342,18 +341,18 @@ const addPrivileges = async () => {
                 const postServerResponse = await ajaxPPDRequest("/privilege", "POST", privilege);
 
                 if (postServerResponse === 'OK') {
-                    showAlertModal('suc','Saved Successfully');
+                    showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formPrivilege').reset();
                     buildPriviTable();
                     refreshPrivilegeForm();
                 } else {
-                    showAlertModal('err','Submit Failed ' + postServerResponse);
+                    showAlertModal('err', 'Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
-                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         } else {
-            showAlertModal('inf',"user cancelled the task")
+            showAlertModal('inf', "user cancelled the task")
         }
     } else {
         showAlertModal('err', errors)
@@ -379,7 +378,7 @@ const refillPriviForm = async (prvObj) => {
         console.error("Error in refillPriviForm:", error);
     }
 
-     if (prvObj.prvselect) {
+    if (prvObj.prvselect) {
         selectGrantSwitch.checked = true;
     } else {
         selectRevokeSwitch.checked = true;
@@ -453,7 +452,7 @@ const updatePrivileges = async () => {
 
         let updates = showValueChanges();
         if (updates == "") {
-            showAlertModal('err',"No changes detected to update");
+            showAlertModal('err', "No changes detected to update");
         } else {
 
             let userConfirm = confirm("Are you sure to update following record? \n \n" + updates);
@@ -464,21 +463,21 @@ const updatePrivileges = async () => {
                     let putServiceResponse = await ajaxPPDRequest("/privilege", "PUT", privilege);
 
                     if (putServiceResponse === "OK") {
-                        showAlertModal('suc',"Successfully Updated");
+                        showAlertModal('suc', "Successfully Updated");
                         buildPriviTable();
                         document.getElementById('formPrivilege').reset();
                         refreshPrivilegeForm();
 
                     } else {
-                        showAlertModal('err',"Update Failed \n" + putServiceResponse);
+                        showAlertModal('err', "Update Failed \n" + putServiceResponse);
                     }
 
                 } catch (error) {
-                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
 
             } else {
-                showAlertModal('inf',"User cancelled the task");
+                showAlertModal('inf', "User cancelled the task");
             }
         }
     } else {
@@ -496,17 +495,17 @@ const deletePriviRecord = async (prvObj) => {
         try {
             const deleteServerResponse = await ajaxPPDRequest("/privilege", "DELETE", prvObj);
             if (deleteServerResponse === 'OK') {
-                showAlertModal('suc','Record Deleted');
+                showAlertModal('suc', 'Record Deleted');
 
             } else {
-                showAlertModal('err','Delete Failed' + deleteServerResponce);
+                showAlertModal('err', 'Delete Failed' + deleteServerResponce);
             }
 
         } catch (error) {
-            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        showAlertModal('inf',"User cancelled the task")
+        showAlertModal('inf', "User cancelled the task")
     }
 
 }
@@ -522,4 +521,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //print entire table module vise or ???
-const printPrivi = (prvObj) => { showAlertModal('inf','test print ') }
+const printPrivi = (prvObj) => { showAlertModal('inf', 'test print ') }

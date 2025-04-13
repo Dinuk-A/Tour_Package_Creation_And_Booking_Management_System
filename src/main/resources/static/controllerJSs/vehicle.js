@@ -34,9 +34,42 @@ const buildVehicleTable = async () => {
 }
 
 //get vehicle type 
-const showVehicleType = (vehiObj) => {
+const showVehicleTypeOri = (vehiObj) => {
     return vehiObj.vehicletype_id.name;
 }
+
+// get vehicle type
+const showVehicleType = (vehiObj) => {
+    const type = vehiObj.vehicletype_id.name;
+
+    let bgColor = "#bdc3c7"; // default or non-defined types
+    let text = type;
+
+    switch (type) {
+        case "Car":
+            bgColor = "#f39c12"; 
+            break;
+        case "Van":
+            bgColor = "#16a085";
+            break;
+        case "Mini Bus":
+            bgColor = "#9b59b6"; 
+            break;
+        case "SUV":
+            bgColor = "#34495e"; 
+            break;
+        case "Coach":
+            bgColor = "#2c3e50"; 
+            break;
+    }
+
+    return `
+        <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+           style="background-color: ${bgColor}; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+           ${text}
+        </p>`;
+}
+
 
 //get vehicle status 
 const showVehicleStatus = (vehiObj) => {
@@ -137,6 +170,16 @@ const setVehicleStatusAuto = () => {
     vehicle.vehi_status = 'Available';
 }
 
+//clear out the form everytime a user switches to table tab
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshVehicleForm();
+        }
+    });
+});
+
 const checkVehiFormErrors = () => {
 
     let errors = '';
@@ -179,7 +222,7 @@ const addNewVehicle = async () => {
     const errors = checkVehiFormErrors();
 
     if (errors == '') {
-        const userResponse = confirm("Are You Sure To Add ?\n " + vehicle.numberplate);
+        const userResponse = confirm("Are You Sure To Add ?\n " + vehicle.vehiclename + "  (" + vehicle.numberplate + ")");
 
         if (userResponse) {
 

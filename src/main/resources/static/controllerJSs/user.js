@@ -48,31 +48,27 @@ const getEmployeeCode = (userObj) => {
 
 
 const getUserRoles = (userObj) => {
-
-    //let userRoles = '';
     let userRoles = '<div class="role-container" style="max-width: 300px;">';
 
     const roleColors = {
-        Admin: '#d63031', // Bright red
-        Manager: '#00cec9', // Teal green
-        Receptionist: '#6c5ce7', // Deep purple
-        "Assistant Manager": '#fdcb6e', // Soft orange-yellow
-        Developer: '#0984e3', // Sky blue
-        Intern: '#636e72', // Grayish black
-        HR: '#e84393', // Pinkish red
-        Executive: '#ff7675', // Light coral red
-        Analyst: '#00b894', // Emerald green
+        Admin: '#2c3e50',            
+        Manager: '#8e44ad',           
+        "Assistant Manager": '#6c5ce7', 
+        Receptionist: '#00cec9',     
+        Driver: '#e67e22',           
+        Executive: '#1e90ff',        
+        Guide: '#d63031',             
     };
 
     userObj.roles.forEach((element) => {
-
-        const color = roleColors[element.name] || '#b2bec3';
-        userRoles += `<span class="rounded-pill text-white p-2" style="background-color: ${color};">${element.name}</span>`;
-
+        const color = roleColors[element.name] || '#7f8c8d'; 
+        userRoles += `<span class="rounded-pill text-white p-2 me-1 mb-1 d-inline-block" style="background-color: ${color}; font-weight: 500;">${element.name}</span>`;
     });
+
     userRoles += '</div>';
     return userRoles;
 };
+
 
 
 //to support fill main table

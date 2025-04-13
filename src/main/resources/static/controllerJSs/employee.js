@@ -35,23 +35,48 @@ const buildEmployeeTable = async () => {
 }
 
 // fn to fill the table
-const showEmpDesignation = (empObj) => {
+const showEmpDesignationOri = (empObj) => {
     return empObj.designation_id.name;
 }
 
-// fn to fill the table
-const showEmployeeStatusOri = (empObj) => {
+const showEmpDesignation = (empObj) => {
+    const designation = empObj.designation_id.name;
+    let bgColor;
 
-    if (empObj.deleted_emp == null || empObj.deleted_emp == false) {
-        if (empObj.emp_status == "Working") {
-            return "Working"
-        } else {
-            return "Resigned"
-        }
-    } else if (empObj.deleted_emp != null && empObj.deleted_emp == true) {
-        return '<p class="text-white bg-danger text-center my-0 p-2" > Deleted Record </p>'
+    switch (designation) {
+        case "Admin":
+            bgColor = "#2c3e50"; 
+            break;
+        case "Manager":
+            bgColor = "#8e44ad"; 
+            break;
+        case "Assistant Manager":
+            bgColor = "#6c5ce7"; 
+            break;
+        case "Receptionist":
+            bgColor = "#00cec9"; 
+            break;
+        case "Driver":
+            bgColor = "#e67e22"; 
+            break;
+        case "Executive":
+            bgColor = "#1e90ff"; 
+            break;
+        case "Guide":
+            bgColor = "#d63031"; 
+            break;
+        default:
+            bgColor = "#7f8c8d"; 
     }
-}
+
+    return `
+        <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+           style="background-color: ${bgColor}; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+           ${designation}
+        </p>`;
+};
+
+
 
 const showEmployeeStatus = (empObj) => {
 
