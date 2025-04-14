@@ -73,7 +73,7 @@
                                             </div>
 
                                             <div class="col-md-7">
-                                                <label for="inputVehicleName" class="fw-bold form-label mb-0">Model Name
+                                                <label for="inputVehicleName" class="fw-bold form-label mb-0">Vehicle Modal
                                                     :</label>
                                                 <input id="inputVehicleName" type="text"
                                                     class="test form-control form-input"
@@ -260,78 +260,70 @@
                     </div>
 
                     <!-- Modal Body -->
-                    <div class="modal-body">
+                    <div class="modal-body bg-light">
                         <div class="container">
+                            <!-- Row 1 -->
+                            <div class="row mb-4 align-items-start">
+                                <!-- Photo -->
+                                <div class="col-md-4">
+                                    <img id="modalVehiPic" src="images/vehicle.png" alt="Vehicle"
+                                        class="img-thumbnail shadow-sm"
+                                        style="width: 100%; max-width: 180px; height: auto;">
+                                </div>
 
-                            <!-- Employee Image and Basic Info -->
-                            <div class="row g-4 align-items-center">
+                                <!-- Type, Name, Number Plate -->
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-primary mb-0">Vehicle Type:</p>
+                                    <p id="modalVehiType" class="mb-2"></p>
 
-                                <!-- Name and NIC -->
-                                <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Numbr plate:</p>
-                                    <p id="modalVehiNumberPlate" class="text-muted"></p>
-                                    <p class="fw-bold mb-1">Modal name:</p>
-                                    <p id="modalVehiModalName" class="text-muted"></p>
+                                    <p class="fw-bold text-primary mb-0">Model Name:</p>
+                                    <p id="modalVehiModalName" class="mb-2"></p>
+
+                                    <p class="fw-bold text-primary mb-0">Number Plate:</p>
+                                    <p id="modalVehiNumberPlate" class="mb-2"></p>
+                                </div>
+
+                                <!-- Cost Per KM -->
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-primary mb-0">Cost Per Kilometer:</p>
+                                    <p id="modalVehiCostPerKM" class="mb-2"></p>
                                 </div>
                             </div>
 
-                            <!-- Other Details -->
-                            <hr>
-                            <div class="row g-4">
+                            <!-- Row 2 -->
+                            <div class="row mb-4">
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Vehicle Type:</p>
-                                    <p id="modalVehiType" class="text-muted mb-0"></p>
+                                    <p class="fw-bold text-primary mb-0">Passenger Seat Count:</p>
+                                    <p id="modalVehiPassengerSeatCount" class="mb-2"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Passenger Seat Count:</p>
-                                    <p id="modalVehiPassengerSeatCount" class="text-muted mb-0"></p>
+                                    <p class="fw-bold text-primary mb-0">Max Luggage Capacity:</p>
+                                    <p id="modalVehiLuggageCapacity" class="mb-2"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Vehicke Status:</p>
-                                    <p id="modalVehiStatus" class="text-muted mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Maximum Luggage Capacity:</p>
-                                    <p id="modalVehiLuggageCapacity" class="text-muted mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Cost Per Kilometer:</p>
-                                    <p id="modalVehiCostPerKM" class="text-muted mb-0"></p>
+                                    <p class="fw-bold text-primary mb-0">Last Service Date:</p>
+                                    <p id="modalVehiLSDate" class="mb-2"></p>
                                 </div>
                             </div>
 
-                            <hr>
-                            <div class="row g-4">
+                            <!-- Row 3 -->
+                            <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Photo:</p>
-                                    <img id="modalVehiPic" src="images/vehicle.png" alt="Vehicle"  class="img-thumbnail shadow-sm"
-                                    style="height: 150px; width: 150px;">
+                                    <p class="fw-bold text-primary mb-0">Vehicle Status:</p>
+                                    <p id="modalVehiStatus" class="mb-2"></p>
                                 </div>
-
-
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-primary mb-0">Additional Information:</p>
+                                    <p id="modalVehiNote" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-danger mb-0 d-none" id="modalVehiIfDeleted"></p>
+                                </div>
                             </div>
-                            <div class="row g-4">
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Last Service Date:</p>
-                                    <p id="modalVehiLSDate" class="text-muted mb-0"></p>
-                                </div>
-
-
-                            </div>
-                            <div class="row g-4">
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Additional Information:</p>
-                                    <p id="modalVehiNote" class="text-muted mb-0"></p>
-                                </div>
-
-                                <div class="col-md-4">
-                                    <p id="modalVehiIfDeleted" class="text-danger d-none mb-0"></p>
-                                </div>
-
-                            </div>
-
                         </div>
                     </div>
+
+
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">

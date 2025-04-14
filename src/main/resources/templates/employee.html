@@ -11,7 +11,6 @@
     <script src="controllerJSs/employee.js"></script>
 
     <style>
-
         /* Male radio selected */
         input#radioMale:checked+label {
             background-color: #0d6efd !important;
@@ -25,7 +24,6 @@
             color: white !important;
             border-color: #d63384 !important;
         }
-        
     </style>
 
 </head>
@@ -285,7 +283,7 @@
                             <!-- Form Buttons -->
                             <div class="row mt-4 mb-2">
                                 <div class="col-4">
-                                    <button type="reset" class="btn-clear w-50" onclick="refreshEmployeeForm()">Reset
+                                    <button type="reset" class="btn-clear fw-bold" onclick="refreshEmployeeForm()">Reset
                                         Form</button>
                                 </div>
                                 <div class="col-8 text-end">
@@ -315,91 +313,87 @@
                     </div>
 
                     <!-- Modal Body -->
-                    <div class="modal-body">
+                    <div class="modal-body bg-light">
                         <div class="container">
-                            <!-- Employee Image and Basic Info -->
-                            <div class="row g-4 align-items-center">
-                                <!-- Image -->
+
+                            <!-- Row 1 -->
+                            <div class="row mb-4 align-items-start">
+                                <!-- Photo -->
                                 <div class="col-md-4 text-center">
                                     <img id="modalPreviewEmployeeImg" src="images/employee.png" alt="Preview"
                                         class="img-thumbnail rounded-circle shadow-sm"
                                         style="height: 150px; width: 150px;">
                                 </div>
-                                <!-- Name and NIC -->
-                                <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Full Name:</p>
-                                    <p id="modalEmpFullName" class=" "></p>
-                                    <p class="fw-bold mb-1">NIC:</p>
-                                    <p id="modalEmpNIC" class=" "></p>
+
+                                <!-- Full Name + NIC -->
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Full Name:</p>
+                                    <p id="modalEmpFullName" class="mb-2"></p>
+
+                                    <p class="fw-bold mb-1 text-primary">NIC:</p>
+                                    <p id="modalEmpNIC" class="mb-2"></p>
+                                </div>
+
+                                <!-- Emp Code + Designation -->
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Employee Code:</p>
+                                    <p id="modalEmpCode" class="mb-2"></p>
+
+                                    <p class="fw-bold mb-1 text-primary">Designation:</p>
+                                    <p id="modalEmpDesignation" class="mb-2"></p>
                                 </div>
                             </div>
 
-                            <!-- Other Details -->
-                            <hr>
-                            <div class="row g-4">
+                            <!-- Row 2 - Contact Info -->
+                            <div class="row mb-4">
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Employee Code:</p>
-                                    <p id="modalEmpCode" class="  mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Mobile Number:</p>
+                                    <p id="modalEmpMobileNum" class="mb-2"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Designation:</p>
-                                    <p id="modalEmpDesignation" class="  mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Land Number:</p>
+                                    <p id="modalEmpLandNum" class="mb-2"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Working Status:</p>
-                                    <p id="modalEmpStatus" class="  mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Personal Email:</p>
+                                    <p id="modalEmpPersonalEmail" class="mb-2"></p>
                                 </div>
                             </div>
 
-                            <hr>
-                            <div class="row g-4">
+                            <!-- Row 3 - Address, Gender, DOB -->
+                            <div class="row mb-4">
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Gender:</p>
-                                    <p id="modalEmpGender" class="  mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Address:</p>
+                                    <p id="modalEmpAddress" class="mb-2"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Date of Birth:</p>
-                                    <p id="modalEmpDOB" class="  mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Gender:</p>
+                                    <p id="modalEmpGender" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Date of Birth:</p>
+                                    <p id="modalEmpDOB" class="mb-2"></p>
                                 </div>
                             </div>
 
-                            <hr>
-                            <div class="row g-4">
+                            <!-- Row 4 - Status, Note, If Deleted -->
+                            <div class="row mb-3">
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Mobile Number:</p>
-                                    <p id="modalEmpMobileNum" class="  mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Land Number:</p>
-                                    <p id="modalEmpLandNum" class="  mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Working Status:</p>
+                                    <p id="modalEmpStatus" class="mb-2"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Personal Email:</p>
-                                    <p id="modalEmpPersonalEmail" class="  mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Additional Details:</p>
+                                    <p id="modalEmpNote" class="mb-2"></p>
                                 </div>
-                            </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Address:</p>
-                                    <p id="modalEmpAddress" class="  mb-0"></p>
-                                </div>
-                            </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Additional Details:</p>
-                                    <p id="modalEmpNote" class="  mb-0"></p>
-                                </div>
-
                                 <div class="col-md-4">
                                     <p id="modalEmpIfDeleted" class="text-danger d-none mb-0"></p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex 
