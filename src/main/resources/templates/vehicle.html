@@ -56,105 +56,169 @@
                         <!-- form starts -->
                         <form id="formVehicle" class="" onsubmit="return false">
 
-                            <div class="row mt-2">
-                                <!-- select vehicle type starts -->
-                                <div class="col-4">
-                                    <label for="selectVehicleType" class="fw-bold">Type : </label>
-                                    <select id="selectVehicleType" class="form-control form-select"
-                                        onchange="dynamicSelectValidator(this , 'vehicle','vehicletype_id')" required>
-                                    </select>
-                                </div>
+                            <!-- Basic Info -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Basic Vehicle Information</legend>
 
-                            </div>
+                                <div class="row">
 
-                            <!--number plate starts -->
-                            <div class="row mt-2">
-                                <div class="col-6">
-                                    <label for="inputNumberPlate" class="fw-bold form-label mb-0"> License Plate number
-                                        :</label>
-                                    <input id="inputNumberPlate" type="text" class="form-control form-input"
-                                        onkeyup="inputValidatorText(this,'','vehicle','numberplate')" required>
-                                </div>
-                            </div>
+                                    <div class="col-md-8">
+                                        <div class="row mb-2">
+                                            <div class="col-5">
+                                                <label for="selectVehicleType" class="fw-bold">Type : </label>
+                                                <select id="selectVehicleType" class="form-control form-select"
+                                                    onchange="dynamicSelectValidator(this , 'vehicle','vehicletype_id')"
+                                                    required>
+                                                </select>
+                                            </div>
 
-                            <div class="row mt-2">
+                                            <div class="col-md-7">
+                                                <label for="inputVehicleName" class="fw-bold form-label mb-0">Model Name
+                                                    :</label>
+                                                <input id="inputVehicleName" type="text"
+                                                    class="test form-control form-input"
+                                                    onkeyup="inputValidatorText(this,'','vehicle','vehiclename')"
+                                                    required>
+                                            </div>
+                                        </div>
 
-                                <!-- full vehi name -->
-                                <div class="col-8">
-                                    <label for="inputVehicleName" class="fw-bold form-label mb-0">Model Name
-                                        :</label>
-                                    <input id="inputVehicleName" type="text" class="test form-control form-input"
-                                        onkeyup="inputValidatorText(this,'','vehicle','vehiclename')" required>
-                                </div>
+                                        <div class="row mb-2">
+                                            <div class="col-5">
+                                                <label for="inputNumberPlate" class="fw-bold form-label mb-0"> License
+                                                    Plate
+                                                    number
+                                                    :</label>
+                                                <input id="inputNumberPlate" type="text" class="form-control form-input"
+                                                    onkeyup="inputValidatorText(this,'','vehicle','numberplate')"
+                                                    required>
+                                            </div>
+
+                                            <div class="col-4">
+                                                <label class="fw-bold  mb-0" for="inputVehiCostPerKM">Cost Per
+                                                    Kilometer</label>
+
+                                                <div class="input-group">
+                                                    <span class="input-group-text p-1 pb-0">
+                                                        <h6 class="my-auto">LKR</h6>
+                                                    </span>
+                                                    <input type="text" id="inputVehiCostPerKM"
+                                                        class="form-control form-input w-85 p-1 text-center"
+                                                        placeholder=""
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','vehicle','cost_per_km')">
+                                                </div>
+                                            </div>
+                                        </div>
 
 
-                            </div>
+                                    </div>
 
-                            <!-- luggage capacity starts -->
-                            <div class="row mt-2">
+                                    <!-- photo -->
+                                    <div class="col-md-4 mx-auto">
+                                        <div class="row mx-auto d-flex align-items-center">
+                                            <div class="col-7 ">
+                                                <img id="previewVehicleImg" src="images/vehicle.png" alt="Preview"
+                                                    class="img-thumbnail"
+                                                    style="height:150px; width: 150px; border:2px solid #ced4da">
+                                                <!-- use accepts 💥💥💥 -->
+                                                <input type="file" class="d-none" id="fileInputVehiPhoto"
+                                                    onchange="imgValidatorVehiclePic(this,'vehicle','vehi_photo',previewVehicleImg)">
 
-                                <!-- luggage capacity  -->
-                                <div class="col-8">
-                                    <label for="inputVehiLuggageCapacity" class="fw-bold form-label mb-0">Luggage Capacity
-                                        :</label>
-                                    <input id="inputVehiLuggageCapacity" type="text" class="test form-control form-input"
-                                        onkeyup="inputValidatorText(this,'','vehicle','luggage_capacity')" required>
-                                </div>
+                                            </div>
+                                            <div class="col-5">
+                                                <button type="button" class="btn btn-primary w-100 mb-2"
+                                                    onclick="fileInputVehiPhoto.click();">Select Image</button>
 
+                                                <button type="button" class="btn btn-danger"
+                                                    onclick="clearVehicleImg();">Clear Image</button>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                            </div>
+                            </fieldset>
 
-                            <!-- seating capacity starts -->
-                            <div class="row mt-2">
+                            <!-- capacity and other info -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Other Information</legend>
 
-                                <label for="inputPassengerSeatCount" class="fw-bold form-label mb-0"> Seat Count
-                                    :</label>
-                                <input id="inputPassengerSeatCount" type="text" class="test form-control form-input"
-                                    onkeyup="inputValidatorText(this,'','vehicle','passengerseats')" required>
-                            </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <label for="inputPassengerSeatCount" class="fw-bold form-label mb-0">Passenger's
+                                            Seat Count
+                                            :</label>
+                                        <input id="inputPassengerSeatCount" type="text"
+                                            class="test form-control form-input"
+                                            onkeyup="inputValidatorText(this,'','vehicle','passengerseats')" required>
+                                    </div>
 
-                            <div class="row mt-1 mb-3 ">
-                                <div class="col-6">
-                                    <label class="form-label mb-0" for="inputVehiCostPerKM">Cost Per KM</label>
-
-                                    <div class="input-group">
-                                        <span class="input-group-text p-1 pb-0">
-                                            <h6 class="my-auto">LKR</h6>
-                                        </span>
-                                        <input type="text" id="inputVehiCostPerKM"
-                                            class="form-control form-input w-85 p-1 text-center"
-                                            placeholder=""
-                                            onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','vehicle','cost_per_km')"  >
+                                    <div class="col-md-8">
+                                        <label for="inputVehiLuggageCapacity" class="fw-bold form-label mb-0">Luggage
+                                            Capacity
+                                            :</label>
+                                        <input id="inputVehiLuggageCapacity" type="text"
+                                            class="test form-control form-input"
+                                            onkeyup="inputValidatorText(this,'','vehicle','luggage_capacity')" required>
                                     </div>
                                 </div>
 
+                                <div class="row ">
+                                    <div class="col-4">
+                                        <label for="dateLastService" class="form-label fw-bold mb-0"> Last Service Date
+                                            <span class="text-danger"> * </span> :</label>
+                                        <input type="date" class="form-control mt-0" id="dateLastService"
+                                            onchange="inputValidatorText(this, '^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$' ,'vehicle' , 'last_service_date')">
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Status & Note</legend>
+                                <div class="row">
+
+                                    <div class="col-6">
+                                        <div class="row mb-1">
+                                            <div class="col-12">
+                                                <label for="selectVehicleStatus" class="fw-bold form-label mb-0">
+                                                    Vehicle Status
+                                                    :</label>
+
+                                                <select id="selectVehicleStatus" class="form-control form-select"
+                                                    required
+                                                    onchange="staticSelectValidator(this , 'vehicle' , 'vehi_status')">
+                                                    <option value="" selected disabled>Please Select Status </option>
+                                                    <option value="Available"> Available For Tours</option>
+                                                    <option value="On Tour"> On A Tour </option>
+                                                    <option value="Under Maintenance"> Under Maintenance </option>
+                                                    <option value="Not In Service"> Not In Service </option>
+                                                    <option value="ifDeleted" class="d-none"> Deleted </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label for="inputNote" class="fw-bold">Additional Information</label>
+                                        <textarea id="inputNote" class="form-control" rows="5"
+                                            onkeyup="inputValidatorText(this,'','vehicle','note')"></textarea>
+                                    </div>
+
+
+                                </div>
+                            </fieldset>
+
+
 
                             <div class="row mt-2">
-
-
                                 <!--select status starts -->
                                 <div class="col-4">
-                                    <label for="selectVehicleStatus" class="fw-bold form-label mb-0"> Vehicle Status
-                                        :</label>
 
-                                    <select id="selectVehicleStatus" class="form-control form-select" required
-                                        onchange="staticSelectValidator(this , 'vehicle' , 'vehi_status')">
-                                        <option value="" selected disabled>Please Select Status </option>
-                                        <option value="Available"> Available For Tours</option>
-                                        <option value="On Tour"> On A Tour </option>
-                                        <option value="Under Maintenance"> Under Maintenance </option>
-                                        <option value="Not In Service"> Not In Service </option>
-                                        <option value="ifDeleted" class="d-none"> Deleted </option>
-                                    </select>
                                 </div>
                             </div>
 
                             <div class="row mt-2">
                                 <!-- note starts -->
                                 <div class="col-8">
-                                    <label for="inputNote" class="fw-bold">Additional Information</label>
-                                    <textarea id="inputNote" class="form-control" rows="5"
-                                        onkeyup="inputValidatorText(this,'','vehicle','note')"></textarea>
+
                                 </div>
                             </div>
 
@@ -237,6 +301,23 @@
                             </div>
 
                             <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Photo:</p>
+                                    <img id="modalVehiPic" src="images/vehicle.png" alt="Vehicle"  class="img-thumbnail shadow-sm"
+                                    style="height: 150px; width: 150px;">
+                                </div>
+
+
+                            </div>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Last Service Date:</p>
+                                    <p id="modalVehiLSDate" class="text-muted mb-0"></p>
+                                </div>
+
+
+                            </div>
                             <div class="row g-4">
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Additional Information:</p>

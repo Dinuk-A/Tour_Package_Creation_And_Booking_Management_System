@@ -1,6 +1,7 @@
 package lk.yathratravels.vehicle;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,6 +39,9 @@ public class Vehicle {
     @Column(name = "passengerseats")
     private Integer passengerseats;
 
+    @Column(name = "vehi_photo")
+    private byte[] vehi_photo;
+
     @Column(name = "vehi_status")
     private String vehi_status;
 
@@ -45,6 +50,10 @@ public class Vehicle {
 
     @Column(name = "cost_per_km")
     private BigDecimal cost_per_km;
+
+    @Column(name = "last_service_date")
+    @NotNull
+    private LocalDate last_service_date;
 
     @ManyToOne
     @JoinColumn(name = "vehicletype_id", referencedColumnName = "id")

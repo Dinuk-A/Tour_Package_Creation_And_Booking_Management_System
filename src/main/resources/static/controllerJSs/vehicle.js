@@ -2,6 +2,7 @@ window.addEventListener('load', () => {
 
     buildVehicleTable();
     refreshVehicleForm();
+    restrictFutureDays();
 
 });
 
@@ -47,19 +48,19 @@ const showVehicleType = (vehiObj) => {
 
     switch (type) {
         case "Car":
-            bgColor = "#f39c12"; 
+            bgColor = "#f39c12";
             break;
         case "Van":
             bgColor = "#16a085";
             break;
         case "Mini Bus":
-            bgColor = "#9b59b6"; 
+            bgColor = "#9b59b6";
             break;
         case "SUV":
-            bgColor = "#34495e"; 
+            bgColor = "#34495e";
             break;
         case "Coach":
-            bgColor = "#2c3e50"; 
+            bgColor = "#2c3e50";
             break;
     }
 
@@ -69,7 +70,6 @@ const showVehicleType = (vehiObj) => {
            ${text}
         </p>`;
 }
-
 
 //get vehicle status 
 const showVehicleStatus = (vehiObj) => {
@@ -113,7 +113,6 @@ const showVehicleStatus = (vehiObj) => {
 
 }
 
-
 //fn to ready the main form for accept values
 const refreshVehicleForm = async () => {
 
@@ -139,7 +138,10 @@ const refreshVehicleForm = async () => {
         'selectVehicleStatus',
         'inputNote',
         'inputVehiCostPerKM',
-        'inputVehiLuggageCapacity'
+        'inputVehiLuggageCapacity',
+        'fileInputVehiPhoto',
+        'dateLastService',
+        'previewVehicleImg'
 
     ];
 
@@ -157,6 +159,70 @@ const refreshVehicleForm = async () => {
 
     vehicleAddBtn.disabled = false;
     vehicleAddBtn.style.cursor = "pointer";
+}
+
+//cant select future days
+const restrictFutureDays = () => {
+    let dateInput = document.getElementById("dateLastService");
+
+    if (dateInput) {
+
+        let today = new Date();
+        let formattedDate = today.toISOString().split('T')[0];
+        dateInput.max = formattedDate;
+
+    }
+}
+
+//to validate and bind the image 
+const imgValidatorVehiclePic = (fileInputID, object, imgProperty, previewId) => {
+    if (fileInputID.files != null) {
+        const file = fileInputID.files[0];
+
+        // Validate file size (1 MB max)
+        const maxSizeInBytes = 2 * 1024 * 1024;
+        if (file.size > maxSizeInBytes) {
+            showAlertModal('war', 'The file size exceeds 2 MB. Please select a smaller file.');
+            //return false;
+        }
+
+        // Validate file type (JPEG, JPG, PNG)
+        const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+        if (!allowedTypes.includes(file.type)) {
+            showAlertModal('war', "Invalid file type. Only JPEG, JPG, and PNG files are allowed.");
+            //return false;
+        }
+
+        // Process file and update the preview
+        const fileReader = new FileReader();
+        fileReader.onload = function (e) {
+            previewId.src = e.target.result; // Show image preview
+            window[object][imgProperty] = btoa(e.target.result); // Store Base64 data
+            previewId.style.border = "2px solid lime";
+        };
+        fileReader.readAsDataURL(file);
+
+        //return true;
+    }
+    previewId.style.border = "2px solid red";
+    return false;
+
+};
+
+//clear uploaded image (not delete)
+const clearVehicleImg = () => {
+    if (vehicle.vehi_photo != null) {
+        let userConfirmImgDlt = confirm("Are You Sure To Clear This Image?");
+        if (userConfirmImgDlt) {
+            vehicle.vehi_photo = null;
+            document.getElementById('previewVehicleImg').src = 'images/vehicle.png';
+            document.getElementById('fileInputVehiPhoto').files = null;
+            document.getElementById('previewVehicleImg').style.border = "1px solid #ced4da";
+
+        } else {
+            showAlertModal("inf", "User Cancelled The Deletion Task")
+        }
+    }
 }
 
 //set vehi status auto when refresh form 
@@ -253,8 +319,6 @@ const addNewVehicle = async () => {
     } else {
         showAlertModal('err', errors);
     }
-
-
 }
 
 //fn for edit button
@@ -266,7 +330,14 @@ const openModal = (vehiObj) => {
     document.getElementById('modalVehiStatus').innerText = vehiObj.vehi_status || 'N/A';
     document.getElementById('modalVehiLuggageCapacity').innerText = vehiObj.luggage_capacity || 'N/A';
     document.getElementById('modalVehiCostPerKM').innerText = vehiObj.cost_per_km || 'N/A';
+    document.getElementById('modalVehiLSDate').innerText = vehiObj.last_service_date || 'N/A';
     document.getElementById('modalVehiNote').innerText = vehiObj.note || 'N/A';
+
+    if (vehiObj.vehi_photo != null) {
+        document.getElementById('modalVehiPic').src = atob(vehiObj.vehi_photo)
+    } else {
+        document.getElementById('modalVehiPic').src = 'images/vehicle.png';
+    }
 
     if (vehiObj.deleted_vehi) {
         document.getElementById('modalVehiIfDeleted').classList.remove('d-none');
@@ -295,6 +366,13 @@ const refillVehicleForm = async (ob) => {
     inputNote.value = vehicle.note;
     inputVehiLuggageCapacity.value = vehicle.luggage_capacity;
     inputVehiCostPerKM.value = vehicle.cost_per_km;
+    dateLastService.value = vehicle.last_service_date;
+
+    if (vehicle.vehi_photo != null) {
+        previewVehicleImg.src = atob(vehicle.vehi_photo);
+    } else {
+        previewVehicleImg.src = "images/vehicle.png";
+    }
 
     try {
         vTypes = await ajaxGetReq("/vehitypes/all");
@@ -327,6 +405,10 @@ const showVehicleValueChanges = () => {
 
     let updates = "";
 
+    if (vehicle.vehi_photo != oldVehi.vehi_photo) {
+        updates = updates + " Vehicle Photo has changed";
+    }
+
     if (vehicle.vehicletype_id.name != oldVehi.vehicletype_id.name) {
         updates = updates + oldVehi.vehicletype_id.name + " will be changed to " + vehicle.vehicletype_id.name + "\n";
     }
@@ -358,6 +440,10 @@ const showVehicleValueChanges = () => {
         updates = updates + oldVehi.note + " will be changed to " + vehicle.note + "\n"
     }
 
+    if (vehicle.last_service_date != oldVehi.last_service_date) {
+        updates = updates + oldVehi.last_service_date + " will be changed to " + vehicle.last_service_date + "\n"
+    }
+   
     return updates;
 }
 
