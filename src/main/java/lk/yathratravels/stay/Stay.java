@@ -40,6 +40,10 @@ public class Stay {
     @NotNull
     private String address;
 
+    @Column(name = "gcoords")
+    //@NotNull
+    private String gcoords;
+
     @Column(name = "contactnumone")
     @NotNull
     private String contactnumone;

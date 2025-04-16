@@ -40,6 +40,10 @@ public class LunchPlace {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "gcoords")
+    //@NotNull
+    private String gcoords;
+
     @Column(name = "contactnum")
     private String contactnum;
 

@@ -307,6 +307,14 @@
                                         style="height: 100px;"
                                         aria-placeholder="Enter A Short Description About The Location"></textarea>
                                 </div>
+
+                                <div class="col-5">
+                                    <label for="inputGeoCoords" class="form-label fw-bold">Geo Coords :</label>
+                                    <input type="text" id="inputGeoCoords"
+                                    class="form-control form-input"
+                                    placeholder="Paste from Google Maps"
+                                    oninput="inputValidatorText(this,'','attraction','gcoords')">
+                                </div>
                             </div>
 
                             <!-- NOTE -->
@@ -417,6 +425,9 @@
                                 <div class="col-md-8">
                                     <p class="fw-bold mb-1"> Name:</p>
                                     <p id="modalAttrName" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1"> Geo Coords:</p>
+                                    <p id="modalAttrGCoords" class="text-muted"></p>
 
                                     <p class="fw-bold mb-1">Location:</p>
                                     <p id="modalAttrDistrict" class="text-muted"></p>

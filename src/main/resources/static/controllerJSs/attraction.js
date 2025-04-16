@@ -142,7 +142,7 @@ const refreshAttractionForm = async () => {
             newLabel.innerText = element.name;
             newLabel.style.minWidth = "100px";
             newLabel.style.textAlign = "center";
-            newLabel.style.borderRadius = "8px"; 
+            newLabel.style.borderRadius = "8px";
             newLabel.style.transition = "all 0.3s ease-in-out";
 
             newInput.onchange = function () {
@@ -205,6 +205,7 @@ const refreshAttractionForm = async () => {
         'inputNote',
         'inputTourDuration',
         'vehiParkingFeeInput',
+        'inputGeoCoords',
         'selectAttrStatus'
     ];
 
@@ -216,12 +217,12 @@ const refreshAttractionForm = async () => {
             field.value = '';
         }
     });
-    
+
     inputLocalAdultFee.value = "0.00"
     inputLocalChildFee.value = "0.00"
     inputForeignAdultFee.value = "0.00"
     inputForeignChildFee.value = "0.00"
-    
+
     vehiParkingFeeInput.value = "0.00"
 
 }
@@ -365,6 +366,10 @@ const checkAttrFormErrors = () => {
         errors = errors + " Please Select The Status \n";
     }
 
+    if (attraction.gcoords == null) {
+        errors = errors + " Please Enter The Geo Coords \n";
+    }
+
     if (attraction.district_id == null) {
         errors = errors + " Please Select The District \n";
     }
@@ -476,8 +481,7 @@ const openModal = (attrObj) => {
     document.getElementById('modalAttrVehicleParkingFee').innerText = attrObj.vehicleparkingfee || 'N/A';
     document.getElementById('modalAttrStatus').innerText = attrObj.attr_status || 'N/A';
     document.getElementById('modalAttrNote').innerText = attrObj.note || 'N/A';
-    //document.getElementById('modalAttrPersonalEmail').innerText = attrObj.email || 'N/A';
-    //document.getElementById('modalAttrPersonalEmail').innerText = attrObj.email || 'N/A';
+    document.getElementById('modalAttrGCoords').innerText = attrObj.gcoords || 'N/A';
 
     if (attrObj.deleted_attr) {
         document.getElementById('modalAttrIfDeleted').classList.remove('d-none');
@@ -539,6 +543,7 @@ const refillAttractionForm = async (obj) => {
 
     inputPlaceName.value = obj.name;
     selectAttrStatus.value = attraction.attr_status;
+    inputGeoCoords.value = attraction.gcoords;
 
     try {
 
@@ -604,7 +609,6 @@ const refillAttractionForm = async (obj) => {
         console.error("Failed to fetch Data : ", error);
     }
 
-    //open 2 collapses auto
     flushCollapseOne.classList.add("show")
 
     //get Activity list
@@ -727,13 +731,18 @@ const showAttrValueChanges = () => {
         updates = updates + "Name Has Changed To " + attraction.name + "\n";
     }
 
+    if (attraction.gcoords != attractionOldObj.gcoords) {
+        updates = updates + "Geo Coords Has Changed To " + attraction.gcoords + "\n";
+    }
+
     if (attraction.district_id.name != attractionOldObj.district_id.name) {
         updates = updates + "District Has Changed To " + attraction.district_id.name + "\n";
     }
-    //
-    //    if (attraction.attrstatus_id.name != attractionOldObj.attrstatus_id.name) {
-    //        updates = updates + "Status Has Changed To " + attraction.attrstatus_id.name + "\n";
-    //    }
+
+
+    if (attraction.attr_status != attractionOldObj.attr_status) {
+        updates = updates + "Status Has Changed To " + attraction.attr_status + "\n";
+    }
 
     if (attraction.duration != attractionOldObj.duration) {
         updates = updates + "Duration Has Changed To " + attraction.duration + "\n";

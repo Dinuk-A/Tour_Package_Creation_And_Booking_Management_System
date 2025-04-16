@@ -35,6 +35,10 @@ public class Attraction {
     @NotNull
     private String name;
 
+    @Column(name = "gcoords")
+    //@NotNull
+    private String gcoords;
+
     @Column(name = "description")
     private String description;
 
@@ -64,7 +68,7 @@ public class Attraction {
     private String attr_status;
 
     @Column(name = "deleted_attr")
-     private Boolean deleted_attr;
+    private Boolean deleted_attr;
 
     @Column(name = "vehicleparkingfee")
     private BigDecimal vehicleparkingfee;
@@ -98,7 +102,8 @@ public class Attraction {
 
     // day plans walata attr based on district gennaganna hadapu query ekata
     // >>>attrListByDistrict
-    public Attraction(Integer id, String name, BigDecimal feelocaladult, BigDecimal feeforeignadult, BigDecimal feechildlocal,
+    public Attraction(Integer id, String name, BigDecimal feelocaladult, BigDecimal feeforeignadult,
+            BigDecimal feechildlocal,
             BigDecimal feechildforeign, BigDecimal vehicleparkingfee, District district_id) {
 
         this.id = id;
@@ -112,4 +117,3 @@ public class Attraction {
 
     }
 }
-
