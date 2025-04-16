@@ -91,6 +91,7 @@ const refreshStayForm = async () => {
         'inputStayEmail',
         'selectStayStatus',
         'inputStayNote',
+        'inputGeoCoords'
     ];
 
     //clear out any previous styles
@@ -121,6 +122,10 @@ const checkStayFormErrors = () => {
 
     if (stay.district_id == null) {
         errors = errors + " Please Select The District \n";
+    }
+
+    if (stay.gcoords == null) {
+        errors = errors + " Please Enter The Accomodation's Geo Coords \n";
     }
 
     //if (stay.stay_type_id == null) {
@@ -201,6 +206,7 @@ const openModal = (stayObj) => {
     document.getElementById('modalStayDescription').innerText = stayObj.description || 'N/A';
     document.getElementById('modalStayStatus').innerText = stayObj.stay_status || 'N/A';
     document.getElementById('modalStayNote').innerText = stayObj.note || 'N/A';
+    document.getElementById('modalStayGCoords').innerText = stayObj.gcoords || 'N/A';
 
 
     if (stayObj.deleted_stay) {
@@ -265,6 +271,7 @@ const refillStayForm = async (ob) => {
     inputStayContactTwo.value = stay.contactnumtwo;
     inputStayEmail.value = stay.email;
     inputStayNote.value = stay.note;
+    inputGeoCoords.value = stay.gcoords;
     //stayMaxGuestCount.value = stay.maxguestscount 💥💥
 
     try {
@@ -312,6 +319,10 @@ const showStayValueChanges = () => {
 
     if (stay.name != stayOldObj.name) {
         updates = updates + "Name will be changed to " + stay.name + "\n";
+    }
+
+    if (stay.gcoords != stayOldObj.gcoords) {
+        updates = updates + "Geo Coords will be changed to " + stay.gcoords + "\n";
     }
 
     if (stay.address != stayOldObj.address) {

@@ -80,24 +80,38 @@
                             <!-- Fieldset 2: Address, Province, District -->
                             <fieldset class="border border-dark p-4 mb-4 bg-light">
                                 <legend class="float-none w-auto px-2 text-primary">Location</legend>
-                                <div class="row">
+
+                                <div class="row mb-1">
                                     <div class="col-6">
                                         <label for="selectStayProvince" class="form-label fw-bold mb-0">Province <span
-                                                class="text-danger">*</span> :</label>
+                                                class="text-danger">*</span>
+                                            :</label>
                                         <select id="selectStayProvince" class="form-select mb-3"
                                             onchange="getDistByProvince()"></select>
+                                    </div>
 
+                                    <div class="col-6">
                                         <label for="selectStayDistrict" class="form-label fw-bold mb-0">District <span
                                                 class="text-danger">*</span> :</label>
                                         <select id="selectStayDistrict" class="form-select"
                                             onchange="dynamicSelectValidator(this,'stay','district_id')"></select>
-                                    </div>
+                                    </div>                                  
 
+                                </div>
+
+                                <div class="row">
                                     <div class="col-6">
                                         <label for="inputStayAddress" class="form-label fw-bold mb-0">Address <span
                                                 class="text-danger">*</span> :</label>
                                         <textarea id="inputStayAddress" class="form-control" style="height: 117px;"
                                             onkeyup="inputValidatorText(this,'','stay','address')"></textarea>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label for="inputGeoCoords" class="form-label fw-bold mb-0">Geo Coords :</label>
+                                        <input type="text" id="inputGeoCoords" class="form-control form-input"
+                                            placeholder="Paste from Google Maps"
+                                            oninput="inputValidatorText(this,'','stay','gcoords')">
                                     </div>
                                 </div>
                             </fieldset>
@@ -204,6 +218,9 @@
 
                                     <p class="fw-bold mb-1">Location:</p>
                                     <p id="modalStayDistrict" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1">Geo Coords:</p>
+                                    <p id="modalStayGCoords" class="text-muted"></p>
 
                                     <p id="modalStayProvince" class="text-muted"></p>
 

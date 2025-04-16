@@ -65,6 +65,7 @@ const refreshLunchPlaceForm = async () => {
         'inputContactNumTwo',
         'inputEmail',
         'inputLHNote',
+        'inputLHGeoCoords',
         'inputLHAddress',
         'lHStatusSelect'
     ];
@@ -92,6 +93,10 @@ const checkLHFormErrors = () => {
 
     if (lunchplace.name == null) {
         lPlaceErrors = lPlaceErrors + " Please Enter Hotel Name \n";
+    }
+
+    if (lunchplace.gcoords == null) {
+        lPlaceErrors = lPlaceErrors + " Please Enter The Geo Coords \n";
     }
 
     if (lunchplace.costperhead == null) {
@@ -161,6 +166,7 @@ const addNewLunchPlace = async () => {
 const openModal = (obj) => {
     document.getElementById('modalLPName').innerText = obj.name || 'N/A';
     document.getElementById('modalLPDistrict').innerText = obj.district_id.name || 'N/A';
+    document.getElementById('modalLHGeoCoords').innerText = obj.gcoords || 'N/A';
     document.getElementById('modalLPProvince').innerText = obj.district_id.province_id.name || 'N/A';
     document.getElementById('modalLPAddress').innerText = obj.address || 'N/A';
     document.getElementById('modalLPCostPerHead').innerText = obj.costperhead || 'N/A';
@@ -209,6 +215,7 @@ const refillLunchPlaceForm = async (ob) => {
     inputLHNote.value = lunchplace.note;
     inputLHAddress.value = lunchplace.address;
     inputLPEmail.value = lunchplace.email;
+    inputLHGeoCoords.value = lunchplace.gcoords;
 
     lunchPlaceAddBtn.disabled = true;
     lunchPlaceAddBtn.style.cursor = "not-allowed";
@@ -227,6 +234,10 @@ const showLPValueChanges = () => {
 
     if (lunchplace.name != lunchplaceOldObj.name) {
         updates = updates + " Hotel Name has changed \n";
+    }
+
+    if (lunchplace.gcoords != lunchplaceOldObj.gcoords) {
+        updates = updates + " Hotel Geo Coords has changed \n";
     }
 
     if (lunchplace.costperhead != lunchplaceOldObj.costperhead) {

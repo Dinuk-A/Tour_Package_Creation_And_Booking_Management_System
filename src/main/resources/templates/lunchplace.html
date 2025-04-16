@@ -111,10 +111,18 @@
 
                             <div class="row g-3 mb-4">
                                 <!-- Address -->
-                                <div class="col-md-12">
+                                <div class="col-md-4">
                                     <label for="inputLHAddress" class="form-label fw-bold">Address:</label>
                                     <textarea id="inputLHAddress" class="form-control" rows="3"
                                         onkeyup="inputValidatorText(this,'','lunchplace','address');"></textarea>
+                                </div>
+
+                                <div class="col-md-4">
+                                     <label for="inputLHGeoCoords" class="form-label fw-bold">Geo Coords :</label>
+                                    <input type="text" id="inputLHGeoCoords"
+                                    class="form-control form-input"
+                                    placeholder="Paste from Google Maps"
+                                    oninput="inputValidatorText(this,'','lunchplace','gcoords')">
                                 </div>
                             </div>
 
@@ -180,6 +188,9 @@
                                 <div class="col-md-8">
                                     <p class="fw-bold mb-1"> Name:</p>
                                     <p id="modalLPName" class="text-muted"></p>
+
+                                    <p class="fw-bold mb-1"> Geo Coords:</p>
+                                    <p id="modalLHGeoCoords" class="text-muted"></p>
 
                                     <p class="fw-bold mb-1">Location:</p>
                                     <p id="modalLPDistrict" class="text-muted"></p>
