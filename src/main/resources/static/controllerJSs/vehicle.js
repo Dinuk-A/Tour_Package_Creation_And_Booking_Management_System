@@ -367,6 +367,7 @@ const refillVehicleForm = async (ob) => {
     inputVehiLuggageCapacity.value = vehicle.luggage_capacity;
     inputVehiCostPerKM.value = vehicle.cost_per_km;
     dateLastService.value = vehicle.last_service_date;
+    selectVehicleStatus.value = vehicle.vehi_status;
 
     if (vehicle.vehi_photo != null) {
         previewVehicleImg.src = atob(vehicle.vehi_photo);
@@ -406,7 +407,7 @@ const showVehicleValueChanges = () => {
     let updates = "";
 
     if (vehicle.vehi_photo != oldVehi.vehi_photo) {
-        updates = updates + " Vehicle Photo has changed";
+        updates = updates + " Vehicle Photo has changed \n";
     }
 
     if (vehicle.vehicletype_id.name != oldVehi.vehicletype_id.name) {

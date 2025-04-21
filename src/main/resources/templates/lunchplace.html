@@ -33,7 +33,7 @@
             <!-- for form side -->
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formLunchPlaceHolderDiv" role="tab"
-                    aria-controls="formLunchPlaceHolderDiv" aria-selected="false">Form</a>
+                    aria-controls="formLunchPlaceHolderDiv" aria-selected="false" onclick="setLHStatusAuto()">Form</a>
             </li>
         </ul>
 
@@ -53,111 +53,150 @@
                     </div>
                     <div class="card-body" style="background-color: ivory;">
 
+                        <!-- Lunch Place Details Form -->
                         <form id="formLunchPlace" onsubmit="return false">
-                            <div class="row g-3 mb-3">
+                            <!-- General Info -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">General Information</legend>
+                                <div class="row g-3">
+                                    <!-- Name -->
+                                    <div class="col-md-9">
+                                        <label for="inputLHPlaceName" class="form-label fw-bold mb-0"> Restaurant/Hotel
+                                            Name:</label>
+                                        <input type="text" id="inputLHPlaceName" class="form-control" required
+                                            onkeyup="inputValidatorText(this,'','lunchplace','name');">
+                                    </div>
 
-                                <!-- Name -->
-                                <div class="col-md-6">
-                                    <label for="inputLHPlaceName" class="form-label fw-bold">Name:</label>
-                                    <input type="text" id="inputLHPlaceName" class="form-control" required
-                                        onkeyup="inputValidatorText(this,'','lunchplace','name');">
+                                    <!-- Cost Per Head -->
+                                    <div class="col-md-3">
+
+                                        <label for="inputCostperHead" class="form-label fw-bold mb-0">Cost Per
+                                            Head:</label>
+
+                                        <div class="input-group mb-1">
+                                            <span class="input-group-text p-1 pb-0">
+                                                <h6 class="my-auto">LKR</h6>
+                                            </span>
+                                            <input type="number" id="inputCostperHead" class="form-control" required
+                                                onkeyup="inputValidatorText(this,'','lunchplace','costperhead');">
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- Contact & Location Info -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Contact & Location</legend>
+
+                                <div class="row g-3 mb-2">
+
+                                    <!-- Province -->
+                                    <div class="col-6">
+                                        <label for="selectLHProvince" class="form-label fw-bold mb-0">Province <span
+                                                class="text-danger">*</span>
+                                            :</label>
+                                        <select id="selectLHProvince" class="form-select mb-3"
+                                            onchange="getDistByProvince()"></select>
+                                    </div>
+
+                                    <!-- District ID -->
+                                    <div class="col-md-6">
+                                        <label for="selectLHDistrict" class="form-label fw-bold mb-0">District :</label>
+                                        <select id="selectLHDistrict" class="form-select mb-2"
+                                            onchange="dynamicSelectValidator(this, 'lunchplace' , 'district_id')"></select>
+                                    </div>
                                 </div>
 
-                                <!-- Cost Per Head -->
-                                <div class="col-md-6">
-                                    <label for="inputCostperHead" class="form-label fw-bold">Cost Per Head:</label>
-                                    <input type="number" id="inputCostperHead" class="form-control" required
-                                        onkeyup="inputValidatorText(this,'','lunchplace','costperhead');">
-                                </div>
-                            </div>
+                                <div class="row g-3 mb-2">
+                                    
+                                    <!-- Contact Number -->
+                                    <div class="col-md-3">
+                                        <label for="inputContactNum" class="form-label fw-bold mb-0">Contact
+                                            Number #1:</label>
+                                        <input type="tel" id="inputContactNum" pattern="[0-9]{10}" class="form-control"
+                                            onkeyup="inputValidatorText(this,'','lunchplace','contactnum');">
+                                    </div>
 
-                            <div class="row g-3 mb-3">
+                                    <!-- Contact Number 2 -->
+                                    <div class="col-md-3">
+                                        <label for="inputContactNumTwo" class="form-label fw-bold mb-0">Contact Number #2
+                                            2:</label>
+                                        <input type="tel" id="inputContactNumTwo" pattern="[0-9]{10}"
+                                            class="form-control"
+                                            onkeyup="inputValidatorText(this,'','lunchplace','contactnumtwo');">
+                                    </div>
 
-                                <!-- District ID -->
-                                <div class="col-md-6">
-                                    <label for="selectLHDistrict" class="form-label fw-bold">District ID:</label>
-                                    <select id="selectLHDistrict" class="form-select mb-2"
-                                        onchange="dynamicSelectValidator(this, 'lunchplace' , 'district_id')"></select>
-                                </div>
-
-                                <!-- Contact Number -->
-                                <div class="col-md-6">
-                                    <label for="inputContactNum" class="form-label fw-bold">Contact Number:</label>
-                                    <input type="tel" id="inputContactNum" pattern="[0-9]{10}" class="form-control"
-                                        onkeyup="inputValidatorText(this,'','lunchplace','contactnum');">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="inputContactNumTwo" class="form-label fw-bold">Contact Number 2:</label>
-                                    <input type="tel" id="inputContactNumTwo" pattern="[0-9]{10}" class="form-control"
-                                        onkeyup="inputValidatorText(this,'','lunchplace','contactnumtwo');">
+                                    <!-- Contact Email -->
+                                    <div class="col-md-6">
+                                        <label for="inputLPEmail" class="form-label fw-bold mb-0">Email:</label>
+                                        <input type="tel" id="inputLPEmail" class="form-control"
+                                            onkeyup="inputValidatorText(this,'','lunchplace','email');">
+                                    </div>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <label for="inputLPEmail" class="form-label fw-bold">Contact Email:</label>
-                                    <input type="tel" id="inputLPEmail" class="form-control"
-                                        onkeyup="inputValidatorText(this,'','lunchplace','email');">
+                                <div class="row g-3 mb-2">
+                                    <!-- Address -->
+                                    <div class="col-md-6">
+                                        <label for="inputLHAddress" class="form-label fw-bold mb-0">Address:</label>
+                                        <textarea id="inputLHAddress" class="form-control" rows="3"
+                                            onkeyup="inputValidatorText(this,'','lunchplace','address');"></textarea>
+                                    </div>
+
+                                    <!-- Geo Coords -->
+                                    <div class="col-md-6">
+                                        <label for="inputLHGeoCoords" class="form-label fw-bold mb-0">Geo
+                                            Coords:</label>
+                                        <input type="text" id="inputLHGeoCoords" class="form-control"
+                                            placeholder="Paste from Google Maps"
+                                            oninput="inputValidatorText(this,'','lunchplace','gcoords')">
+                                    </div>
                                 </div>
-                            </div>
+                            </fieldset>
 
-                            <div class="row g-3 mb-3">
-                                <!-- Note -->
-                                <div class="col-md-12">
-                                    <label for="inputLHNote" class="form-label fw-bold">Note:</label>
-                                    <textarea id="inputLHNote" class="form-control" rows="3"
-                                        onkeyup="inputValidatorText(this,'','lunchplace','note');"></textarea>
+
+                            <!-- Notes & Status -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Other Details</legend>
+
+                                <div class="row g-3">
+                                    <!-- Note -->
+                                    <div class="col-md-8">
+                                        <label for="inputLHNote" class="form-label fw-bold mb-0">Note:</label>
+                                        <textarea id="inputLHNote" class="form-control" rows="3"
+                                            onkeyup="inputValidatorText(this,'','lunchplace','note');"></textarea>
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="col-md-4">
+                                        <label for="lHStatusSelect" class="form-label fw-bold mb-0">Status:</label>
+                                        <select required id="lHStatusSelect" class="form-select"
+                                            onchange="staticSelectValidator(this,'lunchplace','lp_status')">
+                                            <option value="" selected disabled>Select Status</option>
+                                            <option value="available">Available</option>
+                                            <option value="closed">Not In Business</option>
+                                            <option value="ifDeleted" class="d-none">Deleted Record</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            </fieldset>
 
-                            <div class="row g-3 mb-4">
-                                <!-- Address -->
-                                <div class="col-md-4">
-                                    <label for="inputLHAddress" class="form-label fw-bold">Address:</label>
-                                    <textarea id="inputLHAddress" class="form-control" rows="3"
-                                        onkeyup="inputValidatorText(this,'','lunchplace','address');"></textarea>
+
+                            <!-- Buttons -->
+                            <div class="row mt-4 mb-2">
+                                <div class="col-4">
+                                    <button type="reset" class="btn-clear fw-bold"
+                                        onclick="refreshLunchPlaceForm()">Reset Form</button>
                                 </div>
-
-                                <div class="col-md-4">
-                                     <label for="inputLHGeoCoords" class="form-label fw-bold">Geo Coords :</label>
-                                    <input type="text" id="inputLHGeoCoords"
-                                    class="form-control form-input"
-                                    placeholder="Paste from Google Maps"
-                                    oninput="inputValidatorText(this,'','lunchplace','gcoords')">
-                                </div>
-                            </div>
-
-                            <!-- Status (if needed as a select element) -->
-                            <div class="row g-3 mb-4">
-                                <div class="col-md-6">
-                                    <label for="lHStatusSelect" class="form-label fw-bold">Status:</label>
-
-                                    <select required id="lHStatusSelect" class="form-select"
-                                        onchange="staticSelectValidator(this,'lunchplace','lp_status')">
-
-                                        <option value="" selected disabled> Select Status </option>
-                                        <option value="available"> Available </option>
-                                        <option value="closed"> Not In Business </option>
-                                        <option value="ifDeleted" class="d-none"> Deleted Record </option>
-                                    </select>
-
-                                </div>
-                            </div>
-
-                            <!-- form buttons starts -->
-                            <div class="row g-3 mt-3">
-                                <div class="col-md-6 text-start">
-                                    <button type="reset" class="btn-clear w-25">Reset Form</button>
-                                </div>
-                                <div class="col-md-3">
-                                    <button type="button" id="lunchPlaceUpdateBtn" class="btn-update w-100"
+                                <div class="col-8 text-end">
+                                    <button type="button" id="lunchPlaceUpdateBtn" class="btn-update fw-bold"
                                         onclick="updateLunchPlace()">Update</button>
-                                </div>
-                                <div class="col-md-3">
-                                    <button type="submit" id="lunchPlaceAddBtn" class="btn-add w-100"
+                                    <button type="submit" id="lunchPlaceAddBtn" class="btn-add fw-bold"
                                         onclick="addNewLunchPlace()">Add New Record</button>
                                 </div>
                             </div>
+
                         </form>
+
 
                     </div>
 
@@ -197,7 +236,9 @@
 
                                     <p id="modalLPProvince" class="text-muted"></p>
 
-                                    <p class="fw-bold mb-1"><Address></Address></p>
+                                    <p class="fw-bold mb-1">
+                                    <Address></Address>
+                                    </p>
                                     <p id="modalLPAddress" class="text-muted"></p>
 
 
@@ -211,13 +252,13 @@
 
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Cost Per Head:</p>
+                                    <p class="fw-bold mb-1">Price Per Person:</p>
                                     <p id="modalLPCostPerHead" class="text-muted mb-0"></p>
                                 </div>
-                               
+
                             </div>
 
-                                                     <hr>
+                            <hr>
                             <div class="row g-4">
                                 <div class="col-md-4">
                                     <p class="fw-bold mb-1">Contact Number:</p>

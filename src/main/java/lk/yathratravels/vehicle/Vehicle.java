@@ -52,7 +52,7 @@ public class Vehicle {
     private BigDecimal cost_per_km;
 
     @Column(name = "last_service_date")
-    @NotNull
+    //@NotNull
     private LocalDate last_service_date;
 
     @ManyToOne

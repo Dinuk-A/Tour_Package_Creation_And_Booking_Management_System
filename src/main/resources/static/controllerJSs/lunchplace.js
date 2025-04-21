@@ -50,7 +50,11 @@ const refreshLunchPlaceForm = async () => {
 
     try {
         districts = await ajaxGetReq("district/all");
-        fillDataIntoDynamicSelects(selectLHDistrict, 'Please Select The District', districts, 'name');
+        fillDataIntoDynamicSelects(selectLHDistrict, 'Please Select The Province First', districts, 'name');
+        selectLHDistrict.disabled = true;
+
+        provinces = await ajaxGetReq("/province/all");
+        fillDataIntoDynamicSelects(selectLHProvince, 'Please Select The Province', provinces, 'name');
 
     } catch (error) {
         console.error("Failed to fetch data : ", error);
@@ -63,6 +67,7 @@ const refreshLunchPlaceForm = async () => {
         'selectLHDistrict',
         'inputContactNum',
         'inputContactNumTwo',
+        'selectLHProvince',
         'inputEmail',
         'inputLHNote',
         'inputLHGeoCoords',
@@ -138,7 +143,7 @@ const addNewLunchPlace = async () => {
                 let postServiceResponse = await ajaxPPDRequest("/lunchplace", "POST", lunchplace);
 
                 if (postServiceResponse == "OK") {
-                    showAlertModal('suc','Saved Successfully');
+                    showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formLunchPlace').reset();
                     refreshLunchPlaceForm();
                     buildLunchPlaceTable();
@@ -146,16 +151,16 @@ const addNewLunchPlace = async () => {
                     myLPTableTab.show();
 
                 } else {
-                    showAlertModal('err','Submit Failed ' + postServerResponse);
+                    showAlertModal('err', 'Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
 
 
         } else {
-            showAlertModal('inf','Operation Cancelled By User')
+            showAlertModal('inf', 'Operation Cancelled By User')
         }
     } else {
         showAlertModal('err', errors);
@@ -206,6 +211,11 @@ const refillLunchPlaceForm = async (ob) => {
     try {
         districts = await ajaxGetReq("district/all");
         fillDataIntoDynamicSelects(selectLHDistrict, 'Please Select The District', districts, 'name', lunchplace.district_id.name);
+        selectLHDistrict.style.border = "1px solid ced4da";
+
+        provinces = await ajaxGetReq("/province/all");
+        fillDataIntoDynamicSelects(selectLHProvince, 'Please Select The Province', provinces, 'name', lunchplace.district_id.province_id.name);
+        selectLHProvince.style.border = "1px solid ced4da";
 
     } catch (error) {
         console.error("Failed to fetch data : ", error);
@@ -275,7 +285,7 @@ const updateLunchPlace = async () => {
     if (errors == "") {
         let updates = showLPValueChanges();
         if (updates == "") {
-            showAlertModal('err',"No changes detected");
+            showAlertModal('err', "No changes detected");
         } else {
             let userConfirm = confirm("Are you sure to proceed ? \n \n" + updates);
 
@@ -285,21 +295,21 @@ const updateLunchPlace = async () => {
                     let putServiceResponce = await ajaxPPDRequest("/lunchplace", "PUT", lunchplace);
 
                     if (putServiceResponce == "OK") {
-                        showAlertModal('suc',"Successfully Updted");
+                        showAlertModal('suc', "Successfully Updted");
                         document.getElementById('formLunchPlace').reset();
                         refreshLunchPlaceForm();
                         buildLunchPlaceTable();
                         var myLPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myLPTableTab.show();
                     } else {
-                        showAlertModal('err',"An Error Occured " + putServiceResponce);
+                        showAlertModal('err', "An Error Occured " + putServiceResponce);
                     }
                 } catch (error) {
-                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
 
             } else {
-                showAlertModal('inf',"Operation cancelled by the Operator");
+                showAlertModal('inf', "Operation cancelled by the Operator");
             }
         }
     } else {
@@ -315,18 +325,18 @@ const deleteLunchPlaceRecord = async (ob) => {
         try {
             let deleteServerResponse = await ajaxPPDRequest("/lunchplace", "DELETE", ob);
             if (deleteServerResponse == "OK") {
-                showAlertModal('suc','Deleted succesfully')
+                showAlertModal('suc', 'Deleted succesfully')
                 $('#infoModalEmployee').modal('hide');
                 window.location.reload();
             } else {
-                showAlertModal('err',"Delete Failed \n" + deleteServerResponse);
+                showAlertModal('err', "Delete Failed \n" + deleteServerResponse);
             }
         } catch (error) {
-            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
 
     } else {
-        showAlertModal('inf',"User cancelled the task")
+        showAlertModal('inf', "User cancelled the task")
     }
 }
 
@@ -342,34 +352,47 @@ const restoreLunchPlaceRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/lunchplace", "PUT", lunchplace);
 
             if (putServiceResponse === "OK") {
-                showAlertModal('suc',"Successfully Restored");
+                showAlertModal('suc', "Successfully Restored");
                 $("#infoModalLunchplace").modal("hide");
 
                 //AN LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
                 window.location.reload();
 
             } else {
-                showAlertModal('err',"Restore Failed \n" + putServiceResponse);
+                showAlertModal('err', "Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {
-            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        showAlertModal('inf','User cancelled the recovery task');
+        showAlertModal('inf', 'User cancelled the recovery task');
     }
 
 }
 
-// const getDistByProvince = () => {
+const getDistByProvince = async () => {
 
-//     const currentProvinceID = JSON.parse(stayProvinceSelect.value).id;
-//     stayProvinceSelect.style.border = '2px solid green';
-//     stayDistrictSelect.disabled = false;
-//     const districts = ajaxGetRequest("district/getdistrictbyprovince/" + currentProvinceID);
-//     fillDataIntoSelect(stayDistrictSelect, " Please Select The District Now", districts, 'name');
+    const currentProvinceID = JSON.parse(selectLHProvince.value).id;
+    selectLHProvince.style.border = '2px solid lime';
+    selectLHDistrict.disabled = false;
 
-// }
+    try {
+        const districts = await ajaxGetReq("districts/byprovinceid/" + currentProvinceID);
+        fillDataIntoDynamicSelects(selectLHDistrict, " Please Select The District Now", districts, 'name');
+    } catch (error) {
+        console.error("Failed to fetch Data : ", error);
+    }
+
+}
+
+const setLHStatusAuto = () => {
+    document.getElementById('lHStatusSelect').value = 'available';
+    document.getElementById('lHStatusSelect').style.border = '2px solid lime';
+    document.getElementById('lHStatusSelect').children[2].setAttribute('class', 'd-none');
+    lunchplace.lp_status = 'available';
+}
+
 
 // const disableButtonsCommonFn = (rowOb) => {
 

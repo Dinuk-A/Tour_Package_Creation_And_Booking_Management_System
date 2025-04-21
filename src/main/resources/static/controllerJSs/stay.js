@@ -63,15 +63,15 @@ const refreshStayForm = async () => {
 
     try {
         //get stay types
-        stayTypes = await await ajaxGetReq("/staytype/all");
+        stayTypes = await  ajaxGetReq("/staytype/all");
         fillDataIntoDynamicSelects(selectStayType, 'Please Select The Type', stayTypes, 'name');
 
         //get province list
-        provinces = await await ajaxGetReq("province/all");
+        provinces = await  ajaxGetReq("province/all");
         fillDataIntoDynamicSelects(selectStayProvince, 'Please Select The Province', provinces, 'name');
 
         //get district list 
-        districts = await await ajaxGetReq("district/all");
+        districts = await  ajaxGetReq("district/all");
         fillDataIntoDynamicSelects(selectStayDistrict, 'Please Select The Provice First', districts, 'name');
         selectStayDistrict.disabled = true;
 
