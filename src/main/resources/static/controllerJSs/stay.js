@@ -113,6 +113,13 @@ const refreshStayForm = async () => {
 
 }
 
+const setStayStatusAuto = () => {
+    document.getElementById('selectStayStatus').value = 'open';
+    document.getElementById('selectStayStatus').style.border = '2px solid lime';
+    document.getElementById('selectStayStatus').children[4].setAttribute('class', 'd-none');
+    stay.stay_status = 'open';
+}
+
 const checkStayFormErrors = () => {
     let errors = '';
 

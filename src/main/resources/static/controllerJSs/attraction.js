@@ -67,29 +67,40 @@ const showAttrStatus = (ob) => {
 //fn for show LOCAL fees in table
 const showLocalFees = (ob) => {
 
-    if (ob.feelocaladult != 0.00 && ob.feechildlocal != 0.00) {
-
-        return "Adult : " + parseFloat(ob.feelocaladult).toFixed(2) + "<br/> Child  : " + parseFloat(ob.feechildlocal).toFixed(2);
-
-    } else if (ob.feechildlocal == 0.00 && ob.feelocaladult != 0) {
-
-        return "Adult : " + parseFloat(ob.feelocaladult).toFixed(2) + "<br/> Child : Free";
-        //💥TO FIXED KARAPU GAMAN MEKA STRING EKAK WENAWA. CALC KARANNA BA ITAPASSE,  CALC KARANNA OONNAM  AYE  PARSE KARANNA💥
-
-    } else {
+    if (ob.feelocaladult == null && ob.feechildlocal == null) {
         return 'No Entrance Fee';
-    }
+    } else {
 
+        if (ob.feelocaladult != 0.00 && ob.feechildlocal != 0.00) {
+
+            return "Adult : " + parseFloat(ob.feelocaladult).toFixed(2) + "<br/> Child  : " + parseFloat(ob.feechildlocal).toFixed(2);
+
+        } else if (ob.feechildlocal == 0.00 && ob.feelocaladult != 0.00) {
+
+            return "Adult : " + parseFloat(ob.feelocaladult).toFixed(2) + "<br/> Child : Free";
+            //💥TO FIXED KARAPU GAMAN MEKA STRING EKAK WENAWA. CALC KARANNA BA ITAPASSE,  CALC KARANNA OONNAM  AYE  PARSE KARANNA💥
+
+        } else {
+            return 'No Entrance Fee';
+        }
+    }
 }
 
 //fn for show FOREIGN FEES in table
 const showForeignFees = (ob) => {
 
-    if (ob.feeforeignadult != 0.00 && ob.feechildforeign != 0.00) {
+    if (ob.feeforeignadult == null && ob.feechildforeign == null) {
 
-        return "Adult : " + parseFloat(ob.feeforeignadult).toFixed(2) + "<br/> Child : " + parseFloat(ob.feechildforeign).toFixed(2);
-    } else {
         return 'No Entrance Fee';
+        
+    } else {
+
+        if (ob.feeforeignadult != 0.00 && ob.feechildforeign != 0.00) {
+
+            return "Adult : " + parseFloat(ob.feeforeignadult).toFixed(2) + "<br/> Child : " + parseFloat(ob.feechildforeign).toFixed(2);
+        } else {
+            return 'No Entrance Fee';
+        }
     }
 }
 
@@ -206,7 +217,8 @@ const refreshAttractionForm = async () => {
         'inputTourDuration',
         'vehiParkingFeeInput',
         'inputGeoCoords',
-        'selectAttrStatus'
+        'selectAttrStatus',
+        'selectAttrProvince'
     ];
 
     //clear out any previous styles
@@ -884,6 +896,7 @@ const getDistByProvince = async () => {
     try {
         const districts = await ajaxGetReq("districts/byprovinceid/" + currentProvinceID);
         fillDataIntoDynamicSelects(selectAttrDistrict, " Please Select The District Now", districts, 'name');
+        selectAttrDistrict.style.border = '2px solid #ced4da'
     } catch (error) {
         console.error("Failed to fetch Data : ", error);
     }

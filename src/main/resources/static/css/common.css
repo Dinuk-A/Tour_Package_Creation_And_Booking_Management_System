@@ -34,6 +34,12 @@ a:hover {
   text-decoration: none;
 }
 
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 /* ========================================================================
    Header & Top Navigation
    ======================================================================== */
@@ -195,7 +201,7 @@ h2.text-info {
   margin-top: 60px;
   padding: 2rem;
   max-width: 1400px;
-  
+
   z-index: 999;
   top: 0;
   left: 0;

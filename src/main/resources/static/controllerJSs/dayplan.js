@@ -105,6 +105,8 @@ const refreshDayPlanForm = async () => {
         'dpTotalVehiParkingCost',
         'dpTotalCostForToday',
         'dpNote',
+        'allVPs',
+        'selectedVPs',
         'dpSelectStatus',
         'dpTotalKMcount',
     ];

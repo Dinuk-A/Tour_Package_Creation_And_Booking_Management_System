@@ -172,7 +172,6 @@ const restrictBirthDays = () => {
 }
 
 //set the status as auto every time when a new form is opened
-//maybe hide entire thing and display only when updating ? 💥
 const setEmpStatusAuto = () => {
     document.getElementById('selectEmployeementStatus').value = 'Working';
     document.getElementById('selectEmployeementStatus').style.border = '2px solid lime';
