@@ -22,7 +22,7 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
     @Query(value = "select e from Employee e where e.mobilenum =?1")
     public Employee getEmployeeByMobileNum(String mobilenum);
 
-    //get employees who dont have an user account
+    // get employees who dont have an user account
     @Query(value = "select e from Employee e where e.id not in (select u.employee_id.id from User u)")
     public List<Employee> getEmpsWithoutAccount();
 
@@ -31,5 +31,9 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
      * @Query(value = "select e from Employee e where e.email=:email")
      * public Employee getEmpByEmail(@Param("email") String email);
      */
+
+    // get all employees except the system admin
+    @Query(value = "select emp from Employee emp where emp.designation_id.name <> 'Admin'")
+    public List<Employee> getAllEmployeesExceptAdmin();
 
 }

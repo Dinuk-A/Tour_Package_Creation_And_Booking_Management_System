@@ -12,7 +12,7 @@ let sharedTableId = "mainTableUser";
 const buildUserTable = async () => {
 
     try {
-        users = await ajaxGetReq("/user/all");
+        users = await ajaxGetReq("/user/exceptadmin");
 
         const tableColumnInfo = [
             { displayType: 'function', displayingPropertyOrFn: getEmployeeCode, colHeadName: 'Emp Code' },
@@ -77,7 +77,7 @@ const getUserAccStatus = (userObj) => {
         return `
             <p class="text-white mx-1 px-3 py-1 my-auto d-inline-block"
                style="background-color: #2ecc71; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
-               ✅ Active
+               Active
             </p>`;
     } else {
         return `
@@ -176,6 +176,8 @@ const refreshUserForm = async () => {
             field.value = '';
         }
     });
+
+    document.getElementById("selectEmployee").disabled = false;
 
     userUpdateBtn.disabled = true;
     userUpdateBtn.style.cursor = "not-allowed";

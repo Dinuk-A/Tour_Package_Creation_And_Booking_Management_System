@@ -24,14 +24,15 @@ public class MyUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        System.out.println("Logged User :");
-        System.out.println(username);
-
+        System.out.println("Logged User : " + username);
+   
         User loggedUser = userDao.getUserByUsername(username);
-
+        
         if (loggedUser == null) {
             throw new UsernameNotFoundException("Username not found" + username);
         }
+
+        System.out.println("Role: " + loggedUser.getRoles());
 
         Set<GrantedAuthority> authoritiesSet = new HashSet<>();
 

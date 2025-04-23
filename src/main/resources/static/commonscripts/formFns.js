@@ -54,7 +54,7 @@ const fillMultDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPro
 
     dataContainer.forEach((element) => {
         const selectableOption = document.createElement('option');
-        selectableOption.innerText = element[displayingPropertyName1] + "  " + element[displayingPropertyName2];
+        selectableOption.innerText = element[displayingPropertyName1] + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + element[displayingPropertyName2];
         selectableOption.value = JSON.stringify(element);
 
         if (selectedValue != "") {

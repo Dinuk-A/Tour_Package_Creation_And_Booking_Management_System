@@ -90,6 +90,21 @@ public class EmployeeController {
         return employeeDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
+    //emp list except admin
+    @GetMapping(value = "/emp/exceptadmin", produces = "application/json")
+    public List<Employee> returnEmpListExceptAdmin(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<Employee>();
+        }
+
+        return employeeDao.getAllEmployeesExceptAdmin();
+
+    }
+
     // get employees who dont have an user account
     @GetMapping(value = "/emp/listwithoutuseracc", produces = "application/json")
     public List<Employee> showEmpsWOUserAccs() {

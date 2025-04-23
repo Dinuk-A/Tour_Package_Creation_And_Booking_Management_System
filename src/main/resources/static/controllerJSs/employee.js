@@ -13,7 +13,7 @@ let sharedTableId = "mainTableEmployee";
 const buildEmployeeTable = async () => {
 
     try {
-        const employees = await ajaxGetReq("/emp/all");
+        const employees = await ajaxGetReq("/emp/exceptadmin");
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'emp_code', colHeadName: 'Code' },

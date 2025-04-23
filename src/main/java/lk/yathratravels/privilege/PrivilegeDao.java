@@ -2,12 +2,40 @@ package lk.yathratravels.privilege;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 
 public interface PrivilegeDao extends JpaRepository<Privilege, Integer> {
 
     @Query("select p from Privilege p where p.role_id.id=?1 and p.module_id.id=?2")
     Privilege getPrivisByBothRoleAndModule(Integer roleid, Integer moduleid);
+
+    // Fetch User ID by Username
+    @Query(value = "SELECT u.id FROM user u WHERE u.username = ?1", nativeQuery = true)
+    Integer getUserIdByUsername(String username);
+
+    // Fetch Role IDs for a User
+    @Query(value = "SELECT ur.role_id FROM user_has_role ur WHERE ur.user_id = ?1", nativeQuery = true)
+    List<Integer> getRoleIdsByUserId(Integer userId);
+
+    // Fetch Module ID by Module Name
+    @Query(value = "SELECT m.id FROM module m WHERE m.name = ?1", nativeQuery = true)
+    Integer getModuleIdByName(String moduleName);
+
+    // Fetch Privileges by Role IDs and Module ID
+    // ORIGINAL
+    @Query(value = "SELECT p.prvselect, p.prvinsert, p.prvupdate, p.prvdelete " +
+            "FROM privilege p " +
+            "WHERE p.module_id = ?1 AND p.role_id IN (:roleIds)", nativeQuery = true)
+    List<Object[]> getPrivilegesByRoleIdsAndModuleId(Integer moduleId, List<Integer> roleIds);
+
+    // NEW
+    @Query(value = "SELECT p.prvselect, p.prvinsert, p.prvupdate, p.prvdelete " +
+            "FROM privilege p " +
+            "WHERE p.module_id = :moduleId AND p.role_id IN (:roleIds)", nativeQuery = true)
+    List<Object[]> getPrivilegesByRoleIdsAndModuleIdNew(@Param("moduleId") Integer moduleId,
+            @Param("roleIds") List<Integer> roleIds);
 
     // Step 1: Identify the module_id for the specified modulename.
 
@@ -24,24 +52,6 @@ public interface PrivilegeDao extends JpaRepository<Privilege, Integer> {
 
     // Step 4: Aggregate the privilege flags using BIT_OR to ensure that if any role
     // has the privilege enabled, it will be considered.
-
-    // Fetch User ID by Username
-    @Query(value = "SELECT u.id FROM user u WHERE u.username = ?1", nativeQuery = true)
-    Integer getUserIdByUsername(String username);
-
-    // Fetch Role IDs for a User
-    @Query(value = "SELECT ur.role_id FROM user_has_role ur WHERE ur.user_id = ?1", nativeQuery = true)
-    List<Integer> getRoleIdsByUserId(Integer userId);
-
-    // Fetch Module ID by Module Name
-    @Query(value = "SELECT m.id FROM module m WHERE m.name = ?1", nativeQuery = true)
-    Integer getModuleIdByName(String moduleName);
-
-    // Fetch Privileges by Role IDs and Module ID
-    @Query(value = "SELECT p.prvselect, p.prvinsert, p.prvupdate, p.prvdelete " +
-            "FROM privilege p " +
-            "WHERE p.module_id = ?1 AND p.role_id IN (:roleIds)", nativeQuery = true)
-    List<Object[]> getPrivilegesByRoleIdsAndModuleId(Integer moduleId, List<Integer> roleIds);
 
     // explain or refine step by step ??????????
     // @Query(value = "SELECT bit_or(p.prvselect) as pri_select ,

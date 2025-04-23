@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import lk.yathratravels.employee.Employee;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
 
@@ -79,6 +78,35 @@ public class UserController {
 
         return userDao.findAll(Sort.by(Direction.DESC, "id"));
     }
+
+    // get all users except admin
+    @GetMapping(value = "/user/exceptadmin", produces = "application/json")
+    public List<User> returnAllUsersExceptAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "USER");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<User>();
+        }
+
+        return userDao.getAllUserAccsExceptAdmin();
+    }
+
+    @GetMapping(value = "/user/exceptadminloggeduser", produces = "application/json")
+public List<User> returnAllUsersExceptAdminAndLoggedUSer() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    String currentUsername = auth.getName();
+
+    Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(currentUsername, "USER");
+
+    if (!privilegeLevelForLoggedUser.getPrvselect()) {
+        return new ArrayList<>();
+    }
+
+    return userDao.getAllUserAccsExceptAdminAndLoggedUser(currentUsername);
+}
+
 
     // this will be used for prints only
     @GetMapping(value = "/username/byid/{userid}", produces = "application/json")
