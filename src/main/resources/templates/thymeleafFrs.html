@@ -85,7 +85,7 @@
                     <img src="images/employee.png" alt="Avatar" class="rounded-circle avatar-large mb-2">
                     <p class="mb-0 fw-bold" th:text="${loggedUserUN}"></p>
                     <!-- meka hadanna one -->
-                    <p class="text-muted mb-0" th:text="${loggedUserCompanyEmail}"></p>
+                    <p id="loggedUserCompanyEmailDisplayId" class="text-muted mb-0" th:text="${loggedUserCompanyEmail}"></p>
                 </li>
                 <li>
                     <hr class="dropdown-divider">
@@ -347,7 +347,7 @@
     </div>
 </div>
 
-<!-- modal for use as a custom alert -->
+<!-- modal for use as a custom confirm -->
 <div th:fragment="customConfirmFragment" class="confirm-modal" id="customConfirmModal">
     <img id="confirmIcon" src="images/warning.png">
     <p id="confirmMsg">This is a custom confirm!</p>

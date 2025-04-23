@@ -275,20 +275,32 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">
-                        <button class="btn-print fw-bold" onclick="printUserRecord()">
+                        <button class="btn-print fw-bold" onclick="printUserRecord()" id="modalUserPrintBtn">
                             Print Record
                         </button>
                         <div>
-                            <button class="btn-edit fw-bold me-2" onclick="refillUserForm(window['currentObject'])">
+                            <button class="btn-edit fw-bold me-2" onclick="refillUserForm(window['currentObject'])" id="modalUserEditBtn">
                                 Edit User
                             </button>
-                            <button class="btn-delete fw-bold" onclick="deleteUserRecord(window['currentObject'])">
+                            <button class="btn-delete fw-bold" onclick="deleteUserRecord(window['currentObject'])" id="modalUserDeleteBtn">
                                 Delete User
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="d-none bg-white text-danger p-3 text-md" id="hoverTextModalEditBtn" style="position: absolute;
+            top: 50px;
+            left: 50px; z-index: 999;">
+            <p class="text-success">You Cannot Edit Your Own User Account From Here, Use Settings</p>
+        </div>
+
+        <div class="d-none bg-white text-danger p-3 text-md" id="hoverTextModalDltBtn" style="position: absolute;
+            top: 50px;
+            left: 50px; z-index: 999;">
+            <p class="text-warning">You Cannot Delete Your Own User Account From Here, Contact HR Team or System Admin</p>
         </div>
 
     </main>

@@ -12,6 +12,8 @@ let sharedTableId = "mainTableUser";
 const buildUserTable = async () => {
 
     try {
+
+        //  /user/exceptadminloggeduser
         users = await ajaxGetReq("/user/exceptadmin");
 
         const tableColumnInfo = [
@@ -51,17 +53,17 @@ const getUserRoles = (userObj) => {
     let userRoles = '<div class="role-container" style="max-width: 300px;">';
 
     const roleColors = {
-        Admin: '#2c3e50',            
-        Manager: '#8e44ad',           
-        "Assistant Manager": '#6c5ce7', 
-        Receptionist: '#00cec9',     
-        Driver: '#e67e22',           
-        Executive: '#1e90ff',        
-        Guide: '#d63031',             
+        Admin: '#2c3e50',
+        Manager: '#8e44ad',
+        "Assistant Manager": '#6c5ce7',
+        Receptionist: '#00cec9',
+        Driver: '#e67e22',
+        Executive: '#1e90ff',
+        Guide: '#d63031',
     };
 
     userObj.roles.forEach((element) => {
-        const color = roleColors[element.name] || '#7f8c8d'; 
+        const color = roleColors[element.name] || '#7f8c8d';
         userRoles += `<span class="rounded-pill text-white p-2 me-1 mb-1 d-inline-block" style="background-color: ${color}; font-weight: 500;">${element.name}</span>`;
     });
 
@@ -111,7 +113,7 @@ const refreshUserForm = async () => {
 
         rolesList.forEach(element => {
             let idAttribute = element.name.replace(/\s+/g, '-');
-            
+
             let newInput = document.createElement('input');
             newInput.type = "checkbox";
             newInput.classList.add("btn-check");
@@ -292,8 +294,33 @@ const addNewUser = async () => {
     }
 }
 
+const resetUserModal = () => {
+
+    let editBtnModal = document.getElementById("modalUserEditBtn");
+    let deleteBtnModal = document.getElementById("modalUserDeleteBtn");
+
+    // Hide the deleted record message    
+    //document.getElementById('modalEmpIfDeleted').innerText = '';
+    //document.getElementById('modalEmpIfDeleted').classList.add('d-none');
+
+    // Enable and show edit/delete buttons
+    editBtnModal.disabled = false;
+    deleteBtnModal.disabled = false;
+    editBtnModal.style.cursor = "pointer";
+    deleteBtnModal.style.cursor = "pointer";
+    editBtnModal.classList.remove('d-none');
+    deleteBtnModal.classList.remove('d-none');
+
+    // Hide the recover button
+    //document.getElementById('modalEmpRecoverBtn').classList.add('d-none');
+
+}
+
 //fn for edit button  
 const openModal = (userObj) => {
+
+    //reset the modal
+    resetUserModal();
 
     document.getElementById('modalUserEmpCode').innerText = userObj.employee_id.emp_code || 'N/A';
     document.getElementById('modalUserEmpName').innerText = userObj.employee_id.fullname || 'N/A';
@@ -321,8 +348,48 @@ const openModal = (userObj) => {
 
     document.getElementById('modalUserRoles').innerText = userRoles || 'N/A';
 
+    let loggedUserEmailText = document.getElementById("loggedUserCompanyEmailDisplayId").innerText;
+
+    if (userObj.work_email == loggedUserEmailText) {
+
+        let editBtnModal = document.getElementById("modalUserEditBtn");
+        let deleteBtnModal = document.getElementById("modalUserDeleteBtn");
+
+        editBtnModal.disabled = true;
+        deleteBtnModal.disabled = true;
+
+        editBtnModal.style.cursor = "not-allowed";
+        deleteBtnModal.style.cursor = "not-allowed";
+
+        let modalEditBtnErrMsg = document.getElementById("hoverTextModalEditBtn");
+        let modalDeleteBtnErrMsg = document.getElementById("hoverTextModalDltBtn");
+
+        editBtnModal.onmouseover = function (e) {
+            modalEditBtnErrMsg.classList.remove("d-none");
+            modalEditBtnErrMsg.style.left = e.pageX +'px';
+            modalEditBtnErrMsg.style.top = e.pageY +'px';
+        }
+
+        editBtnModal.onmouseout = function () {
+            modalEditBtnErrMsg.classList.add("d-none");
+        }
+
+        deleteBtnModal.onmouseover = function (e) {
+            modalDeleteBtnErrMsg.classList.remove("d-none");
+            modalDeleteBtnErrMsg.style.left = e.pageX +'px';
+            modalDeleteBtnErrMsg.style.top = e.pageY +'px';
+        }
+
+        deleteBtnModal.onmouseout = function () {
+            modalDeleteBtnErrMsg.classList.add("d-none");
+        }
+
+        //document.getElementById("btnUserEdit").onmouseover
+    }
+
     // Show the modal
     $('#infoModalUser').modal('show');
+
 };
 
 // refill the form to edit a record
