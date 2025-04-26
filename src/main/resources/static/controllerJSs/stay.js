@@ -223,8 +223,28 @@ const addNewStay = async () => {
 
 }
 
+//clear modal content without refreshing , to aid show new content in modal
+const resetModal = () => {
+
+    // Hide the deleted record message    
+    document.getElementById('modalStayIfDeleted').innerText = '';
+    document.getElementById('modalStayIfDeleted').classList.add('d-none');
+
+    // Enable and show edit/delete buttons
+    document.getElementById('modalStayEditBtn').disabled = false;
+    document.getElementById('modalStayDeleteBtn').disabled = false;
+    document.getElementById('modalStayEditBtn').classList.remove('d-none');
+    document.getElementById('modalStayDeleteBtn').classList.remove('d-none');
+
+    // Hide the recover button
+    document.getElementById('modalStayRecoverBtn').classList.add('d-none');
+
+}
+
 //fn for edit button
 const openModal = (stayObj) => {
+
+    resetModal();
 
     // Modal Data Population
     document.getElementById('modalStayName').innerText = stayObj.name || 'N/A';
@@ -461,6 +481,7 @@ const deleteStayRecord = async (ob) => {
         showAlertModal('inf', "User cancelled the task")
     }
 }
+
 //get district list based on selected province
 const getDistByProvince = async () => {
 

@@ -78,7 +78,6 @@ const showAttrStatus = (ob) => {
     }
 }
 
-
 //fn for show LOCAL fees in table
 const showLocalFees = (ob) => {
 
@@ -491,8 +490,29 @@ const addNewAttraction = async () => {
     }
 }
 
+//clear modal content without refreshing , to aid show new content in modal
+const resetModal = () => {
+
+    // Hide the deleted record message    
+    document.getElementById('modalAttrIfDeleted').innerText = '';
+    document.getElementById('modalAttrIfDeleted').classList.add('d-none');
+
+    // Enable and show edit/delete buttons
+    document.getElementById('modalAttrEditBtn').disabled = false;
+    document.getElementById('modalAttrDeleteBtn').disabled = false;
+    document.getElementById('modalAttrEditBtn').classList.remove('d-none');
+    document.getElementById('modalAttrDeleteBtn').classList.remove('d-none');
+
+    // Hide the recover button
+    document.getElementById('modalAttrRecoverBtn').classList.add('d-none');
+
+}
+
 //fn for edit button
 const openModal = (attrObj) => {
+
+    resetModal();
+    
     document.getElementById('modalAttrName').innerText = attrObj.name || 'N/A';
     document.getElementById('modalAttrDistrict').innerText = attrObj.district_id.name || 'N/A';
     document.getElementById('modalAttrProvince').innerText = attrObj.district_id.province_id.name || 'N/A';

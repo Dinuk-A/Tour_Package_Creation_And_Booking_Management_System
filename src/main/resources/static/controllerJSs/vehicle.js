@@ -321,8 +321,29 @@ const addNewVehicle = async () => {
     }
 }
 
+//clear modal content without refreshing , to aid show new content in modal
+const resetModal = () => {
+
+    // Hide the deleted record message    
+    document.getElementById('modalVehiIfDeleted').innerText = '';
+    document.getElementById('modalVehiIfDeleted').classList.add('d-none');
+
+    // Enable and show edit/delete buttons
+    document.getElementById('modalVehiEditBtn').disabled = false;
+    document.getElementById('modalVehiDeleteBtn').disabled = false;
+    document.getElementById('modalVehiEditBtn').classList.remove('d-none');
+    document.getElementById('modalVehiDeleteBtn').classList.remove('d-none');
+
+    // Hide the recover button
+    document.getElementById('modalVehiRecoverBtn').classList.add('d-none');
+
+}
+
 //fn for edit button
 const openModal = (vehiObj) => {
+
+    resetModal(); 
+
     document.getElementById('modalVehiNumberPlate').innerText = vehiObj.numberplate || 'N/A';
     document.getElementById('modalVehiModalName').innerText = vehiObj.vehiclename || 'N/A';
     document.getElementById('modalVehiPassengerSeatCount').innerText = vehiObj.passengerseats || 'N/A';

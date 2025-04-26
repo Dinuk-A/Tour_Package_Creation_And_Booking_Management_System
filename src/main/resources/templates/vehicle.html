@@ -207,21 +207,6 @@
                             </fieldset>
 
 
-
-                            <div class="row mt-2">
-                                <!--select status starts -->
-                                <div class="col-4">
-
-                                </div>
-                            </div>
-
-                            <div class="row mt-2">
-                                <!-- note starts -->
-                                <div class="col-8">
-
-                                </div>
-                            </div>
-
                             <!-- Form Buttons -->
                             <div class="row mt-3 mb-2">
 
@@ -232,10 +217,10 @@
 
                                 <div class="col-8 text-end">
                                     <button type="button" id="vehicleUpdateBtn" class=" btn-update fw-bold "
-                                        onclick="updateVehicle()">Update</button>
+                                        onclick="updateVehicle()">Update Entry</button>
 
                                     <button type="submit" id="vehicleAddBtn" class="btn-add fw-bold"
-                                        onclick="addNewVehicle()">Add New Vehicle</button>
+                                        onclick="addNewVehicle()">Add Entry</button>
                                 </div>
                             </div>
                         </form>
@@ -333,15 +318,15 @@
                         <div>
                             <button id="modalVehiEditBtn" class="btn-edit me-2 fw-bold"
                                 onclick="refillVehicleForm(window['currentObject'])">
-                                Edit Vehicle
+                                Edit Entry
                             </button>
                             <button id="modalVehiDeleteBtn" class="btn-delete fw-bold"
                                 onclick="deleteVehicleRecord(window['currentObject'])">
-                                Delete Vehicle
+                                Delete Entry
                             </button>
                             <button id="modalVehiRecoverBtn" class="btn-restore d-none fw-bold"
                                 onclick="restoreVehicleRecord()">
-                                Restore Vehicle
+                                Restore Entry
                             </button>
                         </div>
                     </div>

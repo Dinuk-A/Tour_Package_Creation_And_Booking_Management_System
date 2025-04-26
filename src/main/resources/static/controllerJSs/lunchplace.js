@@ -183,7 +183,28 @@ const addNewLunchPlace = async () => {
 
 }
 
+//clear modal content without refreshing , to aid show new content in modal
+const resetModal = () => {
+
+    // Hide the deleted record message    
+    document.getElementById('modalLPIfDeleted').innerText = '';
+    document.getElementById('modalLPIfDeleted').classList.add('d-none');
+
+    // Enable and show edit/delete buttons
+    document.getElementById('modalLPEditBtn').disabled = false;
+    document.getElementById('modalLPDeleteBtn').disabled = false;
+    document.getElementById('modalLPEditBtn').classList.remove('d-none');
+    document.getElementById('modalLPDeleteBtn').classList.remove('d-none');
+
+    // Hide the recover button
+    document.getElementById('modalLPRecoverBtn').classList.add('d-none');
+
+}
+
 const openModal = (obj) => {
+
+    resetModal();
+    
     document.getElementById('modalLPName').innerText = obj.name || 'N/A';
     document.getElementById('modalLPDistrict').innerText = obj.district_id.name || 'N/A';
     document.getElementById('modalLHGeoCoords').innerText = obj.gcoords || 'N/A';

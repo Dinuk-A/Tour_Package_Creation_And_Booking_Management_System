@@ -388,16 +388,16 @@
                             <div class="row mt-3">
 
                                 <div class="col-3">
-                                    <button type="reset" class="btn btn-all btn-clear"
-                                        onclick="refreshAttractionForm()"> Clear</button>
+                                    <button type="reset" class="btn-clear fw-bold" onclick="refreshAttractionForm()"></button>
+                                        Reset Form</button>
                                 </div>
 
                                 <div class="col-9 text-end">
-                                    <button type="button" id="attraUpdateBtn" class="btn btn-all btn-update "
-                                        onclick="updateAttraction()" style="pointer-events: all;">Update</button>
+                                    <button type="button" id="attraUpdateBtn" class="btn-update fw-bold"
+                                        onclick="updateAttraction()" style="pointer-events: all;">Update Entry</button>
 
-                                    <button type="submit" id="attraAddBtn" class="btn btn-all btn-add "
-                                        onclick="addNewAttraction()" style="pointer-events: all;">Add</button>
+                                    <button type="submit" id="attraAddBtn" class="btn-add fw-bold"
+                                        onclick="addNewAttraction()" style="pointer-events: all;">Add Entry</button>
                                 </div>
                             </div>
 
@@ -425,7 +425,7 @@
                     <!-- Modal Body -->
                     <div class="modal-body bg-light">
                         <div class="container">
-                    
+
                             <!-- Row 1: Name and Status -->
                             <div class="row mb-4 align-items-start">
                                 <div class="col-md-8">
@@ -437,7 +437,7 @@
                                     <p id="modalAttrStatus" class="mb-2"></p>
                                 </div>
                             </div>
-                    
+
                             <!-- Row 2: District, Province, Geo Coords -->
                             <div class="row mb-4">
                                 <div class="col-md-4">
@@ -453,7 +453,7 @@
                                     <p id="modalAttrGCoords" class="mb-2"></p>
                                 </div>
                             </div>
-                    
+
                             <!-- Row 3: Categories and Description -->
                             <div class="row mb-4">
                                 <div class="col-md-6">
@@ -465,7 +465,7 @@
                                     <p id="modalAttrDescription" class="mb-2"></p>
                                 </div>
                             </div>
-                    
+
                             <!-- Row 4: Entrance Fees -->
                             <div class="row mb-4">
                                 <div class="col-md-3">
@@ -485,7 +485,7 @@
                                     <p id="modalAttrForeignChildFee" class="mb-2"></p>
                                 </div>
                             </div>
-                    
+
                             <!-- Row 5: Duration and Parking Fee -->
                             <div class="row mb-4">
                                 <div class="col-md-6">
@@ -497,7 +497,7 @@
                                     <p id="modalAttrVehicleParkingFee" class="mb-2"></p>
                                 </div>
                             </div>
-                    
+
                             <!-- Final Row: Additional Info -->
                             <div class="row mb-3">
                                 <div class="col-md-8">
@@ -508,10 +508,10 @@
                                     <p id="modalAttrIfDeleted" class="text-danger d-none mb-0"></p>
                                 </div>
                             </div>
-                    
+
                         </div>
                     </div>
-                    
+
 
 
                     <!-- Modal Footer -->
@@ -523,15 +523,15 @@
                         <div>
                             <button id="modalAttrEditBtn" class="btn-edit me-2 fw-bold"
                                 onclick="refillAttractionForm(window['currentObject'])">
-                                Edit Attraction Record
+                                Edit Entry
                             </button>
                             <button id="modalAttrDeleteBtn" class="btn-delete fw-bold"
                                 onclick="deleteAttractionRecord(window['currentObject'])">
-                                Delete Record
+                                Delete Entry
                             </button>
                             <button id="modalAttrRecoverBtn" class="btn-restore d-none fw-bold"
                                 onclick="restoreAttractionRecord()">
-                                Restore Record
+                                Restore Entry
                             </button>
                         </div>
                     </div>
