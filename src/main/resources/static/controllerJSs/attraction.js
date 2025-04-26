@@ -50,19 +50,34 @@ const showAttrStatus = (ob) => {
     if (ob.deleted_attr == null || ob.deleted_attr == false) {
 
         if (ob.attr_status == "open") {
-            return "Open to Visit"
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #27ae60; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Open for Tours
+                </p>`;
         } else if (ob.attr_status == "permanantly_closed") {
-            return "Permanantly Closed"
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Permanently Closed
+                </p>`;
         } else if (ob.attr_status == "temporary_closed") {
-            return "Temporary Closed"
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Temporary Closed
+                </p>`;
         }
 
     } else if (ob.deleted_attr != null && ob.deleted_attr == true) {
-        return '<p class="text-white bg-danger text-center my-0 p-2" > Deleted Record </p>'
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Deleted Record
+            </p>`;
     }
-
-
 }
+
 
 //fn for show LOCAL fees in table
 const showLocalFees = (ob) => {
@@ -234,8 +249,6 @@ const refreshAttractionForm = async () => {
     inputLocalChildFee.value = "0.00"
     inputForeignAdultFee.value = "0.00"
     inputForeignChildFee.value = "0.00"
-
-    vehiParkingFeeInput.value = "0.00"
 
 }
 
@@ -910,7 +923,8 @@ const freeParkingCheckBox = () => {
     if (checkbox.checked) {
         vehiParkingFeeInput.disabled = true;
         vehiParkingFeeInput.style.border = "1px solid #ced4da";
-        attraction.vehicleparkingfee = null;
+        //attraction.vehicleparkingfee = null;
+        attraction.vehicleparkingfee = 0.00;
         vehiParkingFeeInput.value = "0.00";
     } else {
         vehiParkingFeeInput.disabled = false;

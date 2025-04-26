@@ -8,7 +8,6 @@ window.addEventListener('load', () => {
 //global var to store id of the table
 let sharedTableId = "mainTableLunchPlace";
 
-
 const buildLunchPlaceTable = async () => {
 
     try {
@@ -19,7 +18,7 @@ const buildLunchPlaceTable = async () => {
                 { displayType: 'text', displayingPropertyOrFn: 'name', colHeadName: 'Name' },
                 { displayType: 'function', displayingPropertyOrFn: showLPLocationShort, colHeadName: 'Location' },
                 { displayType: 'function', displayingPropertyOrFn: showLPContacts, colHeadName: 'Contacts' },
-                { displayType: 'text', displayingPropertyOrFn: 'costperhead', colHeadName: 'Price (per Head)' },
+                { displayType: 'function', displayingPropertyOrFn: showPricePerPerson, colHeadName: 'Price(per Person)' },
             ];
 
         createTable(tableLunchPlaceHolderDiv, sharedTableId, lunchPlaces, tableColumnInfo);
@@ -36,10 +35,16 @@ const showLPLocationShort = (obj) => {
     return obj.district_id.name + "<br> " + obj.district_id.province_id.name;
 }
 
-
 const showLPContacts = (obj) => {
-    return obj.contactnum + "<br>" + obj.contactnumtwo || "N/A";
-}
+    const email = obj.email || "No email";
+    return obj.contactnum + "<br>" + email;
+};
+
+const showPricePerPerson = (obj) => {
+    const cost = obj.costperhead;
+    const formattedCost = cost ? `LKR ${parseFloat(cost).toFixed(2)}` : "Price not set";
+    return formattedCost;
+};
 
 
 const refreshLunchPlaceForm = async () => {
@@ -68,7 +73,7 @@ const refreshLunchPlaceForm = async () => {
         'inputContactNum',
         'inputContactNumTwo',
         'selectLHProvince',
-        'inputEmail',
+        'inputLPEmail',
         'inputLHNote',
         'inputLHGeoCoords',
         'inputLHAddress',
@@ -91,6 +96,16 @@ const refreshLunchPlaceForm = async () => {
     lunchPlaceAddBtn.style.cursor = "pointer";
 
 }
+
+//clear out the form everytime a user switches to table tab
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshLunchPlaceForm();
+        }
+    });
+});
 
 const checkLHFormErrors = () => {
 
@@ -174,11 +189,22 @@ const openModal = (obj) => {
     document.getElementById('modalLHGeoCoords').innerText = obj.gcoords || 'N/A';
     document.getElementById('modalLPProvince').innerText = obj.district_id.province_id.name || 'N/A';
     document.getElementById('modalLPAddress').innerText = obj.address || 'N/A';
-    document.getElementById('modalLPCostPerHead').innerText = obj.costperhead || 'N/A';
+    document.getElementById('modalLPCostPerHead').innerText =
+        obj.costperhead ? `LKR ${parseFloat(obj.costperhead).toFixed(2)}` : 'N/A';
     document.getElementById('modalLPContactNum').innerText = obj.contactnum || 'N/A';
     document.getElementById('modalLPContactNumTwo').innerText = obj.contactnumtwo || 'N/A';
     document.getElementById('modalLPEmail').innerText = obj.email || 'N/A';
-    document.getElementById('modalLPStatus').innerText = obj.lp_status || 'N/A';
+
+    let displayStatus;
+    if (obj.lp_status === 'available') {
+        displayStatus = 'Open for customers';
+    } else if (obj.lp_status === 'closed') {
+        displayStatus = 'Service unavailable';
+    } else {
+        displayStatus = 'N/A';
+    }
+    document.getElementById('modalLPStatus').innerText = displayStatus;
+
     document.getElementById('modalLPNote').innerText = obj.note || 'N/A';
 
     if (obj.deleted_lp) {

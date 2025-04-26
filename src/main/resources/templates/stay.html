@@ -95,7 +95,7 @@
                                                 class="text-danger">*</span> :</label>
                                         <select id="selectStayDistrict" class="form-select"
                                             onchange="dynamicSelectValidator(this,'stay','district_id')"></select>
-                                    </div>                                  
+                                    </div>
 
                                 </div>
 
@@ -205,97 +205,78 @@
                     </div>
 
                     <!-- Modal Body -->
-                    <div class="modal-body">
+                    <div class="modal-body bg-light">
                         <div class="container">
-
-                            <!-- Employee Image and Basic Info -->
-                            <div class="row g-4 align-items-center">
-
-                                <!-- Name and NIC -->
+                    
+                            <!-- Row 1: Name and Type -->
+                            <div class="row mb-4 align-items-start">
                                 <div class="col-md-8">
-                                    <p class="fw-bold mb-1"> Name:</p>
-                                    <p id="modalStayName" class="text-muted"></p>
-
-                                    <p class="fw-bold mb-1">Location:</p>
-                                    <p id="modalStayDistrict" class="text-muted"></p>
-
-                                    <p class="fw-bold mb-1">Geo Coords:</p>
-                                    <p id="modalStayGCoords" class="text-muted"></p>
-
-                                    <p id="modalStayProvince" class="text-muted"></p>
-
-                                    <p class="fw-bold mb-1">Categories</p>
-                                    <p id="modalStayCatrgories" class="text-muted"></p>
-
-
+                                    <p class="fw-bold mb-1 text-primary">Name:</p>
+                                    <p id="modalStayName" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Type:</p>
+                                    <p id="modalStayType" class="mb-2"></p>
                                 </div>
                             </div>
-
-                            <!-- Other Details -->
-                            <hr>
-                            <div class="row g-4">
+                    
+                            <!-- Row 2: District, Province, Geo Coords -->
+                            <div class="row mb-4">
                                 <div class="col-md-4">
-
+                                    <p class="fw-bold mb-1 text-primary">District:</p>
+                                    <p id="modalStayDistrict" class="mb-2"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Local Adult Fee:</p>
-                                    <p id="modalStayLocalAdultFee" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Province:</p>
+                                    <p id="modalStayProvince" class="mb-2"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Local Child Fee:</p>
-                                    <p id="modalStayLocalChildFee" class="text-muted mb-0"></p>
-                                </div>
-                            </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Foreign Adult Fee:</p>
-                                    <p id="modalStayForeignAdultFee" class="text-muted mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Foreign Child Fee:</p>
-                                    <p id="modalStayForeignChildFee" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Geo Coords:</p>
+                                    <p id="modalStayGeoCoords" class="mb-2"></p>
                                 </div>
                             </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Staying Duration:</p>
-                                    <p id="modalStayDuration" class="text-muted mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Description:</p>
-                                    <p id="modalStayDescription" class="text-muted mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Vehicle Parking Fee:</p>
-                                    <p id="modalStayVehicleParkingFee" class="text-muted mb-0"></p>
+                    
+                            <!-- Row 3: Address -->
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <p class="fw-bold mb-1 text-primary">Address:</p>
+                                    <p id="modalStayAddress" class="mb-2"></p>
                                 </div>
                             </div>
-
-                            <hr>
-                            <div class="row g-4">
+                    
+                            <!-- Row 4: Contact Info -->
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Contact No. 1:</p>
+                                    <p id="modalStayContact1" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Contact No. 2:</p>
+                                    <p id="modalStayContact2" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Email:</p>
+                                    <p id="modalStayEmail" class="mb-2"></p>
+                                </div>
+                            </div>
+                    
+                            <!-- Row 5: Status and Additional Details -->
+                            <div class="row mb-3">
                                 <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Status:</p>
-                                    <p id="modalStayStatus" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Status:</p>
+                                    <p id="modalStayStatus" class="mb-2"></p>
+                    
+                                    <p class="fw-bold mb-1 text-primary">Additional Details:</p>
+                                    <p id="modalStayAdditionalDetails" class="mb-2"></p>
                                 </div>
-                            </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Additional Details:</p>
-                                    <p id="modalStayNote" class="text-muted mb-0"></p>
-                                </div>
-
                                 <div class="col-md-4">
                                     <p id="modalStayIfDeleted" class="text-danger d-none mb-0"></p>
                                 </div>
                             </div>
+                    
                         </div>
                     </div>
+                    
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">

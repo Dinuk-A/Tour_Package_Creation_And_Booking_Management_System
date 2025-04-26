@@ -1,0 +1,9 @@
+src/main/resources/static/libs/datatables-1.13.6
+src/main/resources/static/libs/bootstrap-5.2.3
+
+addeddatetime 
+lastmodifieddatetime 
+deleteddatetime 
+addeduserid 
+lastmodifieduserid 
+deleteduserid

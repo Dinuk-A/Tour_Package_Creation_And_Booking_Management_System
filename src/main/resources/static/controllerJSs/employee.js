@@ -77,7 +77,6 @@ const showEmpDesignation = (empObj) => {
 };
 
 
-
 const showEmployeeStatus = (empObj) => {
 
     if (empObj.deleted_emp == null || empObj.deleted_emp == false) {
@@ -98,12 +97,10 @@ const showEmployeeStatus = (empObj) => {
         return `
             <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
                style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-               ❌ Deleted Record
+               Deleted Record
             </p>`;
     }
 }
-
-
 
 //fn to ready the main form for accept values
 const refreshEmployeeForm = async () => {

@@ -52,8 +52,34 @@ const showStayContacts = (ob) => {
 }
 
 const showStayStatus = (ob) => {
-    return ob.stay_status;
-}
+    if (ob.deleted_stay == null || ob.deleted_stay == false) {
+        if (ob.stay_status === "open") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #27ae60; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Open
+                </p>`;
+        } else if (ob.stay_status === "temporary_closed") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Temporarily Closed
+                </p>`;
+        } else if (ob.stay_status === "permanantly_closed") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Permanently Closed
+                </p>`;
+        }
+    } else if (ob.deleted_stay != null && ob.deleted_stay === true) {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Deleted Record
+            </p>`;
+    }
+};
 
 const refreshStayForm = async () => {
 
@@ -63,15 +89,15 @@ const refreshStayForm = async () => {
 
     try {
         //get stay types
-        stayTypes = await  ajaxGetReq("/staytype/all");
+        stayTypes = await ajaxGetReq("/staytype/all");
         fillDataIntoDynamicSelects(selectStayType, 'Please Select The Type', stayTypes, 'name');
 
         //get province list
-        provinces = await  ajaxGetReq("province/all");
+        provinces = await ajaxGetReq("province/all");
         fillDataIntoDynamicSelects(selectStayProvince, 'Please Select The Province', provinces, 'name');
 
         //get district list 
-        districts = await  ajaxGetReq("district/all");
+        districts = await ajaxGetReq("district/all");
         fillDataIntoDynamicSelects(selectStayDistrict, 'Please Select The Provice First', districts, 'name');
         selectStayDistrict.disabled = true;
 
@@ -156,7 +182,6 @@ const checkStayFormErrors = () => {
     return errors;
 }
 
-
 const addNewStay = async () => {
 
     //check errors
@@ -172,7 +197,7 @@ const addNewStay = async () => {
                 let postServiceResponse = await ajaxPPDRequest("/stay", "POST", stay);
 
                 if (postServiceResponse === "OK") {
-                    showAlertModal('suc','Saved Successfully');
+                    showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formStay').reset();
                     refreshStayForm();
                     buildStayTable();
@@ -180,17 +205,17 @@ const addNewStay = async () => {
                     myStayTableTab.show();
 
                 } else {
-                    showAlertModal('err','Submit Failed ' + postServiceResponse);
+                    showAlertModal('err', 'Submit Failed ' + postServiceResponse);
                 }
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
 
 
         } else {
             //💥💥💥
-            showAlertModal('inf','Operation Cancelled By User')
+            showAlertModal('inf', 'Operation Cancelled By User')
         }
     } else {
         showAlertModal('err', errors);
@@ -201,21 +226,20 @@ const addNewStay = async () => {
 //fn for edit button
 const openModal = (stayObj) => {
 
+    // Modal Data Population
     document.getElementById('modalStayName').innerText = stayObj.name || 'N/A';
+    document.getElementById('modalStayType').innerText = stayObj.stay_type_id.name || 'N/A';
     document.getElementById('modalStayDistrict').innerText = stayObj.district_id.name || 'N/A';
     document.getElementById('modalStayProvince').innerText = stayObj.district_id.province_id.name || 'N/A';
-    document.getElementById('modalStayCatrgories').innerText = stayObj.dob || 'N/A';
-    document.getElementById('modalStayLocalAdultFee').innerText = stayObj.feelocaladult || 'N/A';
-    document.getElementById('modalStayLocalChildFee').innerText = stayObj.feechildlocal || 'N/A';
-    document.getElementById('modalStayForeignAdultFee').innerText = stayObj.feeforeignadult || 'N/A';
-    document.getElementById('modalStayForeignChildFee').innerText = stayObj.feechildforeign || 'N/A';
-    document.getElementById('modalStayDuration').innerText = stayObj.duration || 'N/A';
-    document.getElementById('modalStayDescription').innerText = stayObj.description || 'N/A';
+    document.getElementById('modalStayGeoCoords').innerText = stayObj.gcoords || 'N/A';
+    document.getElementById('modalStayAddress').innerText = stayObj.address || 'N/A';
+    document.getElementById('modalStayContact1').innerText = stayObj.contactnumone || 'N/A';
+    document.getElementById('modalStayContact2').innerText = stayObj.contactnumtwo || 'N/A';
+    document.getElementById('modalStayEmail').innerText = stayObj.email || 'N/A';
     document.getElementById('modalStayStatus').innerText = stayObj.stay_status || 'N/A';
-    document.getElementById('modalStayNote').innerText = stayObj.note || 'N/A';
-    document.getElementById('modalStayGCoords').innerText = stayObj.gcoords || 'N/A';
+    document.getElementById('modalStayAdditionalDetails').innerText = stayObj.note || 'N/A';
 
-
+    // Handle Deleted Stay
     if (stayObj.deleted_stay) {
         document.getElementById('modalStayIfDeleted').classList.remove('d-none');
         document.getElementById('modalStayIfDeleted').innerHTML =
@@ -230,8 +254,7 @@ const openModal = (stayObj) => {
 
     // Show the modal
     $('#infoModalStay').modal('show');
-
-}
+};
 
 //fn for restore button
 const restoreStayRecord = async () => {
@@ -247,20 +270,20 @@ const restoreStayRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/stay", "PUT", stay);
 
             if (putServiceResponse === "OK") {
-                showAlertModal('suc',"Successfully Restored");
+                showAlertModal('suc', "Successfully Restored");
                 document.getElementById('formStay').reset();
                 $("#infoModalStay").modal("hide");
                 window.location.reload();
 
             } else {
-                showAlertModal('err',"Restore Failed \n" + putServiceResponse);
+                showAlertModal('err', "Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {
-            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        showAlertModal('inf','Recovery process has cancelled');
+        showAlertModal('inf', 'Recovery process has cancelled');
     }
 }
 
@@ -381,7 +404,7 @@ const updateStay = async () => {
     if (errors == "") {
         let updates = showStayValueChanges();
         if (updates == "") {
-            showAlertModal('err',"No changes detected");
+            showAlertModal('err', "No changes detected");
         } else {
             let userConfirm = confirm("Are you sure to proceed ? \n \n" + updates);
 
@@ -391,7 +414,7 @@ const updateStay = async () => {
                     let putServiceResponce = await ajaxPPDRequest("/stay", "PUT", stay);
 
                     if (putServiceResponce == "OK") {
-                        showAlertModal('suc',"Successfully Updted");
+                        showAlertModal('suc', "Successfully Updted");
                         document.getElementById('formStay').reset();
                         refreshStayForm();
                         buildStayTable();
@@ -399,18 +422,18 @@ const updateStay = async () => {
                         myStayTableTab.show();
 
                     } else {
-                        showAlertModal('err',"An Error Occured " + putServiceResponce);
+                        showAlertModal('err', "An Error Occured " + putServiceResponce);
                     }
                 } catch (error) {
-                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
 
             } else {
-                showAlertModal('inf',"Operation cancelled by the Operator");
+                showAlertModal('inf', "Operation cancelled by the Operator");
             }
         }
     } else {
-        showAlertModal('err',errors);
+        showAlertModal('err', errors);
     }
 }
 
@@ -424,18 +447,18 @@ const deleteStayRecord = async (ob) => {
         try {
             let deleteServerResponse = await ajaxPPDRequest("/stay", "DELETE", ob);
             if (deleteServerResponse === "OK") {
-                showAlertModal('suc','Deleted succesfully');
+                showAlertModal('suc', 'Deleted succesfully');
                 $('#infoModalStay').modal('hide');
                 window.location.reload();
             } else {
-                showAlertModal('err',"Delete Failed \n" + deleteServerResponse);
+                showAlertModal('err', "Delete Failed \n" + deleteServerResponse);
             }
         } catch (error) {
-            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
 
     } else {
-        showAlertModal('inf',"User cancelled the task")
+        showAlertModal('inf', "User cancelled the task")
     }
 }
 //get district list based on selected province

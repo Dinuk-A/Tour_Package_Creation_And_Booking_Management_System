@@ -83,7 +83,7 @@
                                         onchange="staticSelectValidator(this,'attraction','attr_status')">
 
                                         <option value="" selected disabled> Select Status </option>
-                                        <option value="open"> Open To Visit </option>
+                                        <option value="open"> Open for Tours </option>
                                         <option value="permanantly_closed"> Permanantly Closed </option>
                                         <option value="temporary_closed"> Temporary Closed </option>
                                         <option value="ifDeleted" class="d-none"> Deleted Record </option>
@@ -230,7 +230,8 @@
                                                     <input type="number" id="inputLocalAdultFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feelocaladult')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feelocaladult')"
+                                                        onblur="insertDecimals(this);">
                                                 </div>
 
 
@@ -249,7 +250,8 @@
                                                     <input type="number" id="inputLocalChildFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildlocal')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildlocal')"
+                                                        onblur="insertDecimals(this);">
                                                 </div>
 
 
@@ -274,7 +276,8 @@
                                                     <input type="number" id="inputForeignAdultFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feeforeignadult')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feeforeignadult')"
+                                                        onblur="insertDecimals(this);">
                                                 </div>
                                             </div>
 
@@ -290,7 +293,8 @@
                                                     <input type="number" id="inputForeignChildFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildforeign')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildforeign')"
+                                                        onblur="insertDecimals(this);">
                                                 </div>
 
 
@@ -346,7 +350,8 @@
                                                 </span>
                                                 <input type="number" id="vehiParkingFeeInput"
                                                     class="form-control form-input p-1 text-center " placeholder=""
-                                                    onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','vehicleparkingfee')">
+                                                    onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','vehicleparkingfee')"
+                                                    onblur="insertDecimals(this);">
 
                                             </div>
                                         </div>
@@ -418,97 +423,96 @@
                     </div>
 
                     <!-- Modal Body -->
-                    <div class="modal-body">
+                    <div class="modal-body bg-light">
                         <div class="container">
-
-                            <!-- Employee Image and Basic Info -->
-                            <div class="row g-4 align-items-center">
-
-                                <!-- Name and NIC -->
+                    
+                            <!-- Row 1: Name and Status -->
+                            <div class="row mb-4 align-items-start">
                                 <div class="col-md-8">
-                                    <p class="fw-bold mb-1"> Name:</p>
-                                    <p id="modalAttrName" class="text-muted"></p>
-
-                                    <p class="fw-bold mb-1"> Geo Coords:</p>
-                                    <p id="modalAttrGCoords" class="text-muted"></p>
-
-                                    <p class="fw-bold mb-1">Location:</p>
-                                    <p id="modalAttrDistrict" class="text-muted"></p>
-
-                                    <p id="modalAttrProvince" class="text-muted"></p>
-
-                                    <p class="fw-bold mb-1">Categories</p>
-                                    <p id="modalAttrCatrgories" class="text-muted"></p>
-
-
+                                    <p class="fw-bold mb-1 text-primary">Name:</p>
+                                    <p id="modalAttrName" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Status:</p>
+                                    <p id="modalAttrStatus" class="mb-2"></p>
                                 </div>
                             </div>
-
-                            <!-- Other Details -->
-                            <hr>
-                            <div class="row g-4">
+                    
+                            <!-- Row 2: District, Province, Geo Coords -->
+                            <div class="row mb-4">
                                 <div class="col-md-4">
-
+                                    <p class="fw-bold mb-1 text-primary">District:</p>
+                                    <p id="modalAttrDistrict" class="mb-2"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Local Adult Fee:</p>
-                                    <p id="modalAttrLocalAdultFee" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Province:</p>
+                                    <p id="modalAttrProvince" class="mb-2"></p>
                                 </div>
                                 <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Local Child Fee:</p>
-                                    <p id="modalAttrLocalChildFee" class="text-muted mb-0"></p>
-                                </div>
-                            </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Foreign Adult Fee:</p>
-                                    <p id="modalAttrForeignAdultFee" class="text-muted mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Foreign Child Fee:</p>
-                                    <p id="modalAttrForeignChildFee" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Geo Coords:</p>
+                                    <p id="modalAttrGCoords" class="mb-2"></p>
                                 </div>
                             </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Staying Duration:</p>
-                                    <p id="modalAttrDuration" class="text-muted mb-0"></p>
+                    
+                            <!-- Row 3: Categories and Description -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1 text-primary">Categories:</p>
+                                    <p id="modalAttrCatrgories" class="mb-2"></p>
                                 </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Description:</p>
-                                    <p id="modalAttrDescription" class="text-muted mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Vehicle Parking Fee:</p>
-                                    <p id="modalAttrVehicleParkingFee" class="text-muted mb-0"></p>
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1 text-primary">Description:</p>
+                                    <p id="modalAttrDescription" class="mb-2"></p>
                                 </div>
                             </div>
-
-                            <hr>
-                            <div class="row g-4">
+                    
+                            <!-- Row 4: Entrance Fees -->
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-1 text-primary">Local Adult Fee:</p>
+                                    <p id="modalAttrLocalAdultFee" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-1 text-primary">Local Child Fee:</p>
+                                    <p id="modalAttrLocalChildFee" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-1 text-primary">Foreign Adult Fee:</p>
+                                    <p id="modalAttrForeignAdultFee" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-1 text-primary">Foreign Child Fee:</p>
+                                    <p id="modalAttrForeignChildFee" class="mb-2"></p>
+                                </div>
+                            </div>
+                    
+                            <!-- Row 5: Duration and Parking Fee -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1 text-primary">Staying Duration:</p>
+                                    <p id="modalAttrDuration" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1 text-primary">Vehicle Parking Fee:</p>
+                                    <p id="modalAttrVehicleParkingFee" class="mb-2"></p>
+                                </div>
+                            </div>
+                    
+                            <!-- Final Row: Additional Info -->
+                            <div class="row mb-3">
                                 <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Status:</p>
-                                    <p id="modalAttrStatus" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-1 text-primary">Additional Details:</p>
+                                    <p id="modalAttrNote" class="mb-2"></p>
                                 </div>
-                            </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Additional Details:</p>
-                                    <p id="modalAttrNote" class="text-muted mb-0"></p>
-                                </div>
-
                                 <div class="col-md-4">
                                     <p id="modalAttrIfDeleted" class="text-danger d-none mb-0"></p>
                                 </div>
                             </div>
+                    
                         </div>
                     </div>
+                    
+
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">

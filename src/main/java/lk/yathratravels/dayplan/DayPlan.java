@@ -15,7 +15,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import lk.yathratravels.activity.Activity;
+//import lk.yathratravels.activity.Activity;
 import lk.yathratravels.attraction.Attraction;
 import lk.yathratravels.attraction.District;
 import lk.yathratravels.lunchplace.LunchPlace;

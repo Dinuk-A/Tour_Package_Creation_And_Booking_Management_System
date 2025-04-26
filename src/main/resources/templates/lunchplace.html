@@ -78,7 +78,8 @@
                                                 <h6 class="my-auto">LKR</h6>
                                             </span>
                                             <input type="number" id="inputCostperHead" class="form-control" required
-                                                onkeyup="inputValidatorText(this,'','lunchplace','costperhead');">
+                                                onkeyup="inputValidatorText(this,'','lunchplace','costperhead');"
+                                                onblur="insertDecimals(this);">
                                         </div>
                                     </div>
                                 </div>
@@ -87,6 +88,34 @@
                             <!-- Contact & Location Info -->
                             <fieldset class="border border-dark p-4 mb-4 bg-light">
                                 <legend class="float-none w-auto px-2 text-primary">Contact & Location</legend>
+
+                                <div class="row g-3 mb-2">
+
+                                    <!-- Contact Number -->
+                                    <div class="col-md-3">
+                                        <label for="inputContactNum" class="form-label fw-bold mb-0">Contact
+                                            Number #1:</label>
+                                        <input type="tel" id="inputContactNum" pattern="[0-9]{10}" class="form-control"
+                                            onkeyup="inputValidatorText(this,'','lunchplace','contactnum');">
+                                    </div>
+
+                                    <!-- Contact Number 2 -->
+                                    <div class="col-md-3">
+                                        <label for="inputContactNumTwo" class="form-label fw-bold mb-0">Contact Number
+                                            #2
+                                            2:</label>
+                                        <input type="tel" id="inputContactNumTwo" pattern="[0-9]{10}"
+                                            class="form-control"
+                                            onkeyup="inputValidatorText(this,'','lunchplace','contactnumtwo');">
+                                    </div>
+
+                                    <!-- Contact Email -->
+                                    <div class="col-md-6">
+                                        <label for="inputLPEmail" class="form-label fw-bold mb-0">Email:</label>
+                                        <input type="tel" id="inputLPEmail" class="form-control"
+                                            onkeyup="inputValidatorText(this,'','lunchplace','email');">
+                                    </div>
+                                </div>
 
                                 <div class="row g-3 mb-2">
 
@@ -104,33 +133,6 @@
                                         <label for="selectLHDistrict" class="form-label fw-bold mb-0">District :</label>
                                         <select id="selectLHDistrict" class="form-select mb-2"
                                             onchange="dynamicSelectValidator(this, 'lunchplace' , 'district_id')"></select>
-                                    </div>
-                                </div>
-
-                                <div class="row g-3 mb-2">
-                                    
-                                    <!-- Contact Number -->
-                                    <div class="col-md-3">
-                                        <label for="inputContactNum" class="form-label fw-bold mb-0">Contact
-                                            Number #1:</label>
-                                        <input type="tel" id="inputContactNum" pattern="[0-9]{10}" class="form-control"
-                                            onkeyup="inputValidatorText(this,'','lunchplace','contactnum');">
-                                    </div>
-
-                                    <!-- Contact Number 2 -->
-                                    <div class="col-md-3">
-                                        <label for="inputContactNumTwo" class="form-label fw-bold mb-0">Contact Number #2
-                                            2:</label>
-                                        <input type="tel" id="inputContactNumTwo" pattern="[0-9]{10}"
-                                            class="form-control"
-                                            onkeyup="inputValidatorText(this,'','lunchplace','contactnumtwo');">
-                                    </div>
-
-                                    <!-- Contact Email -->
-                                    <div class="col-md-6">
-                                        <label for="inputLPEmail" class="form-label fw-bold mb-0">Email:</label>
-                                        <input type="tel" id="inputLPEmail" class="form-control"
-                                            onkeyup="inputValidatorText(this,'','lunchplace','email');">
                                     </div>
                                 </div>
 
@@ -217,84 +219,81 @@
                     </div>
 
                     <!-- Modal Body -->
-                    <div class="modal-body">
+
+                    <div class="modal-body bg-light">
                         <div class="container">
 
-                            <!-- Employee Image and Basic Info -->
-                            <div class="row g-4 align-items-center">
-
-                                <!-- Name and NIC -->
+                            <!-- Row 1: Name and Geo Coords -->
+                            <div class="row py-3 align-items-start" style="border-bottom: 1px solid #004d7a;">
                                 <div class="col-md-8">
-                                    <p class="fw-bold mb-1"> Name:</p>
-                                    <p id="modalLPName" class="text-muted"></p>
-
-                                    <p class="fw-bold mb-1"> Geo Coords:</p>
-                                    <p id="modalLHGeoCoords" class="text-muted"></p>
-
-                                    <p class="fw-bold mb-1">Location:</p>
-                                    <p id="modalLPDistrict" class="text-muted"></p>
-
-                                    <p id="modalLPProvince" class="text-muted"></p>
-
-                                    <p class="fw-bold mb-1">
-                                    <Address></Address>
-                                    </p>
-                                    <p id="modalLPAddress" class="text-muted"></p>
-
-
+                                    <p class="fw-bold mb-0 text-primary">Name:</p>
+                                    <p id="modalLPName" class="text-muted mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-0 text-primary">Geo Coords:</p>
+                                    <p id="modalLHGeoCoords" class="text-muted mb-2"></p>
                                 </div>
                             </div>
 
-                            <!-- Other Details -->
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-4">
-
+                            <!-- Row 2: Address, District, Province -->
+                            <div class="row py-3 border-bottom">
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-0 text-primary">Address:</p>
+                                    <p id="modalLPAddress" class="text-muted mb-2"></p>
                                 </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Price Per Person:</p>
-                                    <p id="modalLPCostPerHead" class="text-muted mb-0"></p>
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-0 text-primary">District:</p>
+                                    <p id="modalLPDistrict" class="text-muted mb-2"></p>
                                 </div>
-
-                            </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Contact Number:</p>
-                                    <p id="modalLPContactNum" class="text-muted mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Contact Number #2:</p>
-                                    <p id="modalLPContactNumTwo" class="text-muted mb-0"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1">Email</p>
-                                    <p id="modalLPEmail" class="text-muted mb-0"></p>
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-0 text-primary">Province:</p>
+                                    <p id="modalLPProvince" class="text-muted mb-2"></p>
                                 </div>
                             </div>
 
-                            <hr>
-                            <div class="row g-4">
+                            <!-- Row 3: Contact Numbers and Email -->
+                            <div class="row py-3 border-bottom">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-0 text-primary">Contact Number:</p>
+                                    <p id="modalLPContactNum" class="text-muted mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-0 text-primary">Contact Number #2:</p>
+                                    <p id="modalLPContactNumTwo" class="text-muted mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-0 text-primary">Email:</p>
+                                    <p id="modalLPEmail" class="text-muted mb-2"></p>
+                                </div>
+                            </div>
+
+                            <!-- Row 4: Cost Per Head and Status -->
+                            <div class="row py-3 border-bottom">
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-0 text-primary">Cost Per Head:</p>
+                                    <p id="modalLPCostPerHead" class="text-muted mb-2"></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-0 text-primary">Status:</p>
+                                    <p id="modalLPStatus" class="text-muted mb-2"></p>
+                                </div>
+                            </div>
+
+                            <!-- Row 5: Additional Details -->
+                            <div class="row py-3">
                                 <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Status:</p>
-                                    <p id="modalLPStatus" class="text-muted mb-0"></p>
+                                    <p class="fw-bold mb-0 text-primary">Additional Details:</p>
+                                    <p id="modalLPNote" class="text-muted mb-2"></p>
                                 </div>
-                            </div>
-
-                            <hr>
-                            <div class="row g-4">
-                                <div class="col-md-8">
-                                    <p class="fw-bold mb-1">Additional Details:</p>
-                                    <p id="modalLPNote" class="text-muted mb-0"></p>
-                                </div>
-
                                 <div class="col-md-4">
                                     <p id="modalLPIfDeleted" class="text-danger d-none mb-0"></p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
+
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">

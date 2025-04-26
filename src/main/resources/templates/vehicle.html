@@ -104,7 +104,7 @@
                                                     <input type="text" id="inputVehiCostPerKM"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','vehicle','cost_per_km')">
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','vehicle','cost_per_km')" onblur="insertDecimals(this);">
                                                 </div>
                                             </div>
                                         </div>
