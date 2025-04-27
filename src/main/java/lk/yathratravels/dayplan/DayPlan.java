@@ -73,8 +73,7 @@ public class DayPlan {
     private BigDecimal localadulttktcost;
 
     @Column(name = "localchildtktcost")
-    private BigDecimal localchildtktcost;
-    
+    private BigDecimal localchildtktcost;    
     // ****TICKETS COSTS ENDS
 
     @Column(name = "totalkmcount")

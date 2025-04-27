@@ -1,335 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
+<head th:replace="~{thymeleafFrs :: commonHeadFr}">
+    <style>
+        .container {
+            max-width: 700px;
+            margin-top: 50px;
+        }
 
-<head>
-    <!-- Make sure jQuery is loaded before SmartWizard -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- SmartWizard CSS should be loaded after Bootstrap CSS -->
-    <link rel="stylesheet" href="libs/smartwiz/css/smart_wizard_all.min.css">
+        .form-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
 
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-tabs .nav-link {
+            border-radius: 0;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .tab-content {
+            margin-top: 20px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
     <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
     <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
     <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
-    <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
-    <div th:replace="~{thymeleafFrs :: customConfirmFragment}"></div>
+    <!--<div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>-->
+    <!--<div th:replace="~{thymeleafFrs :: customConfirmFragment}"></div>-->
 
     <main id="mainAreaID" class="main">
 
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab dolorum ipsum a tenetur asperiores veritatis amet
-            explicabo sunt in nemo.</p>
-
-        <button onclick="handleConfirm()">click me</button>
-
-        <p>vfdgdfgdf gfgdf g g g gg g dgd gf gdf gf gf gdf gg fdg gfgdfg g dgfg dgd g gdaz</p>
-
-        <button onclick="handleConfirm()">click me</button>
-
-        <div class="container mt-5">
-            <div class="card">
-                <div class="card-header">
-                    Multi-Step Form
+        <div class="container bg-light p-4">
+            <div class="form-container bg-warning p-2">
+                <div class="form-title">
+                    <h2>Modern Multi-Step Form</h2>
                 </div>
-                <div class="card-body">
-                    <div id="smartwizard">
-                        <ul class="nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#step-1">Step 1</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#step-2">Step 2</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#step-3">Step 3</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#step-4">Step 4</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#step-5">Step 5</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#step-6">Step 6</a>
-                            </li>
-                        </ul>
 
-                        <div class="tab-content">
-                            <div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-1">
-                                <!-- Step 1: Name and Status -->
-                                <div class="mb-2">
-                                    <div class="input-group">
-                                        <!-- Name Label -->
-                                        <label class="form-label" for="inputPlaceName" style="width:65%">Name :</label>
-                                        <!-- Status label -->
-                                        <label for="selectAttrStatus" class="form-label">Status: </label>
-                                    </div>
-                                    <div class="input-group">
-                                        <!-- Name Input -->
-                                        <input id="inputPlaceName"
-                                            onkeyup="inputValidatorText(this, '' ,'attraction' ,'name' )" type="text"
-                                            class="form-control form-input me-2" style="width:35%">
+                <!-- Tabs Navigation -->
+                <ul class="nav nav-tabs" id="formTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="step1-tab" data-bs-toggle="tab" href="#step1" role="tab"
+                            aria-controls="step1" aria-selected="true">Step 1</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="step2-tab" data-bs-toggle="tab" href="#step2" role="tab"
+                            aria-controls="step2" aria-selected="false">Step 2</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="step3-tab" data-bs-toggle="tab" href="#step3" role="tab"
+                            aria-controls="step3" aria-selected="false">Step 3</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="step4-tab" data-bs-toggle="tab" href="#step4" role="tab"
+                            aria-controls="step4" aria-selected="false">Step 4</a>
+                    </li>
+                </ul>
 
-                                        <!-- Status input -->
-                                        <select required id="selectAttrStatus" class="form-select"
-                                            onchange="staticSelectValidator(this,'attraction','attr_status')">
-                                            <option value="" selected disabled> Select Status </option>
-                                            <option value="open"> Open Site </option>
-                                            <option value="permanantly_closed"> Permanantly Closed </option>
-                                            <option value="temporary_closed"> Temporary Closed </option>
-                                            <option value="ifDeleted" class="d-none"> Deleted Record </option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="step-2" class="tab-pane" role="tabpanel" aria-labelledby="step-2">
-                                <!-- Step 2: Province and District -->
-                                <div class="mb-2">
-                                    <div class="input-group">
-                                        <!-- Label for PROVINCE -->
-                                        <label class="form-label w-50" for="selectAttrProvince">Province</label>
-                                        <!-- Label for DISTRICT -->
-                                        <label for="selectAttrDistrict" class="form-label w-50">District</label>
-                                    </div>
-                                    <div class="input-group">
-                                        <!-- SELECT PROVINCE -->
-                                        <select id="selectAttrProvince" class="form-control form-select"
-                                            onchange="getDistByProvince()">
-                                            <option value="province1">Province 1</option>
-                                            <option value="province2">Province 2</option>
-                                            <option value="province3">Province 3</option>
-                                        </select>
-
-                                        <!-- SELECT DISTRICT -->
-                                        <select id="selectAttrDistrict" class="ms-3 form-control form-select"
-                                            onchange="dynamicSelectValidator(this,'attraction','district_id')">
-                                            <option value="district1">District 1</option>
-                                            <option value="district2">District 2</option>
-                                            <option value="district3">District 3</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="step-3" class="tab-pane" role="tabpanel" aria-labelledby="step-3">
-                                <!-- Step 3: Types (Accordion) -->
-                                <div class="mb-2 w-100 border p-3 accordion accordion-flush mt-2"
-                                    id="accordionForTypes">
-                                    <div class="accordion-item">
-                                        <div class="accordion-header mb-2">
-                                            <button class="p-0 accordion-button collapsed fw-bold " type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#flushCollapseOne"
-                                                aria-expanded="false" aria-controls="flushCollapseOne">
-                                                <h5 class="text-info"> Categories : Click to Expand</h5>
-                                            </button>
-                                        </div>
-                                        <div id="flushCollapseOne" class="accordion-collapse collapse ps-4"
-                                            data-bs-parent="#accordionForTypes">
-                                            <div class="accordion-body bg-light d-flex justify-content-between">
-                                                <!-- Add your dynamic content here -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="step-4" class="tab-pane" role="tabpanel" aria-labelledby="step-4">
-                                <!-- Step 4: Entrance Fees -->
-                                <div class="mb-2">
-                                    <div class="row">
-                                        <h5>Entrance Fees</h5>
-
-                                        <!-- 3 Check Boxes for Entrance Fees -->
-                                        <div class="input-group">
-                                            <!-- CB 1 -->
-                                            <input type="radio" class="btn-check" id="allEntryFreeChkBox"
-                                                autocomplete="off" name="entranceFees" value="All Free"
-                                                onchange="allEntryFree(); attraction.feetype = this.value">
-                                            <label class="btn btn-outline-success w-33 rounded-start"
-                                                for="allEntryFreeChkBox">All Free</label>
-
-                                            <!-- CB 2 -->
-                                            <input type="radio" class="btn-check" id="localsEntryFreeCheckBox"
-                                                autocomplete="off" value="Local Free" name="entranceFees"
-                                                onchange="localsEntryFree(); attraction.feetype = this.value">
-                                            <label class="ms-1 btn btn-outline-warning w-33"
-                                                for="localsEntryFreeCheckBox">Local Free</label>
-
-                                            <!-- CB 3 -->
-                                            <input type="radio" class="btn-check" id="allPaidCheckBox"
-                                                autocomplete="off" name="entranceFees" value="All Paid"
-                                                onchange="allPaid(); attraction.feetype = this.value">
-                                            <label class="btn ms-1 btn-outline-danger w-33" for="allPaidCheckBox">All
-                                                Paid</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="step-5" class="tab-pane" role="tabpanel" aria-labelledby="step-5">
-                                <!-- Step 5: Fees Input -->
-                                <div class="mb-2">
-                                    <div class="row">
-                                        <div class="col-6 bg-light border">
-                                            <h5 class="mt-1">Local Fees</h5>
-
-                                            <!-- Local ADULT -->
-                                            <div class="row mt-1 mb-3">
-                                                <div class="col-6">
-                                                    <label class="form-label  mb-0">Local Adult</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text p-1 pb-0">
-                                                            <h6>LKR</h6>
-                                                        </span>
-                                                        <input type="number" id="inputLocalAdultFee"
-                                                            class="form-control form-input w-85 p-1 text-center"
-                                                            placeholder=""
-                                                            onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feelocaladult')">
-                                                    </div>
-                                                </div>
-
-                                                <!-- Local CHILD -->
-                                                <div class="col-6">
-                                                    <label class="form-label mb-0">Local Children</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text p-1 pb-0">
-                                                            <h6>LKR</h6>
-                                                        </span>
-                                                        <input type="text" id="inputLocalChildFee"
-                                                            class="form-control form-input w-85 p-1 text-center"
-                                                            placeholder=""
-                                                            onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildlocal')">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-6 bg-light border">
-                                            <h5 class="mt-1">Foreign Fees</h5>
-
-                                            <!-- Foreign ADULT -->
-                                            <div class="row mt-1 mb-3 ">
-                                                <div class="col-6">
-                                                    <label class="form-label mb-0">Foreign Adult</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text p-1 pb-0">
-                                                            <h6>LKR</h6>
-                                                        </span>
-                                                        <input type="text" id="inputForeignAdultFee"
-                                                            class="form-control form-input w-85 p-1 text-center"
-                                                            placeholder=""
-                                                            onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feeforeignadult')">
-                                                    </div>
-                                                </div>
-
-                                                <!-- Foreign CHILD -->
-                                                <div class="col-6">
-                                                    <label class="form-label mb-0">Foreign Children</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text p-1 pb-0">
-                                                            <h6>LKR</h6>
-                                                        </span>
-                                                        <input type="number" id="inputForeignChildFee"
-                                                            class="form-control form-input w-85 p-1 text-center"
-                                                            placeholder=""
-                                                            onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','feechildforeign')">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="step-6" class="tab-pane" role="tabpanel" aria-labelledby="step-6">
-                                <!-- Step 6: Additional Information -->
-                                <div class="row mt-2">
-                                    <div class="col-5">
-                                        <label for="inputNote" class="form-label fw-bold">Location Description :</label>
-                                        <textarea class="form-control" placeholder=" " id="inputNote"
-                                            onkeyup="inputValidatorText(this,'','attraction','description')"
-                                            style="height: 100px;"
-                                            aria-placeholder="Enter A Short Description About The Location"></textarea>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Tabs Content -->
+                <div class="tab-content" id="formTabsContent">
+                    <!-- Step 1: Personal Information -->
+                    <div class="tab-pane fade show active" id="step1" role="tabpanel" aria-labelledby="step1-tab">
+                        <h5>Step 1: Personal Information</h5>
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" required>
                         </div>
                     </div>
+
+                    <!-- Step 2: Contact Information -->
+                    <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="step2-tab">
+                        <h5>Step 2: Contact Information</h5>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" required>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Address -->
+                    <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="step3-tab">
+                        <h5>Step 3: Address</h5>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Street Address</label>
+                            <input type="text" class="form-control" id="address" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city" required>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Review -->
+                    <div class="tab-pane fade" id="step4" role="tabpanel" aria-labelledby="step4-tab">
+                        <h5>Step 4: Review</h5>
+                        <p>Please review your information before submitting:</p>
+                        <ul class="review-list" id="reviewDetails"></ul>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="btn-container">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" disabled>Previous</button>
+                    <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
                 </div>
             </div>
         </div>
 
-        <button onclick="customConfirm('ffgfdgfggd')">click me</button>
-
-
-        <!-- SmartWizard JS should be loaded after jQuery -->
-        <script src="libs/smartwiz/js/jquery.smartWizard.min.js"></script>
-
 
         <script>
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const tabLinks = document.querySelectorAll('.nav-link');
+            let currentStep = 0;
 
-            //test custom confirm
-            const handleConfirm = async () => {
-                const userResponse = await customConfirm('Are you sure to add?');
-
-                if (userResponse) {
-                    console.log("User clicked OK.");
-                } else {
-                    console.log("User clicked Cancel.");
-                }
-            };
-
-
-            // Wait for document to fully load
-            $(document).ready(function () {
-                // Initialize SmartWizard with proper settings
-                $('#smartwizard').smartWizard({
-                    //selected: 0, 
-                    theme: 'arrows', // Choose from 'default', 'arrows', 'dots', 'progress'
-                    justified: true, // Navigation menu will be justified
-                    autoAdjustHeight: false, // Set to false to avoid height calculation errors
-                    backButtonSupport: true, // Enables browser back button support
-                    enableURLhash: false, // Allow navigation via URL hash
-                    transition: {
-                        animation: 'fade', // Animation effect on step change
-                        speed: '400', // Animation speed
-                        easing: '' // Animation easing
-                    },
-                    toolbarSettings: { // Corrected from 'toolbar' to 'toolbarSettings'
-                        toolbarPosition: 'bottom', // Show buttons at the bottom
-                        toolbarButtonPosition: 'end', // Align buttons to the end
-                        showNextButton: true, // Show Next button
-                        showPreviousButton: true, // Show Previous button
-                        extraHtml: '<button class="btn btn-primary">Finish</button>' // Add extra button if needed
-                    },
-                    anchorSettings: { // Corrected from 'anchor' to 'anchorSettings'
-                        anchorClickable: true, // Enable anchor navigation
-                        enableAllAnchors: true, // Make all anchors clickable
-                        markDoneStep: true, // Mark previous steps as done
-                        markAllPreviousStepsAsDone: true // Mark all steps as done
-                    },
-                    keyboardSettings: { // Corrected from 'keyboard' to 'keyboardSettings'
-                        keyNavigation: true, // Enable left/right arrow keys
-                        keyLeft: [37], // Left arrow key
-                        keyRight: [39] // Right arrow key
-                    },
-                    lang: {
-                        next: 'Next',
-                        previous: 'Previous'
+            function updateTab() {
+                tabLinks.forEach((link, index) => {
+                    if (index === currentStep) {
+                        link.classList.add('active');
+                        link.setAttribute('aria-selected', 'true');
+                    } else {
+                        link.classList.remove('active');
+                        link.setAttribute('aria-selected', 'false');
                     }
                 });
 
-                // Add this after SmartWizard initialization
-                $('#smartwizard .nav-link').on('click', function (e) {
-                    e.preventDefault();
-                    return false;
-                });
+                // Disable the 'Previous' button on the first step
+                prevBtn.disabled = currentStep === 0;
+                nextBtn.textContent = currentStep === tabLinks.length - 1 ? 'Submit' : 'Next';
+
+                // Show/Hide review section on the last step
+                if (currentStep === tabLinks.length - 1) {
+                    document.getElementById('reviewDetails').innerHTML = `
+                        <li><strong>First Name:</strong> ${document.getElementById('firstName').value}</li>
+                        <li><strong>Last Name:</strong> ${document.getElementById('lastName').value}</li>
+                        <li><strong>Email:</strong> ${document.getElementById('email').value}</li>
+                        <li><strong>Phone:</strong> ${document.getElementById('phone').value}</li>
+                        <li><strong>Address:</strong> ${document.getElementById('address').value}</li>
+                        <li><strong>City:</strong> ${document.getElementById('city').value}</li>
+                    `;
+                }
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentStep < tabLinks.length - 1) {
+                    currentStep++;
+                    updateTab();
+                } else {
+                    alert('Form Submitted!');
+                    // Here you can handle the form submission logic
+                }
             });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentStep > 0) {
+                    currentStep--;
+                    updateTab();
+                }
+            });
+
+            updateTab(); // Initialize the form
         </script>
+
     </main>
 </body>
 
