@@ -36,7 +36,7 @@ public class Attraction {
     private String name;
 
     @Column(name = "gcoords")
-    //@NotNull
+    // @NotNull
     private String gcoords;
 
     @Column(name = "description")
@@ -104,7 +104,7 @@ public class Attraction {
     // >>>attrListByDistrict
     public Attraction(Integer id, String name, BigDecimal feelocaladult, BigDecimal feeforeignadult,
             BigDecimal feechildlocal,
-            BigDecimal feechildforeign, BigDecimal vehicleparkingfee, District district_id) {
+            BigDecimal feechildforeign, BigDecimal vehicleparkingfee, District district_id, String gcoords) {
 
         this.id = id;
         this.name = name;
@@ -114,6 +114,6 @@ public class Attraction {
         this.feechildforeign = feechildforeign;
         this.vehicleparkingfee = vehicleparkingfee;
         this.district_id = district_id;
-
+        this.gcoords = gcoords;
     }
 }

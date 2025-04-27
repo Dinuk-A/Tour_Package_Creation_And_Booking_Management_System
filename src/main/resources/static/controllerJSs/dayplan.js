@@ -232,6 +232,18 @@ const getLunchAndHotelAuto = async () => {
 
 }
 
+//new
+function printGcoords(dayplan) {
+    if (dayplan && Array.isArray(dayplan.vplaces)) {
+        dayplan.vplaces.forEach(place => {
+            console.log(place.gcoords);
+        });
+    } else {
+        console.log("No valid vplaces array found.");
+    }
+}
+
+
 //for add a single location
 const addOne = () => {
 
@@ -274,7 +286,11 @@ const addOne = () => {
 
         calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
 
-        getLunchAndHotelAuto()
+        //getLunchAndHotelAuto();
+
+        printGcoords(dayplan);
+
+        //calculateRoadDistanceFromDayplan(dayplan);
     }
 
 }
@@ -299,6 +315,12 @@ const addAll = () => {
         }
     }
 
+    //new part
+    printGcoords(dayplan);
+
+    //calculateRoadDistanceFromDayplan(dayplan);
+
+    //original
     vplaces = [];
     fillDataIntoDynamicSelects(allVPs, '', vplaces, 'name');
 
@@ -310,7 +332,7 @@ const addAll = () => {
 
     calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
 
-    getLunchAndHotelAuto()
+    //getLunchAndHotelAuto()
 
 }
 
@@ -336,7 +358,7 @@ const removeOne = () => {
 
     calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
 
-    getLunchAndHotelAuto();
+    //getLunchAndHotelAuto();
 
 }
 
@@ -371,6 +393,79 @@ const removeAll = () => {
     lunchPlaceSelect.disabled = true;
     endStaySelect.disabled = true;
 
+}
+
+async function calculateTotalDistance() {
+    const apiKey = '5b3ce3597851110001cf6248dfc26e4e6071445f9197c3adf89c69e4'; 
+    const msgBox = document.getElementById('calcDistanceMsg');
+    const kmInput = document.getElementById('dpTotalKMcount');
+
+    // Clear old messages
+    msgBox.innerText = '';
+    kmInput.value = '';
+
+    if (!dayplan || !dayplan.vplaces || dayplan.vplaces.length < 2) {
+        msgBox.innerText = 'Please select at least 2 places.';
+        return;
+    }
+
+    // Extract gcoords
+    const coordinates = dayplan.vplaces.map(place => {
+        const [lat, lon] = place.gcoords.split(',').map(Number);
+        return [lon, lat]; // OpenRoute needs [lon, lat]
+    });
+
+    const body = { coordinates: coordinates };
+
+    try {
+        const response = await fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
+            method: 'POST',
+            headers: {
+                'Authorization': apiKey,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            if (errorData.error && errorData.error.code === 2010) {
+                msgBox.innerText = '⚠️ Some locations are too far from a road. Please enter total KM manually.';
+            } else {
+                msgBox.innerText = '⚠️ Could not calculate automatically. Please enter total KM manually.';
+            }
+            return;
+        }
+
+        const data = await response.json();
+        const distanceMeters = data.features[0].properties.summary.distance;
+        const distanceKm = (distanceMeters / 1000).toFixed(2); // two decimals
+
+        // ✅ Update the input and dayplan object
+        kmInput.value = distanceKm;
+        dayplan.totalkmcount = distanceKm;
+
+        // ✅ Calculate time
+        let durationSeconds = data.features[0].properties.summary.duration;
+        let totalMinutes = Math.round(durationSeconds / 60);
+
+        // Round to nearest 15 minutes
+        let roundedMinutes = Math.ceil(totalMinutes / 15) * 15;
+        let hours = Math.floor(roundedMinutes / 60);
+        let minutes = roundedMinutes % 60;
+
+        // Format nicely
+        let timeStr = hours;
+        if (minutes > 0) {
+            timeStr += "." + (minutes / 60).toFixed(2).split('.')[1]; // like 1.25 H
+        }
+        console.log(`🚗 Total Distance: ${distanceKm} km`);
+        console.log(`⏱️ Total Estimated Time: ${timeStr} H`);
+
+    } catch (error) {
+        console.error('Error calculating distance:', error);
+        msgBox.innerText = '⚠️ Unexpected error. Please enter total KM manually.';
+    }
 }
 
 //get districts by province
