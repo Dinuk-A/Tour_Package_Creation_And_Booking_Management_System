@@ -8,7 +8,7 @@
     <!-- link dayplan js -->
     <script src="controllerJSs/dayplan.js"></script>
 
-    <style>
+    <!--<style>
         #dayPlanTabs {
             display: flex;
             border: none;
@@ -50,7 +50,7 @@
             transform: translateY(-1px);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
-    </style>
+    </style>-->
 </head>
 
 <body>
@@ -120,7 +120,7 @@
                                 <!-- Step 1 -->
                                 <div class="tab-pane fade show active" id="dayStep1" role="tabpanel"
                                     aria-labelledby="dayStep1-tab">
-                                    <h5>Step 1: Basic Details</h5>
+                                    <h5 class="mt-2">Step 1: Basic Details</h5>
 
                                     <!-- isTemplate?  -->
                                     <div class="row">
@@ -200,51 +200,89 @@
 
                                 <!-- Step 2 -->
                                 <div class="tab-pane fade" id="dayStep2" role="tabpanel" aria-labelledby="dayStep2-tab">
-                                    <h5>Step 2: Pickup Location</h5>
+                                    <h5 class="mt-2">Step 2: Pickup Location</h5>
 
                                     <!-- 3 cbs -->
+
                                     <div class="row border bg-light mt-2" id="PickupTypeCBsRow">
-                                        <h5 class="mt-2 mb-1">Pickup Type</h5>
+                                        <h5 class="mt-2 mb-1 text-center">Pickup Type</h5>
 
-                                        <div class="input-group mt-2 mb-2">
-
+                                        <div class="d-flex justify-content-center gap-2 mt-2 mb-2 flex-wrap">
                                             <!-- CB 1 -->
                                             <input type="radio" class="btn-check" id="generalPickupCB"
                                                 autocomplete="off" name="pickupType" value="GENERAL"
                                                 onchange="selectPickupType(this);">
-
-                                            <label class="btn btn-outline-primary w-33 rounded-start"
-                                                for="generalPickupCB">General</label>
+                                            <label class="btn btn-outline-primary" for="generalPickupCB">General</label>
 
                                             <!-- CB 2 -->
                                             <input type="radio" class="btn-check" id="accommodationsPickupCB"
                                                 autocomplete="off" name="pickupType" value="ACCOMMODATIONS"
                                                 onchange="selectPickupType(this);">
-
-                                            <label class="ms-1 btn btn-outline-secondary w-33"
+                                            <label class="btn btn-outline-secondary"
                                                 for="accommodationsPickupCB">Accommodations</label>
 
                                             <!-- CB 3 -->
                                             <input type="radio" class="btn-check" id="manualPickupCB" autocomplete="off"
                                                 name="pickupType" value="MANUAL" onchange="selectPickupType(this);">
-
-                                            <label class="btn ms-1 btn-outline-dark w-33"
-                                                for="manualPickupCB">Manual</label>
+                                            <label class="btn btn-outline-dark" for="manualPickupCB">Manual</label>
                                         </div>
-
                                     </div>
 
+
                                     <!-- if general -->
-                                    <!-- if accomos -->
+                                    <div class="row mt-3 " id="generalPickupOptions" style="display: none;">
+                                        <label for="airportSelect" class="form-label">General Pickup Points</label>
+
+                                        <select class="form-select" id="airportSelect" onchange="printValues();">
+                                            <option value="" selected disabled> Please Select </option>
+                                            <option data-location='{"name":"BIA","geo":11.9028}'>Bandaranaike International Airport</option>
+                                            <option data-location='{"name":"MATTALA","geo":12.9028}'>Mattala Rajapaksa International Airport</option>
+                                            <option data-location='{"name":"RATMALANA","geo":13.9028}'>Ratmalana Airport</option>
+                                            <option data-location='{"name":"JAFFNA","geo":14.9028}'>Jaffna International Airport</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- if accommodations -->
+                                    <div class="row mt-3" id="accommodationPickupOptions" style="display: none;">
+                                        <div class="col-6">
+                                            <label for="pickupProvinceSelect" class="form-label">Province</label>
+                                            <select class="form-select" id="pickupProvinceSelect" onchange="getDistByProvince(pickupProvinceSelect,pickupDistrictSelect);">
+                                               
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="pickupDistrictSelect" class="form-label">District</label>
+                                            <select class="form-select" id="pickupDistrictSelect"  onchange="getStayByDistrict(pickupDistrictSelect,pickupAccommodationSelect)">
+                                               
+                                            </select>
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <label for="pickupAccommodationSelect" class="form-label">Accommodation</label>
+                                            <select class="form-select" id="pickupAccommodationSelect">
+                                                
+                                            </select>
+                                        </div>
+                                    </div>
+
                                     <!-- if manual -->
-
-
-
+                                    <div class="row mt-3" id="manualPickupOptions" style="display: none;">
+                                        <div class="col-12 mb-2">
+                                            <label for="manualLocation" class="form-label">Location / Address</label>
+                                            <input type="text" class="form-control" id="manualLocation"
+                                                placeholder="Enter location or address">
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="geoCoords" class="form-label">Geo Coords</label>
+                                            <input type="text" class="form-control" id="geoCoords"
+                                                placeholder="Latitude, Longitude">
+                                        </div>
+                                    </div>
                                 </div>
+
 
                                 <!-- Step 3 -->
                                 <div class="tab-pane fade" id="dayStep3" role="tabpanel" aria-labelledby="dayStep3-tab">
-                                    <h5>Step 3: Visiting Places</h5>
+                                    <h5 class="mt-2">Step 3: Visiting Places</h5>
                                     <div class="mb-3">
 
                                         <!-- prov and dist -->
@@ -445,7 +483,7 @@
                                         </div>
 
                                         <!-- total distance covered for thsi day(manual entry) -->
-                                        <button onclick="calculateTotalDistance()">Calculate Total Distance and
+                                        <button id="distanceCalcBtn" onclick="calculateTotalDistance()">Calculate Total Distance and
                                             Time</button>
                                         <div id="calcDistanceMsg" class="text-danger mt-2"></div>
                                         <div class="row mt-1">
@@ -472,7 +510,7 @@
 
                                 <!-- Step 4 -->
                                 <div class="tab-pane fade" id="dayStep4" role="tabpanel" aria-labelledby="dayStep4-tab">
-                                    <h5>Step 4: Accomodations and Lunch</h5>
+                                    <h5 class="mt-2">Step 4: Accomodations and Lunch</h5>
 
                                     <!--lunch province & district -->
                                     <div class="row">
@@ -545,7 +583,7 @@
 
                                 <!-- Step 5 -->
                                 <div class="tab-pane fade" id="dayStep5" role="tabpanel" aria-labelledby="dayStep5-tab">
-                                    <h5>Step 5: Final Notes</h5>
+                                    <h5 class="mt-2">Step 5: Final Notes</h5>
 
                                     <div class="row border mt-2 mb-2 pb-2 bg-light">
 
@@ -584,7 +622,8 @@
                                     <!-- MAIN BUTTONS -->
                                     <div class="row mt-4 mb-2">
                                         <div class="col-4">
-                                            <button type="reset" class="btn-clear w-50" onclick="refreshDayPlanForm()">Reset
+                                            <button type="reset" class="btn-clear w-50"
+                                                onclick="refreshDayPlanForm()">Reset
                                                 Form</button>
                                         </div>
                                         <div class="col-8 text-end">
@@ -596,13 +635,6 @@
                                     </div>
 
                                 </div>
-
-                                <!-- Navigation Buttons -->
-                                <!--<div class="btn-container">
-                                    <button type="button" class="btn btn-secondary" id="prevDayBtn"
-                                        disabled>Previous</button>
-                                    <button type="button" class="btn btn-primary" id="nextDayBtn">Next</button>
-                                </div>-->
 
                         </form>
 
@@ -746,50 +778,6 @@
             </div>
 
     </main>
-
-    <script>
-        //const nextDayBtn = document.getElementById('nextDayBtn');
-        //const prevDayBtn = document.getElementById('prevDayBtn');
-        const dayTabLinks = document.querySelectorAll('#dayPlanTabs .nav-link');
-
-        let currentDayStep = 0;
-
-        function updateDayTab() {
-            dayTabLinks.forEach((link, index) => {
-                if (index === currentDayStep) {
-                    link.classList.add('active');
-                    link.setAttribute('aria-selected', 'true');
-                    document.querySelector(link.getAttribute('href')).classList.add('show', 'active');
-                } else {
-                    link.classList.remove('active');
-                    link.setAttribute('aria-selected', 'false');
-                    document.querySelector(link.getAttribute('href')).classList.remove('show', 'active');
-                }
-            });
-
-            //prevDayBtn.disabled = currentDayStep === 0;
-            //nextDayBtn.textContent = currentDayStep === dayTabLinks.length - 1 ? 'Submit' : 'Next';
-        }
-
-        //nextDayBtn.addEventListener('click', () => {
-        //    if (currentDayStep < dayTabLinks.length - 1) {
-        //        currentDayStep++;
-        //        updateDayTab();
-        //    } else {
-        //        alert('Form Submitted!');
-        //                   }
-        //});
-
-        //prevDayBtn.addEventListener('click', () => {
-        //    if (currentDayStep > 0) {
-        //        currentDayStep--;
-        //        updateDayTab();
-        //    }
-        //});
-
-        updateDayTab();
-
-    </script>
 
 </body>
 

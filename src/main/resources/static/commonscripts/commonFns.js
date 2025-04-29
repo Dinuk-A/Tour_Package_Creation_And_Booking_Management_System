@@ -61,3 +61,10 @@ const insertDecimals = (elementId) => {
         elementId.value = enteredValue.toFixed(2);
     }
 }
+
+
+
+/*Array.from(select.options).map((opt, index) => {
+    opt.hidden = index > 1; // Hide all except first two
+});
+*/

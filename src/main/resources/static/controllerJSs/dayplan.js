@@ -2,6 +2,7 @@ window.addEventListener('load', () => {
 
     buildDayPlanTable();
     refreshDayPlanForm();
+    updateDayTab();
 
 });
 
@@ -29,6 +30,27 @@ const buildDayPlanTable = async () => {
         console.error("Failed to build day plan table:", error);
     }
 
+}
+
+function updateDayTab() {
+
+    const dayTabLinks = document.querySelectorAll('#dayPlanTabs .nav-link');
+    let currentDayStep = 0;
+
+    dayTabLinks.forEach((link, index) => {
+        if (index === currentDayStep) {
+            link.classList.add('active');
+            link.setAttribute('aria-selected', 'true');
+            document.querySelector(link.getAttribute('href')).classList.add('show', 'active');
+        } else {
+            link.classList.remove('active');
+            link.setAttribute('aria-selected', 'false');
+            document.querySelector(link.getAttribute('href')).classList.remove('show', 'active');
+        }
+    });
+
+    //prevDayBtn.disabled = currentDayStep === 0;
+    //nextDayBtn.textContent = currentDayStep === dayTabLinks.length - 1 ? 'Submit' : 'Next';
 }
 
 //to fill main table
@@ -80,6 +102,8 @@ const refreshDayPlanForm = async () => {
         fillDataIntoDynamicSelects(selectLPProv, 'Select Province', allProvinces, 'name');
 
         fillDataIntoDynamicSelects(selectDPEndProv, 'Select Province', allProvinces, 'name');
+
+        fillDataIntoDynamicSelects(pickupProvinceSelect, 'Select Province', allProvinces, 'name');
 
     } catch (error) {
         console.error("Failed to fetch Provinces : ", error);
@@ -144,6 +168,45 @@ const refreshDayPlanForm = async () => {
     document.getElementById('dpSelectStatus').children[2].removeAttribute('class', 'd-none');
 }
 
+function selectPickupType(radio) {
+    const selected = radio.value;
+
+    const generalDiv = document.getElementById('generalPickupOptions');
+    const accomDiv = document.getElementById('accommodationPickupOptions');
+    const manualDiv = document.getElementById('manualPickupOptions');
+
+    // Hide all first
+    generalDiv.style.display = 'none';
+    accomDiv.style.display = 'none';
+    manualDiv.style.display = 'none';
+
+    // Clear all inputs/selects in each section
+    const clearInputs = (section) => {
+        const inputs = section.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            if (input.tagName === 'SELECT') {
+                input.selectedIndex = 0;
+            } else {
+                input.value = '';
+            }
+        });
+    }
+
+    clearInputs(generalDiv);
+    clearInputs(accomDiv);
+    clearInputs(manualDiv);
+
+    // Show the selected section
+    if (selected === 'GENERAL') {
+        generalDiv.style.display = 'block';
+    } else if (selected === 'ACCOMMODATIONS') {
+        accomDiv.style.display = 'block';
+    } else if (selected === 'MANUAL') {
+        manualDiv.style.display = 'block';
+    }
+}
+
+
 //for 3 checkboxes
 const selectDayType = (feild) => {
     dayplan.dayplancode = feild.value;
@@ -168,22 +231,68 @@ const handleChangesBasedDPType = () => {
         document.getElementById('DayTypeCBsRow').classList.add("d-none");
         dayplan.dayplancode = "TP";
 
-        document.getElementById('lunchPlaceDivId').classList.add("d-none");
+        //document.getElementById('lunchPlaceDivId').classList.add("d-none");
         dayplan.lunchplace_id = null;
 
-        document.getElementById('endPointDivId').classList.add("d-none");
+        //document.getElementById('endPointDivId').classList.add("d-none");
         dayplan.end_stay_id = null;
+
+        document.getElementById('PickupTypeCBsRow').classList.add("d-none");
+
+        document.getElementById('generalPickupOptions').style.display = 'block';
+
+        document.getElementById('accommodationPickupOptions').style.display = 'none';
+
+        document.getElementById('manualPickupOptions').style.display = 'none';
+        //meke select eke id eka === airportSelect
+
+        document.getElementById('distanceCalcBtn').classList.add("d-none");
+
+        document.getElementById('calcDistanceMsg').classList.add("d-none");
+
+        document.getElementById('dpTotalKMcount').classList.add("d-none");
+
+        //me sampurna 1ta wenama fnekak hadala me than 3 dima call krnna (3 === when main tabs are changing)
+        dayplan.dp_status = "Draft";
+        dpSelectStatus.value = "Draft";
+        dpSelectStatus.style.border = "2px solid lime";
+        document.getElementById('dpSelectStatus').children[2].classList.add('d-none');
+        document.getElementById('dpSelectStatus').children[3].classList.add('d-none');
+
 
     } else if (dpNotTemplate.checked) {
         document.getElementById('DayTypeCBsRow').classList.remove("d-none");
         dayplan.dayplancode = null;
 
-        document.getElementById('lunchPlaceDivId').classList.remove("d-none");
+        //document.getElementById('lunchPlaceDivId').classList.remove("d-none");
         dayplan.lunchplace_id = null;
 
-        document.getElementById('endPointDivId').classList.remove("d-none");
+        //document.getElementById('endPointDivId').classList.remove("d-none");
         dayplan.end_stay_id = null;
+
+        document.getElementById('PickupTypeCBsRow').classList.remove("d-none");
+
+        //generalPickupOptions eke dapu value eka dayplan obj eken remove karanna weey maybe
+
+        document.getElementById('distanceCalcBtn').classList.remove("d-none");
+
+        document.getElementById('dpTotalKMcount').classList.remove("d-none");
+
+        dayplan.dp_status = "Draft";
+        dpSelectStatus.value = "Draft";
+        dpSelectStatus.style.border = "2px solid lime";
+        document.getElementById('dpSelectStatus').children[2].classList.add('d-none');
+        document.getElementById('dpSelectStatus').children[3].classList.add('d-none');
+        //anith values apahu show  wennarh one
     }
+}
+
+const printValues = () => {
+    const selectDataJson = document.getElementById('airportSelect');
+    const option = selectDataJson.options[selectDataJson.selectedIndex];
+    const data = JSON.parse(option.dataset.location);
+    console.log(data.name + " :" + data.geo);
+
 }
 
 //to calculate total vehi parking fee also depends on visiting hours
@@ -196,7 +305,7 @@ const calcTotalVehiParkingfee = () => {
     });
 
     dpTotalVehiParkingCost.value = parseFloat(cost).toFixed(2);
-    dayplan.totalvehiparkcost = dpTotalVehiParkingCost.value ;
+    dayplan.totalvehiparkcost = dpTotalVehiParkingCost.value;
 }
 
 //CALCULATE TOTAL TICKET COST AND VEHI PARKING FEE

@@ -15,3 +15,5 @@ booking ekata additional charging kiyala wenama table ekak link wenna one(id,pri
 meka one wenne booking module ekedi
 
 hotel availability boru data database eke danna, UI one na
+
+start district === 1st visiting place eke ID eka
