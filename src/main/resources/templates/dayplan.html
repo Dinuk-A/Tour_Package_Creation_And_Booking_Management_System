@@ -580,14 +580,29 @@
                                         </div>
 
                                     </div>
+
+                                    <!-- MAIN BUTTONS -->
+                                    <div class="row mt-4 mb-2">
+                                        <div class="col-4">
+                                            <button type="reset" class="btn-clear w-50" onclick="refreshDayPlanForm()">Reset
+                                                Form</button>
+                                        </div>
+                                        <div class="col-8 text-end">
+                                            <button type="submit" id="dpUpdateBtn" class="btn-update fw-bold"
+                                                onclick="updateDayPlan()">Update Entry</button>
+                                            <button type="submit" id="dpAddBtn" class="btn-add fw-bold"
+                                                onclick="addNewDayPlan()">Add Entry</button>
+                                        </div>
+                                    </div>
+
                                 </div>
 
                                 <!-- Navigation Buttons -->
-                                <div class="btn-container">
+                                <!--<div class="btn-container">
                                     <button type="button" class="btn btn-secondary" id="prevDayBtn"
                                         disabled>Previous</button>
                                     <button type="button" class="btn btn-primary" id="nextDayBtn">Next</button>
-                                </div>
+                                </div>-->
 
                         </form>
 
@@ -733,8 +748,8 @@
     </main>
 
     <script>
-        const nextDayBtn = document.getElementById('nextDayBtn');
-        const prevDayBtn = document.getElementById('prevDayBtn');
+        //const nextDayBtn = document.getElementById('nextDayBtn');
+        //const prevDayBtn = document.getElementById('prevDayBtn');
         const dayTabLinks = document.querySelectorAll('#dayPlanTabs .nav-link');
 
         let currentDayStep = 0;
@@ -752,28 +767,28 @@
                 }
             });
 
-            prevDayBtn.disabled = currentDayStep === 0;
-            nextDayBtn.textContent = currentDayStep === dayTabLinks.length - 1 ? 'Submit' : 'Next';
+            //prevDayBtn.disabled = currentDayStep === 0;
+            //nextDayBtn.textContent = currentDayStep === dayTabLinks.length - 1 ? 'Submit' : 'Next';
         }
 
-        nextDayBtn.addEventListener('click', () => {
-            if (currentDayStep < dayTabLinks.length - 1) {
-                currentDayStep++;
-                updateDayTab();
-            } else {
-                alert('Form Submitted!');
-                // submit the form data
-            }
-        });
+        //nextDayBtn.addEventListener('click', () => {
+        //    if (currentDayStep < dayTabLinks.length - 1) {
+        //        currentDayStep++;
+        //        updateDayTab();
+        //    } else {
+        //        alert('Form Submitted!');
+        //                   }
+        //});
 
-        prevDayBtn.addEventListener('click', () => {
-            if (currentDayStep > 0) {
-                currentDayStep--;
-                updateDayTab();
-            }
-        });
+        //prevDayBtn.addEventListener('click', () => {
+        //    if (currentDayStep > 0) {
+        //        currentDayStep--;
+        //        updateDayTab();
+        //    }
+        //});
 
         updateDayTab();
+
     </script>
 
 </body>

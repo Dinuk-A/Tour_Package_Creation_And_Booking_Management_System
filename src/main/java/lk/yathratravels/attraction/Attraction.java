@@ -59,7 +59,7 @@ public class Attraction {
     private BigDecimal feechildforeign;
 
     @Column(name = "duration")
-    private String duration;
+    private BigDecimal duration;
 
     @Column(name = "note")
     private String note;
@@ -104,7 +104,7 @@ public class Attraction {
     // >>>attrListByDistrict
     public Attraction(Integer id, String name, BigDecimal feelocaladult, BigDecimal feeforeignadult,
             BigDecimal feechildlocal,
-            BigDecimal feechildforeign, BigDecimal vehicleparkingfee, District district_id, String gcoords) {
+            BigDecimal feechildforeign, BigDecimal vehicleparkingfee, District district_id, String gcoords, BigDecimal duration) {
 
         this.id = id;
         this.name = name;
@@ -115,5 +115,6 @@ public class Attraction {
         this.vehicleparkingfee = vehicleparkingfee;
         this.district_id = district_id;
         this.gcoords = gcoords;
+        this.duration = duration;
     }
 }

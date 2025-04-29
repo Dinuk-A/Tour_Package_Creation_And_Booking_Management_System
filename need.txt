@@ -7,3 +7,11 @@ deleteddatetime
 addeduserid 
 lastmodifieduserid 
 deleteduserid
+
+
+user acc delete kaloth status eka inactive wenawa witharays
+
+booking ekata additional charging kiyala wenama table ekak link wenna one(id,price,charge,link to booking)
+meka one wenne booking module ekedi
+
+hotel availability boru data database eke danna, UI one na

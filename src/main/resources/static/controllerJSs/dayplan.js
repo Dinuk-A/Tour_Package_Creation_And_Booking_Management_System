@@ -186,6 +186,19 @@ const handleChangesBasedDPType = () => {
     }
 }
 
+//to calculate total vehi parking fee also depends on visiting hours
+const calcTotalVehiParkingfee = () => {
+    let cost = 0.00;
+    dayplan.vplaces.forEach(placeObj => {
+        fee = (placeObj.vehicleparkingfee) * (placeObj.duration);
+        cost = cost + fee;
+        return cost;
+    });
+
+    dpTotalVehiParkingCost.value = parseFloat(cost).toFixed(2);
+    dayplan.totalvehiparkcost = dpTotalVehiParkingCost.value ;
+}
+
 //CALCULATE TOTAL TICKET COST AND VEHI PARKING FEE
 const calcTktCost = (vpCostType, dpInputFieldID, dpPropertName) => {
 
@@ -261,7 +274,7 @@ const addOne = () => {
     }
 
     if (isPlaceAlreadySelected) {
-        showAlertModal('err','this place is already selected')
+        showAlertModal('err', 'this place is already selected')
     } else {
 
         dayplan.vplaces.push(selectedPlace);
@@ -284,9 +297,11 @@ const addOne = () => {
         calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localadulttktcost");
         calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "localchildtktcost");
 
-        calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
-
+        //calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
+        calcTotalVehiParkingfee();
         //getLunchAndHotelAuto();
+
+
 
         printGcoords(dayplan);
 
@@ -330,7 +345,8 @@ const addAll = () => {
     calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localadulttktcost");
     calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "localchildtktcost");
 
-    calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
+    //calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
+    calcTotalVehiParkingfee();
 
     //getLunchAndHotelAuto()
 
@@ -356,7 +372,8 @@ const removeOne = () => {
     calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localadulttktcost");
     calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "localchildtktcost");
 
-    calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
+    //calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
+    calcTotalVehiParkingfee();
 
     //getLunchAndHotelAuto();
 
@@ -374,7 +391,8 @@ const removeAll = () => {
     calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localadulttktcost");
     calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "localchildtktcost");
 
-    calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
+    //calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
+    calcTotalVehiParkingfee();
 
     //remove and clear automatically binded lp and end stay info too
     dayplan.lunchplace_id = null;
@@ -396,7 +414,7 @@ const removeAll = () => {
 }
 
 async function calculateTotalDistance() {
-    const apiKey = '5b3ce3597851110001cf6248dfc26e4e6071445f9197c3adf89c69e4'; 
+    const apiKey = '5b3ce3597851110001cf6248dfc26e4e6071445f9197c3adf89c69e4';
     const msgBox = document.getElementById('calcDistanceMsg');
     const kmInput = document.getElementById('dpTotalKMcount');
 
@@ -412,7 +430,7 @@ async function calculateTotalDistance() {
     // Extract gcoords
     const coordinates = dayplan.vplaces.map(place => {
         const [lat, lon] = place.gcoords.split(',').map(Number);
-        return [lon, lat]; // OpenRoute needs [lon, lat]
+        return [lon, lat];
     });
 
     const body = { coordinates: coordinates };
@@ -624,18 +642,18 @@ const addNewDayPlan = async () => {
                     var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                     myDPTableTab.show();
                 } else {
-                    showAlertModal('err','Submit Failed ' + postServerResponse);
+                    showAlertModal('err', 'Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
                 // Handle errors (such as network issues or server errors)
-                showshowAlertModalModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         } else {
-            showshowAlertModalModal('inf', 'User cancelled the task');
+            showAlertModal('inf', 'User cancelled the task');
         }
     } else {
-        //showshowAlertModalModal('war',' \n' + errors);
-        showshowAlertModalModal('war', errors);
+        //showAlertModal('war',' \n' + errors);
+        showAlertModal('war', errors);
     }
 }
 
@@ -717,7 +735,7 @@ const openModal = (dpObj) => {
 const refillDayPlanForm = async (dpObj) => {
 
     if (dpObj.dp_status == "Completed") {
-        showAlertModal('err',"tour for this day plan is already completed, hence cant edit")
+        showAlertModal('err', "tour for this day plan is already completed, hence cant edit")
     } else {
 
         dayplan = JSON.parse(JSON.stringify(dpObj));
@@ -855,7 +873,7 @@ const updateDayPlan = async () => {
     if (errors == "") {
         let updates = showDPValueChanges();
         if (updates == "") {
-            showAlertModal('err',"No changes detected to update");
+            showAlertModal('err', "No changes detected to update");
         } else {
             let userConfirm = confirm("Are you sure to proceed ? \n \n" + updates);
 
@@ -865,25 +883,25 @@ const updateDayPlan = async () => {
                     let putServiceResponse = await ajaxPPDRequest("/dayplan", "PUT", dayplan);
 
                     if (putServiceResponse === "OK") {
-                        showshowAlertModalModal('suc', 'Saved Successfully');
+                        showAlertModal('suc', 'Saved Successfully');
                         document.getElementById('formDayPlan').reset();
                         refreshDayPlanForm();
                         buildDayPlanTable();
                         var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myDPTableTab.show();
                     } else {
-                        showAlertModal('err',"Update Failed \n" + putServiceResponse);
+                        showAlertModal('err', "Update Failed \n" + putServiceResponse);
                     }
 
                 } catch (error) {
-                    showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
                 }
             } else {
-                showshowAlertModalModal('inf', 'User cancelled the task');
+                showAlertModal('inf', 'User cancelled the task');
             }
         }
     } else {
-        showshowAlertModalModal('war', errors);
+        showAlertModal('war', errors);
     }
 }
 
@@ -895,17 +913,17 @@ const deleteDayPlanRecord = async (dpObj) => {
             const deleteServerResponse = await ajaxPPDRequest("/dayplan", "DELETE", dpObj);
 
             if (deleteServerResponse === 'OK') {
-                showAlertModal('suc','Record Deleted');
+                showAlertModal('suc', 'Record Deleted');
                 $('#infoModalDayPlan').modal('hide');
                 window.location.reload();
             } else {
-                showAlertModal('err','Delete Failed' + deleteServerResponce);
+                showAlertModal('err', 'Delete Failed' + deleteServerResponce);
             }
         } catch (error) {
-            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        showAlertModal('inf',"User cancelled the task")
+        showAlertModal('inf', "User cancelled the task")
     }
 }
 
@@ -924,21 +942,21 @@ const restoreDayPlanRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/dayplan", "PUT", dayplan);
 
             if (putServiceResponse === "OK") {
-                showAlertModal('suc',"Successfully Restored");
+                showAlertModal('suc', "Successfully Restored");
                 $("#infoModalDayPlan").modal("hide");
 
                 //AN LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
                 window.location.reload();
 
             } else {
-                showAlertModal('err',"Restore Failed \n" + putServiceResponse);
+                showAlertModal('err', "Restore Failed \n" + putServiceResponse);
             }
 
         } catch (error) {
-            showAlertModal('err','An error occurred: ' + (error.responseText || error.statusText || error.message));
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
         }
     } else {
-        showAlertModal('inf','User cancelled the recovery task');
+        showAlertModal('inf', 'User cancelled the recovery task');
     }
 
 
@@ -1083,14 +1101,14 @@ const saveAsNewDayPlan = () => {
 
     let postServiceResponse = ajaxRequest("/dayplan/saveasnew", "POST", dayplan);
     if (new RegExp("^[A-Z]{5}[0-9]{1,3}$").test(postServiceResponse)) {
-        showAlertModal('suc',"Succesfully Saved ! \n New Code : " + postServiceResponse);
+        showAlertModal('suc', "Succesfully Saved ! \n New Code : " + postServiceResponse);
         formDayPlan.reset();
         refreshDayPlanForm();
         refreshDayPlanTable();
 
         $('#mainDayPlanFormModal').modal('hide');
     } else {
-        showAlertModal('err',"An Error Occured " + postServiceResponse);
+        showAlertModal('err', "An Error Occured " + postServiceResponse);
     }
 
 }
