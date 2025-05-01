@@ -9,6 +9,9 @@ window.addEventListener('load', () => {
 //global var to store id of the table
 let sharedTableId = "mainTableDayPlan";
 
+//global var to store pickup point's geo coords
+let pickupPointGCoords = '';
+
 //to create and refresh content in main dayplan table
 const buildDayPlanTable = async () => {
 
@@ -32,6 +35,7 @@ const buildDayPlanTable = async () => {
 
 }
 
+//t o support navigate through multi step form
 function updateDayTab() {
 
     const dayTabLinks = document.querySelectorAll('#dayPlanTabs .nav-link');
@@ -61,7 +65,6 @@ const showDayType = (dpObj) => {
         return "Not Template"
     }
 }
-
 
 const showDayPlanStatus = (dpObj) => {
 
@@ -97,13 +100,13 @@ const refreshDayPlanForm = async () => {
 
         //fillDataIntoDynamicSelects(selectDPStartProv, 'Select Province', allProvinces, 'name');
 
-        fillDataIntoDynamicSelects(selectVPProv, 'Select Province', allProvinces, 'name');
+        fillDataIntoDynamicSelects(selectVPProv, 'Please Select The Province', allProvinces, 'name');
 
-        fillDataIntoDynamicSelects(selectLPProv, 'Select Province', allProvinces, 'name');
+        fillDataIntoDynamicSelects(selectLPProv, 'Please Select The Province', allProvinces, 'name');
 
-        fillDataIntoDynamicSelects(selectDPEndProv, 'Select Province', allProvinces, 'name');
+        fillDataIntoDynamicSelects(selectDPEndProv, 'Please Select The Province', allProvinces, 'name');
 
-        fillDataIntoDynamicSelects(pickupProvinceSelect, 'Select Province', allProvinces, 'name');
+        fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name');
 
     } catch (error) {
         console.error("Failed to fetch Provinces : ", error);
@@ -122,11 +125,14 @@ const refreshDayPlanForm = async () => {
         'selectDPEndProv',
         'selectDPEndDist',
         'selectDPEndStay',
-        'dpTotalLocalAdultTktCost',
-        'dpTotalLocalChildTktCost',
-        'dpTotalForeignAdultTktCost',
-        'dpTotalForeignChildTktCost',
-        'dpTotalVehiParkingCost',
+        'pickupProvinceSelect',
+        'pickupDistrictSelect',
+        'pickupAccommodationSelect',
+        //'dpTotalLocalAdultTktCost',
+        //'dpTotalLocalChildTktCost',
+        //'dpTotalForeignAdultTktCost',
+        //'dpTotalForeignChildTktCost',
+        //'dpTotalVehiParkingCost',
         'dpTotalCostForToday',
         'dpNote',
         'allVPs',
@@ -150,10 +156,12 @@ const refreshDayPlanForm = async () => {
     fillDataIntoDynamicSelects(selectVPDist, 'Select The Province First', districts, 'name');
     fillDataIntoDynamicSelects(selectLPDist, 'Select The Province First', districts, 'name');
     fillDataIntoDynamicSelects(selectDPEndDist, 'Select The Province First', districts, 'name');
+    fillDataIntoDynamicSelects(pickupDistrictSelect, 'Select The Province First', districts, 'name');
 
     //show EMPTY accomadation selects, before filtered by district
     stay = [];
     fillDataIntoDynamicSelects(selectDPEndStay, 'Select The District First', stay, 'name');
+    fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Select The District First', stay, 'name');
 
     //show EMPTY lunch selects, before filtered by district
     lunchHotels = [];
@@ -206,12 +214,10 @@ function selectPickupType(radio) {
     }
 }
 
-
 //for 3 checkboxes
 const selectDayType = (feild) => {
     dayplan.dayplancode = feild.value;
 }
-
 
 //handle isTemplate or not
 const handleDayTypeRadio = (fieldId) => {
@@ -220,8 +226,15 @@ const handleDayTypeRadio = (fieldId) => {
 
 //set status auto
 const setDayPlanStatus = () => {
-    document.getElementById('dpSelectStatus').classList.add = 'd-none';
-    dayplan.dp_status = 'Draft';
+
+    const ddyPlanStatusSelectElement = document.getElementById('dpSelectStatus');
+    ddyPlanStatusSelectElement.classList.add = 'd-none';
+    dayplan.dp_status = "Draft";
+    ddyPlanStatusSelectElement.value = "Draft";
+    ddyPlanStatusSelectElement.style.border = "2px solid lime";
+    ddyPlanStatusSelectElement.children[2].classList.add('d-none');
+    ddyPlanStatusSelectElement.children[3].classList.add('d-none');
+
 }
 
 //handle changes based on dp type
@@ -252,12 +265,10 @@ const handleChangesBasedDPType = () => {
 
         document.getElementById('dpTotalKMcount').classList.add("d-none");
 
-        //me sampurna 1ta wenama fnekak hadala me than 3 dima call krnna (3 === when main tabs are changing)
-        dayplan.dp_status = "Draft";
-        dpSelectStatus.value = "Draft";
-        dpSelectStatus.style.border = "2px solid lime";
-        document.getElementById('dpSelectStatus').children[2].classList.add('d-none');
-        document.getElementById('dpSelectStatus').children[3].classList.add('d-none');
+        setDayPlanStatus();
+
+        //prov, dist,...etc okkogema borders default wennath one
+
 
 
     } else if (dpNotTemplate.checked) {
@@ -278,20 +289,36 @@ const handleChangesBasedDPType = () => {
 
         document.getElementById('dpTotalKMcount').classList.remove("d-none");
 
-        dayplan.dp_status = "Draft";
-        dpSelectStatus.value = "Draft";
-        dpSelectStatus.style.border = "2px solid lime";
-        document.getElementById('dpSelectStatus').children[2].classList.add('d-none');
-        document.getElementById('dpSelectStatus').children[3].classList.add('d-none');
+        setDayPlanStatus();
+
         //anith values apahu show  wennarh one
     }
 }
 
-const printValues = () => {
+//to pass g coords of airport pickup points
+const airportSelection = () => {
+
     const selectDataJson = document.getElementById('airportSelect');
     const option = selectDataJson.options[selectDataJson.selectedIndex];
     const data = JSON.parse(option.dataset.location);
-    console.log(data.name + " :" + data.geo);
+    const airportGeocoords = data.geo;
+    pickupPointGCoords = airportGeocoords;
+
+    console.log("G: " + airportGeocoords);
+    console.log("Global Var pickupPointGCoords: " + pickupPointGCoords);
+
+}
+
+//to pass g coords of airport pickup points
+const passStayGCoords = () => {
+
+    pickupPointGCoords = '';
+    const pickupStaySelect = document.getElementById('pickupAccommodationSelect');
+    const selectedStayString = pickupStaySelect.value;
+    const selectedStay = JSON.parse(selectedStayString);
+    pickupPointGCoords = selectedStay.gcoords;
+    console.log("Global Var pickupPointGCoords: " + pickupPointGCoords);
+    pickupStaySelect.style.border = '2px solid lime';
 
 }
 
@@ -305,6 +332,7 @@ const calcTotalVehiParkingfee = () => {
     });
 
     dpTotalVehiParkingCost.value = parseFloat(cost).toFixed(2);
+    dpTotalVehiParkingCost.innerText = parseFloat(cost).toFixed(2);
     dayplan.totalvehiparkcost = dpTotalVehiParkingCost.value;
 }
 
@@ -319,6 +347,7 @@ const calcTktCost = (vpCostType, dpInputFieldID, dpPropertName) => {
     });
 
     dpInputFieldID.value = parseFloat(cost).toFixed(2);
+    dpInputFieldID.innerText = parseFloat(cost).toFixed(2);
     dayplan[dpPropertName] = dpInputFieldID.value;
 
 }
@@ -610,6 +639,8 @@ const getDistByProvince = async (provinceSelectid, districtSelectId) => {
 
 }
 
+
+
 //getvisiting places by district
 const getVPlacesByDistrict = async () => {
     const selectedDistrict = JSON.parse(selectVPDist.value).id;
@@ -786,7 +817,7 @@ const resetModal = () => {
 //fn for edit button,
 const openModal = (dpObj) => {
 
-    resetModal();
+    //resetModal();
 
     if (dpObj.is_template) {
         document.getElementById('modalDPIsTemplateOrNot').innerText = 'This is a Template';
@@ -861,11 +892,11 @@ const refillDayPlanForm = async (dpObj) => {
         document.getElementById('dpTitle').value = dayplan.daytitle;
         document.getElementById('dpSelectStatus').value = dayplan.dp_status;
         document.getElementById('dpNote').value = dayplan.note;
-        document.getElementById('dpTotalVehiParkingCost').value = dayplan.totalvehiparkcost;
-        document.getElementById('dpTotalForeignChildTktCost').value = dayplan.foreignchildtktcost;
-        document.getElementById('dpTotalForeignAdultTktCost').value = dayplan.foreignadulttktcost;
-        document.getElementById('dpTotalLocalChildTktCost').value = dayplan.localchildtktcost;
-        document.getElementById('dpTotalLocalAdultTktCost').value = dayplan.localadulttktcost;
+        document.getElementById('dpTotalVehiParkingCost').innerText = dayplan.totalvehiparkcost;
+        document.getElementById('dpTotalForeignChildTktCost').innerText = dayplan.foreignchildtktcost;
+        document.getElementById('dpTotalForeignAdultTktCost').innerText = dayplan.foreignadulttktcost;
+        document.getElementById('dpTotalLocalChildTktCost').innerText = dayplan.localchildtktcost;
+        document.getElementById('dpTotalLocalAdultTktCost').innerText = dayplan.localadulttktcost;
 
         if (dayplan.dayplancode.substring(0, 2) == "FD") {
             firstDayCB.checked = true;
@@ -941,6 +972,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.target.id === 'table-tab') {
             console.log("Switching to table tab - clearing form");
             refreshDayPlanForm();
+            //ara tika methana manually hide karanna
         }
     });
 });

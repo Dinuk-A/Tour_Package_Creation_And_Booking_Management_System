@@ -59,6 +59,9 @@ public class DayPlan {
     @JoinColumn(name = "start_district_id", referencedColumnName = "id")
     private District start_district_id;
 
+    // 💥💥💥 start loaction ekakuth denawads?
+    //ethakota eken tpkg ekedi kelinma vlaue ekak ganna puluwan
+
     @Column(name = "note")
     private String note;
 

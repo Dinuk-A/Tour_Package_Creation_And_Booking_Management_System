@@ -101,9 +101,10 @@ public class Stay {
     private Integer deleteduserid;
 
     // for dao
-    public Stay(Integer id, String name) {
+    public Stay(Integer id, String name, String gcoords) {
         this.id = id;
         this.name = name;
+        this.gcoords = gcoords;
     }
 
 }

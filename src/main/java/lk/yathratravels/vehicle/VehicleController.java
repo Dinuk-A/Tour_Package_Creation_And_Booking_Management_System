@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
 @RestController
@@ -58,6 +59,8 @@ public class VehicleController {
             vehicleView.setViewName("vehicle.html");
             vehicleView.addObject("loggedusername", auth.getName());
             vehicleView.addObject("title", "Yathra Vehicles");
+            User loggedUser = userDao.getUserByUsername(auth.getName());
+            vehicleView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
 
             return vehicleView;
         }
@@ -70,7 +73,7 @@ public class VehicleController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "TRANSPORT");
 
-           if (!privilegeLevelForLoggedUser.getPrvselect()) {
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
             return new ArrayList<Vehicle>();
         }
 

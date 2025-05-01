@@ -57,7 +57,7 @@ public class DayPlanController {
             dpView.setViewName("dayplan.html");
             dpView.addObject("loggedUserUN", auth.getName());
             dpView.addObject("title", "Yathra Day Plan");
-            dpView.addObject("moduleName", "Day Plan Builder");
+            dpView.addObject("moduleName", "Itinerary Builder");
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
             dpView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());

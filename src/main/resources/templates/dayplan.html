@@ -8,49 +8,13 @@
     <!-- link dayplan js -->
     <script src="controllerJSs/dayplan.js"></script>
 
-    <!--<style>
-        #dayPlanTabs {
-            display: flex;
-            border: none;
-            gap: 0.5rem;
-            padding: 0.75rem;
-            width: 100%;
-            background-color: #f7f9fc;
-            border-radius: 6px;
+    <style>
+        .btn-pill {
+            border-radius: 50px;
+            padding: 0.375rem 0.75rem;
         }
+    </style>
 
-        #dayPlanTabs .nav-item {
-            flex: 1;
-            margin-bottom: 0;
-        }
-
-        #dayPlanTabs .nav-link {
-            display: block;
-            width: 100%;
-            padding: 0.875rem 1rem;
-            text-align: center;
-            font-weight: 500;
-            color: #475569;
-            background-color: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        #dayPlanTabs .nav-link.active {
-            background-color: #3b82f6;
-            color: white;
-            border-color: #3b82f6;
-            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.25);
-        }
-
-        #dayPlanTabs .nav-link:hover:not(.active) {
-            background-color: #f1f5f9;
-            border-color: #cbd5e1;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-    </style>-->
 </head>
 
 <body>
@@ -93,24 +57,29 @@
                             <!-- Tabs Navigation -->
                             <ul class="nav nav-tabs" id="dayPlanTabs" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="dayStep1-tab" data-bs-toggle="tab" href="#dayStep1"
-                                        role="tab" aria-controls="dayStep1" aria-selected="true">Itinerary Type</a>
+                                    <a class="nav-link active border border-dark" id="dayStep1-tab" data-bs-toggle="tab"
+                                        href="#dayStep1" role="tab" aria-controls="dayStep1"
+                                        aria-selected="true">Itinerary Type</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="dayStep2-tab" data-bs-toggle="tab" href="#dayStep2"
-                                        role="tab" aria-controls="dayStep2" aria-selected="false">Pickup Location</a>
+                                    <a class="nav-link border border-dark" id="dayStep2-tab" data-bs-toggle="tab"
+                                        href="#dayStep2" role="tab" aria-controls="dayStep2"
+                                        aria-selected="false">Pickup Location</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="dayStep3-tab" data-bs-toggle="tab" href="#dayStep3"
-                                        role="tab" aria-controls="dayStep3" aria-selected="false">Attractions</a>
+                                    <a class="nav-link border border-dark" id="dayStep3-tab" data-bs-toggle="tab"
+                                        href="#dayStep3" role="tab" aria-controls="dayStep3"
+                                        aria-selected="false">Attractions</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="dayStep4-tab" data-bs-toggle="tab" href="#dayStep4"
-                                        role="tab" aria-controls="dayStep4" aria-selected="false">Accomodations</a>
+                                    <a class="nav-link border border-dark" id="dayStep4-tab" data-bs-toggle="tab"
+                                        href="#dayStep4" role="tab" aria-controls="dayStep4"
+                                        aria-selected="false">Accomodations</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" id="dayStep5-tab" data-bs-toggle="tab" href="#dayStep5"
-                                        role="tab" aria-controls="dayStep5" aria-selected="false">Other</a>
+                                    <a class="nav-link border border-dark" id="dayStep5-tab" data-bs-toggle="tab"
+                                        href="#dayStep5" role="tab" aria-controls="dayStep5"
+                                        aria-selected="false">Other</a>
                                 </li>
                             </ul>
 
@@ -120,511 +89,488 @@
                                 <!-- Step 1 -->
                                 <div class="tab-pane fade show active" id="dayStep1" role="tabpanel"
                                     aria-labelledby="dayStep1-tab">
-                                    <h5 class="mt-2">Step 1: Basic Details</h5>
 
-                                    <!-- isTemplate?  -->
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <input type="radio" class="btn-check" id="dpTemplate" autocomplete="off"
-                                                name="dpTemplateOrNot" value="true"
-                                                onchange="handleDayTypeRadio(this); handleChangesBasedDPType();">
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Step 1: Basic Details
+                                        </legend>
 
-                                            <label class="btn btn-outline-success rounded-start" for="dpTemplate">To use
-                                                as a
-                                                template</label>
+                                        <!-- Itinerary Type -->
+                                        <div class="row mb-3">
+                                            <label class="form-label fw-bold mb-1">Itinerary Type <span
+                                                    class="text-danger">*</span> :</label>
+
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" id="dpTemplate" autocomplete="off"
+                                                    name="dpTemplateOrNot" value="true"
+                                                    onchange="handleDayTypeRadio(this); handleChangesBasedDPType();">
+
+                                                <label
+                                                    class="btn btn-outline-success w-100 rounded-start fw-bold text-uppercase"
+                                                    for="dpTemplate">To use as a template</label>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" id="dpNotTemplate"
+                                                    autocomplete="off" name="dpTemplateOrNot" value="false"
+                                                    onchange="handleDayTypeRadio(this); handleChangesBasedDPType();">
+
+                                                <label
+                                                    class="btn btn-outline-warning w-100 rounded-end fw-bold text-uppercase"
+                                                    for="dpNotTemplate">For a Custom Package</label>
+                                            </div>
                                         </div>
 
-                                        <div class="col-6">
-                                            <input type="radio" class="btn-check" id="dpNotTemplate" autocomplete="off"
-                                                name="dpTemplateOrNot" value="false"
-                                                onchange="handleDayTypeRadio(this); handleChangesBasedDPType();">
+                                        <!-- Day Type -->
+                                        <div class="row mb-3" id="DayTypeCBsRow">
+                                            <label class="form-label fw-bold mb-1">Day Type <span
+                                                    class="text-danger">*</span> :</label>
 
-                                            <label class="ms-1 btn btn-outline-warning " for="dpNotTemplate">For a
-                                                Custom
-                                                Package</label>
-                                        </div>
-                                    </div>
+                                            <div class="col-4">
+                                                <input type="radio" class="btn-check" id="firstDayCB" autocomplete="off"
+                                                    name="dpDayType" value="FD" onchange="selectDayType(this);">
+                                                <label class="btn btn-outline-success w-100 fw-bold text-uppercase"
+                                                    for="firstDayCB">First Day</label>
+                                            </div>
 
-                                    <!-- day type -->
-                                    <div class="row border bg-light mt-2" id="DayTypeCBsRow">
-                                        <h5 class="mt-2 mb-1">Day Type</h5>
+                                            <div class="col-4">
+                                                <input type="radio" class="btn-check" id="middleDayCB"
+                                                    autocomplete="off" name="dpDayType" value="MD"
+                                                    onchange="selectDayType(this);">
+                                                <label class="btn btn-outline-warning w-100 fw-bold text-uppercase"
+                                                    for="middleDayCB">Middle Day</label>
+                                            </div>
 
-                                        <div class="input-group mt-2 mb-2">
-
-                                            <!-- CB 1 -->
-                                            <input type="radio" class="btn-check" id="firstDayCB" autocomplete="off"
-                                                name="dpDayType" value="FD" onchange="selectDayType(this);">
-
-                                            <label class="btn btn-outline-success w-33 rounded-start"
-                                                for="firstDayCB">First
-                                                Day</label>
-
-                                            <!--CB 2  -->
-                                            <input type="radio" class="btn-check" id="middleDayCB" autocomplete="off"
-                                                name="dpDayType" value="MD" onchange="selectDayType(this);">
-
-                                            <label class="ms-1 btn btn-outline-warning w-33" for="middleDayCB">Middle
-                                                Day</label>
-
-                                            <!-- CB 3 -->
-                                            <input type="radio" class="btn-check" id="lastDayCB" autocomplete="off"
-                                                name="dpDayType" value="LD" onchange="selectDayType(this);">
-
-                                            <label class="btn ms-1 btn-outline-danger w-33" for="lastDayCB">Last
-                                                Day</label>
+                                            <div class="col-4">
+                                                <input type="radio" class="btn-check" id="lastDayCB" autocomplete="off"
+                                                    name="dpDayType" value="LD" onchange="selectDayType(this);">
+                                                <label class="btn btn-outline-danger w-100 fw-bold text-uppercase"
+                                                    for="lastDayCB">Last Day</label>
+                                            </div>
                                         </div>
 
-                                    </div>
+                                        <!-- title and code -->
+                                        <div class="row">
+                                            <!-- title -->
+                                            <div class="col-8 mb-3">
+                                                <label for="dpTitle" class="form-label fw-bold mb-0">Title <span
+                                                        class="text-danger">*</span> :</label>
+                                                <input id="dpTitle" class="form-control" placeholder="Enter Day Title"
+                                                    onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle')">
+                                            </div>
 
-                                    <!-- title -->
-                                    <!-- code hidden -->
-                                    <div class="row mt-1">
-                                        <div class="col-8">
-                                            <label for="dpTitle" class="form-label mb-0">Title :</label>
-
-                                            <input id="dpTitle" class="form-control form-input"
-                                                onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle')">
+                                            <!-- code hidden -->
+                                            <div class="col-4 d-none">
+                                                <label for="dpCode" class="form-label fw-bold mb-0">Code
+                                                    <span><small class="text-info">(Generated by system)</small></span>
+                                                    :</label>
+                                                <input id="dpCode" class="form-control" disabled>
+                                            </div>
                                         </div>
-
-                                        <div class="col-4 d-none">
-                                            <label for="dpCode" class="form-label mb-0">Code <span><small
-                                                        class="text-info">(This code was generated
-                                                        by the system)</small></span>
-                                                :</label>
-
-                                            <input id="dpCode" class="form-control form-input" disabled>
-                                        </div>
-                                    </div>
-
+                                    </fieldset>
                                 </div>
 
                                 <!-- Step 2 -->
                                 <div class="tab-pane fade" id="dayStep2" role="tabpanel" aria-labelledby="dayStep2-tab">
-                                    <h5 class="mt-2">Step 2: Pickup Location</h5>
+                                    <fieldset class="border border-dark p-4 mt-2 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Step 2: Pickup Location
+                                        </legend>
 
-                                    <!-- 3 cbs -->
-
-                                    <div class="row border bg-light mt-2" id="PickupTypeCBsRow">
-                                        <h5 class="mt-2 mb-1 text-center">Pickup Type</h5>
-
-                                        <div class="d-flex justify-content-center gap-2 mt-2 mb-2 flex-wrap">
-                                            <!-- CB 1 -->
-                                            <input type="radio" class="btn-check" id="generalPickupCB"
-                                                autocomplete="off" name="pickupType" value="GENERAL"
-                                                onchange="selectPickupType(this);">
-                                            <label class="btn btn-outline-primary" for="generalPickupCB">General</label>
-
-                                            <!-- CB 2 -->
-                                            <input type="radio" class="btn-check" id="accommodationsPickupCB"
-                                                autocomplete="off" name="pickupType" value="ACCOMMODATIONS"
-                                                onchange="selectPickupType(this);">
-                                            <label class="btn btn-outline-secondary"
-                                                for="accommodationsPickupCB">Accommodations</label>
-
-                                            <!-- CB 3 -->
-                                            <input type="radio" class="btn-check" id="manualPickupCB" autocomplete="off"
-                                                name="pickupType" value="MANUAL" onchange="selectPickupType(this);">
-                                            <label class="btn btn-outline-dark" for="manualPickupCB">Manual</label>
+                                        <!-- Pickup Type Radios -->
+                                        <label class="form-label fw-bold mb-1">Pickup Type <span
+                                                class="text-danger">*</span> :</label>
+                                        <div class="row mb-3" id="PickupTypeCBsRow">
+                                            <div class="col-4">
+                                                <input type="radio" class="btn-check" id="generalPickupCB"
+                                                    autocomplete="off" name="pickupType" value="GENERAL"
+                                                    onchange="selectPickupType(this);">
+                                                <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
+                                                    for="generalPickupCB">General</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="radio" class="btn-check" id="accommodationsPickupCB"
+                                                    autocomplete="off" name="pickupType" value="ACCOMMODATIONS"
+                                                    onchange="selectPickupType(this);">
+                                                <label class="btn btn-outline-secondary w-100 fw-bold text-uppercase"
+                                                    for="accommodationsPickupCB">Accommodations</label>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="radio" class="btn-check" id="manualPickupCB"
+                                                    autocomplete="off" name="pickupType" value="MANUAL"
+                                                    onchange="selectPickupType(this);">
+                                                <label class="btn btn-outline-dark w-100 fw-bold text-uppercase"
+                                                    for="manualPickupCB">Manual</label>
+                                            </div>
                                         </div>
-                                    </div>
 
+                                        <!-- If General -->
+                                        <div class="row mb-3 align-items-center" id="generalPickupOptions"
+                                            style="display: none;">
+                                            <div class="col-auto">
+                                                <label for="airportSelect" class="form-label fw-bold mb-0">General
+                                                    Pickup Locations</label>
+                                            </div>
+                                            <div class="col">
+                                                <select class="form-select" id="airportSelect"
+                                                    onchange="airportSelection(); ">
+                                                    <option value="" selected disabled>Please Select The Pickup Location</option>
+                                                    <option data-location='{"name":"BIA","geo":11.9028}'>Bandaranaike
+                                                        International Airport</option>
+                                                    <option data-location='{"name":"MATTALA","geo":12.9028}'>Mattala
+                                                        Rajapaksa International Airport</option>
+                                                    <option data-location='{"name":"RATMALANA","geo":13.9028}'>Ratmalana
+                                                        Airport</option>
+                                                    <option data-location='{"name":"JAFFNA","geo":14.9028}'>Jaffna
+                                                        International Airport</option>
+                                                </select>
+                                            </div>
+                                        </div>
 
-                                    <!-- if general -->
-                                    <div class="row mt-3 " id="generalPickupOptions" style="display: none;">
-                                        <label for="airportSelect" class="form-label">General Pickup Points</label>
+                                        <!-- If Accommodations -->
+                                        <div id="accommodationPickupOptions" style="display: none;">
+                                            <!-- Province & District Labels -->
+                                            <div class="row mb-0">
+                                                <div class="col-6">
+                                                    <label for="pickupProvinceSelect"
+                                                        class="form-label fw-bold mb-0">Province</label>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="pickupDistrictSelect"
+                                                        class="form-label fw-bold mb-0">District</label>
+                                                </div>
+                                            </div>
 
-                                        <select class="form-select" id="airportSelect" onchange="printValues();">
-                                            <option value="" selected disabled> Please Select </option>
-                                            <option data-location='{"name":"BIA","geo":11.9028}'>Bandaranaike International Airport</option>
-                                            <option data-location='{"name":"MATTALA","geo":12.9028}'>Mattala Rajapaksa International Airport</option>
-                                            <option data-location='{"name":"RATMALANA","geo":13.9028}'>Ratmalana Airport</option>
-                                            <option data-location='{"name":"JAFFNA","geo":14.9028}'>Jaffna International Airport</option>
-                                        </select>
-                                    </div>
+                                            <!-- Province & District Inputs -->
+                                            <div class="row mb-2">
+                                                <div class="col-6">
+                                                    <select class="form-select" id="pickupProvinceSelect"
+                                                        onchange="getDistByProvince(pickupProvinceSelect,pickupDistrictSelect);"></select>
+                                                </div>
+                                                <div class="col-6">
+                                                    <select disabled class="form-select" id="pickupDistrictSelect"
+                                                        onchange="getStayByDistrict(pickupDistrictSelect,pickupAccommodationSelect);"></select>
+                                                </div>
+                                            </div>
 
-                                    <!-- if accommodations -->
-                                    <div class="row mt-3" id="accommodationPickupOptions" style="display: none;">
-                                        <div class="col-6">
-                                            <label for="pickupProvinceSelect" class="form-label">Province</label>
-                                            <select class="form-select" id="pickupProvinceSelect" onchange="getDistByProvince(pickupProvinceSelect,pickupDistrictSelect);">
-                                               
-                                            </select>
+                                            <!-- Accommodation Label + Input -->
+                                            <div class="row mb-2 align-items-center">
+                                                <div class="col-auto">
+                                                    <label for="pickupAccommodationSelect"
+                                                        class="form-label fw-bold mb-0">Pickup Accommodation</label>
+                                                </div>
+                                                <!--<div class="col">-->
+                                                    <select class="form-select" id="pickupAccommodationSelect" disabled onchange="passStayGCoords();" ></select>
+                                                <!--</div>-->
+                                            </div>
                                         </div>
-                                        <div class="col-6">
-                                            <label for="pickupDistrictSelect" class="form-label">District</label>
-                                            <select class="form-select" id="pickupDistrictSelect"  onchange="getStayByDistrict(pickupDistrictSelect,pickupAccommodationSelect)">
-                                               
-                                            </select>
-                                        </div>
-                                        <div class="col-12 mt-2">
-                                            <label for="pickupAccommodationSelect" class="form-label">Accommodation</label>
-                                            <select class="form-select" id="pickupAccommodationSelect">
-                                                
-                                            </select>
-                                        </div>
-                                    </div>
 
-                                    <!-- if manual -->
-                                    <div class="row mt-3" id="manualPickupOptions" style="display: none;">
-                                        <div class="col-12 mb-2">
-                                            <label for="manualLocation" class="form-label">Location / Address</label>
-                                            <input type="text" class="form-control" id="manualLocation"
-                                                placeholder="Enter location or address">
+                                        <!-- If Manual -->
+                                        <div id="manualPickupOptions" style="display: none;">
+                                            <!-- Labels Row -->
+                                            <div class="row mb-1">
+                                                <div class="col-6">
+                                                    <label for="manualLocation" class="form-label fw-bold mb-0">Location
+                                                        / Address</label>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="geoCoords" class="form-label fw-bold mb-0">Geo
+                                                        Coords</label>
+                                                </div>
+                                            </div>
+
+                                            <!-- Inputs Row -->
+                                            <div class="row mb-2">
+                                                <div class="col-6">
+                                                    <input type="text" class="form-control" id="manualLocation"
+                                                        placeholder="Enter location or address">
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="text" class="form-control" id="geoCoords"
+                                                        placeholder="Latitude, Longitude">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-12">
-                                            <label for="geoCoords" class="form-label">Geo Coords</label>
-                                            <input type="text" class="form-control" id="geoCoords"
-                                                placeholder="Latitude, Longitude">
-                                        </div>
-                                    </div>
+                                    </fieldset>
                                 </div>
-
 
                                 <!-- Step 3 -->
                                 <div class="tab-pane fade" id="dayStep3" role="tabpanel" aria-labelledby="dayStep3-tab">
                                     <h5 class="mt-2">Step 3: Visiting Places</h5>
                                     <div class="mb-3">
 
-                                        <!-- prov and dist -->
-                                        <div class="row">
-                                            <!-- select province -->
-                                            <div class="col-6">
-                                                <label for="selectVPProv" class="form-label mb-1">Province
-                                                    :</label>
-                                                <select id="selectVPProv" class="form-control form-select mb-2"
-                                                    onchange="getDistByProvince(selectVPProv,selectVPDist); "></select>
-                                            </div>
+                                        <!-- Attraction Selection -->
+                                        <fieldset class="border border-dark p-4 mb-4 bg-light">
 
-                                            <!-- select district -->
-                                            <div class="col-6">
-                                                <label for="selectVPDist" class="form-label mb-1">District
-                                                    :</label>
-                                                <select id="selectVPDist" class="form-select"
-                                                    onchange="selectVPDist.style.border='2px solid green'; getVPlacesByDistrict(); "></select>
-                                            </div>
-                                        </div>
+                                            <legend class="float-none w-auto px-2 text-primary">Select Attractions
+                                            </legend>
 
-                                        <!-- visiting places -->
-                                        <div class="row mt-2">
-
-                                            <!-- LEFT side -->
-                                            <div class="col-5">
-                                                <label for="allVPs" class="form-label">All Places</label>
-                                                <select class="form-select" size="8" id="allVPs"></select>
-                                            </div>
-
-                                            <!-- btns 4 -->
-                                            <div class="col-2">
-
-                                                <div class="row mt-5">
-                                                    <button class="btn btn-primary fw-bold  btn-pill" id="passOne"
-                                                        onclick="addOne()"> + </button>
+                                            <!-- prov and dist -->
+                                            <div class="row mb-3">
+                                                <div class="col-6">
+                                                    <label for="selectVPProv"
+                                                        class="form-label fw-bold mb-0">Province:</label>
+                                                    <select id="selectVPProv" class="form-control form-select"
+                                                        onchange="getDistByProvince(selectVPProv,selectVPDist); "></select>
                                                 </div>
 
-                                                <div class="row mt-2">
-                                                    <button class="btn btn-dark fw-bold" id="passAll"
-                                                        onclick="addAll()">
-                                                        Add
-                                                        All </button>
+                                                <div class="col-6">
+                                                    <label for="selectVPDist"
+                                                        class="form-label fw-bold mb-0">District:</label>
+                                                    <select disabled id="selectVPDist" class="form-select"
+                                                        onchange="selectVPDist.style.border='2px solid green'; getVPlacesByDistrict(); "></select>
                                                 </div>
-
-                                                <div class="row mt-2">
-                                                    <button class="btn btn-danger fw-bold " id="removeSelectedOne"
-                                                        onclick="removeOne()"> -
-                                                    </button>
-                                                </div>
-
-                                                <div class="row mt-2">
-                                                    <button class="btn btn-success fw-bold " id="removeSelectedAll"
-                                                        onclick="removeAll()">
-                                                        Remove All </button>
-                                                </div>
-
                                             </div>
 
-                                            <!-- RIGHT side -->
-                                            <div class="col-5">
-                                                <label for="selectedVPs" class="form-label">Selected
-                                                    Places</label>
-                                                <select size="8" id="selectedVPs" class="form-select"></select>
+                                            <!-- visiting places -->
+                                            <div class="row mt-2">
+
+                                                <!-- All Places -->
+                                                <div class="col-5">
+                                                    <label for="allVPs" class="form-label fw-bold mb-0">All
+                                                        Places</label>
+                                                    <select class="form-select" size="8" id="allVPs"></select>
+                                                </div>
+
+                                                <!-- Buttons -->
+                                                <div
+                                                    class="col-2 text-center d-flex flex-column justify-content-center mt-3">
+                                                    <button class="btn btn-sm fw-bold my-1 btn-pill" id="passOne"
+                                                        style="background-color: #4ea8de; color: white;"
+                                                        onclick="addOne()">Add</button>
+
+                                                    <button class="btn btn-sm fw-bold my-1 btn-pill" id="passAll"
+                                                        style="background-color: #3b8bca; color: white;"
+                                                        onclick="addAll()">Add All</button>
+
+                                                    <button class="btn btn-sm fw-bold my-1 btn-pill"
+                                                        id="removeSelectedOne"
+                                                        style="background-color: #f67280; color: white;"
+                                                        onclick="removeOne()">Remove</button>
+
+                                                    <button class="btn btn-sm fw-bold my-1 btn-pill"
+                                                        id="removeSelectedAll"
+                                                        style="background-color: #e84545; color: white;"
+                                                        onclick="removeAll()">Remove All</button>
+                                                </div>
+
+
+                                                <!-- Selected Places -->
+                                                <div class="col-5">
+                                                    <label for="selectedVPs" class="form-label fw-bold mb-0">Selected
+                                                        Places</label>
+                                                    <select size="8" id="selectedVPs" class="form-select"></select>
+                                                </div>
                                             </div>
+                                        </fieldset>
 
-                                        </div>
+                                        <!-- Costs and Distance -->
+                                        <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                            <legend class="float-none w-auto px-2 text-primary">Costs & Distance
+                                            </legend>
 
-                                        <!-- costs -->
-                                        <div class="row">
-                                            <div class="col-6 border">
-                                                <div class="row mt-1 mb-3">
-                                                    <!-- Local ADULT -->
-                                                    <div class="col-6">
-
-                                                        <label class="form-label mb-0 fw-bold text-success"
-                                                            for="dpTotalLocalAdultTktCost">Local
-                                                            Adult</label>
-
-                                                        <div class="input-group">
-                                                            <span class="input-group-text p-1 pb-0">
-                                                                <h6>LKR</h6>
-                                                            </span>
-                                                            <input disabled type="text" id="dpTotalLocalAdultTktCost"
-                                                                class="form-control form-input w-85 p-1 text-center"
-                                                                placeholder=""
-                                                                onchange="inputValidatorText(this,'','dayplan','localadulttktcost')">
+                                            <div class="row mb-1">
+                                                <!-- Local -->
+                                                <div class="col-6 ">
+                                                    <div class="row mt-1 mb-0">
+                                                        <div class="col-6">
+                                                            <label class="form-label mb-0 fw-bold"
+                                                                for="dpTotalLocalAdultTktCost">Local Adult</label>
+                                                            <p id="dpTotalLocalAdultTktCost"
+                                                                class="p-1 text-center border rounded bg-white">LKR
+                                                                0.00</p>
                                                         </div>
 
-
-                                                    </div>
-
-                                                    <!-- Local CHILD -->
-                                                    <div class="col-6">
-
-                                                        <label class="form-label mb-0 fw-bold text-success"
-                                                            for="dpTotalLocalChildTktCost">Local
-                                                            Children</label>
-
-                                                        <div class="input-group">
-                                                            <span class="input-group-text p-1 pb-0">
-                                                                <h6>LKR</h6>
-                                                            </span>
-                                                            <input disabled type="text" id="dpTotalLocalChildTktCost"
-                                                                class="form-control form-input w-85 p-1 text-center"
-                                                                placeholder=""
-                                                                onchange="inputValidatorText(this,'','dayplan','localchildtktcost')">
-                                                        </div>
-
-
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-6 border">
-                                                <div class="row mt-1 mb-3 ">
-                                                    <!-- Foreign ADULT -->
-                                                    <div class="col-6">
-                                                        <label class="form-label mb-0 fw-bold text-primary"
-                                                            for="dpTotalForeignAdultTktCost">Foreign
-                                                            Adult</label>
-
-                                                        <div class="input-group">
-                                                            <span class="input-group-text p-1 pb-0">
-                                                                <h6>LKR</h6>
-                                                            </span>
-                                                            <input disabled type="text" id="dpTotalForeignAdultTktCost"
-                                                                class="form-control form-input w-85 p-1 text-center"
-                                                                placeholder=""
-                                                                onchange="inputValidatorText(this,'','dayplan','foreignadulttktcost')">
+                                                        <div class="col-6">
+                                                            <label class="form-label mb-0 fw-bold"
+                                                                for="dpTotalLocalChildTktCost">Local Children</label>
+                                                            <p id="dpTotalLocalChildTktCost"
+                                                                class="p-1 text-center border rounded bg-white">
+                                                                LKR
+                                                                0.00</p>
                                                         </div>
                                                     </div>
+                                                </div>
 
-                                                    <!-- foreign CHILD -->
-                                                    <div class="col-6">
-                                                        <label class="form-label mb-0 fw-bold text-primary"
-                                                            for="dpTotalForeignChildTktCost">Foreign
-                                                            Children</label>
-
-                                                        <div class="input-group">
-                                                            <span class="input-group-text p-1 pb-0">
-                                                                <h6>LKR</h6>
-                                                            </span>
-                                                            <input disabled type="text" id="dpTotalForeignChildTktCost"
-                                                                class="form-control form-input w-85 p-1 text-center"
-                                                                placeholder=""
-                                                                onchange="inputValidatorText(this,'','dayplan','foreignchildtktcost')">
+                                                <!-- Foreign -->
+                                                <div class="col-6 ">
+                                                    <div class="row mt-1 mb-0">
+                                                        <div class="col-6">
+                                                            <label class="form-label mb-0 fw-bold"
+                                                                for="dpTotalForeignAdultTktCost">Foreign Adult</label>
+                                                            <p id="dpTotalForeignAdultTktCost"
+                                                                class="p-1 text-center border rounded bg-white">LKR
+                                                                0.00</p>
                                                         </div>
 
-
+                                                        <div class="col-6">
+                                                            <label class="form-label mb-0 fw-bold"
+                                                                for="dpTotalForeignChildTktCost">Foreign
+                                                                Children</label>
+                                                            <p id="dpTotalForeignChildTktCost"
+                                                                class="p-1 text-center border rounded bg-white">LKR
+                                                                0.00</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                        </div>
-
-                                        <!-- for other daily costs -->
-                                        <div class="row mt-2 mb-2 pb-2 ">
-
-                                            <div class="col-3">
-                                                <!-- total vehicle parking fee -->
-                                                <label class="form-label mb-0" for="dpTotalVehiParkingCost">Total
-                                                    Parking Fees
-                                                </label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6>LKR</h6>
-                                                    </span>
-                                                    <input disabled type="text" id="dpTotalVehiParkingCost"
-                                                        class="form-control form-input w-85 p-1 text-center"
-                                                        placeholder=""
-                                                        oninput="inputValidatorText(this,'','dayplan','totalvehiparkcost')">
+                                            <!-- Other Costs -->
+                                            <div class="row mb-3">
+                                                <div class="col-3">
+                                                    <label class="form-label fw-bold mb-0"
+                                                        for="dpTotalVehiParkingCost">Total
+                                                        Parking Fees</label>
+                                                    <p id="dpTotalVehiParkingCost"
+                                                        class="p-1 text-center border rounded bg-white">LKR 0.00
+                                                    </p>
                                                 </div>
                                             </div>
 
-
-                                            <!-- total cost for day -->
-                                            <!--<div class="col-3">
-
-                                                <label class="form-label mb-0" for="dpTotalCostForToday">Total
-                                                    Cost For Day
-                                                </label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6>LKR</h6>
-                                                    </span>
-                                                    <input disabled type="text" id="dpTotalCostForToday"
-                                                        class="form-control form-input w-85 p-1 text-center"
-                                                        placeholder="">
+                                            <!-- Distance -->
+                                            <div class="row mb-3">
+                                                <!-- Calculate Button and Message -->
+                                                <div class="col-3 mb-0">
+                                                    <div class="d-flex flex-column align-items-start">
+                                                        <button id="distanceCalcBtn"
+                                                            class="btn btn-outline-primary btn-sm fw-bold shadow-sm"
+                                                            onclick="calculateTotalDistance()">Calculate Total
+                                                            Distance</button>
+                                                        <small id="calcDistanceMsg"
+                                                            class="text-danger mt-1 ms-1"></small>
+                                                    </div>
                                                 </div>
 
-                                              
-                                            </div>-->
-                                            <!-- totallocostfortoday -->
-
-                                        </div>
-
-                                        <!-- total distance covered for thsi day(manual entry) -->
-                                        <button id="distanceCalcBtn" onclick="calculateTotalDistance()">Calculate Total Distance and
-                                            Time</button>
-                                        <div id="calcDistanceMsg" class="text-danger mt-2"></div>
-                                        <div class="row mt-1">
-                                            <label for="dpTotalKMcount" class="form-label mb-0">Distance
-                                                Covered
-                                                :
-                                            </label>
-
-                                            <div class="input-group">
-
-                                                <input type="text" id="dpTotalKMcount"
-                                                    class="form-control form-input w-85 p-1 text-center" placeholder=""
-                                                    onkeyup="inputValidatorText(this,'','dayplan','totalkmcount')">
-                                                <span class="input-group-text p-1 pb-0">
-                                                    <h6>KM</h6>
-                                                </span>
+                                                <!-- Distance Input Field -->
+                                                <div class="col-6">
+                                                    <label for="dpTotalKMcount" class="form-label fw-bold mb-0">Distance
+                                                        Covered:</label>
+                                                    <div class="input-group">
+                                                        <input type="number" min="0" id="dpTotalKMcount"
+                                                            class="form-control text-center" placeholder=""
+                                                            onkeyup="inputValidatorText(this,'','dayplan','totalkmcount')">
+                                                        <span class="input-group-text">Kilometer(s)</span>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
 
+                                        </fieldset>
 
                                     </div>
-
                                 </div>
 
                                 <!-- Step 4 -->
                                 <div class="tab-pane fade" id="dayStep4" role="tabpanel" aria-labelledby="dayStep4-tab">
-                                    <h5 class="mt-2">Step 4: Accomodations and Lunch</h5>
 
-                                    <!--lunch province & district -->
-                                    <div class="row">
+                                    <!-- Lunch / Restaurant Section -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Step 4: Lunch / Restaurant
+                                        </legend>
 
-                                        <!-- select province -->
-                                        <div class="col-6">
-                                            <label for="selectLPProv" class="form-label mb-1">Province
-                                                :</label>
-                                            <select id="selectLPProv" class="form-control form-select mb-2"
-                                                onchange="getDistByProvince(selectLPProv,selectLPDist);"></select>
+                                        <!-- Province & District -->
+                                        <div class="row mb-3">
+                                            <!-- Province -->
+                                            <div class="col-6">
+                                                <label for="selectLPProv"
+                                                    class="form-label fw-bold mb-0">Province:</label>
+                                                <select id="selectLPProv" class="form-control form-select"
+                                                    onchange="getDistByProvince(selectLPProv,selectLPDist);"></select>
+                                            </div>
+
+                                            <!-- District -->
+                                            <div class="col-6">
+                                                <label for="selectLPDist"
+                                                    class="form-label fw-bold mb-0">District:</label>
+                                                <select id="selectLPDist" class="form-select"
+                                                    onchange="getLunchHotelByDistrict(selectLPDist,selectDPLunch)"
+                                                    disabled></select>
+                                            </div>
                                         </div>
 
-                                        <!-- select district -->
-                                        <div class="col-6">
-                                            <label for="selectLPDist" class="form-label mb-1">District
-                                                :</label>
-                                            <select disabled id="selectLPDist" class="form-select"
-                                                onchange="getLunchHotelByDistrict(selectLPDist,selectDPLunch)"></select>
+                                        <!-- Lunch Hotel -->
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label for="selectDPLunch" class="form-label fw-bold mb-0">Lunch
+                                                    Hotel:</label>
+                                                <select id="selectDPLunch" class="form-select"
+                                                    onchange="dynamicSelectValidator(this,'dayplan','lunchplace_id');"
+                                                    disabled></select>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </fieldset>
 
-                                    <div class="row">
-                                        <!-- select lunch hotel -->
-                                        <div class="col-6">
-                                            <label for="selectDPLunch" class="form-label mb-1">Lunch
-                                                Hotel:
-                                                :</label>
-                                            <select id="selectDPLunch" class="form-select"
-                                                onchange="dynamicSelectValidator(this,'dayplan','lunchplace_id');"
-                                                disabled></select>
+                                    <!-- Accommodations Section -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Step 4: Accommodations
+                                        </legend>
+
+                                        <!-- Province & District -->
+                                        <div class="row mb-3">
+                                            <!-- Province -->
+                                            <div class="col-6">
+                                                <label for="selectDPEndProv"
+                                                    class="form-label fw-bold mb-0">Province:</label>
+                                                <select id="selectDPEndProv" disabled class="form-control form-select"
+                                                    onchange="getDistByProvince(selectDPEndProv,selectDPEndDist);"></select>
+                                            </div>
+
+                                            <!-- District -->
+                                            <div class="col-6">
+                                                <label for="selectDPEndDist"
+                                                    class="form-label fw-bold mb-0">District:</label>
+                                                <select disabled id="selectDPEndDist" class="form-select"
+                                                    onchange="getStayByDistrict(selectDPEndDist,selectDPEndStay)"></select>
+                                            </div>
                                         </div>
 
-                                    </div>
-
-                                    <!--END province & district -->
-                                    <div class="row">
-
-                                        <!-- select province -->
-                                        <div class="col-6">
-                                            <label for="selectDPEndProv" class="form-label mb-1">Province
-                                                :</label>
-                                            <select id="selectDPEndProv" class="form-control form-select mb-2"
-                                                onchange="getDistByProvince(selectDPEndProv,selectDPEndDist);"></select>
+                                        <!-- Accommodation -->
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label for="selectDPEndStay"
+                                                    class="form-label fw-bold mb-0">Accommodation:</label>
+                                                <select id="selectDPEndStay" class="form-select"
+                                                    onchange="dynamicSelectValidator(this,'dayplan','end_stay_id');"
+                                                    disabled></select>
+                                            </div>
                                         </div>
-
-                                        <!-- select district -->
-                                        <div class="col-6">
-                                            <label for="selectDPEndDist" class="form-label mb-1">District
-                                                :</label>
-                                            <select id="selectDPEndDist" class="form-select"
-                                                onchange="getStayByDistrict(selectDPEndDist,selectDPEndStay)"></select>
-                                        </div>
-                                    </div>
-
-                                    <!--END accomadation -->
-                                    <div class="row">
-
-                                        <!-- if a hotel SELECT-->
-                                        <div class="col-6">
-
-                                            <label for="selectDPEndStay" class="form-label mb-1">Accomadation
-                                                :</label>
-                                            <select id="selectDPEndStay" class="form-select"
-                                                onchange="dynamicSelectValidator(this,'dayplan','end_stay_id');"
-                                                disabled></select>
-                                        </div>
-                                    </div>
-
+                                    </fieldset>
                                 </div>
 
                                 <!-- Step 5 -->
                                 <div class="tab-pane fade" id="dayStep5" role="tabpanel" aria-labelledby="dayStep5-tab">
-                                    <h5 class="mt-2">Step 5: Final Notes</h5>
 
-                                    <div class="row border mt-2 mb-2 pb-2 bg-light">
+                                    <!-- Final Notes Section -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Step 5: Final Notes</legend>
 
-                                        <div class="col-7">
-                                            <label for="dpNote" class="form-label mb-1">Note :</label>
+                                        <div class="row">
+                                            <!-- Note Textarea -->
+                                            <div class="col-7 mb-3">
+                                                <label for="dpNote" class="form-label fw-bold mb-0">Note:</label>
+                                                <textarea class="form-control" id="dpNote" style="height: 100px;"
+                                                    placeholder=" "
+                                                    onkeyup="inputValidatorText(this,'','dayplan','note')"></textarea>
+                                            </div>
 
-                                            <textarea class="form-control" placeholder=" " id="dpNote"
-                                                onkeyup="inputValidatorText(this,'','dayplan','note')"
-                                                style="height: 100px;"></textarea>
-                                        </div>
-
-
-                                        <div class="col-5">
-                                            <!-- based inquiry -->
-
-                                            <!-- status -->
-                                            <div class="row">
-                                                <label for="dpSelectStatus" class="form-label mb-1">Status
-                                                    :</label>
+                                            <!-- Status Dropdown -->
+                                            <div class="col-5 mb-3">
+                                                <label for="dpSelectStatus"
+                                                    class="form-label fw-bold mb-0">Status:</label>
                                                 <select id="dpSelectStatus" class="form-select"
                                                     onchange="staticSelectValidator(this , 'dayplan' , 'dp_status')">
                                                     <option value="" selected disabled> Select Status </option>
                                                     <option value="Draft"> Draft </option>
                                                     <option value="Confirmed"> Added to a Package </option>
                                                     <option value="Completed"> Tour Completed </option>
-                                                    <option value="ifDeleted" class="d-none"> Deleted Record
-                                                    </option>
+                                                    <option value="ifDeleted" class="d-none"> Deleted Record </option>
                                                 </select>
-
                                             </div>
-
                                         </div>
+                                    </fieldset>
 
-                                    </div>
-
-                                    <!-- MAIN BUTTONS -->
+                                    <!-- MAIN BUTTONS (unchanged as per your request) -->
                                     <div class="row mt-4 mb-2">
                                         <div class="col-4">
-                                            <button type="reset" class="btn-clear w-50"
-                                                onclick="refreshDayPlanForm()">Reset
-                                                Form</button>
+                                            <button type="reset" class="btn-clear w-50 fw-bold"
+                                                onclick="refreshDayPlanForm()">Reset Form</button>
                                         </div>
                                         <div class="col-8 text-end">
                                             <button type="submit" id="dpUpdateBtn" class="btn-update fw-bold"
@@ -633,149 +579,150 @@
                                                 onclick="addNewDayPlan()">Add Entry</button>
                                         </div>
                                     </div>
-
                                 </div>
+
 
                         </form>
 
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Modal to display full details of a row -->
-            <div class="modal fade py-5" id="infoModalDayPlan" tabindex="-1" aria-labelledby="infoModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content shadow-lg rounded-4">
-                        <!-- Modal Header -->
-                        <div class="modal-header bg-primary text-white">
-                            <h5 class="modal-title" id="infoModalLabel">Yathra DayPlan Record</h5>
-                            <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
-                                aria-label="Close" onclick="resetModal()"></button>
-                        </div>
+        <!-- Modal to display full details of a row -->
+        <div class="modal fade py-5" id="infoModalDayPlan" tabindex="-1" aria-labelledby="infoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="infoModalLabel">Yathra DayPlan Record</h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"
+                            onclick="resetModal()"></button>
+                    </div>
 
-                        <!-- Modal Body -->
-                        <div class="modal-body">
-                            <div class="container">
-                                <!-- DayPlan Image and Basic Info -->
-                                <div class="row g-4 align-items-center">
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <div class="container">
+                            <!-- DayPlan Image and Basic Info -->
+                            <div class="row g-4 align-items-center">
 
-                                    <!-- Name and NIC -->
-                                    <div class="col-md-8">
+                                <!-- Name and NIC -->
+                                <div class="col-md-8">
 
-                                        <p id="modalDPIsTemplateOrNot" class=" "></p>
-
-                                    </div>
-                                </div>
-
-                                <!-- Other Details -->
-                                <hr>
-                                <div class="row g-4">
-                                    <div class="col-md-4">
-                                        <p class="fw-bold mb-1">DayPlan Code:</p>
-                                        <p id="modalDPCode" class="  mb-0"></p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p class="fw-bold mb-1">Day Title:</p>
-                                        <p id="modalDPTitle" class="  mb-0"></p>
-                                    </div>
+                                    <p id="modalDPIsTemplateOrNot" class=" "></p>
 
                                 </div>
+                            </div>
 
-                                <hr>
-                                <div class="row g-4">
-                                    <div class="col-md-4">
-                                        <p class="fw-bold mb-1">Attractions:</p>
-                                        <p id="modalDPAttractions" class="  mb-0"></p>
-                                    </div>
+                            <!-- Other Details -->
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">DayPlan Code:</p>
+                                    <p id="modalDPCode" class="  mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Day Title:</p>
+                                    <p id="modalDPTitle" class="  mb-0"></p>
+                                </div>
+
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Attractions:</p>
+                                    <p id="modalDPAttractions" class="  mb-0"></p>
+                                </div>
+
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">Lunch For day:</p>
+                                    <p id="modalDPLunch" class="  mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1">End Stay For Day:</p>
+                                    <p id="modalDPStay" class="  mb-0"></p>
+                                </div>
+
+                            </div>
+
+                            <hr>
+                            <p class="fw-bold mb-1">Total Ticket Costs:</p>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Local Adults:</p>
+                                    <p id="modalDPTktLocalAdult" class="  mb-0"></p>
+                                </div>
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Local Child:</p>
+                                    <p id="modalDPTktLocalChild" class="  mb-0"></p>
+                                </div>
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Foreign Adults:</p>
+                                    <p id="modalDPTktForeignAdult" class="  mb-0"></p>
+                                </div>
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Foreign Adults:</p>
+                                    <p id="modalDPTktForeignChild" class="  mb-0"></p>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row g-4">
+                                <div class="col-md-8">
+                                    <p class="fw-bold mb-1">Total Parking Fee:</p>
+                                    <p id="modalDPParkingFee" class="  mb-0"></p>
 
                                 </div>
 
-                                <hr>
-                                <div class="row g-4">
-                                    <div class="col-md-4">
-                                        <p class="fw-bold mb-1">Lunch For day:</p>
-                                        <p id="modalDPLunch" class="  mb-0"></p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <p class="fw-bold mb-1">End Stay For Day:</p>
-                                        <p id="modalDPStay" class="  mb-0"></p>
-                                    </div>
-
+                                <div>
+                                    <p class="fw-bold mb-1">Total Distance Covered:</p>
+                                    <p id="modalDPTotalDistance" class="  mb-0"></p>
                                 </div>
 
-                                <hr>
-                                <p class="fw-bold mb-1">Total Ticket Costs:</p>
-                                <div class="row g-4">
-                                    <div class="col-md-8">
-                                        <p class="fw-bold mb-1">Local Adults:</p>
-                                        <p id="modalDPTktLocalAdult" class="  mb-0"></p>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="fw-bold mb-1">Local Child:</p>
-                                        <p id="modalDPTktLocalChild" class="  mb-0"></p>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="fw-bold mb-1">Foreign Adults:</p>
-                                        <p id="modalDPTktForeignAdult" class="  mb-0"></p>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <p class="fw-bold mb-1">Foreign Adults:</p>
-                                        <p id="modalDPTktForeignChild" class="  mb-0"></p>
-                                    </div>
+                                <div>
+                                    <p class="fw-bold mb-1">Additional Information:</p>
+                                    <p id="modalDPNote" class="  mb-0"></p>
+                                    <p class="fw-bold mb-1"> Status:</p>
+                                    <p id="modalDPStatus" class="  mb-0"></p>
                                 </div>
 
-                                <hr>
-                                <div class="row g-4">
-                                    <div class="col-md-8">
-                                        <p class="fw-bold mb-1">Total Parking Fee:</p>
-                                        <p id="modalDPParkingFee" class="  mb-0"></p>
-
-                                    </div>
-
-                                    <div>
-                                        <p class="fw-bold mb-1">Total Distance Covered:</p>
-                                        <p id="modalDPTotalDistance" class="  mb-0"></p>
-                                    </div>
-
-                                    <div>
-                                        <p class="fw-bold mb-1">Additional Information:</p>
-                                        <p id="modalDPNote" class="  mb-0"></p>
-                                        <p class="fw-bold mb-1"> Status:</p>
-                                        <p id="modalDPStatus" class="  mb-0"></p>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <p id="modalDPIfDeleted" class="text-danger d-none mb-0"></p>
-                                    </div>
+                                <div class="col-md-4">
+                                    <p id="modalDPIfDeleted" class="text-danger d-none mb-0"></p>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Modal Footer -->
-                        <div class="modal-footer d-flex 
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex 
                  justify-content-between bg-light">
-                            <button class="btn-print fw-bold" onclick="printDayPlanRecord()">
-                                Print Record
+                        <button class="btn-print fw-bold" onclick="printDayPlanRecord()">
+                            Print Record
+                        </button>
+                        <div>
+                            <button id="modalDPEditBtn" class="btn-edit me-2 fw-bold"
+                                onclick="refillDayPlanForm(window['currentObject'])">
+                                Edit Entry
                             </button>
-                            <div>
-                                <button id="modalDPEditBtn" class="btn-edit me-2 fw-bold"
-                                    onclick="refillDayPlanForm(window['currentObject'])">
-                                    Edit Entry
-                                </button>
-                                <button id="modalDPDeleteBtn" class="btn-delete fw-bold"
-                                    onclick="deleteDayPlanRecord(window['currentObject'])">
-                                    Delete Entry
-                                </button>
-                                <button id="modalDPRecoverBtn" class="btn-restore d-none fw-bold"
-                                    onclick="restoreDayPlanRecord()">
-                                    Restore Entry
-                                </button>
-                            </div>
+                            <button id="modalDPDeleteBtn" class="btn-delete fw-bold"
+                                onclick="deleteDayPlanRecord(window['currentObject'])">
+                                Delete Entry
+                            </button>
+                            <button id="modalDPRecoverBtn" class="btn-restore d-none fw-bold"
+                                onclick="restoreDayPlanRecord()">
+                                Restore Entry
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
     </main>
 
