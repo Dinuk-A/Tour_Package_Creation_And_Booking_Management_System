@@ -281,11 +281,11 @@
                                             <div class="row mb-2">
                                                 <div class="col-6">
                                                     <input type="text" class="form-control" id="manualLocation"
-                                                        placeholder="Enter location or address">
+                                                        placeholder="Enter location or address"  onkeyup="inputValidatorText(this, '', 'dayplan' , 'pickuppoint')">
                                                 </div>
                                                 <div class="col-6">
                                                     <input type="text" class="form-control" id="geoCoords"
-                                                        placeholder="Latitude, Longitude">
+                                                        placeholder="Latitude, Longitude" oninput="passManualGeoCoords();">
                                                 </div>
                                             </div>
                                         </div>
@@ -508,7 +508,7 @@
                                             <div class="col-6">
                                                 <label for="selectDPEndProv"
                                                     class="form-label fw-bold mb-0">Province:</label>
-                                                <select id="selectDPEndProv" disabled class="form-control form-select"
+                                                <select id="selectDPEndProv"  class="form-control form-select"
                                                     onchange="getDistByProvince(selectDPEndProv,selectDPEndDist);"></select>
                                             </div>
 

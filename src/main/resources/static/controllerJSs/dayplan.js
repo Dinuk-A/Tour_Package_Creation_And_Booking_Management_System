@@ -177,6 +177,10 @@ const refreshDayPlanForm = async () => {
 }
 
 function selectPickupType(radio) {
+
+    //💥💥💥💥💥💥💥mewa athara maru weddi, anith ewayedi select krpu values null karanna, borders default colour karanna, ekko ekin ekata wenama fn 3k hadana eka lesi
+
+
     const selected = radio.value;
 
     const generalDiv = document.getElementById('generalPickupOptions');
@@ -298,14 +302,17 @@ const handleChangesBasedDPType = () => {
 //to pass g coords of airport pickup points
 const airportSelection = () => {
 
-    const selectDataJson = document.getElementById('airportSelect');
-    const option = selectDataJson.options[selectDataJson.selectedIndex];
+    const airportSelectElement = document.getElementById('airportSelect');
+    const option = airportSelectElement.options[airportSelectElement.selectedIndex];
     const data = JSON.parse(option.dataset.location);
     const airportGeocoords = data.geo;
     pickupPointGCoords = airportGeocoords;
 
     console.log("G: " + airportGeocoords);
     console.log("Global Var pickupPointGCoords: " + pickupPointGCoords);
+
+    dayplan.pickuppoint = data.name;
+    airportSelectElement.style.border = '2px solid lime';
 
 }
 
@@ -318,9 +325,44 @@ const passStayGCoords = () => {
     const selectedStay = JSON.parse(selectedStayString);
     pickupPointGCoords = selectedStay.gcoords;
     console.log("Global Var pickupPointGCoords: " + pickupPointGCoords);
+
+    dayplan.pickuppoint = selectedStay.name;
     pickupStaySelect.style.border = '2px solid lime';
 
 }
+
+//to pass g coords of manual pickup points
+const passManualGeoCoords = () => {
+
+    //first remove previous value
+    pickupPointGCoords = '';
+
+    const input = document.getElementById("geoCoords");
+    const value = input.value.trim();
+
+    // Basic regex pattern (format only)
+    const regex = /^-?\d{1,2}(\.\d+)?,\s*-?\d{1,3}(\.\d+)?$/;
+
+    if (regex.test(value)) {
+        // Optional: further split and range check
+        const [latStr, lngStr] = value.split(',').map(s => s.trim());
+        const lat = parseFloat(latStr);
+        const lng = parseFloat(lngStr);
+
+        const latValid = lat >= -90 && lat <= 90;
+        const lngValid = lng >= -180 && lng <= 180;
+
+        if (latValid && lngValid) {
+            pickupPointGCoords = value;
+            input.style.border = "2px solid lime";
+            return;
+        }
+    }
+
+    // If invalid
+    pickupPointGCoords = '';
+    input.style.border = "2px solid red";
+};
 
 //to calculate total vehi parking fee also depends on visiting hours
 const calcTotalVehiParkingfee = () => {
