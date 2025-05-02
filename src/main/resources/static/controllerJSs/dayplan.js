@@ -151,21 +151,25 @@ const refreshDayPlanForm = async () => {
     });
 
     // show EMPTY district selects, before filtered by province
-    districts = [];
+    emptyArray = [];
     //fillDataIntoDynamicSelects(selectDPStartDist, 'Select The Province First', districts, 'name');
-    fillDataIntoDynamicSelects(selectVPDist, 'Select The Province First', districts, 'name');
-    fillDataIntoDynamicSelects(selectLPDist, 'Select The Province First', districts, 'name');
-    fillDataIntoDynamicSelects(selectDPEndDist, 'Select The Province First', districts, 'name');
-    fillDataIntoDynamicSelects(pickupDistrictSelect, 'Select The Province First', districts, 'name');
+    fillDataIntoDynamicSelects(selectVPDist, 'Select The Province First', emptyArray, 'name');
+    fillDataIntoDynamicSelects(selectLPDist, 'Select The Province First', emptyArray, 'name');
+    fillDataIntoDynamicSelects(selectDPEndDist, 'Select The Province First', emptyArray, 'name');
+    fillDataIntoDynamicSelects(pickupDistrictSelect, 'Select The Province First', emptyArray, 'name');
 
     //show EMPTY accomadation selects, before filtered by district
-    stay = [];
-    fillDataIntoDynamicSelects(selectDPEndStay, 'Select The District First', stay, 'name');
-    fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Select The District First', stay, 'name');
+    fillDataIntoDynamicSelects(selectDPEndStay, 'Select The District First', emptyArray, 'name');
+    fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Select The District First', emptyArray, 'name');
 
     //show EMPTY lunch selects, before filtered by district
-    lunchHotels = [];
-    fillDataIntoDynamicSelects(selectDPLunch, 'select the District first', lunchHotels, 'name')
+    fillDataIntoDynamicSelects(selectDPLunch, 'select the District first', emptyArray, 'name')
+
+    //show EMPTY visiting places selects, before filtered by district
+    fillDataIntoDynamicSelects(allVPs, 'select the District first', emptyArray, 'name');
+
+    //show EMPTY selected visiting places selects
+    fillDataIntoDynamicSelects(selectedVPs, 'Selected Places', emptyArray, 'name');
 
     dpUpdateBtn.disabled = true;
     dpUpdateBtn.style.cursor = "not-allowed";
@@ -176,10 +180,7 @@ const refreshDayPlanForm = async () => {
     document.getElementById('dpSelectStatus').children[2].removeAttribute('class', 'd-none');
 }
 
-function selectPickupType(radio) {
-
-    //💥💥💥💥💥💥💥mewa athara maru weddi, anith ewayedi select krpu values null karanna, borders default colour karanna, ekko ekin ekata wenama fn 3k hadana eka lesi
-
+const selectPickupType = (radio) => {
 
     const selected = radio.value;
 
@@ -192,22 +193,6 @@ function selectPickupType(radio) {
     accomDiv.style.display = 'none';
     manualDiv.style.display = 'none';
 
-    // Clear all inputs/selects in each section
-    const clearInputs = (section) => {
-        const inputs = section.querySelectorAll('input, select');
-        inputs.forEach(input => {
-            if (input.tagName === 'SELECT') {
-                input.selectedIndex = 0;
-            } else {
-                input.value = '';
-            }
-        });
-    }
-
-    clearInputs(generalDiv);
-    clearInputs(accomDiv);
-    clearInputs(manualDiv);
-
     // Show the selected section
     if (selected === 'GENERAL') {
         generalDiv.style.display = 'block';
@@ -218,7 +203,89 @@ function selectPickupType(radio) {
     }
 }
 
-//for 3 checkboxes
+//when general cb selected
+const clearOtherInputsGen = () => {
+
+    const inputTagsIds = [
+        'pickupProvinceSelect',
+        'pickupDistrictSelect',
+        'pickupAccommodationSelect',
+        'manualLocation',
+        'geoCoords',
+        'dpTotalKMcount'
+    ];
+
+    //clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    dayplan.pickuppoint = null;
+    pickupPointGCoords = '';
+    document.getElementById('dpTotalKMcount').style.border = "1px solid #ced4da";
+    dayplan.totalkmcount = null;
+    document.getElementById('pickupDistrictSelect').disabled = true;
+    document.getElementById('pickupAccommodationSelect').disabled = true;
+}
+
+//when manual stay selected
+const clearOtherInputsStay = () => {
+
+    const inputTagsIds = [
+        'manualLocation',
+        'geoCoords',
+        'airportSelect',
+        'dpTotalKMcount'
+    ];
+
+    //clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    dayplan.pickuppoint = null;
+    pickupPointGCoords = '';
+    document.getElementById('dpTotalKMcount').style.border = "1px solid #ced4da";
+    dayplan.totalkmcount = null;
+}
+
+//when manual cb selected
+const clearOtherInputsManual = () => {
+
+    const inputTagsIds = [
+        'pickupProvinceSelect',
+        'pickupDistrictSelect',
+        'pickupAccommodationSelect',
+        'airportSelect',
+        'dpTotalKMcount'
+    ];
+
+    //clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    dayplan.pickuppoint = null;
+    pickupPointGCoords = '';
+    document.getElementById('dpTotalKMcount').style.border = "1px solid #ced4da";
+    dayplan.totalkmcount = null;
+    document.getElementById('pickupDistrictSelect').disabled = true;
+    document.getElementById('pickupAccommodationSelect').disabled = true;
+}
+
+//for 3 FD,MD,LD checkboxes
 const selectDayType = (feild) => {
     dayplan.dayplancode = feild.value;
 }
@@ -593,7 +660,7 @@ const removeAll = () => {
 
 }
 
-async function calculateTotalDistance() {
+async function calculateTotalDistanceOriginal() {
     const apiKey = '5b3ce3597851110001cf6248dfc26e4e6071445f9197c3adf89c69e4';
     const msgBox = document.getElementById('calcDistanceMsg');
     const kmInput = document.getElementById('dpTotalKMcount');
@@ -666,8 +733,101 @@ async function calculateTotalDistance() {
     }
 }
 
+//suucess 
+async function calculateTotalDistance() {
+
+    dayplan.totalkmcount = null;
+    const kmInput = document.getElementById('dpTotalKMcount');
+    kmInput.style.border = "1px solid #ced4da";
+
+    const apiKey = '5b3ce3597851110001cf6248dfc26e4e6071445f9197c3adf89c69e4';
+    const msgBox = document.getElementById('calcDistanceMsg');    
+
+    // Clear old messages
+    msgBox.innerText = '';
+    kmInput.value = '';
+
+    let coords = [];
+
+    // ✅ Add pickup point if available
+    if (pickupPointGCoords && pickupPointGCoords.includes(',')) {
+        const [lat, lon] = pickupPointGCoords.split(',').map(Number);
+        coords.push([lon, lat]); // OpenRoute needs [lon, lat]
+    }
+
+    // ✅ Add visiting places
+    if (dayplan && dayplan.vplaces && dayplan.vplaces.length > 0) {
+        coords = coords.concat(
+            dayplan.vplaces.map(place => {
+                const [lat, lon] = place.gcoords.split(',').map(Number);
+                return [lon, lat];
+            })
+        );
+    }
+
+    // ✅ Now check if we have at least 2 points
+    if (coords.length < 2) {
+        msgBox.innerText = 'Please select at least 2 locations (pickup + at least 1 place).';
+        return;
+    }
+
+    const body = { coordinates: coords };
+
+    try {
+        const response = await fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
+            method: 'POST',
+            headers: {
+                'Authorization': apiKey,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            if (errorData.error && errorData.error.code === 2010) {
+                msgBox.innerText = '⚠️ Some locations are too far from a road. Please enter total KM manually.';
+            } else {
+                msgBox.innerText = '⚠️ Could not calculate automatically. Please enter total KM manually.';
+            }
+            return;
+        }
+
+        const data = await response.json();
+        const distanceMeters = data.features[0].properties.summary.distance;
+        const distanceKm = (distanceMeters / 1000).toFixed(2);
+
+        // ✅ Update input and object
+        kmInput.value = distanceKm;
+        dayplan.totalkmcount = distanceKm;
+        kmInput.style.border = "2px solid lime";
+
+        // Time handling
+        let durationSeconds = data.features[0].properties.summary.duration;
+        let totalMinutes = Math.round(durationSeconds / 60);
+        let roundedMinutes = Math.ceil(totalMinutes / 15) * 15;
+        let hours = Math.floor(roundedMinutes / 60);
+        let minutes = roundedMinutes % 60;
+
+        let timeStr = hours;
+        if (minutes > 0) {
+            timeStr += "." + (minutes / 60).toFixed(2).split('.')[1];
+        }
+
+        console.log(`Total Distance: ${distanceKm} km`);
+        console.log(`Total Estimated Time: ${timeStr} H`);
+
+    } catch (error) {
+        console.error('Error calculating distance:', error);
+        msgBox.innerText = '⚠️ Unexpected error. Please enter total KM manually.';
+    }
+}
+
 //get districts by province
 const getDistByProvince = async (provinceSelectid, districtSelectId) => {
+
+    districtSelectId.disabled = false;
+    districtSelectId.style.border = '1px solid #ced4da';
 
     const currentProvinceID = JSON.parse(provinceSelectid.value).id;
     try {
@@ -677,11 +837,9 @@ const getDistByProvince = async (provinceSelectid, districtSelectId) => {
         console.error("Failed to fetch districts:", error);
     }
     provinceSelectid.style.border = '2px solid lime';
-    districtSelectId.disabled = false;
+  
 
 }
-
-
 
 //getvisiting places by district
 const getVPlacesByDistrict = async () => {
@@ -704,6 +862,7 @@ const getStayByDistrict = async (distSelectID, staySelectID) => {
     const selectedDistrict = JSON.parse(distSelectID.value).id;
     distSelectID.style.border = '2px solid lime';
     staySelectID.disabled = false;
+    staySelectID.style.border = '1px solid #ced4da';
 
     try {
         staysByDist = await ajaxGetReq("/stay/bydistrict/" + selectedDistrict);
@@ -719,6 +878,7 @@ const getLunchHotelByDistrict = async (distSelectID, lhSelectID) => {
     const selectedDistrict = JSON.parse(distSelectID.value).id;
     distSelectID.style.border = '2px solid lime';
     lhSelectID.disabled = false;
+    lhSelectID.style.border = '1px solid #ced4da';    
 
     try {
         lunchByDist = await ajaxGetReq("/lunchplace/bydistrict/" + selectedDistrict);
@@ -727,8 +887,6 @@ const getLunchHotelByDistrict = async (distSelectID, lhSelectID) => {
         console.error('getLunchHotelByDistrict');
     }
 }
-
-
 
 //check errors before submitting
 const checkDPFormErrors = () => {

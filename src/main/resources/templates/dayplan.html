@@ -182,21 +182,21 @@
                                             <div class="col-4">
                                                 <input type="radio" class="btn-check" id="generalPickupCB"
                                                     autocomplete="off" name="pickupType" value="GENERAL"
-                                                    onchange="selectPickupType(this);">
+                                                    onchange="clearOtherInputsGen(); selectPickupType(this);">
                                                 <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
                                                     for="generalPickupCB">General</label>
                                             </div>
                                             <div class="col-4">
                                                 <input type="radio" class="btn-check" id="accommodationsPickupCB"
                                                     autocomplete="off" name="pickupType" value="ACCOMMODATIONS"
-                                                    onchange="selectPickupType(this);">
+                                                    onchange="clearOtherInputsStay(); selectPickupType(this);">
                                                 <label class="btn btn-outline-secondary w-100 fw-bold text-uppercase"
                                                     for="accommodationsPickupCB">Accommodations</label>
                                             </div>
                                             <div class="col-4">
                                                 <input type="radio" class="btn-check" id="manualPickupCB"
                                                     autocomplete="off" name="pickupType" value="MANUAL"
-                                                    onchange="selectPickupType(this);">
+                                                    onchange="clearOtherInputsManual(); selectPickupType(this);">
                                                 <label class="btn btn-outline-dark w-100 fw-bold text-uppercase"
                                                     for="manualPickupCB">Manual</label>
                                             </div>
@@ -213,13 +213,13 @@
                                                 <select class="form-select" id="airportSelect"
                                                     onchange="airportSelection(); ">
                                                     <option value="" selected disabled>Please Select The Pickup Location</option>
-                                                    <option data-location='{"name":"BIA","geo":11.9028}'>Bandaranaike
+                                                    <option data-location='{"name":"BIA","geo":"7.18111,79.88361"}'>Bandaranaike
                                                         International Airport</option>
-                                                    <option data-location='{"name":"MATTALA","geo":12.9028}'>Mattala
+                                                    <option data-location='{"name":"MATTALA","geo":"6.28889,81.12361"}'>Mattala
                                                         Rajapaksa International Airport</option>
-                                                    <option data-location='{"name":"RATMALANA","geo":13.9028}'>Ratmalana
+                                                    <option data-location='{"name":"RATMALANA","geo":"6.82199,79.88621"}'>Ratmalana
                                                         Airport</option>
-                                                    <option data-location='{"name":"JAFFNA","geo":14.9028}'>Jaffna
+                                                    <option data-location='{"name":"JAFFNA","geo":"9.79263,80.07030"}'>Jaffna
                                                         International Airport</option>
                                                 </select>
                                             </div>
