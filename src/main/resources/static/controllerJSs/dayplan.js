@@ -11,6 +11,7 @@ let sharedTableId = "mainTableDayPlan";
 
 //global var to store pickup point's geo coords
 let pickupPointGCoords = '';
+let dropoffPointGCoords = '';
 
 //to create and refresh content in main dayplan table
 const buildDayPlanTable = async () => {
@@ -104,7 +105,7 @@ const refreshDayPlanForm = async () => {
 
         fillDataIntoDynamicSelects(selectLPProv, 'Please Select The Province', allProvinces, 'name');
 
-        fillDataIntoDynamicSelects(selectDPEndProv, 'Please Select The Province', allProvinces, 'name');
+        fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name');
 
         fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name');
 
@@ -122,9 +123,9 @@ const refreshDayPlanForm = async () => {
         'selectLPProv',
         'selectLPDist',
         'selectDPLunch',
-        'selectDPEndProv',
-        'selectDPEndDist',
-        'selectDPEndStay',
+        'dropOffProvinceSelect',
+        'dropOffDistrictSelect',
+        'dropOffAccommodationSelect',
         'pickupProvinceSelect',
         'pickupDistrictSelect',
         'pickupAccommodationSelect',
@@ -155,11 +156,11 @@ const refreshDayPlanForm = async () => {
     //fillDataIntoDynamicSelects(selectDPStartDist, 'Select The Province First', districts, 'name');
     fillDataIntoDynamicSelects(selectVPDist, 'Select The Province First', emptyArray, 'name');
     fillDataIntoDynamicSelects(selectLPDist, 'Select The Province First', emptyArray, 'name');
-    fillDataIntoDynamicSelects(selectDPEndDist, 'Select The Province First', emptyArray, 'name');
+    fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Select The Province First', emptyArray, 'name');
     fillDataIntoDynamicSelects(pickupDistrictSelect, 'Select The Province First', emptyArray, 'name');
 
     //show EMPTY accomadation selects, before filtered by district
-    fillDataIntoDynamicSelects(selectDPEndStay, 'Select The District First', emptyArray, 'name');
+    fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Select The District First', emptyArray, 'name');
     fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Select The District First', emptyArray, 'name');
 
     //show EMPTY lunch selects, before filtered by district
@@ -203,6 +204,31 @@ const selectPickupType = (radio) => {
     }
 }
 
+const selectDropOffType = (radio) => {
+
+    const selected = radio.value;
+
+    const generalDiv = document.getElementById('generalDropOffOptions');
+    const accomDiv = document.getElementById('accommodationDropOffOptions');
+    const manualDiv = document.getElementById('manualDropOffOptions');
+
+    // Hide all first
+    generalDiv.style.display = 'none';
+    accomDiv.style.display = 'none';
+    manualDiv.style.display = 'none';
+
+    // Show the selected section
+    if (selected === 'GENERAL') {
+        generalDiv.style.display = 'block';
+    } else if (selected === 'ACCOMMODATIONS') {
+        accomDiv.style.display = 'block';
+    } else if (selected === 'MANUAL') {
+        manualDiv.style.display = 'block';
+    }
+}
+
+
+
 //when general cb selected
 const clearOtherInputsGen = () => {
 
@@ -230,6 +256,7 @@ const clearOtherInputsGen = () => {
     dayplan.totalkmcount = null;
     document.getElementById('pickupDistrictSelect').disabled = true;
     document.getElementById('pickupAccommodationSelect').disabled = true;
+
 }
 
 //when manual stay selected
@@ -284,6 +311,87 @@ const clearOtherInputsManual = () => {
     document.getElementById('pickupDistrictSelect').disabled = true;
     document.getElementById('pickupAccommodationSelect').disabled = true;
 }
+
+const clearOtherInputsGenDropOff = () => {
+
+    const inputTagsIds = [
+        'dropOffProvinceSelect',
+        'dropOffDistrictSelect',
+        'dropOffAccommodationSelect',
+        'manualLocationDropOff',
+        'geoCoordsDropOff',
+        'dpTotalKMcount'
+    ];
+
+    // Clear out any previous styles and values
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    dayplan.droppoint = null;
+    dropoffPointGCoords = '';
+    document.getElementById('dpTotalKMcount').style.border = "1px solid #ced4da";
+    dayplan.totalkmcount = null;
+    document.getElementById('dropOffDistrictSelect').disabled = true;
+    document.getElementById('dropOffAccommodationSelect').disabled = true;
+}
+
+const clearOtherInputsStayDropOff = () => {
+
+    const inputTagsIds = [
+        'manualLocationDropOff',
+        'geoCoordsDropOff',
+        'airportSelectDropOff',
+        'dpTotalKMcount'
+    ];
+
+    // clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    dayplan.droppoint = null;
+    dropoffPointGCoords = '';
+    document.getElementById('dpTotalKMcount').style.border = "1px solid #ced4da";
+    dayplan.totalkmcount = null;
+}
+
+const clearOtherInputsManualDropOff = () => {
+
+    const inputTagsIds = [
+        'dropOffProvinceSelect',
+        'dropOffDistrictSelect',
+        'dropOffAccommodationSelect',
+        'airportSelectDropOff',
+        'dpTotalKMcount'
+    ];
+
+    // clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    dayplan.droppoint = null;
+    dropoffPointGCoords = '';
+    document.getElementById('dpTotalKMcount').style.border = "1px solid #ced4da";
+    dayplan.totalkmcount = null;
+    document.getElementById('dropOffDistrictSelect').disabled = true;
+    document.getElementById('dropOffAccommodationSelect').disabled = true;
+}
+
+
 
 //for 3 FD,MD,LD checkboxes
 const selectDayType = (feild) => {
@@ -383,6 +491,22 @@ const airportSelection = () => {
 
 }
 
+const airportSelectionDropOff = () => {
+
+    const airportSelectElement = document.getElementById('airportSelectDropOff');
+    const option = airportSelectElement.options[airportSelectElement.selectedIndex];
+    const data = JSON.parse(option.dataset.location);
+    const airportGeocoords = data.geo;
+    dropoffPointGCoords = airportGeocoords;
+
+    console.log("G: " + airportGeocoords);
+    console.log("Global Var dropoffPointGCoords: " + dropoffPointGCoords);
+
+    dayplan.droppoint = data.name;
+    airportSelectElement.style.border = '2px solid lime';
+}
+
+
 //to pass g coords of airport pickup points
 const passStayGCoords = () => {
 
@@ -397,6 +521,20 @@ const passStayGCoords = () => {
     pickupStaySelect.style.border = '2px solid lime';
 
 }
+
+const passStayGCoordsDropOff = () => {
+
+    dropoffPointGCoords = '';
+    const dropOffStaySelect = document.getElementById('dropOffAccommodationSelect');
+    const selectedStayString = dropOffStaySelect.value;
+    const selectedStay = JSON.parse(selectedStayString);
+    dropoffPointGCoords = selectedStay.gcoords;
+    console.log("Global Var dropoffPointGCoords: " + dropoffPointGCoords);
+
+    dayplan.droppoint = selectedStay.name;
+    dropOffStaySelect.style.border = '2px solid lime';
+}
+
 
 //to pass g coords of manual pickup points
 const passManualGeoCoords = () => {
@@ -430,6 +568,39 @@ const passManualGeoCoords = () => {
     pickupPointGCoords = '';
     input.style.border = "2px solid red";
 };
+
+const passManualGeoCoordsDropOff = () => {
+
+    // First remove previous value
+    dropoffPointGCoords = '';
+
+    const input = document.getElementById("geoCoordsDropOff");
+    const value = input.value.trim();
+
+    // Basic regex pattern (format only)
+    const regex = /^-?\d{1,2}(\.\d+)?,\s*-?\d{1,3}(\.\d+)?$/;
+
+    if (regex.test(value)) {
+        // Optional: further split and range check
+        const [latStr, lngStr] = value.split(',').map(s => s.trim());
+        const lat = parseFloat(latStr);
+        const lng = parseFloat(lngStr);
+
+        const latValid = lat >= -90 && lat <= 90;
+        const lngValid = lng >= -180 && lng <= 180;
+
+        if (latValid && lngValid) {
+            dropoffPointGCoords = value;
+            input.style.border = "2px solid lime";
+            return;
+        }
+    }
+
+    // If invalid
+    dropoffPointGCoords = '';
+    input.style.border = "2px solid red";
+};
+
 
 //to calculate total vehi parking fee also depends on visiting hours
 const calcTotalVehiParkingfee = () => {
@@ -482,8 +653,8 @@ const getLunchAndHotelAuto = async () => {
 
         try {
             staysByDist = await ajaxGetReq("/stay/bydistrict/" + distIdOfLastEle);
-            fillDataIntoDynamicSelects(selectDPEndStay, 'Please Select The Accomodation', staysByDist, 'name');
-            selectDPEndStay.disabled = false
+            fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Accomodation', staysByDist, 'name');
+            dropOffAccommodationSelect.disabled = false
         } catch (error) {
             console.error('getStayByDistrict failed')
         }
@@ -646,7 +817,7 @@ const removeAll = () => {
     dayplan.end_stay_id = null;
 
     let lunchPlaceSelect = document.getElementById("selectDPLunch");
-    let endStaySelect = document.getElementById("selectDPEndStay");
+    let endStaySelect = document.getElementById("dropOffAccommodationSelect");
 
     lunchPlaceSelect.style.border = "1px solid #ced4da";
     endStaySelect.style.border = "1px solid #ced4da";
@@ -734,14 +905,14 @@ async function calculateTotalDistanceOriginal() {
 }
 
 //suucess 
-async function calculateTotalDistance() {
+async function calculateTotalDistanceSuccess() {
 
     dayplan.totalkmcount = null;
     const kmInput = document.getElementById('dpTotalKMcount');
     kmInput.style.border = "1px solid #ced4da";
 
     const apiKey = '5b3ce3597851110001cf6248dfc26e4e6071445f9197c3adf89c69e4';
-    const msgBox = document.getElementById('calcDistanceMsg');    
+    const msgBox = document.getElementById('calcDistanceMsg');
 
     // Clear old messages
     msgBox.innerText = '';
@@ -749,13 +920,13 @@ async function calculateTotalDistance() {
 
     let coords = [];
 
-    // ✅ Add pickup point if available
+    // Add pickup point if available
     if (pickupPointGCoords && pickupPointGCoords.includes(',')) {
         const [lat, lon] = pickupPointGCoords.split(',').map(Number);
-        coords.push([lon, lat]); // OpenRoute needs [lon, lat]
+        coords.push([lon, lat]);
     }
 
-    // ✅ Add visiting places
+    // Add visiting places
     if (dayplan && dayplan.vplaces && dayplan.vplaces.length > 0) {
         coords = coords.concat(
             dayplan.vplaces.map(place => {
@@ -765,7 +936,7 @@ async function calculateTotalDistance() {
         );
     }
 
-    // ✅ Now check if we have at least 2 points
+    // Now check if we have at least 2 points
     if (coords.length < 2) {
         msgBox.innerText = 'Please select at least 2 locations (pickup + at least 1 place).';
         return;
@@ -797,7 +968,7 @@ async function calculateTotalDistance() {
         const distanceMeters = data.features[0].properties.summary.distance;
         const distanceKm = (distanceMeters / 1000).toFixed(2);
 
-        // ✅ Update input and object
+        // Update input and object
         kmInput.value = distanceKm;
         dayplan.totalkmcount = distanceKm;
         kmInput.style.border = "2px solid lime";
@@ -823,6 +994,102 @@ async function calculateTotalDistance() {
     }
 }
 
+async function calculateTotalDistance() {
+
+    dayplan.totalkmcount = null;
+    const kmInput = document.getElementById('dpTotalKMcount');
+    kmInput.style.border = "1px solid #ced4da";
+
+    const apiKey = '5b3ce3597851110001cf6248dfc26e4e6071445f9197c3adf89c69e4';
+    const msgBox = document.getElementById('calcDistanceMsg');
+
+    // Clear old messages
+    msgBox.innerText = '';
+    kmInput.value = '';
+
+    let coords = [];
+
+    // Add pickup point if available
+    if (pickupPointGCoords && pickupPointGCoords.includes(',')) {
+        const [lat, lon] = pickupPointGCoords.split(',').map(Number);
+        coords.push([lon, lat]); // OpenRoute needs [lon, lat]
+    }
+
+    // Add visiting places
+    if (dayplan && dayplan.vplaces && dayplan.vplaces.length > 0) {
+        coords = coords.concat(
+            dayplan.vplaces.map(place => {
+                const [lat, lon] = place.gcoords.split(',').map(Number);
+                return [lon, lat];
+            })
+        );
+    }
+
+    // Add drop-off point if available
+    if (dropoffPointGCoords && dropoffPointGCoords.includes(',')) {
+        const [lat, lon] = dropoffPointGCoords.split(',').map(Number);
+        coords.push([lon, lat]);
+    }
+
+    // Now check if we have at least 2 points
+    if (coords.length < 2) {
+        msgBox.innerText = 'Please select at least 2 locations (pickup + at least 1 place or drop-off).';
+        return;
+    }
+
+    const body = { coordinates: coords };
+
+    try {
+        const response = await fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
+            method: 'POST',
+            headers: {
+                'Authorization': apiKey,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            if (errorData.error && errorData.error.code === 2010) {
+                msgBox.innerText = '⚠️ Some locations are too far from a road. Please enter total KM manually.';
+            } else {
+                msgBox.innerText = '⚠️ Could not calculate automatically. Please enter total KM manually.';
+            }
+            return;
+        }
+
+        const data = await response.json();
+        const distanceMeters = data.features[0].properties.summary.distance;
+        const distanceKm = (distanceMeters / 1000).toFixed(2);
+
+        // Update input and object
+        kmInput.value = distanceKm;
+        dayplan.totalkmcount = distanceKm;
+        kmInput.style.border = "2px solid lime";
+
+        // Time handling
+        let durationSeconds = data.features[0].properties.summary.duration;
+        let totalMinutes = Math.round(durationSeconds / 60);
+        let roundedMinutes = Math.ceil(totalMinutes / 15) * 15;
+        let hours = Math.floor(roundedMinutes / 60);
+        let minutes = roundedMinutes % 60;
+
+        let timeStr = hours;
+        if (minutes > 0) {
+            timeStr += "." + (minutes / 60).toFixed(2).split('.')[1];
+        }
+
+        console.log(`Total Distance: ${distanceKm} km`);
+        console.log(`Total Estimated Time: ${timeStr} H`);
+
+    } catch (error) {
+        console.error('Error calculating distance:', error);
+        msgBox.innerText = '⚠️ Unexpected error. Please enter total KM manually.';
+    }
+}
+
+
 //get districts by province
 const getDistByProvince = async (provinceSelectid, districtSelectId) => {
 
@@ -837,7 +1104,7 @@ const getDistByProvince = async (provinceSelectid, districtSelectId) => {
         console.error("Failed to fetch districts:", error);
     }
     provinceSelectid.style.border = '2px solid lime';
-  
+
 
 }
 
@@ -878,7 +1145,7 @@ const getLunchHotelByDistrict = async (distSelectID, lhSelectID) => {
     const selectedDistrict = JSON.parse(distSelectID.value).id;
     distSelectID.style.border = '2px solid lime';
     lhSelectID.disabled = false;
-    lhSelectID.style.border = '1px solid #ced4da';    
+    lhSelectID.style.border = '1px solid #ced4da';
 
     try {
         lunchByDist = await ajaxGetReq("/lunchplace/bydistrict/" + selectedDistrict);
@@ -1134,13 +1401,13 @@ const refillDayPlanForm = async (dpObj) => {
         if (oldDayplan.end_stay_id != null) {
             try {
                 const allStays = await ajaxGetReq("/stay/all");
-                fillDataIntoDynamicSelects(selectDPEndStay, '', allStays, 'name', dayplan.end_stay_id.name);
+                fillDataIntoDynamicSelects(dropOffAccommodationSelect, '', allStays, 'name', dayplan.end_stay_id.name);
 
                 const allProvinces = await ajaxGetReq("/province/all");
-                fillDataIntoDynamicSelects(selectDPEndProv, 'Select Province', allProvinces, 'name', dayplan.end_stay_id.district_id.province_id.name);
+                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Select Province', allProvinces, 'name', dayplan.end_stay_id.district_id.province_id.name);
 
                 const allDistricts = await ajaxGetReq("/district/all");
-                fillDataIntoDynamicSelects(selectDPEndDist, 'Select District', allDistricts, 'name', dayplan.end_stay_id.district_id.name);
+                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Select District', allDistricts, 'name', dayplan.end_stay_id.district_id.name);
 
             } catch (error) {
                 console.error('error fetching previous stay place info')
