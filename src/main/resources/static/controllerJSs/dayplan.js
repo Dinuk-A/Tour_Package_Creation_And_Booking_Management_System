@@ -9,9 +9,19 @@ window.addEventListener('load', () => {
 //global var to store id of the table
 let sharedTableId = "mainTableDayPlan";
 
-//global var to store pickup point's geo coords
+//global vars to store pickup point's geo coords
 let pickupPointGCoords = '';
 let dropoffPointGCoords = '';
+
+//clear out the form everytime a user switches to table tab
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshDayPlanForm();
+        }
+    });
+});
 
 //to create and refresh content in main dayplan table
 const buildDayPlanTable = async () => {
@@ -36,8 +46,8 @@ const buildDayPlanTable = async () => {
 
 }
 
-//t o support navigate through multi step form
-function updateDayTab() {
+//to support navigate through multi step form
+const updateDayTab = () => {
 
     const dayTabLinks = document.querySelectorAll('#dayPlanTabs .nav-link');
     let currentDayStep = 0;
@@ -58,7 +68,7 @@ function updateDayTab() {
     //nextDayBtn.textContent = currentDayStep === dayTabLinks.length - 1 ? 'Submit' : 'Next';
 }
 
-//to fill main table
+//to support fill main table
 const showDayType = (dpObj) => {
     if (dpObj.is_template) {
         return "Template"
@@ -67,6 +77,7 @@ const showDayType = (dpObj) => {
     }
 }
 
+//to support fill main table
 const showDayPlanStatus = (dpObj) => {
 
     if (dpObj.deleted_dp == null || dpObj.deleted_dp == false) {
@@ -87,7 +98,7 @@ const showDayPlanStatus = (dpObj) => {
     }
 }
 
-//fn to ready the main form for accept values
+//to ready the main form 
 const refreshDayPlanForm = async () => {
 
     dayplan = new Object();
@@ -181,6 +192,7 @@ const refreshDayPlanForm = async () => {
     document.getElementById('dpSelectStatus').children[2].removeAttribute('class', 'd-none');
 }
 
+//to select the pickup type(general,accomodations,stays)
 const selectPickupType = (radio) => {
 
     const selected = radio.value;
@@ -204,6 +216,7 @@ const selectPickupType = (radio) => {
     }
 }
 
+//to select the dropoff type(general,accomodations,stays)
 const selectDropOffType = (radio) => {
 
     const selected = radio.value;
@@ -225,12 +238,12 @@ const selectDropOffType = (radio) => {
     } else if (selected === 'MANUAL') {
         manualDiv.style.display = 'block';
     }
+
+    dayplan.end_stay_id = null;
 }
 
-
-
-//when general cb selected
-const clearOtherInputsGen = () => {
+//when general cb is selected in pickup options
+const clearOtherInputsGenPickup = () => {
 
     const inputTagsIds = [
         'pickupProvinceSelect',
@@ -259,8 +272,8 @@ const clearOtherInputsGen = () => {
 
 }
 
-//when manual stay selected
-const clearOtherInputsStay = () => {
+//when manual stay is selected in pickup options 
+const clearOtherInputsStayPickup = () => {
 
     const inputTagsIds = [
         'manualLocation',
@@ -284,8 +297,8 @@ const clearOtherInputsStay = () => {
     dayplan.totalkmcount = null;
 }
 
-//when manual cb selected
-const clearOtherInputsManual = () => {
+//when manual cb is selected in pickup options
+const clearOtherInputsManualPickup = () => {
 
     const inputTagsIds = [
         'pickupProvinceSelect',
@@ -312,6 +325,7 @@ const clearOtherInputsManual = () => {
     document.getElementById('pickupAccommodationSelect').disabled = true;
 }
 
+//when general cb is selected in dropoff options
 const clearOtherInputsGenDropOff = () => {
 
     const inputTagsIds = [
@@ -340,6 +354,7 @@ const clearOtherInputsGenDropOff = () => {
     document.getElementById('dropOffAccommodationSelect').disabled = true;
 }
 
+//when manual stay is selected in dropoff options
 const clearOtherInputsStayDropOff = () => {
 
     const inputTagsIds = [
@@ -364,6 +379,7 @@ const clearOtherInputsStayDropOff = () => {
     dayplan.totalkmcount = null;
 }
 
+//when manual cb is selected in dropoff options
 const clearOtherInputsManualDropOff = () => {
 
     const inputTagsIds = [
@@ -391,19 +407,111 @@ const clearOtherInputsManualDropOff = () => {
     document.getElementById('dropOffAccommodationSelect').disabled = true;
 }
 
-
-
-//for 3 FD,MD,LD checkboxes
+//to select day type (FD,MD,LD)
 const selectDayType = (feild) => {
     dayplan.dayplancode = feild.value;
 }
 
-//handle isTemplate or not
+//handle values when the day type radio is selected
 const handleDayTypeRadio = (fieldId) => {
     dayplan.is_template = fieldId.value;
 }
 
-//set status auto
+//handle changes based on dp type(Template or not)
+const handleChangesBasedDPType = () => {
+
+    if (dpTemplate.checked) {
+
+        //show these messages 
+        document.getElementById('dayTypeMsgForTemplate').classList.remove("d-none");
+        document.getElementById('pickupMsgForTemplate').classList.remove("d-none");
+
+        //disable these radios
+        const radioIds = [
+            'firstDayCB',
+            'middleDayCB',
+            'lastDayCB',
+            'generalPickupCB',
+            'accommodationsPickupCB',
+            'manualPickupCB'
+        ];
+
+        radioIds.forEach((radioId) => {
+            const radioCB = document.getElementById(radioId);
+            if (radioCB) {
+                radioCB.disabled = true;
+            }
+        });
+
+        //remove border, remove input value, remove dp attribute value, global var
+        dayplan.pickuppoint = null;
+        dayplan.totalkmcount = null;
+
+        document.getElementById('generalPickupOptions').classList.add("d-none");
+        document.getElementById('airportSelect').value = "";
+        document.getElementById('airportSelect').style.border = '1px solid #ced4da';
+
+        document.getElementById('accommodationPickupOptions').classList.add("d-none");
+        document.getElementById('pickupProvinceSelect').value = "";
+        document.getElementById('pickupProvinceSelect').style.border = '1px solid #ced4da';
+        document.getElementById('pickupDistrictSelect').value = "";
+        document.getElementById('pickupDistrictSelect').style.border = '1px solid #ced4da';
+        document.getElementById('pickupAccommodationSelect').value = "";
+        document.getElementById('pickupAccommodationSelect').style.border = '1px solid #ced4da';
+
+        document.getElementById('manualPickupOptions').classList.add("d-none");
+        document.getElementById('manualLocation').value = "";
+        document.getElementById('geoCoords').style.border = '1px solid #ced4da';
+        document.getElementById('manualLocation').value = "";
+        document.getElementById('geoCoords').style.border = '1px solid #ced4da';
+
+        document.getElementById('calcDistanceRow').classList.add("d-none");
+        document.getElementById('dpTotalKMcount').value = "";
+        document.getElementById('dpTotalKMcount').style.border = '1px solid #ced4da';
+
+        //set this default value (this will be needed when creating the day plan code)
+        dayplan.dayplancode = "TP";
+
+        setDayPlanStatus();
+
+    } else if (dpNotTemplate.checked) {
+
+        //hide these messages 
+        document.getElementById('dayTypeMsgForTemplate').classList.add("d-none");
+        document.getElementById('pickupMsgForTemplate').classList.add("d-none");
+
+        //enable back these radios
+        const radioIds = [
+            'firstDayCB',
+            'middleDayCB',
+            'lastDayCB',
+            'generalPickupCB',
+            'accommodationsPickupCB',
+            'manualPickupCB'
+        ];
+
+        radioIds.forEach((radioId) => {
+            const radioCB = document.getElementById(radioId);
+            if (radioCB) {
+                radioCB.disabled = false;
+            }
+        });
+
+        //remove border, remove input value, remove dp attribute value, global var
+        dayplan.dayplancode = null;
+        dayplan.totalkmcount = null;
+        dayplan.pickuppoint = null;
+
+        document.getElementById('generalPickupOptions').classList.remove("d-none");
+        document.getElementById('accommodationPickupOptions').classList.remove("d-none");
+        document.getElementById('manualPickupOptions').classList.remove("d-none");
+        document.getElementById('calcDistanceRow').classList.remove("d-none");
+
+        setDayPlanStatus();
+    }
+}
+
+//set day plan status when loading
 const setDayPlanStatus = () => {
 
     const ddyPlanStatusSelectElement = document.getElementById('dpSelectStatus');
@@ -416,66 +524,8 @@ const setDayPlanStatus = () => {
 
 }
 
-//handle changes based on dp type
-const handleChangesBasedDPType = () => {
-    if (dpTemplate.checked) {
-
-        document.getElementById('DayTypeCBsRow').classList.add("d-none");
-        dayplan.dayplancode = "TP";
-
-        //document.getElementById('lunchPlaceDivId').classList.add("d-none");
-        dayplan.lunchplace_id = null;
-
-        //document.getElementById('endPointDivId').classList.add("d-none");
-        dayplan.end_stay_id = null;
-
-        document.getElementById('PickupTypeCBsRow').classList.add("d-none");
-
-        document.getElementById('generalPickupOptions').style.display = 'block';
-
-        document.getElementById('accommodationPickupOptions').style.display = 'none';
-
-        document.getElementById('manualPickupOptions').style.display = 'none';
-        //meke select eke id eka === airportSelect
-
-        document.getElementById('distanceCalcBtn').classList.add("d-none");
-
-        document.getElementById('calcDistanceMsg').classList.add("d-none");
-
-        document.getElementById('dpTotalKMcount').classList.add("d-none");
-
-        setDayPlanStatus();
-
-        //prov, dist,...etc okkogema borders default wennath one
-
-
-
-    } else if (dpNotTemplate.checked) {
-        document.getElementById('DayTypeCBsRow').classList.remove("d-none");
-        dayplan.dayplancode = null;
-
-        //document.getElementById('lunchPlaceDivId').classList.remove("d-none");
-        dayplan.lunchplace_id = null;
-
-        //document.getElementById('endPointDivId').classList.remove("d-none");
-        dayplan.end_stay_id = null;
-
-        document.getElementById('PickupTypeCBsRow').classList.remove("d-none");
-
-        //generalPickupOptions eke dapu value eka dayplan obj eken remove karanna weey maybe
-
-        document.getElementById('distanceCalcBtn').classList.remove("d-none");
-
-        document.getElementById('dpTotalKMcount').classList.remove("d-none");
-
-        setDayPlanStatus();
-
-        //anith values apahu show  wennarh one
-    }
-}
-
-//to pass g coords of airport pickup points
-const airportSelection = () => {
+//to pass gcoords of airport pickup points
+const airportSelectionPickup = () => {
 
     const airportSelectElement = document.getElementById('airportSelect');
     const option = airportSelectElement.options[airportSelectElement.selectedIndex];
@@ -491,6 +541,7 @@ const airportSelection = () => {
 
 }
 
+//to pass gcoords of airport dropoff points
 const airportSelectionDropOff = () => {
 
     const airportSelectElement = document.getElementById('airportSelectDropOff');
@@ -506,8 +557,7 @@ const airportSelectionDropOff = () => {
     airportSelectElement.style.border = '2px solid lime';
 }
 
-
-//to pass g coords of airport pickup points
+//to pass gcoords of stay pickup points
 const passStayGCoords = () => {
 
     pickupPointGCoords = '';
@@ -522,6 +572,7 @@ const passStayGCoords = () => {
 
 }
 
+//to pass gcoords of stay dropoff points
 const passStayGCoordsDropOff = () => {
 
     dropoffPointGCoords = '';
@@ -535,8 +586,7 @@ const passStayGCoordsDropOff = () => {
     dropOffStaySelect.style.border = '2px solid lime';
 }
 
-
-//to pass g coords of manual pickup points
+//to pass gcoords of manual pickup points
 const passManualGeoCoords = () => {
 
     //first remove previous value
@@ -569,6 +619,7 @@ const passManualGeoCoords = () => {
     input.style.border = "2px solid red";
 };
 
+//to pass gcoords of manual dropoff points
 const passManualGeoCoordsDropOff = () => {
 
     // First remove previous value
@@ -601,9 +652,9 @@ const passManualGeoCoordsDropOff = () => {
     input.style.border = "2px solid red";
 };
 
-
-//to calculate total vehi parking fee also depends on visiting hours
+//to calculate total vehi parking fee using visiting hours and parking fee per hour
 const calcTotalVehiParkingfee = () => {
+
     let cost = 0.00;
     dayplan.vplaces.forEach(placeObj => {
         fee = (placeObj.vehicleparkingfee) * (placeObj.duration);
@@ -616,7 +667,7 @@ const calcTotalVehiParkingfee = () => {
     dayplan.totalvehiparkcost = dpTotalVehiParkingCost.value;
 }
 
-//CALCULATE TOTAL TICKET COST AND VEHI PARKING FEE
+//common fn for calculate the total cost of a single fee type
 const calcTktCost = (vpCostType, dpInputFieldID, dpPropertName) => {
 
     let cost = 0.00;
@@ -632,7 +683,7 @@ const calcTktCost = (vpCostType, dpInputFieldID, dpPropertName) => {
 
 }
 
-//auto populate lunch restaurants and end stays, based on last element of vplaces array
+//auto populate lunch restaurants and end stays, based on last element of vplaces array (NOT USED)
 const getLunchAndHotelAuto = async () => {
 
     if (dayplan.vplaces.length != 0 && dayplan.is_template == "false") {
@@ -663,19 +714,7 @@ const getLunchAndHotelAuto = async () => {
 
 }
 
-//new
-function printGcoords(dayplan) {
-    if (dayplan && Array.isArray(dayplan.vplaces)) {
-        dayplan.vplaces.forEach(place => {
-            console.log(place.gcoords);
-        });
-    } else {
-        console.log("No valid vplaces array found.");
-    }
-}
-
-
-//for add a single location
+//to pass a single location from all vps to selected vps
 const addOne = () => {
 
     const allVPsBox = document.getElementById('allVPs');
@@ -719,16 +758,12 @@ const addOne = () => {
         calcTotalVehiParkingfee();
         //getLunchAndHotelAuto();
 
-
-
-        printGcoords(dayplan);
-
         //calculateRoadDistanceFromDayplan(dayplan);
     }
 
 }
 
-//for add all locations 
+//for pass all locations 
 const addAll = () => {
 
     for (const leftVplz of vpByDist) {
@@ -747,9 +782,6 @@ const addAll = () => {
             fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name')
         }
     }
-
-    //new part
-    printGcoords(dayplan);
 
     //calculateRoadDistanceFromDayplan(dayplan);
 
@@ -831,80 +863,7 @@ const removeAll = () => {
 
 }
 
-async function calculateTotalDistanceOriginal() {
-    const apiKey = '5b3ce3597851110001cf6248dfc26e4e6071445f9197c3adf89c69e4';
-    const msgBox = document.getElementById('calcDistanceMsg');
-    const kmInput = document.getElementById('dpTotalKMcount');
-
-    // Clear old messages
-    msgBox.innerText = '';
-    kmInput.value = '';
-
-    if (!dayplan || !dayplan.vplaces || dayplan.vplaces.length < 2) {
-        msgBox.innerText = 'Please select at least 2 places.';
-        return;
-    }
-
-    // Extract gcoords
-    const coordinates = dayplan.vplaces.map(place => {
-        const [lat, lon] = place.gcoords.split(',').map(Number);
-        return [lon, lat];
-    });
-
-    const body = { coordinates: coordinates };
-
-    try {
-        const response = await fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
-            method: 'POST',
-            headers: {
-                'Authorization': apiKey,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            if (errorData.error && errorData.error.code === 2010) {
-                msgBox.innerText = '⚠️ Some locations are too far from a road. Please enter total KM manually.';
-            } else {
-                msgBox.innerText = '⚠️ Could not calculate automatically. Please enter total KM manually.';
-            }
-            return;
-        }
-
-        const data = await response.json();
-        const distanceMeters = data.features[0].properties.summary.distance;
-        const distanceKm = (distanceMeters / 1000).toFixed(2); // two decimals
-
-        // ✅ Update the input and dayplan object
-        kmInput.value = distanceKm;
-        dayplan.totalkmcount = distanceKm;
-
-        // ✅ Calculate time
-        let durationSeconds = data.features[0].properties.summary.duration;
-        let totalMinutes = Math.round(durationSeconds / 60);
-
-        // Round to nearest 15 minutes
-        let roundedMinutes = Math.ceil(totalMinutes / 15) * 15;
-        let hours = Math.floor(roundedMinutes / 60);
-        let minutes = roundedMinutes % 60;
-
-        // Format nicely
-        let timeStr = hours;
-        if (minutes > 0) {
-            timeStr += "." + (minutes / 60).toFixed(2).split('.')[1]; // like 1.25 H
-        }
-        console.log(`🚗 Total Distance: ${distanceKm} km`);
-        console.log(`⏱️ Total Estimated Time: ${timeStr} H`);
-
-    } catch (error) {
-        console.error('Error calculating distance:', error);
-        msgBox.innerText = '⚠️ Unexpected error. Please enter total KM manually.';
-    }
-}
-
-//suucess 
+//suucess (NOT USED == updated to next fn)
 async function calculateTotalDistanceSuccess() {
 
     dayplan.totalkmcount = null;
@@ -994,6 +953,7 @@ async function calculateTotalDistanceSuccess() {
     }
 }
 
+//calculate the total distance covered in the entire day (pickup + attractions + dropoff)
 async function calculateTotalDistance() {
 
     dayplan.totalkmcount = null;
@@ -1089,8 +1049,7 @@ async function calculateTotalDistance() {
     }
 }
 
-
-//get districts by province
+//get districts list by the selected province
 const getDistByProvince = async (provinceSelectid, districtSelectId) => {
 
     districtSelectId.disabled = false;
@@ -1108,7 +1067,7 @@ const getDistByProvince = async (provinceSelectid, districtSelectId) => {
 
 }
 
-//getvisiting places by district
+//get visiting places list by the selected district
 const getVPlacesByDistrict = async () => {
     const selectedDistrict = JSON.parse(selectVPDist.value).id;
     selectVPDist.style.border = '2px solid lime';
@@ -1123,7 +1082,7 @@ const getVPlacesByDistrict = async () => {
 
 }
 
-//get accomadations list by district
+//get accomadations list by the selected district
 const getStayByDistrict = async (distSelectID, staySelectID) => {
 
     const selectedDistrict = JSON.parse(distSelectID.value).id;
@@ -1139,7 +1098,7 @@ const getStayByDistrict = async (distSelectID, staySelectID) => {
     }
 }
 
-//get lunch hotel by district
+//get lunch hotel by the selected district
 const getLunchHotelByDistrict = async (distSelectID, lhSelectID) => {
 
     const selectedDistrict = JSON.parse(distSelectID.value).id;
@@ -1229,7 +1188,7 @@ const checkDPFormErrors = () => {
     return errors;
 };
 
-//fn to submit button (add button)
+//fn for add btn to save a record to db
 const addNewDayPlan = async () => {
 
     const errors = checkDPFormErrors();
@@ -1264,6 +1223,7 @@ const addNewDayPlan = async () => {
     }
 }
 
+//to reset the modal that show all the info
 const resetModal = () => {
 
     // Hide the deleted record message    
@@ -1281,7 +1241,7 @@ const resetModal = () => {
 
 }
 
-//fn for edit button,
+//fn for edit button to open the modal that shows all the info
 const openModal = (dpObj) => {
 
     //resetModal();
@@ -1338,7 +1298,7 @@ const openModal = (dpObj) => {
 
 };
 
-// refill the form to edit a record
+// refill the form to update a record
 const refillDayPlanForm = async (dpObj) => {
 
     if (dpObj.dp_status == "Completed") {
@@ -1433,18 +1393,7 @@ const refillDayPlanForm = async (dpObj) => {
 
 }
 
-//clear out the form everytime a user switches to table tab
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
-        if (event.target.id === 'table-tab') {
-            console.log("Switching to table tab - clearing form");
-            refreshDayPlanForm();
-            //ara tika methana manually hide karanna
-        }
-    });
-});
-
-//show value changes before update
+//show value changes before an update
 const showDPValueChanges = () => {
 
     let updates = "";
@@ -1474,7 +1423,7 @@ const showDPValueChanges = () => {
     return updates;
 }
 
-//fn for update button
+//fn for update button to update a record
 const updateDayPlan = async () => {
 
     const errors = checkDPFormErrors();
@@ -1513,7 +1462,7 @@ const updateDayPlan = async () => {
     }
 }
 
-//fn to delete an dayplan record
+//fn for delete button to delete a record
 const deleteDayPlanRecord = async (dpObj) => {
     const userConfirm = confirm("Are you sure to delete the dayplan " + dpObj.emp_code + " ?");
     if (userConfirm) {
@@ -1536,7 +1485,6 @@ const deleteDayPlanRecord = async (dpObj) => {
 }
 
 //restore dayplan record if its already deleted
-// or this should call a new service to set deleted_emp as false ? 💥💥💥
 const restoreDayPlanRecord = async () => {
 
     const userConfirm = confirm("Are you sure to recover this deleted record ?");
@@ -1570,22 +1518,10 @@ const restoreDayPlanRecord = async () => {
 
 }
 
-//DONE FOR MODIFICATION 💥💥💥      
-//total cost for today +++ discounted price
-const calcTotalCostPerDay = () => {
+//💥💥💥💥 print day plan
 
-    let localAdultCost = parseInt(document.getElementById('totalLocalAdultTktCost').value);
-    let ForeignAdultCost = parseInt(document.getElementById('foreignadulttktcost').value);
-    let LocalChildCost = parseInt(document.getElementById('totalLocalChildTktCost').value);
-    let ForeignCgildCost = parseInt(document.getElementById('totalForeignChildTktCost').value);
-    let ParkingCost = parseInt(document.getElementById('totalVehiParkingFeesInput').value);
 
-    let totalCostForTodayVar = localAdultCost + ForeignAdultCost + LocalChildCost + ForeignCgildCost + ParkingCost;
-
-    totalCostForToday.value = totalCostForTodayVar.toFixed(2);
-
-}
-
+//old yathra 2024 💥💥💥
 //pass inq code to day title
 const passName = () => {
 
@@ -1718,6 +1654,24 @@ const saveAsNewDayPlan = () => {
     } else {
         showAlertModal('err', "An Error Occured " + postServiceResponse);
     }
+
+}
+
+
+
+//DONE FOR MODIFICATION 2024 💥💥💥      
+//total cost for today +++ discounted price
+const calcTotalCostPerDay = () => {
+
+    let localAdultCost = parseInt(document.getElementById('totalLocalAdultTktCost').value);
+    let ForeignAdultCost = parseInt(document.getElementById('foreignadulttktcost').value);
+    let LocalChildCost = parseInt(document.getElementById('totalLocalChildTktCost').value);
+    let ForeignCgildCost = parseInt(document.getElementById('totalForeignChildTktCost').value);
+    let ParkingCost = parseInt(document.getElementById('totalVehiParkingFeesInput').value);
+
+    let totalCostForTodayVar = localAdultCost + ForeignAdultCost + LocalChildCost + ForeignCgildCost + ParkingCost;
+
+    totalCostForToday.value = totalCostForTodayVar.toFixed(2);
 
 }
 

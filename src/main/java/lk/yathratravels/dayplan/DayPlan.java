@@ -62,6 +62,9 @@ public class DayPlan {
     @Column(name = "pickuppoint")
     private String pickuppoint;
 
+    @Column(name = "droppoint")
+    private String droppoint;
+
     @Column(name = "note")
     private String note;
 
