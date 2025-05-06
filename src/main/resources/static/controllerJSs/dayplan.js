@@ -110,14 +110,9 @@ const refreshDayPlanForm = async () => {
     try {
         const allProvinces = await ajaxGetReq("/province/all");
 
-        //fillDataIntoDynamicSelects(selectDPStartProv, 'Select Province', allProvinces, 'name');
-
         fillDataIntoDynamicSelects(selectVPProv, 'Please Select The Province', allProvinces, 'name');
-
         fillDataIntoDynamicSelects(selectLPProv, 'Please Select The Province', allProvinces, 'name');
-
         fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name');
-
         fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name');
 
     } catch (error) {
@@ -140,11 +135,12 @@ const refreshDayPlanForm = async () => {
         'pickupProvinceSelect',
         'pickupDistrictSelect',
         'pickupAccommodationSelect',
-        //'dpTotalLocalAdultTktCost',
-        //'dpTotalLocalChildTktCost',
-        //'dpTotalForeignAdultTktCost',
-        //'dpTotalForeignChildTktCost',
-        //'dpTotalVehiParkingCost',
+        'airportSelect',
+        'manualLocation',
+        'geoCoords',
+        'airportSelectDropOff',
+        'manualLocationDropOff',
+        'geoCoordsDropOff',
         'dpTotalCostForToday',
         'dpNote',
         'allVPs',
@@ -1125,24 +1121,21 @@ const checkDPFormErrors = () => {
             errors += " Name cannot be empty \n";
         }
 
+        if (dayplan.dp_status == null) {
+            errors += " Status cannot be empty \n";
+        }
+
+        if (dayplan.totalvehiparkcost == null) {
+            errors += " Status cannot be empty \n";
+        }
 
         if (dayplan.vplaces == 0) {
-            errors += "At least select one attraction  \n";
+            errors += "select at least one attraction  \n";
         }
 
-        if (dayplan.totalkmcount == null) {
-            errors += "totalkmcount cannot be empty \n";
+        if (dayplan.end_stay_id == null) {
+            errors += "end_stay_id cannot be empty \n";
         }
-
-        //temporary 💥
-        //if (dayplan.end_stay_id == null) {
-        //    errors += "end_stay_id cannot be empty \n";
-        //}
-
-        //temporary 💥
-        //if (dayplan.lunchplace_id == null) {
-        //    errors += "lunchplace_id cannot be empty \n";
-        //}
 
     } else {
 
@@ -1168,22 +1161,6 @@ const checkDPFormErrors = () => {
             errors += "end_stay_id cannot be empty \n";
         }
     }
-
-    //    if (dayplan.foreignadulttktcost == null) {
-    //        errors += "foreignadulttktcost cannot be empty \n";
-    //    }
-    //
-    //    if (dayplan.foreignchildtktcost == null) {
-    //        errors += "foreignchildtktcost cannot be empty \n";
-    //    }
-    //
-    //    if (dayplan.localadulttktcost == null) {
-    //        errors += "localadulttktcost Number cannot be empty \n";
-    //    }
-    //
-    //    if (dayplan.localchildtktcost == null) {
-    //        errors += "localchildtktcost cannot be empty \n";
-    //    }
 
     return errors;
 };
