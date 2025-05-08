@@ -167,8 +167,8 @@
                                             </div>
                                         </div>
 
-                                          <!-- If a template, show this message -->
-                                          <div class="d-none" id="dayTypeMsgForTemplate">
+                                        <!-- If a template, show this message -->
+                                        <div class="d-none" id="dayTypeMsgForTemplate">
                                             <div class="row">
                                                 <div class="col-6 mx-auto">
                                                     <div class="text-danger my-3 ms-1 fw-bold"> Selecting A Day Type Is
@@ -471,7 +471,7 @@
                                         </legend>
 
                                         <!-- Province & District -->
-                                        <div class="row mb-3">
+                                        <div class="row mb-2">
                                             <!-- Province -->
                                             <div class="col-6">
                                                 <label for="selectLPProv"
@@ -491,7 +491,7 @@
                                         </div>
 
                                         <!-- Lunch Hotel -->
-                                        <div class="row">
+                                        <div class="row my-1">
                                             <div class="col-6">
                                                 <label for="selectDPLunch" class="form-label fw-bold mb-0">Lunch
                                                     Hotel:</label>
@@ -500,6 +500,21 @@
                                                     disabled></select>
                                             </div>
                                         </div>
+
+                                        <div class="row mt-2">
+                                            <label class="form-label col-12 mb-0 fw-bold" >Take packed lunch?</label>
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" name="packedLunch" id="packedLunchYes" value="true" autocomplete="off" onchange="handleLunchRadio(this); takePackedLunchYes();">
+                                                <label class="btn btn-outline-success w-100 fw-bold text-uppercase" for="packedLunchYes">Yes</label>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" name="packedLunch" id="packedLunchNo" value="false" autocomplete="off" onchange="handleLunchRadio(this); takePackedLunchNo();">
+                                                <label class="btn btn-outline-danger w-100 fw-bold text-uppercase" for="packedLunchNo">No</label>
+                                            </div>
+                                        </div>
+                                
+
+
                                     </fieldset>
 
                                     <!-- DropOff Section -->

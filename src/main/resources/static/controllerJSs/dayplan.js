@@ -679,6 +679,45 @@ const calcTktCost = (vpCostType, dpInputFieldID, dpPropertName) => {
 
 }
 
+//handle values when the day type radio is selected
+const handleLunchRadio = (fieldId) => {
+    dayplan.is_takepackedlunch = fieldId.value;
+}
+
+const takePackedLunchYes = () => {
+
+    const lunchProv = document.getElementById('selectLPProv');
+    const lunchDist = document.getElementById('selectLPDist');
+    const lunchHotel = document.getElementById('selectDPLunch');
+
+    lunchProv.disabled = true;
+    lunchDist.disabled = true;
+    lunchHotel.disabled = true;
+
+    lunchProv.value = " ";
+    lunchDist.value = " ";
+    lunchHotel.value = " ";
+
+    dayplan.lunchplace_id = null;
+
+}
+
+const takePackedLunchNo = () => {
+
+    const lunchProv = document.getElementById('selectLPProv');
+    const lunchDist = document.getElementById('selectLPDist');
+    const lunchHotel = document.getElementById('selectDPLunch');
+
+    lunchProv.disabled = false;
+    lunchDist.disabled = true;
+    lunchHotel.disabled = true;
+
+    lunchProv.style.border = "1px solid ced4da";
+    lunchDist.style.border = "1px solid ced4da";
+    lunchHotel.style.border = "1px solid ced4da";
+
+}
+
 //auto populate lunch restaurants and end stays, based on last element of vplaces array (NOT USED)
 const getLunchAndHotelAuto = async () => {
 

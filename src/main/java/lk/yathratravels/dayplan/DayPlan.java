@@ -53,6 +53,9 @@ public class DayPlan {
     @Column(name = "is_template")
     private Boolean is_template;
 
+    @Column(name = "is_takepackedlunch")
+    private Boolean is_takepackedlunch;
+
     // 💥💥💥 meka wenuwata mulinma add karana attr or actv eke district eka
     // ganna(0th index from that array)
     @ManyToOne

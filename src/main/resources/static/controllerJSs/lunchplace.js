@@ -18,7 +18,7 @@ const buildLunchPlaceTable = async () => {
                 { displayType: 'text', displayingPropertyOrFn: 'name', colHeadName: 'Name' },
                 { displayType: 'function', displayingPropertyOrFn: showLPLocationShort, colHeadName: 'Location' },
                 { displayType: 'function', displayingPropertyOrFn: showLPContacts, colHeadName: 'Contacts' },
-                { displayType: 'function', displayingPropertyOrFn: showPricePerPerson, colHeadName: 'Price(per Person)' },
+                { displayType: 'function', displayingPropertyOrFn: showLPStatus, colHeadName: 'Status' }
             ];
 
         createTable(tableLunchPlaceHolderDiv, sharedTableId, lunchPlaces, tableColumnInfo);
@@ -40,6 +40,37 @@ const showLPContacts = (obj) => {
     return obj.contactnum + "<br>" + email;
 };
 
+const showLPStatus = (ob) => {
+    if (ob.deleted_lp == null || ob.deleted_lp == false) {
+        if (ob.lp_status === "available") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #27ae60; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Available
+                </p>`;
+        } else if (ob.lp_status === "temporary_closed") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Temporarily Closed
+                </p>`;
+        } else if (ob.lp_status === "cloded") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Permanently Closed
+                </p>`;
+        }
+    } else if (ob.deleted_lp != null && ob.deleted_lp === true) {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Deleted Record
+            </p>`;
+    }
+}
+
+//Not used
 const showPricePerPerson = (obj) => {
     const cost = obj.costperhead;
     const formattedCost = cost ? `LKR ${parseFloat(cost).toFixed(2)}` : "Price not set";
@@ -204,7 +235,7 @@ const resetModal = () => {
 const openModal = (obj) => {
 
     resetModal();
-    
+
     document.getElementById('modalLPName').innerText = obj.name || 'N/A';
     document.getElementById('modalLPDistrict').innerText = obj.district_id.name || 'N/A';
     document.getElementById('modalLHGeoCoords').innerText = obj.gcoords || 'N/A';
