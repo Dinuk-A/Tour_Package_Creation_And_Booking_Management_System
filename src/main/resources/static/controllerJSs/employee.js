@@ -76,7 +76,6 @@ const showEmpDesignation = (empObj) => {
         </p>`;
 };
 
-
 const showEmployeeStatus = (empObj) => {
 
     if (empObj.deleted_emp == null || empObj.deleted_emp == false) {

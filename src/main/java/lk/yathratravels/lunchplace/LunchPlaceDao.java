@@ -6,7 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface LunchPlaceDao extends JpaRepository<LunchPlace, Integer> {
 
-    @Query(value = "select lp from LunchPlace lp where lp.district_id.id=?1")
-    public List<LunchPlace> getLunchPlaceByGivenDistrict(Integer givenDistrict);
+    //filtered by district + not deleted ones only
+    @Query("SELECT lp FROM LunchPlace lp WHERE lp.district_id.id = ?1 AND (lp.deleted_lp = false OR lp.deleted_lp IS NULL)")
+    public List<LunchPlace> getLunchPlaceByGivenDistrict(Integer givenDistrict);    
+
+    //get all the lps that isnt delete or null (active) 
+    @Query("select lp from LunchPlace lp where lp.deleted_lp = false or lp.deleted_lp is null")
+    List<LunchPlace> getOnlyActiveLPs();
 
 }

@@ -90,9 +90,24 @@ public class EmployeeController {
         return employeeDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
-    //emp list except admin
+    //get only non deleted emps set
+    @GetMapping(value = "/emp/active", produces = "application/json")
+    public List<Employee> getActiveEmployees() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<Employee>();
+        }
+
+        return employeeDao.getNonDeletedEmployees();
+    }
+
+    // emp list except admin
     @GetMapping(value = "/emp/exceptadmin", produces = "application/json")
-    public List<Employee> returnEmpListExceptAdmin(){
+    public List<Employee> returnEmpListExceptAdmin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
@@ -105,10 +120,10 @@ public class EmployeeController {
 
     }
 
-    // get employees who dont have an user account
+    // get active employees who dont have an user account + not deleted
     @GetMapping(value = "/emp/listwithoutuseracc", produces = "application/json")
     public List<Employee> showEmpsWOUserAccs() {
-        return employeeDao.getEmpsWithoutAccount();
+        return employeeDao.getEmpsWithoutAccountAndNotDeleted();
     }
 
     // save employee record on DB

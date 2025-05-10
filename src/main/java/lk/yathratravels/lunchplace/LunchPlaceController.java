@@ -63,15 +63,30 @@ public class LunchPlaceController {
     @GetMapping(value = "/lunchplace/all", produces = "application/JSON")
     public List<LunchPlace> getLunchPlaceAllData() {
 
-         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-           Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "LUNCHPLACE");
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "LUNCHPLACE");
 
         if (!privilegeLevelForLoggedUser.getPrvselect()) {
             return new ArrayList<LunchPlace>();
         }
 
         return lunchPlaceDao.findAll(Sort.by(Direction.DESC, "id"));
+    }
+
+    // get all undeleted lunch places (for select elements)
+    @GetMapping(value = "/lunchplace/active", produces = "application/JSON")
+    public List<LunchPlace> getOnlyActiveLunchPlaceData() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "LUNCHPLACE");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<LunchPlace>();
+        }
+
+        return lunchPlaceDao.getOnlyActiveLPs();
     }
 
     // get by given district

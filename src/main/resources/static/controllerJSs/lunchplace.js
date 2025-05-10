@@ -290,6 +290,7 @@ const refillLunchPlaceForm = async (ob) => {
         districts = await ajaxGetReq("district/all");
         fillDataIntoDynamicSelects(selectLHDistrict, 'Please Select The District', districts, 'name', lunchplace.district_id.name);
         selectLHDistrict.style.border = "1px solid ced4da";
+        selectLHDistrict.disabled = false;
 
         provinces = await ajaxGetReq("/province/all");
         fillDataIntoDynamicSelects(selectLHProvince, 'Please Select The Province', provinces, 'name', lunchplace.district_id.province_id.name);
