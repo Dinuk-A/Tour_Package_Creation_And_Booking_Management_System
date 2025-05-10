@@ -76,7 +76,7 @@
                                     <!-- Name Input -->
                                     <input id="inputPlaceName"
                                         onkeyup="inputValidatorText(this, '' ,'attraction' ,'name' )" type="text"
-                                        class="form-control form-input me-2" style="width:35%">
+                                        class="form-control form-input me-2" style="width:35%" placeholder="Enter The Attraction's Name">
 
                                     <!-- Status input -->
                                     <select required id="selectAttrStatus" class="form-select"
@@ -307,19 +307,19 @@
 
                             <!-- location description, replace this somewehere else -->
                             <div class="row mt-2">
-                                <div class="col-5">
+                                <div class="col-8">
                                     <label for="inputShortDescription" class="form-label fw-bold">Location Description
                                         :</label>
-                                    <textarea class="form-control" placeholder=" " id="inputShortDescription"
+                                    <textarea class="form-control" id="inputShortDescription"
                                         onkeyup="inputValidatorText(this,'','attraction','description')"
                                         style="height: 100px;"
-                                        aria-placeholder="Enter A Short Description About The Location"></textarea>
+                                        placeholder="Enter A Short Description About The Location"></textarea>
                                 </div>
 
-                                <div class="col-5">
+                                <div class="col-4">
                                     <label for="inputGeoCoords" class="form-label fw-bold">Geo Coords :</label>
                                     <input type="text" id="inputGeoCoords" class="form-control form-input"
-                                        placeholder="Paste from Google Maps"
+                                        placeholder="Paste Here From Google Maps"
                                         oninput="inputValidatorText(this,'','attraction','gcoords')">
                                 </div>
                             </div>
@@ -329,9 +329,9 @@
 
                                 <div class="col-7 pb-2">
                                     <label for="inputNote" class="form-label fw-bold">Additional Information :</label>
-                                    <textarea class="form-control" placeholder=" " id="inputNote"
+                                    <textarea class="form-control" placeholder="Enter Any Additional Information " id="inputNote"
                                         onkeyup="inputValidatorText(this,'','attraction','note')"
-                                        style="height: 100px;"></textarea>
+                                        style="height: 100px;" ></textarea>
                                 </div>
 
                                 <div class="col-5 ms-0 me-0">
@@ -349,7 +349,7 @@
                                                     <h6 class="my-auto">LKR</h6>
                                                 </span>
                                                 <input type="number" id="vehiParkingFeeInput"
-                                                    class="form-control form-input p-1 text-center " placeholder=""
+                                                    class="form-control form-input p-1 text-center " placeholder="150.00"
                                                     onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','attraction','vehicleparkingfee')"
                                                     onblur="insertDecimals(this);">
 
@@ -372,8 +372,8 @@
 
                                         <div class="input-group mt-1">
                                             <input type="number" class="form-control form-input p-1 text-center"
-                                                id="inputTourDuration" placeholder=""
-                                                onkeyup="inputValidatorText(this,'^(?!0*$)\\d+(\\.\\d{1,2})?$','attraction','duration')">
+                                                id="inputTourDuration" placeholder="1.5"
+                                                onkeyup="inputValidatorText(this,'^(?!0*$)\\d+(\\.\\d{1,2})?$','attraction','duration')" >
                                             <span class="input-group-text p-1 pb-0 w-50 text-center">
                                                 <h6 class="my-auto">Hours</h6>
                                             </span>

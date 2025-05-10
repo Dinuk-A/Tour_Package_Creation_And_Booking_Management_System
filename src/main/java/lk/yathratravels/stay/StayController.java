@@ -67,7 +67,7 @@ public class StayController {
     @GetMapping(value = "/stay/all", produces = "application/json")
     public List<Stay> getAllStays() {
 
-          Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "STAY");
 
@@ -76,6 +76,20 @@ public class StayController {
         }
 
         return stayDao.findAll(Sort.by(Direction.DESC, "id"));
+    }
+
+    @GetMapping(value = "/stay/active", produces = "application/json")
+    public List<Stay> getActiveStays() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "STAY");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<Stay>();
+        }
+
+        return stayDao.getNonDeletedStays();
     }
 
     @GetMapping(value = "/stay/bydistrict/{givenDistrict}", produces = "application/json")

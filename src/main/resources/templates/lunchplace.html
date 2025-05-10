@@ -63,7 +63,8 @@
                                     <div class="col-md-9">
                                         <label for="inputLHPlaceName" class="form-label fw-bold mb-0"> Restaurant/Hotel
                                             Name:</label>
-                                        <input type="text" id="inputLHPlaceName" class="form-control" required
+                                        <input type="text" placeholder="Enter The Restaurant Name" id="inputLHPlaceName"
+                                            class="form-control" required
                                             onkeyup="inputValidatorText(this,'','lunchplace','name');">
                                     </div>
 
@@ -77,7 +78,8 @@
                                             <span class="input-group-text p-1 pb-0">
                                                 <h6 class="my-auto">LKR</h6>
                                             </span>
-                                            <input type="number" id="inputCostperHead" class="form-control" required
+                                            <input type="number" placeholder="1500.00" id="inputCostperHead"
+                                                class="form-control" required
                                                 onkeyup="inputValidatorText(this,'','lunchplace','costperhead');"
                                                 onblur="insertDecimals(this);">
                                         </div>
@@ -95,16 +97,15 @@
                                     <div class="col-md-3">
                                         <label for="inputContactNum" class="form-label fw-bold mb-0">Contact
                                             Number #1:</label>
-                                        <input type="tel" id="inputContactNum" pattern="[0-9]{10}" class="form-control"
+                                        <input type="tel" id="inputContactNum" placeholder="Enter Primary Contact Number" pattern="[0-9]{10}" class="form-control"
                                             onkeyup="inputValidatorText(this,'','lunchplace','contactnum');">
                                     </div>
 
                                     <!-- Contact Number 2 -->
                                     <div class="col-md-3">
                                         <label for="inputContactNumTwo" class="form-label fw-bold mb-0">Contact Number
-                                            #2
-                                            2:</label>
-                                        <input type="tel" id="inputContactNumTwo" pattern="[0-9]{10}"
+                                            #2:</label>
+                                        <input type="tel" id="inputContactNumTwo"  placeholder="Enter Secondary Contact Number" pattern="[0-9]{10}"
                                             class="form-control"
                                             onkeyup="inputValidatorText(this,'','lunchplace','contactnumtwo');">
                                     </div>
@@ -112,7 +113,7 @@
                                     <!-- Contact Email -->
                                     <div class="col-md-6">
                                         <label for="inputLPEmail" class="form-label fw-bold mb-0">Email:</label>
-                                        <input type="tel" id="inputLPEmail" class="form-control"
+                                        <input type="tel" id="inputLPEmail"  placeholder="Enter The Email Address" class="form-control"
                                             onkeyup="inputValidatorText(this,'','lunchplace','email');">
                                     </div>
                                 </div>
@@ -141,7 +142,7 @@
                                     <div class="col-md-6">
                                         <label for="inputLHAddress" class="form-label fw-bold mb-0">Address:</label>
                                         <textarea id="inputLHAddress" class="form-control" rows="3"
-                                            onkeyup="inputValidatorText(this,'','lunchplace','address');"></textarea>
+                                            onkeyup="inputValidatorText(this,'','lunchplace','address');" placeholder="Enter The Address"></textarea>
                                     </div>
 
                                     <!-- Geo Coords -->
@@ -165,7 +166,7 @@
                                     <div class="col-md-8">
                                         <label for="inputLHNote" class="form-label fw-bold mb-0">Note:</label>
                                         <textarea id="inputLHNote" class="form-control" rows="3"
-                                            onkeyup="inputValidatorText(this,'','lunchplace','note');"></textarea>
+                                            onkeyup="inputValidatorText(this,'','lunchplace','note');" placeholder="Enter Any Additional Information"></textarea>
                                     </div>
 
                                     <!-- Status -->

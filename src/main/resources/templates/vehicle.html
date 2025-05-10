@@ -75,7 +75,7 @@
                                             <div class="col-md-7">
                                                 <label for="inputVehicleName" class="fw-bold form-label mb-0">Vehicle Modal
                                                     :</label>
-                                                <input id="inputVehicleName" type="text"
+                                                <input id="inputVehicleName" type="text" placeholder="Enter Vehicle Brand/Modal/Year"
                                                     class="test form-control form-input"
                                                     onkeyup="inputValidatorText(this,'','vehicle','vehiclename')"
                                                     required>
@@ -88,7 +88,7 @@
                                                     Plate
                                                     number
                                                     :</label>
-                                                <input id="inputNumberPlate" type="text" class="form-control form-input"
+                                                <input id="inputNumberPlate" type="text" placeholder="Enter Vehicle Number Plate" class="form-control form-input"
                                                     onkeyup="inputValidatorText(this,'','vehicle','numberplate')"
                                                     required>
                                             </div>
@@ -103,7 +103,7 @@
                                                     </span>
                                                     <input type="text" id="inputVehiCostPerKM"
                                                         class="form-control form-input w-85 p-1 text-center"
-                                                        placeholder=""
+                                                        placeholder="100.00"
                                                         onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','vehicle','cost_per_km')" onblur="insertDecimals(this);">
                                                 </div>
                                             </div>
@@ -145,7 +145,7 @@
                                         <label for="inputPassengerSeatCount" class="fw-bold form-label mb-0">Passenger's
                                             Seat Count
                                             :</label>
-                                        <input id="inputPassengerSeatCount" type="text"
+                                        <input id="inputPassengerSeatCount" type="text" placeholder="Enter Passengers Seat Count"
                                             class="test form-control form-input"
                                             onkeyup="inputValidatorText(this,'','vehicle','passengerseats')" required>
                                     </div>
@@ -154,7 +154,7 @@
                                         <label for="inputVehiLuggageCapacity" class="fw-bold form-label mb-0">Luggage
                                             Capacity
                                             :</label>
-                                        <input id="inputVehiLuggageCapacity" type="text"
+                                        <input id="inputVehiLuggageCapacity" type="text" placeholder="5-6 Large Bags/ 1-2 Small Bags"
                                             class="test form-control form-input"
                                             onkeyup="inputValidatorText(this,'','vehicle','luggage_capacity')" required>
                                     </div>
@@ -198,7 +198,7 @@
 
                                     <div class="col-6">
                                         <label for="inputNote" class="fw-bold">Additional Information</label>
-                                        <textarea id="inputNote" class="form-control" rows="5"
+                                        <textarea id="inputNote" class="form-control" rows="5" placeholder="Enter Any Additional Information"
                                             onkeyup="inputValidatorText(this,'','vehicle','note')"></textarea>
                                     </div>
 
