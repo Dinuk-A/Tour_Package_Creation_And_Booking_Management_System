@@ -45,110 +45,381 @@
 
             <!-- Form tab -->
             <div class="tab-pane fade" id="formTpkgHolderDiv" role="tabpanel" aria-labelledby="form-tab">
-                <div class="card mx-auto" style="width: 1100px;">
-                    <div class="card-header bg-primary text-white text-center">
+                <div class="card mx-auto" style="width: 1250px;">
+                    <!--<div class="card-header bg-primary text-white text-center">
                         <h3 class="mb-0">Tour Package Creation Form</h3>
-                    </div>
+                    </div>-->
                     <div class="card-body" style="background-color: ivory;">
 
                         <form id="formTpkg" onsubmit="return false">
 
-                            <!-- pkg type to deteermine whats next -->
-                            <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Package type</legend>
+                            <!-- Tabs Navigation -->
+                            <ul class="nav nav-tabs" id="TpkgTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active border border-dark" id="tpkgStep1-tab"
+                                        data-bs-toggle="tab" href="#tpkgStep1" role="tab" aria-controls="tpkgStep1"
+                                        aria-selected="true">Basics</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link border border-dark" id="tpkgStep2-tab" data-bs-toggle="tab"
+                                        href="#tpkgStep2" role="tab" aria-controls="tpkgStep2"
+                                        aria-selected="false">Itineraries</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link border border-dark" id="tpkgStep3-tab" data-bs-toggle="tab"
+                                        href="#tpkgStep3" role="tab" aria-controls="tpkgStep3"
+                                        aria-selected="false">Attractions</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link border border-dark" id="tpkgStep4-tab" data-bs-toggle="tab"
+                                        href="#tpkgStep4" role="tab" aria-controls="tpkgStep4"
+                                        aria-selected="false">Accomodations</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link border border-dark" id="tpkgStep5-tab" data-bs-toggle="tab"
+                                        href="#tpkgStep5" role="tab" aria-controls="tpkgStep5"
+                                        aria-selected="false">Other</a>
+                                </li>
+                            </ul>
 
-                                <div class="row">
-                                    <!-- for web site or custom -->
-                                    <div class="col-md-6">
+                            <!-- Tabs Content -->
+                            <div class="tab-content" id="tpkgTabsContent">
 
-                                        <!-- for customer -->
-                                        <div class="row mx-auto">
-                                            <input type="radio" class="btn-check" id="customTP" autocomplete="off"
-                                                name="packageType" onchange="changesDependTypeOri();">
-                                            <label class="btn btn-outline-success rounded-start me-2"
-                                                for="customTP">Custom
-                                                Package</label>
+                                <!-- Step 1 -->
+                                <div class="tab-pane fade show active" id="tpkgStep1" role="tabpanel"
+                                    aria-labelledby="tpkg">
+
+                                    <!-- pkg type to determine whats next -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Package Basics</legend>
+
+                                        <!-- title and code -->
+                                        <div class="row mb-3">
+
+                                            <div class="col-md-8">
+
+                                                <label for="inputPkgTitle" class="form-label fw-bold mb-0"> Package
+                                                    Title
+                                                    <span class="text-danger"> * </span> :</label>
+                                                <input id="inputPkgTitle" type="text" class="form-control"
+                                                    placeholder="Enter A Title for The Package"
+                                                    onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')" required>
+
+                                            </div>
+
+                                            <div class="col-md-4">
+
+                                                <label for="inputPkgCode" class="form-label fw-bold mb-0"> Package Code
+                                                    <span class="text-danger"> * </span> :</label>
+                                                <input id="inputPkgCode" type="text" class="form-control"
+                                                    onkeyup="inputValidatorText(this,'','tpkg' , 'pkgcode')" required>
+
+                                            </div>
                                         </div>
 
-                                        <!-- for web site -->
-                                        <div class="row mt-1 mx-auto">
-                                            <input type="radio" class="btn-check" id="forWebSite" autocomplete="off"
-                                                name="packageType" onchange=" changesDependTypeOri(); ">
-                                            <label class="btn btn-outline-primary " for="forWebSite">Show in
-                                                Website</label>
-                                        </div>
-                                    </div>
+                                        <!-- For Web Site or Custom -->
+                                        <div class="row mb-3">
+                                            <label class="form-label fw-bold mb-1">Package Type <span
+                                                    class="text-danger">*</span> :</label>
 
-                                    <!-- singke day or multi -->
-                                    <div class="col-md-6">
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" id="customTP" autocomplete="off"
+                                                    name="packageType" onchange="changesDependTypeOri();">
+                                                <label
+                                                    class="btn btn-outline-success w-100 rounded-start fw-bold text-uppercase"
+                                                    for="customTP">Custom Package</label>
+                                            </div>
 
-                                        <!-- for single day tours -->
-                                        <div class="row mx-auto">
-                                            <input type="radio" class="btn-check" id="oneDayTour" autocomplete="off"
-                                                name="pkgDaysType" onchange="">
-                                            <label class="btn btn-outline-success rounded-start me-2"
-                                                for="oneDayTour">Single Day</label>
-                                        </div>
-
-                                        <!-- for multiple day tours -->
-                                        <div class="row mt-1 mx-auto">
-                                            <input type="radio" class="btn-check" id="multiDayTour" autocomplete="off"
-                                                name="pkgDaysType" onchange="">
-                                            <label class="btn btn-outline-primary " for="multiDayTour">Multi Day</label>
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" id="forWebSite" autocomplete="off"
+                                                    name="packageType" onchange="changesDependTypeOri();">
+                                                <label
+                                                    class="btn btn-outline-primary w-100 rounded-end fw-bold text-uppercase"
+                                                    for="forWebSite">Show in Website</label>
+                                            </div>
                                         </div>
 
-                                    </div>
+                                        <!-- Single Day or Multi Day -->
+                                        <div class="row ">
+                                            <label class="form-label fw-bold mb-1">Tour Duration <span
+                                                    class="text-danger">*</span> :</label>
+
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" id="oneDayTour" autocomplete="off"
+                                                    name="pkgDaysType" onchange="">
+                                                <label
+                                                    class="btn btn-outline-success w-100 rounded-start fw-bold text-uppercase"
+                                                    for="oneDayTour">Single Day</label>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" id="multiDayTour"
+                                                    autocomplete="off" name="pkgDaysType" onchange="">
+                                                <label
+                                                    class="btn btn-outline-primary w-100 rounded-end fw-bold text-uppercase"
+                                                    for="multiDayTour">Multi Day</label>
+                                            </div>
+                                        </div>
+
+                                    </fieldset>
                                 </div>
 
-                            </fieldset>
+                                <!-- Step 2 -->
+                                <div class="tab-pane fade" id="tpkgStep2" role="tabpanel"
+                                    aria-labelledby="tpkgStep2-tab">
+                                    <!-- this fieldset will be stored in a separate row/col-8 -->
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                                <legend class="float-none w-auto px-2 text-primary">Select Itineraries
+                                                </legend>
 
-                            <!-- title and code(hidden, only appear on edit) -->
-                            <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Basic Information</legend>
 
-                                <div class="row">
-                                    <!-- title -->
-                                    <div class="col-md-8">
 
-                                        <label for="inputPkgTitle" class="form-label fw-bold mb-0"> Package Title
-                                            <span class="text-danger"> * </span> :</label>
-                                        <input id="inputPkgTitle" type="text" class="form-control"
-                                            placeholder="Enter A Title for The Package"
-                                            onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')" required>
+                                            </fieldset>
+                                        </div>
+
+                                        <!-- Existing Days Selection with Filters -->
+                                        <!-- Right Column: col-4 (Filter and Select Days) -->
+                                        <div class="col-md-4 my-3 border border-dark bg-light px-3">
+                                            <h5 class="fw-bold mb-3 mt-1">Select Days</h5>
+
+                                            <!-- Day Type Dropdown -->
+                                            <div class="mb-3">
+                                                <label for="dayType" class="form-label fw-bold mb-0">Day Type</label>
+                                                <select id="dayType" class="form-select">
+                                                    <option selected disabled>Select day type</option>
+                                                    <option value="first">First/Single Days</option>
+                                                    <option value="middle">Middle Days</option>
+                                                    <option value="last">Last Days</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Start District Dropdown -->
+                                            <div class="mb-3">
+                                                <label for="startDistrict" class="form-label fw-bold mb-0">Start
+                                                    District</label>
+                                                <select id="startDistrict" class="form-select">
+                                                    <option selected disabled>Select district</option>
+                                                    <option value="colombo">Colombo</option>
+                                                    <option value="kandy">Kandy</option>
+                                                    <option value="galle">Galle</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Day Results -->
+                                            <label class="form-label fw-bold mt-3 mb-2">Available Days</label>
+
+                                            <!-- Sample Day Item -->
+                                            <div class="mb-2">
+                                                <div class="fw-semibold">Colombo City Tour</div>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small class="text-muted">Code: D001</small>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-info me-1">View</button>
+                                                        <button class="btn btn-sm btn-success">Add</button>
+                                                    </div>
+                                                </div>
+                                                <hr class="my-2">
+                                            </div>
+
+                                            <!-- Another Sample Day Item -->
+                                            <div class="mb-2">
+                                                <div class="fw-semibold">Kandy Heritage Walk</div>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small class="text-muted">Code: D045</small>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-info me-1">View</button>
+                                                        <button class="btn btn-sm btn-success">Add</button>
+                                                    </div>
+                                                </div>
+                                                <hr class="my-2">
+                                            </div>
+
+                                            <!-- Another Sample Day Item -->
+                                            <div class="mb-2">
+                                                <div class="fw-semibold">Southern Beach Escape</div>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small class="text-muted">Code: D109</small>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-info me-1">View</button>
+                                                        <button class="btn btn-sm btn-success">Add</button>
+                                                    </div>
+                                                </div>
+                                                <hr class="my-2">
+                                            </div>
+                                        </div>
+
 
                                     </div>
-                                    <!-- code  -->
-                                    <div class="col-md-4">
 
-                                        <label for="inputPkgCode" class="form-label fw-bold mb-0"> Package Code
-                                            <span class="text-danger"> * </span> :</label>
-                                        <input id="inputPkgCode" type="text" class="form-control"
-                                            onkeyup="inputValidatorText(this,'','tpkg' , 'pkgcode')" required>
-
-                                    </div>
                                 </div>
 
-                            </fieldset>
+                                <!-- Step 3 -->
+                                <div class="tab-pane fade" id="tpkgStep3" role="tabpanel"
+                                    aria-labelledby="tpkgStep3-tab">
 
-                            <!-- add fieldsets later -->
-                            <!-- day plans select/create -->
-                            <div class="row mt-2">
+                                    <!-- Attraction Selection -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
 
-                                <!-- btn to create a new day plan  💥💥💥-->
-                                <div class="col-4"><button type="button">Create New Day Plan</button></div>
+                                        <legend class="float-none w-auto px-2 text-primary">Select Attractions
+                                        </legend>
 
-                                <!-- import existing days -->
-                                <!-- 💥💥💥a type and search here -->
-                                <div class="col-8"></div>
-                                
+                                        <!-- prov and dist -->
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <label for="selectVPProv"
+                                                    class="form-label fw-bold mb-0">Province:</label>
+                                                <select id="selectVPProv" class="form-control form-select"
+                                                    onchange="getDistByProvince(selectVPProv,selectVPDist); "></select>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label for="selectVPDist"
+                                                    class="form-label fw-bold mb-0">District:</label>
+                                                <select disabled id="selectVPDist" class="form-select"
+                                                    onchange="selectVPDist.style.border='2px solid green'; getVPlacesByDistrict(); "></select>
+                                            </div>
+                                        </div>
+
+                                        <!-- visiting places -->
+                                        <div class="row mt-2">
+
+                                            <!-- All Places -->
+                                            <div class="col-5">
+                                                <label for="allVPs" class="form-label fw-bold mb-0">All
+                                                    Places</label>
+                                                <select class="form-select" size="8" id="allVPs"></select>
+                                            </div>
+
+                                            <!-- Buttons -->
+                                            <div
+                                                class="col-2 text-center d-flex flex-column justify-content-center mt-3">
+                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="passOne"
+                                                    style="background-color: #4ea8de; color: white;"
+                                                    onclick="addOne()">Add</button>
+
+                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="passAll"
+                                                    style="background-color: #3b8bca; color: white;"
+                                                    onclick="addAll()">Add
+                                                    All</button>
+
+                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedOne"
+                                                    style="background-color: #f67280; color: white;"
+                                                    onclick="removeOne()">Remove</button>
+
+                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedAll"
+                                                    style="background-color: #e84545; color: white;"
+                                                    onclick="removeAll()">Remove All</button>
+                                            </div>
+
+
+                                            <!-- Selected Places -->
+                                            <div class="col-5">
+                                                <label for="selectedVPs" class="form-label fw-bold mb-0">Selected
+                                                    Places</label>
+                                                <select size="8" id="selectedVPs" class="form-select"></select>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- Costs and Distance -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Costs & Distance
+                                        </legend>
+
+                                        <div class="row mb-1">
+                                            <!-- Local -->
+                                            <div class="col-6 ">
+                                                <div class="row mt-1 mb-0">
+                                                    <div class="col-6">
+                                                        <label class="form-label mb-0 fw-bold"
+                                                            for="dpTotalLocalAdultTktCost">Local Adult</label>
+                                                        <p id="dpTotalLocalAdultTktCost"
+                                                            class="p-1 text-center border rounded bg-white">LKR
+                                                            0.00</p>
+                                                    </div>
+
+                                                    <div class="col-6">
+                                                        <label class="form-label mb-0 fw-bold"
+                                                            for="dpTotalLocalChildTktCost">Local Children</label>
+                                                        <p id="dpTotalLocalChildTktCost"
+                                                            class="p-1 text-center border rounded bg-white">
+                                                            LKR
+                                                            0.00</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Foreign -->
+                                            <div class="col-6 ">
+                                                <div class="row mt-1 mb-0">
+                                                    <div class="col-6">
+                                                        <label class="form-label mb-0 fw-bold"
+                                                            for="dpTotalForeignAdultTktCost">Foreign Adult</label>
+                                                        <p id="dpTotalForeignAdultTktCost"
+                                                            class="p-1 text-center border rounded bg-white">LKR
+                                                            0.00</p>
+                                                    </div>
+
+                                                    <div class="col-6">
+                                                        <label class="form-label mb-0 fw-bold"
+                                                            for="dpTotalForeignChildTktCost">Foreign
+                                                            Children</label>
+                                                        <p id="dpTotalForeignChildTktCost"
+                                                            class="p-1 text-center border rounded bg-white">LKR
+                                                            0.00</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <hr style="border: 3px double blue;">
+
+                                        <!-- Other Costs -->
+                                        <div class="row mb-3">
+                                            <div class="col-3">
+                                                <label class="form-label fw-bold mb-0"
+                                                    for="dpTotalVehiParkingCost">Total
+                                                    Parking Fees</label>
+                                                <p id="dpTotalVehiParkingCost"
+                                                    class="p-1 text-center border rounded bg-white">LKR 0.00
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- add fieldsets later -->
+                                    <!-- day plans select/create -->
+                                    <div class="row mt-2">
+
+                                        <!-- btn to create a new day plan  💥💥💥-->
+                                        <div class="col-4"><button type="button">Create New Day Plan</button></div>
+
+                                        <!-- import existing days -->
+                                        <!-- 💥💥💥a type and search here -->
+                                        <div class="col-8"></div>
+
+
+
+                                    </div>
+
+                                    <!--  -->
+                                    <div class="row mt-2">
+
+                                    </div>
+
+                                </div>
+
 
 
                             </div>
 
-                            <!--  -->
-                            <div class="row mt-2">
 
-                            </div>
+
+
+
+
 
 
 

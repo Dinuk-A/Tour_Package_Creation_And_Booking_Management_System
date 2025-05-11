@@ -46,28 +46,6 @@ const buildDayPlanTable = async () => {
 
 }
 
-//to support navigate through multi step form
-const updateDayTab = () => {
-
-    const dayTabLinks = document.querySelectorAll('#dayPlanTabs .nav-link');
-    let currentDayStep = 0;
-
-    dayTabLinks.forEach((link, index) => {
-        if (index === currentDayStep) {
-            link.classList.add('active');
-            link.setAttribute('aria-selected', 'true');
-            document.querySelector(link.getAttribute('href')).classList.add('show', 'active');
-        } else {
-            link.classList.remove('active');
-            link.setAttribute('aria-selected', 'false');
-            document.querySelector(link.getAttribute('href')).classList.remove('show', 'active');
-        }
-    });
-
-    //prevDayBtn.disabled = currentDayStep === 0;
-    //nextDayBtn.textContent = currentDayStep === dayTabLinks.length - 1 ? 'Submit' : 'Next';
-}
-
 //to support fill main table
 const showDayType = (dpObj) => {
     if (dpObj.is_template) {
@@ -1532,6 +1510,30 @@ const restoreDayPlanRecord = async () => {
     }
 
 
+}
+
+//to support navigate through multi step form (NOT USED)
+const updateDayTab = () => {
+
+    console.log("running");
+
+    const dayTabLinks = document.querySelectorAll('#dayPlanTabs .nav-link');
+    let currentDayStep = 0;
+
+    dayTabLinks.forEach((link, index) => {
+        if (index === currentDayStep) {
+            link.classList.add('active');
+            link.setAttribute('aria-selected', 'true');
+            document.querySelector(link.getAttribute('href')).classList.add('show', 'active');
+        } else {
+            link.classList.remove('active');
+            link.setAttribute('aria-selected', 'false');
+            document.querySelector(link.getAttribute('href')).classList.remove('show', 'active');
+        }
+    });
+
+    //prevDayBtn.disabled = currentDayStep === 0;
+    //nextDayBtn.textContent = currentDayStep === dayTabLinks.length - 1 ? 'Submit' : 'Next';
 }
 
 //💥💥💥💥 print day plan
