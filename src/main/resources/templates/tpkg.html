@@ -10,6 +10,28 @@
     <!-- link tpkg js -->
     <script src="controllerJSs/tpkg.js"></script>
 
+    <style>
+        .custom-offcanvas {
+            top: 56px;
+            height: calc(100% - 56px);
+        }
+
+        .custom-itinerary-btn {
+            min-width: 180px;
+            background-color: #f8f9fa;
+            border: 1px solid #0d6efd;
+            color: #0d6efd;
+            transition: all 0.2s ease-in-out;
+            font-weight: 500;
+            border-radius: 6px;
+        }
+
+        .custom-itinerary-btn:hover {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -45,6 +67,8 @@
 
             <!-- Form tab -->
             <div class="tab-pane fade" id="formTpkgHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+
+                <!-- main area for form -->
                 <div class="card mx-auto" style="width: 1250px;">
                     <!--<div class="card-header bg-primary text-white text-center">
                         <h3 class="mb-0">Tour Package Creation Form</h3>
@@ -109,7 +133,8 @@
 
                                             <div class="col-md-4">
 
-                                                <label for="inputPkgCode" class="form-label fw-bold mb-0"> Package Code
+                                                <label for="inputPkgCode" class="form-label fw-bold mb-0"> Package
+                                                    Code
                                                     <span class="text-danger"> * </span> :</label>
                                                 <input id="inputPkgCode" type="text" class="form-control"
                                                     onkeyup="inputValidatorText(this,'','tpkg' , 'pkgcode')" required>
@@ -169,86 +194,47 @@
                                     aria-labelledby="tpkgStep2-tab">
                                     <!-- this fieldset will be stored in a separate row/col-8 -->
                                     <div class="row">
-                                        <div class="col-8">
+                                        <div class="col-12">
                                             <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                                <legend class="float-none w-auto px-2 text-primary">Select Itineraries
+                                                <legend class="float-none w-auto px-2 text-primary mb-0">Select
+                                                    Itineraries
                                                 </legend>
+
+                                                <div class="row align-items-end mt-0">
+                                                    <!-- Tour Start Date -->
+                                                    <div class="col-md-4 mb-2">
+                                                        <label for="tpStartDateInput" class="form-label mb-0">Tour Start
+                                                            Date:</label>
+                                                        <input type="date" class="form-control" id="tpStartDateInput"
+                                                            onchange="inputValidatorText(this, '' ,'tourpkg' , 'tourstartdate');"
+                                                            onkeydown="return false">
+                                                    </div>
+
+                                                    <div class="col-md-8 mb-2 d-flex justify-content-center">
+                                                        <div class="d-flex flex-column align-items-center">
+                                                            <label class="form-label mb-1 fw-bold">Itinerary Options:</label>
+                                                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                                                <button class="btn custom-itinerary-btn">
+                                                                    <i class="bi bi-plus-circle me-1"></i> Create New Itinerary
+                                                                </button>
+                                                                <button class="btn custom-itinerary-btn"
+                                                                    data-bs-toggle="offcanvas"
+                                                                    data-bs-target="#importDaysCanvas">
+                                                                    <i class="bi bi-arrow-down-up me-1"></i> Import & Edit
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+
 
 
 
                                             </fieldset>
                                         </div>
 
-                                        <!-- Existing Days Selection with Filters -->
-                                        <!-- Right Column: col-4 (Filter and Select Days) -->
-                                        <div class="col-md-4 my-3 border border-dark bg-light px-3">
-                                            <h5 class="fw-bold mb-3 mt-1">Select Days</h5>
 
-                                            <!-- Day Type Dropdown -->
-                                            <div class="mb-3">
-                                                <label for="dayType" class="form-label fw-bold mb-0">Day Type</label>
-                                                <select id="dayType" class="form-select">
-                                                    <option selected disabled>Select day type</option>
-                                                    <option value="first">First/Single Days</option>
-                                                    <option value="middle">Middle Days</option>
-                                                    <option value="last">Last Days</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- Start District Dropdown -->
-                                            <div class="mb-3">
-                                                <label for="startDistrict" class="form-label fw-bold mb-0">Start
-                                                    District</label>
-                                                <select id="startDistrict" class="form-select">
-                                                    <option selected disabled>Select district</option>
-                                                    <option value="colombo">Colombo</option>
-                                                    <option value="kandy">Kandy</option>
-                                                    <option value="galle">Galle</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- Day Results -->
-                                            <label class="form-label fw-bold mt-3 mb-2">Available Days</label>
-
-                                            <!-- Sample Day Item -->
-                                            <div class="mb-2">
-                                                <div class="fw-semibold">Colombo City Tour</div>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <small class="text-muted">Code: D001</small>
-                                                    <div>
-                                                        <button class="btn btn-sm btn-info me-1">View</button>
-                                                        <button class="btn btn-sm btn-success">Add</button>
-                                                    </div>
-                                                </div>
-                                                <hr class="my-2">
-                                            </div>
-
-                                            <!-- Another Sample Day Item -->
-                                            <div class="mb-2">
-                                                <div class="fw-semibold">Kandy Heritage Walk</div>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <small class="text-muted">Code: D045</small>
-                                                    <div>
-                                                        <button class="btn btn-sm btn-info me-1">View</button>
-                                                        <button class="btn btn-sm btn-success">Add</button>
-                                                    </div>
-                                                </div>
-                                                <hr class="my-2">
-                                            </div>
-
-                                            <!-- Another Sample Day Item -->
-                                            <div class="mb-2">
-                                                <div class="fw-semibold">Southern Beach Escape</div>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <small class="text-muted">Code: D109</small>
-                                                    <div>
-                                                        <button class="btn btn-sm btn-info me-1">View</button>
-                                                        <button class="btn btn-sm btn-success">Add</button>
-                                                    </div>
-                                                </div>
-                                                <hr class="my-2">
-                                            </div>
-                                        </div>
 
 
                                     </div>
@@ -400,34 +386,17 @@
                                         <!-- 💥💥💥a type and search here -->
                                         <div class="col-8"></div>
 
-
-
-                                    </div>
-
-                                    <!--  -->
-                                    <div class="row mt-2">
-
                                     </div>
 
                                 </div>
 
-
-
                             </div>
-
-
-
-
-
-
-
-
-
                         </form>
                     </div>
 
                 </div>
             </div>
+
         </div>
 
         <!-- Modal to display full details of a row -->
@@ -553,6 +522,80 @@
                 </div>
             </div>
         </div>
+
+        <!-- canvas for day importing filers -->
+        <!-- OFFCANVAS SIDEBAR -->
+        <div class="offcanvas offcanvas-end custom-offcanvas" tabindex="-1" id="importDaysCanvas"
+            aria-labelledby="importDaysCanvasLabel" style="width: 340px;">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title fw-bold" id="importDaysCanvasLabel">Select Days</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body bg-light">
+                <!-- Day Type Dropdown -->
+                <div class="mb-3">
+                    <label for="dayType" class="form-label fw-bold mb-0">Day Type</label>
+                    <select id="dayType" class="form-select">
+                        <option selected disabled>Select day type</option>
+                        <option value="first">First/Single Days</option>
+                        <option value="middle">Middle Days</option>
+                        <option value="last">Last Days</option>
+                    </select>
+                </div>
+
+                <!-- Start District Dropdown -->
+                <div class="mb-3">
+                    <label for="startDistrict" class="form-label fw-bold mb-0">Start District</label>
+                    <select id="startDistrict" class="form-select">
+                        <option selected disabled>Select district</option>
+                        <option value="colombo">Colombo</option>
+                        <option value="kandy">Kandy</option>
+                        <option value="galle">Galle</option>
+                    </select>
+                </div>
+
+                <!-- Day Results -->
+                <label class="form-label fw-bold mt-3 mb-2">Available Days</label>
+
+                <!-- Sample Day Items -->
+                <div class="mb-2">
+                    <div class="fw-bold">Colombo City Tour</div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Code: D001</small>
+                        <div>
+                            <button class="btn btn-sm btn-info me-1">View</button>
+                            <button class="btn btn-sm btn-success">Add</button>
+                        </div>
+                    </div>
+                    <hr class="my-2">
+                </div>
+
+                <div class="mb-2">
+                    <div class="fw-bold">Kandy Heritage Walk</div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Code: D045</small>
+                        <div>
+                            <button class="btn btn-sm btn-info me-1">View</button>
+                            <button class="btn btn-sm btn-success">Add</button>
+                        </div>
+                    </div>
+                    <hr class="my-2">
+                </div>
+
+                <div class="mb-2">
+                    <div class="fw-bold">Southern Beach Escape</div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Code: D109</small>
+                        <div>
+                            <button class="btn btn-sm btn-info me-1">View</button>
+                            <button class="btn btn-sm btn-success">Add</button>
+                        </div>
+                    </div>
+                    <hr class="my-2">
+                </div>
+            </div>
+        </div>
+
 
     </main>
 
