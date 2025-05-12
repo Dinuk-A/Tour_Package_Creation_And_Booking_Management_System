@@ -41,7 +41,7 @@ public class Stay {
     private String address;
 
     @Column(name = "gcoords")
-    //@NotNull
+    // @NotNull
     private String gcoords;
 
     @Column(name = "contactnumone")
@@ -55,8 +55,8 @@ public class Stay {
     @NotNull
     private String email;
 
-    // @Column(name = "maxguestscount")
-    // private Integer maxguestscount;
+    @Column(name = "maxguestscount")
+    private Integer maxguestscount;
 
     @Column(name = "base_price")
     private BigDecimal base_price;

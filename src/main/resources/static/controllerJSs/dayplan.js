@@ -668,13 +668,25 @@ const takePackedLunchYes = () => {
     const lunchDist = document.getElementById('selectLPDist');
     const lunchHotel = document.getElementById('selectDPLunch');
 
+    lunchProv.options[0].disabled = false;
+    lunchProv.selectedIndex = 0;
+    lunchProv.options[0].disabled = true;
+
+    lunchDist.options[0].disabled = false;
+    lunchDist.selectedIndex = 0;
+    lunchDist.options[0].disabled = true;
+
+    lunchHotel.options[0].disabled = false;
+    lunchHotel.selectedIndex = 0;
+    lunchHotel.options[0].disabled = true;
+
+    lunchProv.style.border = '1px solid #ced4da';
+    lunchDist.style.border = '1px solid #ced4da';
+    lunchHotel.style.border = '1px solid #ced4da';
+
     lunchProv.disabled = true;
     lunchDist.disabled = true;
     lunchHotel.disabled = true;
-
-    lunchProv.value = " ";
-    lunchDist.value = " ";
-    lunchHotel.value = " ";
 
     dayplan.lunchplace_id = null;
 
@@ -685,6 +697,18 @@ const takePackedLunchNo = () => {
     const lunchProv = document.getElementById('selectLPProv');
     const lunchDist = document.getElementById('selectLPDist');
     const lunchHotel = document.getElementById('selectDPLunch');
+
+    lunchProv.options[0].disabled = false;
+    lunchProv.selectedIndex = 0;
+    lunchProv.options[0].disabled = true;
+
+    lunchDist.options[0].disabled = false;
+    lunchDist.selectedIndex = 0;
+    lunchDist.options[0].disabled = true;
+
+    lunchHotel.options[0].disabled = false;
+    lunchHotel.selectedIndex = 0;
+    lunchHotel.options[0].disabled = true;
 
     lunchProv.disabled = false;
     lunchDist.disabled = true;
@@ -762,12 +786,11 @@ const addOne = () => {
         //opt 2 ends 
 
         //CALC TOTAL TKT COSTS AND VEHICLE PARKING COSTS 
-        calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "foreignadulttktcost");
-        calcTktCost("feeforeignadult", dpTotalForeignAdultTktCost, "foreignchildtktcost");
-        calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localadulttktcost");
-        calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "localchildtktcost");
+        calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "localadulttktcost");
+        calcTktCost("feeforeignadult", dpTotalForeignAdultTktCost, "foreignadulttktcost");
+        calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localchildtktcost");
+        calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "foreignchildtktcost");
 
-        //calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
         calcTotalVehiParkingfee();
         //getLunchAndHotelAuto();
 
@@ -803,12 +826,11 @@ const addAll = () => {
     fillDataIntoDynamicSelects(allVPs, '', vplaces, 'name');
 
     //CALC TOTAL TKT COSTS AND VEHICLE PARKING COSTS 
-    calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "foreignadulttktcost");
-    calcTktCost("feeforeignadult", dpTotalForeignAdultTktCost, "foreignchildtktcost");
-    calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localadulttktcost");
-    calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "localchildtktcost");
+    calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "localadulttktcost");
+    calcTktCost("feeforeignadult", dpTotalForeignAdultTktCost, "foreignadulttktcost");
+    calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localchildtktcost");
+    calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "foreignchildtktcost");
 
-    //calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
     calcTotalVehiParkingfee();
 
     //getLunchAndHotelAuto()
@@ -830,10 +852,10 @@ const removeOne = () => {
     fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name');
 
     //CALC TOTAL TKT COSTS AND VEHICLE PARKING COSTS 
-    calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "foreignadulttktcost");
-    calcTktCost("feeforeignadult", dpTotalForeignAdultTktCost, "foreignchildtktcost");
-    calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localadulttktcost");
-    calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "localchildtktcost");
+    calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "localadulttktcost");
+    calcTktCost("feeforeignadult", dpTotalForeignAdultTktCost, "foreignadulttktcost");
+    calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localchildtktcost");
+    calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "foreignchildtktcost");
 
     //calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
     calcTotalVehiParkingfee();
@@ -849,12 +871,11 @@ const removeAll = () => {
     fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name');
 
     //CALC TOTAL TKT COSTS AND VEHICLE PARKING COSTS 
-    calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "foreignadulttktcost");
-    calcTktCost("feeforeignadult", dpTotalForeignAdultTktCost, "foreignchildtktcost");
-    calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localadulttktcost");
-    calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "localchildtktcost");
+    calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "localadulttktcost");
+    calcTktCost("feeforeignadult", dpTotalForeignAdultTktCost, "foreignadulttktcost");
+    calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localchildtktcost");
+    calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "foreignchildtktcost");
 
-    //calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
     calcTotalVehiParkingfee();
 
     //remove and clear automatically binded lp and end stay info too
@@ -1195,7 +1216,7 @@ const addNewDayPlan = async () => {
                 const postServerResponse = await ajaxPPDRequest("/dayplan", "POST", dayplan);
 
                 if (postServerResponse === 'OK') {
-                    showAlertModalModal('suc', 'Saved Successfully');
+                    showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formDayPlan').reset();
                     refreshDayPlanForm();
                     buildDayPlanTable();
@@ -1674,8 +1695,6 @@ const saveAsNewDayPlan = () => {
     }
 
 }
-
-
 
 //DONE FOR MODIFICATION 2024 💥💥💥      
 //total cost for today +++ discounted price

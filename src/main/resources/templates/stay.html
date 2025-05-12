@@ -65,8 +65,8 @@
                                     <div class="col-7">
                                         <label for="inputStayName" class="form-label fw-bold mb-0">Name <span
                                                 class="text-danger">*</span> :</label>
-                                        <input id="inputStayName" placeholder="Enter The Accomodation Name" class="form-control"
-                                            onkeyup="inputValidatorText(this, '' ,'stay' ,'name')">
+                                        <input id="inputStayName" placeholder="Enter The Accomodation Name"
+                                            class="form-control" onkeyup="inputValidatorText(this, '' ,'stay' ,'name')">
                                     </div>
                                     <div class="col-5">
                                         <label for="selectStayType" class="form-label fw-bold mb-0">Type <span
@@ -103,7 +103,8 @@
                                     <div class="col-6">
                                         <label for="inputStayAddress" class="form-label fw-bold mb-0">Address <span
                                                 class="text-danger">*</span> :</label>
-                                        <textarea id="inputStayAddress" placeholder="Enter The Address" class="form-control" style="height: 117px;"
+                                        <textarea id="inputStayAddress" placeholder="Enter The Address"
+                                            class="form-control" style="height: 117px;"
                                             onkeyup="inputValidatorText(this,'','stay','address')"></textarea>
                                     </div>
 
@@ -123,29 +124,64 @@
                                     <div class="col-3">
                                         <label for="inputStayContactOne" class="form-label fw-bold mb-0">Contact #1
                                             <span class="text-danger">*</span> :</label>
-                                        <input type="text" class="form-control" placeholder="Enter Primary Contact Number" id="inputStayContactOne"
+                                        <input type="text" class="form-control"
+                                            placeholder="Enter Primary Contact Number" id="inputStayContactOne"
                                             onkeyup="inputValidatorText(this,'','stay','contactnumone')">
                                     </div>
 
                                     <div class="col-3">
                                         <label for="inputStayContactTwo" class="form-label fw-bold mb-0">Contact #2
-                                            :</label> 
-                                        <input type="text" class="form-control"  placeholder="Enter Secondary Contact Number"id="inputStayContactTwo"
+                                            :</label>
+                                        <input type="text" class="form-control"
+                                            placeholder="Enter Secondary Contact Number" id="inputStayContactTwo"
                                             onkeyup="inputValidatorText(this,'','stay','contactnumtwo')">
                                     </div>
 
                                     <div class="col-6">
                                         <label for="inputStayEmail" class="form-label fw-bold mb-0">Email <span
                                                 class="text-danger">*</span> :</label>
-                                        <input type="text" class="form-control" placeholder="Enter The Email Address" id="inputStayEmail"
-                                            onkeyup="inputValidatorText(this,'','stay','email')">
+                                        <input type="text" class="form-control" placeholder="Enter The Email Address"
+                                            id="inputStayEmail" onkeyup="inputValidatorText(this,'','stay','email')">
                                     </div>
                                 </div>
                             </fieldset>
 
                             <!-- Fieldset 4: Note and Status -->
                             <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Additional Details</legend>
+                                <legend class="float-none w-auto px-2 text-primary">Prices & Additional Details</legend>
+
+                                <!-- base and incremental prices -->
+                                <div class="row mb-2">
+
+                                    <div class="col-4">
+                                        <label for="inputStayMaxCap" class="form-label fw-bold mb-0">Max Guest
+                                            Count<span class="text-danger">*</span> :</label>
+                                        <input type="text" class="form-control" placeholder="Enter Guest Capacity"
+                                            id="inputStayMaxCap"
+                                            onkeyup="inputValidatorText(this,'','stay','maxguestscount')">
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label for="inputStayBasePrice" class="form-label fw-bold mb-0">Base Price <span
+                                                class="text-danger">*</span> :</label>
+                                        <input type="text" class="form-control" placeholder="Enter The Base Price"
+                                            id="inputStayBasePrice"
+                                            onkeyup="inputValidatorText(this,'','stay','base_price')"
+                                            onblur="insertDecimals(this);">
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label for="inputStayIncCost" class="form-label fw-bold mb-0">Incremental Cost
+                                            (Per person) <span class="text-danger">*</span> :</label>
+                                        <input type="text" class="form-control" placeholder="Enter The Incremental Cost"
+                                            id="inputStayIncCost"
+                                            onkeyup="inputValidatorText(this,'','stay','incremental_cost')"
+                                            onblur="insertDecimals(this);">
+                                    </div>
+
+                                </div>
+
+                                <!-- note and status row -->
                                 <div class="row">
                                     <div class="col-6">
                                         <label for="selectStayStatus" class="form-label fw-bold mb-0">Status <span
@@ -162,7 +198,8 @@
 
                                     <div class="col-6">
                                         <label for="inputStayNote" class="form-label fw-bold mb-0">Note :</label>
-                                        <textarea id="inputStayNote" placeholder="Enter Any Additional Information" class="form-control" style="height: 115px;"
+                                        <textarea id="inputStayNote" placeholder="Enter Any Additional Information"
+                                            class="form-control" style="height: 115px;"
                                             onkeyup="inputValidatorText(this,'','stay','note')"></textarea>
                                     </div>
                                 </div>
@@ -207,7 +244,7 @@
                     <!-- Modal Body -->
                     <div class="modal-body bg-light">
                         <div class="container">
-                    
+
                             <!-- Row 1: Name and Type -->
                             <div class="row mb-4 align-items-start">
                                 <div class="col-md-8">
@@ -219,7 +256,23 @@
                                     <p id="modalStayType" class="mb-2"></p>
                                 </div>
                             </div>
-                    
+
+                            <!-- row for base price, incremental cost, max guest count -->
+                            <div class="row mb-4 align-items-start">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Base Price:</p>
+                                    <p id="modalStayBasePrice" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Incremental Cost:</p>
+                                    <p id="modalStayIncCost" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Guest Capacity:</p>
+                                    <p id="modalStayMaxCap" class="mb-2"></p>
+                                </div>
+                            </div>
+
                             <!-- Row 2: District, Province, Geo Coords -->
                             <div class="row mb-4">
                                 <div class="col-md-4">
@@ -235,7 +288,7 @@
                                     <p id="modalStayGeoCoords" class="mb-2"></p>
                                 </div>
                             </div>
-                    
+
                             <!-- Row 3: Address -->
                             <div class="row mb-4">
                                 <div class="col-md-12">
@@ -243,7 +296,7 @@
                                     <p id="modalStayAddress" class="mb-2"></p>
                                 </div>
                             </div>
-                    
+
                             <!-- Row 4: Contact Info -->
                             <div class="row mb-4">
                                 <div class="col-md-4">
@@ -259,13 +312,13 @@
                                     <p id="modalStayEmail" class="mb-2"></p>
                                 </div>
                             </div>
-                    
+
                             <!-- Row 5: Status and Additional Details -->
                             <div class="row mb-3">
                                 <div class="col-md-8">
                                     <p class="fw-bold mb-1 text-primary">Status:</p>
-                                    <p id="modalStayStatus" class="mb-2"></p>
-                    
+                                    <p id="modalStayStatus" class="mb-5"></p>
+
                                     <p class="fw-bold mb-1 text-primary">Additional Details:</p>
                                     <p id="modalStayAdditionalDetails" class="mb-2"></p>
                                 </div>
@@ -273,10 +326,10 @@
                                     <p id="modalStayIfDeleted" class="text-danger d-none mb-0"></p>
                                 </div>
                             </div>
-                    
+
                         </div>
                     </div>
-                    
+
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">

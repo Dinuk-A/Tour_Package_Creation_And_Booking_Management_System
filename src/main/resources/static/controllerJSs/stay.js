@@ -117,7 +117,10 @@ const refreshStayForm = async () => {
         'inputStayEmail',
         'selectStayStatus',
         'inputStayNote',
-        'inputGeoCoords'
+        'inputGeoCoords',
+        'inputStayMaxCap',
+        'inputStayBasePrice',
+        'inputStayIncCost'
     ];
 
     //clear out any previous styles
@@ -174,9 +177,17 @@ const checkStayFormErrors = () => {
         errors = errors + " Please Enter The Email \n";
     }
 
-    //if (stay.maxguestscount == null) {
-    //    errors = errors + " Please Enter The Guest Count \n";
-    //}
+    if (stay.maxguestscount == null) {
+        errors = errors + " Please Enter The Guest Capacity \n";
+    }
+
+    if (stay.base_price == null) {
+        errors = errors + " Please Enter The Base Price \n";
+    }
+
+    if (stay.incremental_cost == null) {
+        errors = errors + " Please Enter The Incremental Cost \n";
+    }
 
 
     return errors;
@@ -258,6 +269,9 @@ const openModal = (stayObj) => {
     document.getElementById('modalStayEmail').innerText = stayObj.email || 'N/A';
     document.getElementById('modalStayStatus').innerText = stayObj.stay_status || 'N/A';
     document.getElementById('modalStayAdditionalDetails').innerText = stayObj.note || 'N/A';
+    document.getElementById('modalStayMaxCap').innerText = stayObj.maxguestscount || 'N/A';
+    document.getElementById('modalStayBasePrice').innerText = `LKR ${parseFloat(stayObj.base_price).toFixed(2)}` || 'N/A';
+    document.getElementById('modalStayIncCost').innerText = `LKR ${parseFloat(stayObj.incremental_cost).toFixed(2)}` || 'N/A';
 
     // Handle Deleted Stay
     if (stayObj.deleted_stay) {
@@ -322,7 +336,9 @@ const refillStayForm = async (ob) => {
     inputStayEmail.value = stay.email;
     inputStayNote.value = stay.note;
     inputGeoCoords.value = stay.gcoords;
-    //stayMaxGuestCount.value = stay.maxguestscount 💥💥
+    inputStayMaxCap.value = stay.maxguestscount
+    inputStayBasePrice.value = stay.base_price
+    inputStayIncCost.value = stay.incremental_cost
 
     try {
 
@@ -394,10 +410,18 @@ const showStayValueChanges = () => {
     if (stay.email != stayOldObj.email) {
         updates = updates + "Email will be changed to " + stay.email + "\n";
     }
-    //
-    //    if (stay.maxguestscount != stayOldObj.maxguestscount) {
-    //        updates = updates + "Max guests count will be changed to " + stay.maxguestscount + "\n";
-    //    }
+
+    if (stay.maxguestscount != stayOldObj.maxguestscount) {
+        updates = updates + "Max guests count will be changed to " + stay.maxguestscount + "\n";
+    }
+
+    if (stay.base_price != stayOldObj.base_price) {
+        updates = updates + "Base Price will be changed to " + stay.base_price + "\n";
+    }
+
+    if (stay.incremental_cost != stayOldObj.incremental_cost) {
+        updates = updates + "Incremental cost will be changed to " + stay.incremental_cost + "\n";
+    }
 
     if (stay.note != stayOldObj.note) {
         updates = updates + "Note will be changed to " + stay.note + "\n";

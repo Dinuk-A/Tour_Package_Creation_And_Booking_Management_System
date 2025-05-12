@@ -106,7 +106,7 @@ const showForeignFees = (ob) => {
     if (ob.feeforeignadult == null && ob.feechildforeign == null) {
 
         return 'No Entrance Fee';
-        
+
     } else {
 
         if (ob.feeforeignadult != 0.00 && ob.feechildforeign != 0.00) {
@@ -316,8 +316,14 @@ const localsEntryFree = () => {
         inputForeignAdultFee.disabled = false;
         inputForeignChildFee.disabled = false;
 
-        inputForeignAdultFee.value = "";
-        inputForeignChildFee.value = "";
+        //if this is in refill
+        if (attraction.feeforeignadult != null || attraction.feechildforeign != null) {
+            inputForeignAdultFee.value = attraction.feeforeignadult;
+            inputForeignChildFee.value = attraction.feechildforeign;
+        } else {
+            inputForeignAdultFee.value = "";
+            inputForeignChildFee.value = "";
+        }
 
         //local set eka disable karanwa
         inputLocalAdultFee.disabled = true;
@@ -326,10 +332,8 @@ const localsEntryFree = () => {
         inputLocalAdultFee.value = "0.00";
         inputLocalChildFee.value = "0.00";
 
-        attraction.feeforeignadult = 0.00;
-        attraction.feelocaladult = 0.00;
         attraction.feechildlocal = 0.00;
-        attraction.feechildforeign = 0.00;
+        attraction.feelocaladult = 0.00;
 
         inputLocalAdultFee.style.border = "1px solid #ced4da"
         inputLocalChildFee.style.border = "1px solid #ced4da"
@@ -360,12 +364,20 @@ const allPaid = () => {
     inputForeignChildFee.disabled = false;
     inputLocalChildFee.disabled = false;
 
-    inputForeignAdultFee.value = "";
-    inputLocalAdultFee.value = "";
-    inputForeignChildFee.value = "";
-    inputLocalChildFee.value = "";
+    //if this is in refill
+    if (attraction.feeforeignadult != null || attraction.feelocaladult != null) {
+        inputForeignAdultFee.value = attraction.feeforeignadult;
+        inputForeignChildFee.value = attraction.feelocaladult;
+        inputForeignChildFee.value = attraction.feechildforeign;
+        inputLocalChildFee.value = attraction.feechildlocal;
+    } else {
+        inputForeignAdultFee.value = "";
+        inputForeignChildFee.value = "";
+        inputForeignChildFee.value = "";
+        inputLocalChildFee.value = "";
+    }
 
-    //💥KALIN BINND WUNA 0.00 TIKA METHANADITH AYN KARANNA ONE
+    //💥KALIN BIND WUNA 0.00 TIKA METHANADITH AYN KARANNA ONE
     attraction.feeforeignadult = null;
     attraction.feelocaladult = null;
     attraction.feechildlocal = null;
@@ -512,21 +524,35 @@ const resetModal = () => {
 const openModal = (attrObj) => {
 
     resetModal();
-    
+
     document.getElementById('modalAttrName').innerText = attrObj.name || 'N/A';
     document.getElementById('modalAttrDistrict').innerText = attrObj.district_id.name || 'N/A';
     document.getElementById('modalAttrProvince').innerText = attrObj.district_id.province_id.name || 'N/A';
-    document.getElementById('modalAttrCatrgories').innerText = attrObj.dob || 'N/A';
-    document.getElementById('modalAttrLocalAdultFee').innerText = attrObj.feelocaladult || 'N/A';
-    document.getElementById('modalAttrLocalChildFee').innerText = attrObj.feechildlocal || 'N/A';
-    document.getElementById('modalAttrForeignAdultFee').innerText = attrObj.feeforeignadult || 'N/A';
-    document.getElementById('modalAttrForeignChildFee').innerText = attrObj.feechildforeign || 'N/A';
-    document.getElementById('modalAttrDuration').innerText = attrObj.duration || 'N/A';
+    document.getElementById('modalAttrLocalAdultFee').innerText = `LKR ${parseFloat(attrObj.feelocaladult).toFixed(2)}` || 'N/A';
+    document.getElementById('modalAttrLocalChildFee').innerText = `LKR ${parseFloat(attrObj.feechildlocal).toFixed(2)}` || 'N/A';
+    document.getElementById('modalAttrForeignAdultFee').innerText = `LKR ${parseFloat(attrObj.feeforeignadult).toFixed(2)}` || 'N/A';
+    document.getElementById('modalAttrForeignChildFee').innerText = `LKR ${parseFloat(attrObj.feechildforeign).toFixed(2)}` || 'N/A';
+    document.getElementById('modalAttrVehicleParkingFee').innerText = `LKR ${parseFloat(attrObj.vehicleparkingfee).toFixed(2)}` || 'N/A';
+    document.getElementById('modalAttrDuration').innerText = `${attrObj.duration} Hours` || 'N/A';
     document.getElementById('modalAttrDescription').innerText = attrObj.description || 'N/A';
-    document.getElementById('modalAttrVehicleParkingFee').innerText = attrObj.vehicleparkingfee || 'N/A';
     document.getElementById('modalAttrStatus').innerText = attrObj.attr_status || 'N/A';
     document.getElementById('modalAttrNote').innerText = attrObj.note || 'N/A';
     document.getElementById('modalAttrGCoords').innerText = attrObj.gcoords || 'N/A';
+
+    let attrCategories = '';
+    if (attrObj.categories && attrObj.categories.length > 0) {
+        attrObj.categories.forEach((element, index) => {
+            if (index === attrObj.categories.length - 1) {
+                attrCategories += element.name;
+            } else {
+                attrCategories += element.name + ', ';
+            }
+        });
+    } else {
+        attrCategories = 'N/A';
+    }
+    document.getElementById('modalAttrCategories').innerText = attrCategories;
+
 
     if (attrObj.deleted_attr) {
         document.getElementById('modalAttrIfDeleted').classList.remove('d-none');
@@ -654,53 +680,7 @@ const refillAttractionForm = async (obj) => {
         console.error("Failed to fetch Data : ", error);
     }
 
-    flushCollapseOne.classList.add("show")
-
-    //get Activity list
-    // attrActivities = ajaxGetRequest("/attractivity/alldata");
-    // flushCollapseTwo.innerHTML = "";
-    // attrActivities.forEach(activity => {
-
-    //     let activityDiv = document.createElement('div');
-    //     activityDiv.classList = "form-check form-check-inline";
-    //     activityDiv.style.width = "30%"
-
-    //     let activityInput = document.createElement('input');
-    //     activityInput.classList.add("form-check-input");
-    //     activityInput.type = "checkbox";
-    //     activityInput.setAttribute('id', JSON.stringify(activity.name))
-
-    //     let activityLabel = document.createElement('label');
-    //     activityLabel.classList.add("form-check-label");
-    //     activityLabel.innerText = activity.name;
-    //     activityLabel.setAttribute('for', JSON.stringify(activity.name))
-
-    //     //fn for radio clicks
-    //     activityInput.onchange = function () {
-
-    //         if (this.checked) {
-    //             obj.attr_activities.push(activity);
-    //         } else {
-    //             let existIndex = obj.attr_activities.map(activity => activity.id).indexOf(activity.id);
-    //             if (existIndex != -1) {
-    //                 obj.attr_activities.splice(existIndex, 1)
-    //             }
-    //         }
-    //     }
-
-    //     let existIndex = obj.attr_activities.map(activity => activity.id).indexOf(activity.id);
-    //     if (existIndex != -1) {
-    //         activityInput.checked = true;
-    //     }
-
-    //     activityDiv.appendChild(activityInput);
-    //     activityDiv.appendChild(activityLabel);
-
-    //     flushCollapseTwo.appendChild(activityDiv);
-
-    // })
-
-
+    flushCollapseOne.classList.add("show");
 
     if (obj.feetype === "All Free") {
         allEntryFreeChkBox.checked = true;
@@ -747,6 +727,50 @@ const refillAttractionForm = async (obj) => {
 
     var myAttrFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myAttrFormTab.show();
+
+    //get Activity list
+    // attrActivities = ajaxGetRequest("/attractivity/alldata");
+    // flushCollapseTwo.innerHTML = "";
+    // attrActivities.forEach(activity => {
+
+    //     let activityDiv = document.createElement('div');
+    //     activityDiv.classList = "form-check form-check-inline";
+    //     activityDiv.style.width = "30%"
+
+    //     let activityInput = document.createElement('input');
+    //     activityInput.classList.add("form-check-input");
+    //     activityInput.type = "checkbox";
+    //     activityInput.setAttribute('id', JSON.stringify(activity.name))
+
+    //     let activityLabel = document.createElement('label');
+    //     activityLabel.classList.add("form-check-label");
+    //     activityLabel.innerText = activity.name;
+    //     activityLabel.setAttribute('for', JSON.stringify(activity.name))
+
+    //     //fn for radio clicks
+    //     activityInput.onchange = function () {
+
+    //         if (this.checked) {
+    //             obj.attr_activities.push(activity);
+    //         } else {
+    //             let existIndex = obj.attr_activities.map(activity => activity.id).indexOf(activity.id);
+    //             if (existIndex != -1) {
+    //                 obj.attr_activities.splice(existIndex, 1)
+    //             }
+    //         }
+    //     }
+
+    //     let existIndex = obj.attr_activities.map(activity => activity.id).indexOf(activity.id);
+    //     if (existIndex != -1) {
+    //         activityInput.checked = true;
+    //     }
+
+    //     activityDiv.appendChild(activityInput);
+    //     activityDiv.appendChild(activityLabel);
+
+    //     flushCollapseTwo.appendChild(activityDiv);
+
+    // })
 
     //disabling update button based on USER PRIVILEGES
     //if (loggedUserPrivileges.privupdate) {
