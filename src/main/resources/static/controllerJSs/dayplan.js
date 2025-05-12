@@ -662,6 +662,18 @@ const handleLunchRadio = (fieldId) => {
     dayplan.is_takepackedlunch = fieldId.value;
 }
 
+//this will be triggered when a real value in lunch place is selected
+function checkPackedLunchNo() {
+    const lunchSelect = document.getElementById('selectDPLunch');
+    const packedLunchNo = document.getElementById('packedLunchNo');
+
+    if (lunchSelect.value && lunchSelect.value !== '') {
+        packedLunchNo.checked = true;
+        dayplan.is_takepackedlunch = false;
+    }
+}
+
+
 const takePackedLunchYes = () => {
 
     const lunchProv = document.getElementById('selectLPProv');
@@ -706,9 +718,10 @@ const takePackedLunchNo = () => {
     lunchDist.selectedIndex = 0;
     lunchDist.options[0].disabled = true;
 
-    lunchHotel.options[0].disabled = false;
-    lunchHotel.selectedIndex = 0;
-    lunchHotel.options[0].disabled = true;
+    //meka pissu natanawa, me wemuwata manual option ekak denna 💥💥💥
+    //lunchHotel.options[0].disabled = false;
+    //lunchHotel.selectedIndex = 0;
+    //lunchHotel.options[0].disabled = true;
 
     lunchProv.disabled = false;
     lunchDist.disabled = true;
@@ -1330,29 +1343,69 @@ const refillDayPlanForm = async (dpObj) => {
         middleDayCB.disabled = true;
         lastDayCB.disabled = true;
 
-        document.getElementById('dpTotalKMcount').value = dayplan.totalkmcount;
-        document.getElementById('dpTitle').value = dayplan.daytitle;
-        document.getElementById('dpSelectStatus').value = dayplan.dp_status;
-        document.getElementById('dpNote').value = dayplan.note;
-        document.getElementById('dpTotalVehiParkingCost').innerText = dayplan.totalvehiparkcost;
-        document.getElementById('dpTotalForeignChildTktCost').innerText = dayplan.foreignchildtktcost;
-        document.getElementById('dpTotalForeignAdultTktCost').innerText = dayplan.foreignadulttktcost;
-        document.getElementById('dpTotalLocalChildTktCost').innerText = dayplan.localchildtktcost;
-        document.getElementById('dpTotalLocalAdultTktCost').innerText = dayplan.localadulttktcost;
+        if (dpObj.is_template) {
+            generalPickupCB.disabled = true;
+            accommodationsPickupCB.disabled = true;
+            manualPickupCB.disabled = true;
+        }
 
-        if (dayplan.dayplancode.substring(0, 2) == "FD") {
+        if (dpObj.is_takepackedlunch) {
+            packedLunchYes.checked = true;
+        } else if (!dpObj.is_takepackedlunch || dpObj.is_takepackedlunch == null) {
+            packedLunchNo.checked = true;
+        }
+
+        if (dpObj.pickuppoint != null) {
+            const airportSelect = document.getElementById('airportSelect');
+            const airportDropRow = document.getElementById('generalPickupOptions');
+
+            switch (dpObj.pickuppoint) {
+                case "BIA":
+                    airportSelect.selectedIndex = 1;
+                    airportDropRow.style.display = 'block';
+                    break;
+                case "MATTALA":
+                    airportSelect.selectedIndex = 2;
+                    airportDropRow.style.display = 'block';
+                    break;
+                case "RATMALANA":
+                    airportSelect.selectedIndex = 3;
+                    airportDropRow.style.display = 'block';
+                    break;
+                case "JAFFNA":
+                    airportSelect.selectedIndex = 4;
+                    airportDropRow.style.display = 'block';
+                    break;
+                default:
+                    airportSelect.selectedIndex = 0;
+                    airportDropRow.style.display = 'block';
+                    break;
+            }
+        }
+
+        document.getElementById('dpTotalKMcount').value = dpObj.totalkmcount;
+        document.getElementById('dpTitle').value = dpObj.daytitle;
+        document.getElementById('dpSelectStatus').value = dpObj.dp_status;
+        document.getElementById('dpNote').value = dpObj.note;
+        document.getElementById('dpTotalVehiParkingCost').innerText = dpObj.totalvehiparkcost;
+        document.getElementById('dpTotalForeignChildTktCost').innerText = dpObj.foreignchildtktcost;
+        document.getElementById('dpTotalForeignAdultTktCost').innerText = dpObj.foreignadulttktcost;
+        document.getElementById('dpTotalLocalChildTktCost').innerText = dpObj.localchildtktcost;
+        document.getElementById('dpTotalLocalAdultTktCost').innerText = dpObj.localadulttktcost;
+
+        if (dpObj.dayplancode.substring(0, 2) == "FD") {
             firstDayCB.checked = true;
 
-        } else if (dayplan.dayplancode.substring(0, 2) == "MD") {
+        } else if (dpObj.dayplancode.substring(0, 2) == "MD") {
             middleDayCB.checked = true;
 
-        } else if (dayplan.dayplancode.substring(0, 2) == "LD") {
+        } else if (dpObj.dayplancode.substring(0, 2) == "LD") {
             lastDayCB.checked = true;
         }
 
-        if (dayplan.is_template) {
+        if (dpObj.is_template) {
             dpTemplate.checked = true;
-        } else if (!dayplan.is_template) {
+        } else if (!dpObj.is_template) {
             dpNotTemplate.checked = true;
         }
 
@@ -1360,13 +1413,13 @@ const refillDayPlanForm = async (dpObj) => {
 
             try {
                 const lhs = await ajaxGetReq("/lunchplace/all");
-                fillDataIntoDynamicSelects(selectDPLunch, '', lhs, 'name', dayplan.lunchplace_id.name);
+                fillDataIntoDynamicSelects(selectDPLunch, '', lhs, 'name', dpObj.lunchplace_id.name);
 
                 const allProvinces = await ajaxGetReq("/province/all");
-                fillDataIntoDynamicSelects(selectLPProv, 'Select Province', allProvinces, 'name', dayplan.lunchplace_id.district_id.province_id.name);
+                fillDataIntoDynamicSelects(selectLPProv, 'Select Province', allProvinces, 'name', dpObj.lunchplace_id.district_id.province_id.name);
 
                 const allDistricts = await ajaxGetReq("/district/all");
-                fillDataIntoDynamicSelects(selectLPDist, 'Select District', allDistricts, 'name', dayplan.lunchplace_id.district_id.name);
+                fillDataIntoDynamicSelects(selectLPDist, 'Select District', allDistricts, 'name', dpObj.lunchplace_id.district_id.name);
 
             } catch (error) {
                 console.error('error fetching previous lunch place info')
@@ -1376,20 +1429,20 @@ const refillDayPlanForm = async (dpObj) => {
         if (oldDayplan.end_stay_id != null) {
             try {
                 const allStays = await ajaxGetReq("/stay/all");
-                fillDataIntoDynamicSelects(dropOffAccommodationSelect, '', allStays, 'name', dayplan.end_stay_id.name);
+                fillDataIntoDynamicSelects(dropOffAccommodationSelect, '', allStays, 'name', dpObj.end_stay_id.name);
 
                 const allProvinces = await ajaxGetReq("/province/all");
-                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Select Province', allProvinces, 'name', dayplan.end_stay_id.district_id.province_id.name);
+                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Select Province', allProvinces, 'name', dpObj.end_stay_id.district_id.province_id.name);
 
                 const allDistricts = await ajaxGetReq("/district/all");
-                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Select District', allDistricts, 'name', dayplan.end_stay_id.district_id.name);
+                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Select District', allDistricts, 'name', dpObj.end_stay_id.district_id.name);
 
             } catch (error) {
-                console.error('error fetching previous stay place info')
+                console.error('error fetching previous end stay info')
             }
         }
 
-        fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name');
+        fillDataIntoDynamicSelects(selectedVPs, '', dpObj.vplaces, 'name');
 
         dpUpdateBtn.disabled = false;
         dpUpdateBtn.style.cursor = "pointer";
@@ -1416,13 +1469,16 @@ const showDPValueChanges = () => {
     if (dayplan.daytitle != oldDayplan.daytitle) {
         updates = updates + " Full Name will be changed to " + dayplan.daytitle + "\n";
     }
-    if (dayplan.end_stay_id != oldDayplan.end_stay_id) {
+    if (dayplan.pickuppoint != oldDayplan.pickuppoint) {
+        updates = updates + " Pickup point will be changed to " + dayplan.pickuppoint + "\n";
+    }
+    if (dayplan.end_stay_id.id != oldDayplan.end_stay_id.id) {
         updates = updates + " end_stay_id will be changed to " + dayplan.end_stay_id.name + "\n";
     }
     if (dayplan.note != oldDayplan.note) {
         updates = updates + " note Number will be changed to " + dayplan.note + "\n";
     }
-    if (dayplan.lunchplace_id != oldDayplan.lunchplace_id) {
+    if (dayplan.lunchplace_id.id != oldDayplan.lunchplace_id.id) {
         updates = updates + " lunchplace_id Number will be changed to " + dayplan.lunchplace_id.name + "\n";
     }
     if (dayplan.dp_status != oldDayplan.dp_status) {

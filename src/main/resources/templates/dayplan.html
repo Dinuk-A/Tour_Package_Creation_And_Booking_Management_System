@@ -497,13 +497,13 @@
                                                 <label for="selectDPLunch" class="form-label fw-bold mb-0">Lunch
                                                     Hotel:</label>
                                                 <select id="selectDPLunch" class="form-select"
-                                                    onchange="dynamicSelectValidator(this,'dayplan','lunchplace_id');"
+                                                    onchange="dynamicSelectValidator(this,'dayplan','lunchplace_id'); checkPackedLunchNo();"
                                                     disabled></select>
                                             </div>
                                         </div>
 
                                         <!-- option to select if hotel parceled lunch is taken -->
-                                        <div class="row mt-2">
+                                        <div class="row mt-4">
                                             <label class="form-label col-12 mb-0 fw-bold">Take packed lunch?</label>
                                             <div class="col-6">
                                                 <input type="radio" class="btn-check" name="packedLunch"
