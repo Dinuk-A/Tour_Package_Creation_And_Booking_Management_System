@@ -114,7 +114,7 @@ const refreshDayPlanForm = async () => {
         'pickupDistrictSelect',
         'pickupAccommodationSelect',
         'airportSelect',
-        'manualLocation',
+        'manualLocationPickup',
         'geoCoords',
         'airportSelectDropOff',
         'manualLocationDropOff',
@@ -223,7 +223,7 @@ const clearOtherInputsGenPickup = () => {
         'pickupProvinceSelect',
         'pickupDistrictSelect',
         'pickupAccommodationSelect',
-        'manualLocation',
+        'manualLocationPickup',
         'geoCoords',
         'dpTotalKMcount'
     ];
@@ -250,7 +250,7 @@ const clearOtherInputsGenPickup = () => {
 const clearOtherInputsStayPickup = () => {
 
     const inputTagsIds = [
-        'manualLocation',
+        'manualLocationPickup',
         'geoCoords',
         'airportSelect',
         'dpTotalKMcount'
@@ -434,9 +434,9 @@ const handleChangesBasedDPType = () => {
         document.getElementById('pickupAccommodationSelect').style.border = '1px solid #ced4da';
 
         document.getElementById('manualPickupOptions').classList.add("d-none");
-        document.getElementById('manualLocation').value = "";
+        document.getElementById('manualLocationPickup').value = "";
         document.getElementById('geoCoords').style.border = '1px solid #ced4da';
-        document.getElementById('manualLocation').value = "";
+        document.getElementById('manualLocationPickup').value = "";
         document.getElementById('geoCoords').style.border = '1px solid #ced4da';
 
         document.getElementById('calcDistanceRow').classList.add("d-none");
@@ -541,7 +541,7 @@ const passStayGCoords = () => {
     pickupPointGCoords = selectedStay.gcoords;
     console.log("Global Var pickupPointGCoords: " + pickupPointGCoords);
 
-    dayplan.pickuppoint = selectedStay.name;
+    dynamicSelectValidator(pickupStaySelect, 'dayplan', 'pickup_stay_id');
     pickupStaySelect.style.border = '2px solid lime';
 
 }
@@ -1355,32 +1355,98 @@ const refillDayPlanForm = async (dpObj) => {
             packedLunchNo.checked = true;
         }
 
+        //if the pickup point was an airport or manual location
         if (dpObj.pickuppoint != null) {
+
             const airportSelect = document.getElementById('airportSelect');
             const airportDropRow = document.getElementById('generalPickupOptions');
+            const airportPickupCB = document.getElementById('generalPickupCB');
+            const manualPickupRow = document.getElementById('manualPickupOptions');
+            const manualPickupInput = document.getElementById('manualLocationPickup');
+            const manualPickupGCoordsInput = document.getElementById('geoCoords');
+            const manualPickupCBVar = document.getElementById('manualPickupCB');
 
             switch (dpObj.pickuppoint) {
                 case "BIA":
                     airportSelect.selectedIndex = 1;
                     airportDropRow.style.display = 'block';
+                    airportPickupCB.checked = true;
                     break;
                 case "MATTALA":
                     airportSelect.selectedIndex = 2;
                     airportDropRow.style.display = 'block';
+                    airportPickupCB.checked = true;
                     break;
                 case "RATMALANA":
                     airportSelect.selectedIndex = 3;
                     airportDropRow.style.display = 'block';
+                    airportPickupCB.checked = true;
                     break;
                 case "JAFFNA":
                     airportSelect.selectedIndex = 4;
                     airportDropRow.style.display = 'block';
+                    airportPickupCB.checked = true;
                     break;
                 default:
                     airportSelect.selectedIndex = 0;
-                    airportDropRow.style.display = 'block';
+                    manualPickupRow.style.display = 'block';
+                    manualPickupInput.value = dpObj.pickuppoint;
+                    manualPickupGCoordsInput.value = dpObj.pick_manual_gcoords;
+                    manualPickupCBVar.checked = true;
                     break;
             }
+
+            //enable the 3 radios
+            const radioIds = [
+                'generalPickupCB',
+                'accommodationsPickupCB',
+                'manualPickupCB'
+            ];
+
+            radioIds.forEach((radioId) => {
+                const radioCB = document.getElementById(radioId);
+                if (radioCB) {
+                    radioCB.disabled = false;
+                }
+            });
+
+        }
+
+        //if pickup point was a stay
+        if (dpObj.pickup_stay_id != null) {
+
+            //enable the 3 radios
+            const radioIds = [
+                'generalPickupCB',
+                'accommodationsPickupCB',
+                'manualPickupCB'
+            ];
+
+            radioIds.forEach((radioId) => {
+                const radioCB = document.getElementById(radioId);
+                if (radioCB) {
+                    radioCB.disabled = false;
+                }
+            });
+
+            try {
+
+                const stays = await ajaxGetReq("/stay/active");
+                fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Please Select The Pickup Accomodation', stays, 'name', dpObj.pickup_stay_id.name);
+
+                const allDists = await ajaxGetReq('district/all');
+                fillDataIntoDynamicSelects(pickupDistrictSelect, 'Please Select The District', allDists, 'name', dpObj.pickup_stay_id.district_id.name);
+
+                const allProvinces = await ajaxGetReq("/province/all");
+                fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.pickup_stay_id.district_id.province_id.name);
+
+
+            } catch (error) {
+                console.error('error fetching previous start stay info')
+            }
+
+            const stayPickupRow = document.getElementById('accommodationPickupOptions');
+            stayPickupRow.style.display = 'block';
         }
 
         document.getElementById('dpTotalKMcount').value = dpObj.totalkmcount;
@@ -1485,7 +1551,7 @@ const showDPValueChanges = () => {
         updates = updates + " dp_status will be changed to " + dayplan.dp_status + "\n";
     }
     if (dayplan.totalkmcount != oldDayplan.totalkmcount) {
-        updates = updates + " totalkmcount will be changed to " + dayplan.email + "\n";
+        updates = updates + " totalkmcount will be changed to " + dayplan.totalkmcount + "\n";
     }
     if (dayplan.vplaces.length != oldDayplan.vplaces.length) {
         updates = updates + "visiting places list changed";
@@ -1614,158 +1680,5 @@ const updateDayTab = () => {
 }
 
 //💥💥💥💥 print day plan
-
-
-//old yathra 2024 💥💥💥
-//pass inq code to day title
-const passName = () => {
-
-    let inqSelectElement = document.getElementById('dpBasedInquiryNameSelect');
-
-    let selectedOption = JSON.parse(inqSelectElement.value);
-    let selectedOpsCode = selectedOption.inqcode;
-
-    // var selectedText = inqSelectElement.innerText;
-
-    var inputField = document.getElementById('dpTitle');
-
-    inputField.value += " for " + selectedOpsCode;
-
-}
-
-//to save the same day plan with minor changes
-const duplicateDayPlan = (obj) => {
-    dayplan = JSON.parse(JSON.stringify(obj));
-    oldDayPlanObj = JSON.parse(JSON.stringify(obj));
-
-    firstDayCB.disabled = true;
-    middleDayCB.disabled = true;
-    lastDayCB.disabled = true;
-
-    if (dayplan.dpbasedinq == null) {
-        forWebSite.checked = true;
-        // dpBasedInquiryNameSelect.disabled = true
-        // lunchPlaceDivId.classList.add('d-none')
-        // endPointDivId.classList.add('d-none')
-
-    }
-
-    if (dpBasedInquiryNameSelect.value != null) {
-        forWebSite.checked = true;
-    }
-
-    if (oldDayPlanObj.lunch_hotel_id != null) {
-        lunchHotels = ajaxGetReq("/lunchhotel/alldata");
-        fillDataIntoDynamicSelects(dpLunchHotelSelect, 'Please Select', lunchHotels, 'name', dayplan.lunch_hotel_id.name);
-    }
-
-    //refill end stay
-    if (oldDayPlanObj.end_stay_id != null) {
-        endStay = ajaxGetReq("stay/alldata");
-        fillDataIntoDynamicSelects(dpEndStaySelect, 'Please Select The Stay', endStay, 'name', dayplan.end_stay_id.name);
-
-        //get province list FOR ENDING POINTS 
-        endProvinces = ajaxGetReq("province/alldata");
-        fillDataIntoDynamicSelects(dpEndProvinceSelect, 'Please Select The Province', endProvinces, 'name', dayplan.end_district_id.province_id.name)
-
-        //refill end district
-        districts = ajaxGetReq("district/alldata");
-        fillDataIntoDynamicSelects(dpEndDistrictSelect, 'Please Select The District', districts, 'name', dayplan.end_district_id.name)
-        dpEndDistrictSelect.disabled = false;
-
-    }
-
-    if (dayplan.endlocation != null) {
-        endLocationText.value = dayplan.endlocation;
-    }
-
-    dpStartStaySelect.disabled = false;
-    dpEndStaySelect.disabled = false;
-
-    if (dayplan.dayplancode.substring(0, 2) == "FD") {
-        firstDayCB.checked = true;
-
-    } else if (dayplan.dayplancode.substring(0, 2) == "MD") {
-        middleDayCB.checked = true;
-
-    } else {
-        lastDayCB.checked = true;
-    }
-
-    dpTitle.value = dayplan.daytitle;
-    dpCode.value = dayplan.dayplancode;
-    startLocationText.value = dayplan.startlocation;
-    dpNote.value = dayplan.note;
-    totalKMcount.value = dayplan.kmcountforday;
-
-    //Refill province list FOR STARTING POINT
-    startProvinces = ajaxGetReq("province/alldata");
-    fillDataIntoDynamicSelects(dpStartProvinceSelect, 'Please Select The Province', startProvinces, 'name', dayplan.start_district_id.province_id.name)
-
-    //refill start district
-    districts = ajaxGetReq("district/alldata");
-    fillDataIntoDynamicSelects(dpStartDistrictSelect, 'Please Select The District', districts, 'name', dayplan.start_district_id.name)
-    dpStartDistrictSelect.disabled = false;
-
-    //REFILL PASSED VPLACES
-    fillDataIntoDynamicSelects(selectedVPs, 'Please Select The Place', dayplan.vplaces, 'name')
-
-    //refill start stay
-    if (dayplan.start_stay_id != null) {
-        startStay = ajaxGetReq("stay/alldata");
-        fillDataIntoDynamicSelects(dpStartStaySelect, 'Please Select The Stay', startStay, 'name', dayplan.start_stay_id.name)
-    }
-
-    //Refill dp status 
-    dpStatuses = ajaxGetReq("/dpstatus/alldata")
-    fillDataIntoDynamicSelects(dpStatusSelect, 'Select Status', dpStatuses, 'name', dayplan.dpstatus_id.name);
-
-    dpStartProvinceSelect.disabled = true;
-    dpStartDistrictSelect.disabled = true;
-
-    dpAddBtn.disabled = true;
-    dpAddBtn.style.cursor = "not-allowed";
-
-    dpUpdateBtn.disabled = true;
-    dpUpdateBtn.style.cursor = "not-allowed";
-
-    dpSaveAsNewBtn.disabled = false;
-    dpSaveAsNewBtn.style.cursor = "pointer";
-
-    $('#mainDayPlanFormModal').modal('show');
-}
-
-//save as a new dayplan record
-const saveAsNewDayPlan = () => {
-
-    let postServiceResponse = ajaxRequest("/dayplan/saveasnew", "POST", dayplan);
-    if (new RegExp("^[A-Z]{5}[0-9]{1,3}$").test(postServiceResponse)) {
-        showAlertModal('suc', "Succesfully Saved ! \n New Code : " + postServiceResponse);
-        formDayPlan.reset();
-        refreshDayPlanForm();
-        refreshDayPlanTable();
-
-        $('#mainDayPlanFormModal').modal('hide');
-    } else {
-        showAlertModal('err', "An Error Occured " + postServiceResponse);
-    }
-
-}
-
-//DONE FOR MODIFICATION 2024 💥💥💥      
-//total cost for today +++ discounted price
-const calcTotalCostPerDay = () => {
-
-    let localAdultCost = parseInt(document.getElementById('totalLocalAdultTktCost').value);
-    let ForeignAdultCost = parseInt(document.getElementById('foreignadulttktcost').value);
-    let LocalChildCost = parseInt(document.getElementById('totalLocalChildTktCost').value);
-    let ForeignCgildCost = parseInt(document.getElementById('totalForeignChildTktCost').value);
-    let ParkingCost = parseInt(document.getElementById('totalVehiParkingFeesInput').value);
-
-    let totalCostForTodayVar = localAdultCost + ForeignAdultCost + LocalChildCost + ForeignCgildCost + ParkingCost;
-
-    totalCostForToday.value = totalCostForTodayVar.toFixed(2);
-
-}
 
 

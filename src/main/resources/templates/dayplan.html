@@ -213,14 +213,14 @@
                                                 <input type="radio" class="btn-check" id="accommodationsPickupCB"
                                                     autocomplete="off" name="pickupType" value="ACCOMMODATIONS"
                                                     onchange="clearOtherInputsStayPickup(); selectPickupType(this);">
-                                                <label class="btn btn-outline-secondary w-100 fw-bold text-uppercase"
+                                                <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
                                                     for="accommodationsPickupCB">Accommodations</label>
                                             </div>
                                             <div class="col-4">
                                                 <input type="radio" class="btn-check" id="manualPickupCB"
                                                     autocomplete="off" name="pickupType" value="MANUAL"
                                                     onchange="clearOtherInputsManualPickup(); selectPickupType(this);">
-                                                <label class="btn btn-outline-dark w-100 fw-bold text-uppercase"
+                                                <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
                                                     for="manualPickupCB">Manual</label>
                                             </div>
                                         </div>
@@ -286,10 +286,10 @@
                                                     <label for="pickupAccommodationSelect"
                                                         class="form-label fw-bold mb-0">Pickup Accommodation</label>
                                                 </div>
-                                                <!--<div class="col">-->
-                                                <select class="form-select" id="pickupAccommodationSelect" disabled
-                                                    onchange="passStayGCoords(); "></select>
-                                                <!--</div>-->
+                                                <div class="col-12">
+                                                    <select class="form-select" id="pickupAccommodationSelect" disabled
+                                                        onchange="passStayGCoords(); "></select>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -298,7 +298,7 @@
                                             <!-- Labels Row -->
                                             <div class="row mb-1">
                                                 <div class="col-6">
-                                                    <label for="manualLocation" class="form-label fw-bold mb-0">Location
+                                                    <label for="Pickup" class="form-label fw-bold mb-0">Location
                                                         / Address</label>
                                                 </div>
                                                 <div class="col-6">
@@ -310,7 +310,7 @@
                                             <!-- Inputs Row -->
                                             <div class="row mb-2">
                                                 <div class="col-6">
-                                                    <input type="text" class="form-control" id="manualLocation"
+                                                    <input type="text" class="form-control" id="manualLocationPickup"
                                                         placeholder="Enter Pickup Location/Address"
                                                         onkeyup="inputValidatorText(this, '', 'dayplan' , 'pickuppoint')">
                                                 </div>
@@ -543,14 +543,14 @@
                                                 <input type="radio" class="btn-check" id="accommodationsDropOffCB"
                                                     autocomplete="off" name="dropOffType" value="ACCOMMODATIONS"
                                                     onchange="clearOtherInputsStayDropOff(); selectDropOffType(this);">
-                                                <label class="btn btn-outline-secondary w-100 fw-bold text-uppercase"
+                                                <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
                                                     for="accommodationsDropOffCB">Accommodations</label>
                                             </div>
                                             <div class="col-4">
                                                 <input type="radio" class="btn-check" id="manualDropOffCB"
                                                     autocomplete="off" name="dropOffType" value="MANUAL"
                                                     onchange="clearOtherInputsManualDropOff(); selectDropOffType(this);">
-                                                <label class="btn btn-outline-dark w-100 fw-bold text-uppercase"
+                                                <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
                                                     for="manualDropOffCB">Manual</label>
                                             </div>
                                         </div>
@@ -617,10 +617,10 @@
                                                     <label for="dropOffAccommodationSelect"
                                                         class="form-label fw-bold mb-0">Dropoff Accommodation</label>
                                                 </div>
-                                                <!--<div class="col">-->
-                                                <select class="form-select" id="dropOffAccommodationSelect" disabled
-                                                    onchange="passStayGCoordsDropOff(); dynamicSelectValidator(this,'dayplan','end_stay_id');"></select>
-                                                <!--</div>-->
+                                                <div class="col-12">
+                                                    <select class="form-select" id="dropOffAccommodationSelect" disabled
+                                                        onchange="passStayGCoordsDropOff(); dynamicSelectValidator(this,'dayplan','end_stay_id');"></select>
+                                                </div>
                                             </div>
                                         </div>
 

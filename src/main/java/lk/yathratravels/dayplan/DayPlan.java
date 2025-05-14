@@ -39,7 +39,7 @@ public class DayPlan {
     @Column(name = "daytitle")
     @NotNull
     private String daytitle;
-    
+
     @Column(name = "dayplancode")
     @NotNull
     private String dayplancode;
@@ -56,14 +56,20 @@ public class DayPlan {
     @Column(name = "is_takepackedlunch")
     private Boolean is_takepackedlunch;
 
-    // 💥💥💥 meka wenuwata mulinma add karana attr or actv eke district eka
-    // ganna(0th index from that array)
+    // this will be setted by controller
+    // using the dist id of first attraction
     @ManyToOne
     @JoinColumn(name = "start_district_id", referencedColumnName = "id")
     private District start_district_id;
 
     @Column(name = "pickuppoint")
     private String pickuppoint;
+
+    @Column(name = "pick_manual")
+    private String pick_manual;
+
+    @Column(name = "pick_manual_gcoords")
+    private String pick_manual_gcoords;
 
     @Column(name = "droppoint")
     private String droppoint;
@@ -82,7 +88,7 @@ public class DayPlan {
     private BigDecimal localadulttktcost;
 
     @Column(name = "localchildtktcost")
-    private BigDecimal localchildtktcost;    
+    private BigDecimal localchildtktcost;
     // ****TICKETS COSTS ENDS
 
     @Column(name = "totalkmcount")
@@ -92,13 +98,17 @@ public class DayPlan {
     private BigDecimal totalvehiparkcost;
 
     // total cost for today modification
-    //@Column(name = "totallocostfortoday")
-    //private BigDecimal totallocostfortoday;
+    // @Column(name = "totallocostfortoday")
+    // private BigDecimal totallocostfortoday;
+
+    @ManyToOne
+    @JoinColumn(name = "pickup_stay_id", referencedColumnName = "id")
+    private Stay pickup_stay_id;
 
     @ManyToOne
     @JoinColumn(name = "end_stay_id", referencedColumnName = "id")
-    private Stay end_stay_id;
-
+    private Stay end_stay_id;   
+    
     @ManyToOne
     @JoinColumn(name = "lunchplace_id", referencedColumnName = "id")
     private LunchPlace lunchplace_id;
@@ -107,9 +117,10 @@ public class DayPlan {
     @JoinTable(name = "dayplan_has_attraction", joinColumns = @JoinColumn(name = "dayplan_id"), inverseJoinColumns = @JoinColumn(name = "attraction_id"))
     private Set<Attraction> vplaces;
 
-    //@ManyToMany
-    //@JoinTable(name = "dayplan_has_activity", joinColumns = @JoinColumn(name = "dayplan_id"), inverseJoinColumns = @JoinColumn(name = "activity_id"))
-    //private Set<Activity> activities;
+    // @ManyToMany
+    // @JoinTable(name = "dayplan_has_activity", joinColumns = @JoinColumn(name =
+    // "dayplan_id"), inverseJoinColumns = @JoinColumn(name = "activity_id"))
+    // private Set<Activity> activities;
 
     // common 6
     @Column(name = "addeddatetime")
