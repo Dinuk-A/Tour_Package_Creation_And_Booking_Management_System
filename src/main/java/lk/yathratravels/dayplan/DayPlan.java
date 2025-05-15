@@ -65,11 +65,12 @@ public class DayPlan {
     @Column(name = "pickuppoint")
     private String pickuppoint;
 
-    @Column(name = "pick_manual")
-    private String pick_manual;
-
+    //stay/airport/manual okkoma gcoords walata (but pickup and drop wena wenama)  common ekak thiyaganna thibba 💥💥💥
     @Column(name = "pick_manual_gcoords")
     private String pick_manual_gcoords;
+
+    @Column(name = "drop_manual_gcoords")
+    private String drop_manual_gcoords;
 
     @Column(name = "droppoint")
     private String droppoint;
@@ -106,9 +107,9 @@ public class DayPlan {
     private Stay pickup_stay_id;
 
     @ManyToOne
-    @JoinColumn(name = "end_stay_id", referencedColumnName = "id")
-    private Stay end_stay_id;   
-    
+    @JoinColumn(name = "drop_stay_id", referencedColumnName = "id")
+    private Stay drop_stay_id;
+
     @ManyToOne
     @JoinColumn(name = "lunchplace_id", referencedColumnName = "id")
     private LunchPlace lunchplace_id;

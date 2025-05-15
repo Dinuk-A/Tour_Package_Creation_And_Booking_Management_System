@@ -213,7 +213,7 @@ const selectDropOffType = (radio) => {
         manualDiv.style.display = 'block';
     }
 
-    dayplan.end_stay_id = null;
+    dayplan.drop_stay_id = null;
 }
 
 //when general cb is selected in pickup options
@@ -510,6 +510,8 @@ const airportSelectionPickup = () => {
     console.log("G: " + airportGeocoords);
     console.log("Global Var pickupPointGCoords: " + pickupPointGCoords);
 
+    dayplan.pickup_stay_id = null;
+
     dayplan.pickuppoint = data.name;
     airportSelectElement.style.border = '2px solid lime';
 
@@ -541,6 +543,7 @@ const passStayGCoords = () => {
     pickupPointGCoords = selectedStay.gcoords;
     console.log("Global Var pickupPointGCoords: " + pickupPointGCoords);
 
+    dayplan.pick_manual_gcoords = null; F
     dynamicSelectValidator(pickupStaySelect, 'dayplan', 'pickup_stay_id');
     pickupStaySelect.style.border = '2px solid lime';
 
@@ -893,7 +896,7 @@ const removeAll = () => {
 
     //remove and clear automatically binded lp and end stay info too
     dayplan.lunchplace_id = null;
-    dayplan.end_stay_id = null;
+    dayplan.drop_stay_id = null;
 
     let lunchPlaceSelect = document.getElementById("selectDPLunch");
     let endStaySelect = document.getElementById("dropOffAccommodationSelect");
@@ -1177,15 +1180,15 @@ const checkDPFormErrors = () => {
         }
 
         if (dayplan.totalvehiparkcost == null) {
-            errors += " Status cannot be empty \n";
+            errors += " totalvehiparkcost cannot be empty \n";
         }
 
         if (dayplan.vplaces == 0) {
             errors += "select at least one attraction  \n";
         }
 
-        if (dayplan.end_stay_id == null) {
-            errors += "end_stay_id cannot be empty \n";
+        if (dayplan.drop_stay_id == null) {
+            errors += "drop_stay_id cannot be empty \n";
         }
 
     } else {
@@ -1204,12 +1207,12 @@ const checkDPFormErrors = () => {
             errors += "totalkmcount cannot be empty \n";
         }
 
-        if (dayplan.lunchplace_id == null) {
-            errors += "lunchplace_id cannot be empty \n";
+        if (dayplan.lunchplace_id == null && dayplan.is_takepackedlunch == false) {
+            errors += "lunchplace info cannot be empty \n";
         }
 
-        if (dayplan.end_stay_id == null) {
-            errors += "end_stay_id cannot be empty \n";
+        if (dayplan.drop_stay_id == null) {
+            errors += "drop_stay_id cannot be empty \n";
         }
     }
 
@@ -1231,10 +1234,11 @@ const addNewDayPlan = async () => {
                 if (postServerResponse === 'OK') {
                     showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formDayPlan').reset();
-                    refreshDayPlanForm();
-                    buildDayPlanTable();
-                    var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
-                    myDPTableTab.show();
+                    //refreshDayPlanForm();
+                    //buildDayPlanTable();
+                    //var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    //myDPTableTab.show();
+                    window.location.reload();
                 } else {
                     showAlertModal('err', 'Submit Failed ' + postServerResponse);
                 }
@@ -1275,35 +1279,43 @@ const openModal = (dpObj) => {
     //resetModal();
 
     if (dpObj.is_template) {
-        document.getElementById('modalDPIsTemplateOrNot').innerText = 'This is a Template';
+        document.getElementById('tempInfoDisRow').classList.remove('d-none');
+        document.getElementById('modalDPIsTemplateOrNot').innerText = 'This Is A Template Itinerary';
     }
+
     document.getElementById('modalDPCode').innerText = dpObj.dayplancode || 'N/A';
     document.getElementById('modalDPTitle').innerText = dpObj.daytitle || 'N/A';
 
-    //find another way 💥💥💥
-    let dpAttrs = '';
-    dpObj.vplaces.forEach((element, index) => {
-        if (dpObj.vplaces.length - 1 == index) {
-            dpAttrs = dpAttrs + element.name;
-        }
-        else {
-            dpAttrs = dpAttrs + element.name + ", ";
-        }
-    });
+    const attractionsElement = document.getElementById('modalDPAttractions');
 
-    document.getElementById('modalDPAttractions').innerText = dpAttrs || 'N/A';
+    if (dpObj.vplaces.length > 0) {
 
-    document.getElementById('modalDPLunch').innerText = dpObj.lunchplace_id?.name || 'N/A';
+        const badges = dpObj.vplaces.map((element, index) => {
+            return `<span class="fs-6 px-2 py-1 me-2">${index + 1}. ${element.name}</span>`;
+        });
 
-    document.getElementById('modalDPStay').innerText = dpObj.end_stay_id?.name || 'N/A';
+        attractionsElement.innerHTML = badges.join(' ');
+    } else {
+        attractionsElement.innerHTML = 'N/A';
+    }
 
-    document.getElementById('modalDPTktLocalAdult').innerText = dpObj.localadulttktcost.toFixed(2) || 'N/A';
-    document.getElementById('modalDPTktLocalChild').innerText = dpObj.localchildtktcost.toFixed(2) || 'N/A';
-    document.getElementById('modalDPTktForeignAdult').innerText = dpObj.foreignadulttktcost.toFixed(2) || 'N/A';
-    document.getElementById('modalDPTktForeignChild').innerText = dpObj.foreignchildtktcost.toFixed(2) || 'N/A';
 
-    document.getElementById('modalDPParkingFee').innerText = dpObj.totalvehiparkcost.toFixed(2) || 'N/A';
-    document.getElementById('modalDPTotalDistance').innerText = dpObj.totalkmcount + ' KM' || 'N/A';
+    document.getElementById('modalDPStartLocation').innerText =
+        dpObj.pickuppoint || (dpObj.pickup_stay_id && dpObj.pickup_stay_id.name) || 'N/A';
+
+    document.getElementById('modalDPLunch').innerText =
+        dpObj.lunchplace_id?.name || (dpObj.is_takepackedlunch ? 'Take Packed Lunch' : 'N/A');
+
+    document.getElementById('modalDPStay').innerText = dpObj.drop_stay_id?.name || dpObj.droppoint || 'N/A';
+
+    document.getElementById('modalDPTktLocalAdult').innerText = 'LKR ' + dpObj.localadulttktcost.toFixed(2) || 'N/A';
+    document.getElementById('modalDPTktLocalChild').innerText = 'LKR ' + dpObj.localchildtktcost.toFixed(2) || 'N/A';
+    document.getElementById('modalDPTktForeignAdult').innerText = 'LKR ' + dpObj.foreignadulttktcost.toFixed(2) || 'N/A';
+    document.getElementById('modalDPTktForeignChild').innerText = 'LKR ' + dpObj.foreignchildtktcost.toFixed(2) || 'N/A';
+
+    document.getElementById('modalDPParkingFee').innerText = 'LKR ' + dpObj.totalvehiparkcost.toFixed(2) || 'N/A';
+    document.getElementById('modalDPTotalDistance').innerText = dpObj.totalkmcount > 0 ? `${dpObj.totalkmcount} KM` : 'NA';
+
     document.getElementById('modalDPNote').innerText = dpObj.note || 'N/A';
     document.getElementById('modalDPStatus').innerText = dpObj.dp_status || 'N/A';
 
@@ -1365,6 +1377,11 @@ const refillDayPlanForm = async (dpObj) => {
             const manualPickupInput = document.getElementById('manualLocationPickup');
             const manualPickupGCoordsInput = document.getElementById('geoCoords');
             const manualPickupCBVar = document.getElementById('manualPickupCB');
+            const stayPickupRow = document.getElementById('accommodationPickupOptions');
+
+            airportDropRow.style.display = 'none';
+            manualPickupRow.style.display = 'none';
+            stayPickupRow.style.display = 'none';
 
             switch (dpObj.pickuppoint) {
                 case "BIA":
@@ -1447,6 +1464,9 @@ const refillDayPlanForm = async (dpObj) => {
 
             const stayPickupRow = document.getElementById('accommodationPickupOptions');
             stayPickupRow.style.display = 'block';
+
+            const stayPickupCb = document.getElementById('accommodationsPickupCB');
+            stayPickupCb.checked = true;
         }
 
         document.getElementById('dpTotalKMcount').value = dpObj.totalkmcount;
@@ -1492,16 +1512,16 @@ const refillDayPlanForm = async (dpObj) => {
             }
         }
 
-        if (oldDayplan.end_stay_id != null) {
+        if (oldDayplan.drop_stay_id != null) {
             try {
                 const allStays = await ajaxGetReq("/stay/all");
-                fillDataIntoDynamicSelects(dropOffAccommodationSelect, '', allStays, 'name', dpObj.end_stay_id.name);
+                fillDataIntoDynamicSelects(dropOffAccommodationSelect, '', allStays, 'name', dpObj.drop_stay_id.name);
 
                 const allProvinces = await ajaxGetReq("/province/all");
-                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Select Province', allProvinces, 'name', dpObj.end_stay_id.district_id.province_id.name);
+                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Select Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
 
                 const allDistricts = await ajaxGetReq("/district/all");
-                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Select District', allDistricts, 'name', dpObj.end_stay_id.district_id.name);
+                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Select District', allDistricts, 'name', dpObj.drop_stay_id.district_id.name);
 
             } catch (error) {
                 console.error('error fetching previous end stay info')
@@ -1538,15 +1558,24 @@ const showDPValueChanges = () => {
     if (dayplan.pickuppoint != oldDayplan.pickuppoint) {
         updates = updates + " Pickup point will be changed to " + dayplan.pickuppoint + "\n";
     }
-    if (dayplan.end_stay_id.id != oldDayplan.end_stay_id.id) {
-        updates = updates + " end_stay_id will be changed to " + dayplan.end_stay_id.name + "\n";
+    if (dayplan.drop_stay_id.id != oldDayplan.drop_stay_id.id) {
+        updates = updates + " drop_stay_id will be changed to " + dayplan.drop_stay_id.name + "\n";
     }
     if (dayplan.note != oldDayplan.note) {
         updates = updates + " note Number will be changed to " + dayplan.note + "\n";
     }
-    if (dayplan.lunchplace_id.id != oldDayplan.lunchplace_id.id) {
-        updates = updates + " lunchplace_id Number will be changed to " + dayplan.lunchplace_id.name + "\n";
+
+    if (dayplan.lunchplace_id != null) {
+        if (dayplan.lunchplace_id.id != oldDayplan.lunchplace_id.id) {
+            updates = updates + " lunchplace_id Number will be changed to " + dayplan.lunchplace_id.name + "\n";
+        }
     }
+
+    if (oldDayplan.is_takepackedlunch != dayplan.is_takepackedlunch) {
+        updates = updates + " is_takepackedlunch will be changed to " + dayplan.is_takepackedlunch + "\n";
+        
+    }
+
     if (dayplan.dp_status != oldDayplan.dp_status) {
         updates = updates + " dp_status will be changed to " + dayplan.dp_status + "\n";
     }
@@ -1579,10 +1608,11 @@ const updateDayPlan = async () => {
                     if (putServiceResponse === "OK") {
                         showAlertModal('suc', 'Saved Successfully');
                         document.getElementById('formDayPlan').reset();
-                        refreshDayPlanForm();
-                        buildDayPlanTable();
-                        var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
-                        myDPTableTab.show();
+                        //refreshDayPlanForm();
+                        //buildDayPlanTable();
+                        //var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                        //myDPTableTab.show();
+                        window.location.reload();
                     } else {
                         showAlertModal('err', "Update Failed \n" + putServiceResponse);
                     }
@@ -1638,7 +1668,7 @@ const restoreDayPlanRecord = async () => {
                 showAlertModal('suc', "Successfully Restored");
                 $("#infoModalDayPlan").modal("hide");
 
-                //AN LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
+                //A LOADING ANIMATION HERE BEFORE REFRESHES ?? 💥💥💥
                 window.location.reload();
 
             } else {
