@@ -61,6 +61,85 @@
 
     <main id="mainAreaID" class="main">
 
+        <form action="">
+            <!-- Top action section -->
+<div class="d-flex align-items-center justify-content-between pb-2 mb-4 border-bottom">
+    <label class="form-label fw-bold mb-0 me-3">Add a Day:</label>
+    <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-outline-success btn-sm">
+            <i class="bi bi-plus-circle me-1"></i> Create New
+        </button>
+        <button class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-pencil-square me-1"></i> Edit Template
+        </button>
+        <button class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-archive me-1"></i> Use Existing
+        </button>
+    </div>
+</div>
+
+<!-- Selected Days Section -->
+<div class="d-flex flex-column gap-3">
+
+    <!-- Day Group Card (Start Day) -->
+    <div class="border border-secondary rounded p-3 bg-white shadow-sm">
+        <label class="form-label fw-bold mb-2">Start Day:</label>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <div class="fw-semibold">Colombo City Tour</div>
+                <small class="text-muted">Code: D001</small>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-info">View</button>
+                <button class="btn btn-sm btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons Between Start and Middle Day -->
+    <div class="d-flex justify-content-start gap-3 ps-1">
+        <button class="btn btn-outline-dark btn-sm">
+            <i class="bi bi-plus-circle me-1"></i> Add Middle Day
+        </button>
+        <button class="btn btn-outline-dark btn-sm">
+            <i class="bi bi-flag me-1"></i> Add Final Day
+        </button>
+    </div>
+
+    <!-- Day Group Card (Middle Day) -->
+    <div class="border border-secondary rounded p-3 bg-white shadow-sm">
+        <label class="form-label fw-bold mb-2">Middle Day:</label>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <div class="fw-semibold">Kandy Heritage Walk</div>
+                <small class="text-muted">Code: D045</small>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-info">View</button>
+                <button class="btn btn-sm btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day Group Card (Last Day) -->
+    <div class="border border-secondary rounded p-3 bg-white shadow-sm">
+        <label class="form-label fw-bold mb-2">Final Day:</label>
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <div class="fw-semibold">Southern Beach Escape</div>
+                <small class="text-muted">Code: D109</small>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-info">View</button>
+                <button class="btn btn-sm btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+        </form>
+
         <div class="container bg-light p-4">
             <div class="form-container bg-warning p-2">
                 <div class="form-title">
