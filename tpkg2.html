@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Tour Days</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+</head>
+
+<body class="p-4 bg-light">
+
+    <div id="days-container">
+        <!-- First Day (static) -->
+        <div class="day-card border border-secondary rounded p-3 mb-3 bg-white shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label fw-bold mb-0">First Day:</label>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-1 action-buttons">
+                <button class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i> Create New
+                </button>
+                <button class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Template
+                </button>
+                <button class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-archive me-1"></i> Use Existing
+                </button>
+            </div>
+        </div>
+
+
+
+        <!-- Middle Day cards will be inserted here -->
+
+        <!-- Final Day (static) -->
+        <div class="day-card border border-secondary rounded p-3 mb-3 bg-white shadow-sm" id="final-day-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="form-label fw-bold mb-0">Final Day:</label>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-1 action-buttons">
+                <button class="btn btn-outline-success btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i> Create New
+                </button>
+                <button class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-pencil-square me-1"></i> Edit Template
+                </button>
+                <button class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-archive me-1"></i> Use Existing
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Day Button -->
+    <div id="add-day-controls" class="d-flex justify-content-center gap-3 ps-1 my-3">
+        <button class="btn btn-outline-dark btn-sm" onclick="addMiddleDay()">
+            <i class="bi bi-plus-circle me-1"></i> Add Middle Day
+        </button>
+    </div>
+
+
+
+    <script>
+        function addMiddleDay() {
+            const container = document.getElementById("days-container");
+            const finalDayCard = document.getElementById("final-day-card");
+            const addControls = document.getElementById("add-day-controls");
+
+            // Create new middle day card
+            const newCard = document.createElement("div");
+            newCard.className = "day-card border border-secondary rounded p-3 mb-3 bg-white shadow-sm";
+
+            const middleDayCount = container.querySelectorAll(".middle-day").length + 1;
+            newCard.classList.add("middle-day");
+
+            newCard.innerHTML = `
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <label class="form-label fw-bold mb-0 day-label">Day #${middleDayCount}:</label>
+      <button class="btn btn-outline-danger btn-sm" onclick="deleteDay(this)">
+        <i class="bi bi-trash3 me-1"></i> Delete This Day
+      </button>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <button class="btn btn-outline-success btn-sm">
+        <i class="bi bi-plus-circle me-1"></i> Create New
+      </button>
+      <button class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-pencil-square me-1"></i> Edit a Template
+      </button>
+      <button class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-archive me-1"></i> Use Existing
+      </button>
+    </div>
+  `;
+
+            // Insert before the final day card
+            container.insertBefore(newCard, finalDayCard);
+
+            // Move the add-day-controls after the new card and before final day
+            container.insertBefore(addControls, finalDayCard);
+        }
+
+
+
+        function deleteDay(btn) {
+            const card = btn.closest(".day-card");
+            card.remove();
+
+            // Re-number the remaining middle days
+            const middleDays = document.querySelectorAll(".middle-day");
+            middleDays.forEach((card, index) => {
+                const label = card.querySelector(".day-label");
+                label.textContent = `Day #${index + 2}:`; // Since Day #1 is First Day
+            });
+
+            // Re-insert the add-day-controls in correct position
+            const container = document.getElementById("days-container");
+            const finalDayCard = document.getElementById("final-day-card");
+            const addControls = document.getElementById("add-day-controls");
+            container.insertBefore(addControls, finalDayCard);
+        }
+
+
+    </script>
+</body>
+
+</html>

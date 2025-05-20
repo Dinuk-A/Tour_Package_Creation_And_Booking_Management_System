@@ -92,12 +92,12 @@
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link border border-dark" id="tpkgStep3-tab" data-bs-toggle="tab"
                                         href="#tpkgStep3" role="tab" aria-controls="tpkgStep3"
-                                        aria-selected="false">Attractions</a>
+                                        aria-selected="false">Preferences</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link border border-dark" id="tpkgStep4-tab" data-bs-toggle="tab"
                                         href="#tpkgStep4" role="tab" aria-controls="tpkgStep4"
-                                        aria-selected="false">Accomodations</a>
+                                        aria-selected="false">Costs</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link border border-dark" id="tpkgStep5-tab" data-bs-toggle="tab"
@@ -136,7 +136,7 @@
                                                 <label for="inputPkgCode" class="form-label fw-bold mb-0"> Package
                                                     Code
                                                     <span class="text-danger"> * </span> :</label>
-                                                <input id="inputPkgCode" type="text" class="form-control"
+                                                <input disabled id="inputPkgCode" type="text" class="form-control"
                                                     onkeyup="inputValidatorText(this,'','tpkg' , 'pkgcode')" required>
 
                                             </div>
@@ -144,9 +144,10 @@
 
                                         <!-- pkg type and duration -->
                                         <div class="row mb-3">
+
                                             <!-- Package Type -->
-                                            <div class="col-6">
-                                                <label class="form-label fw-bold mb-1">Package Type <span
+                                            <div class="col-8">
+                                                <label class="form-label fw-bold mb-0">Package Type <span
                                                         class="text-danger">*</span> :</label>
                                                 <div class="row">
                                                     <div class="col-6">
@@ -168,8 +169,16 @@
                                                 </div>
                                             </div>
 
+                                            <div class="col-4">
+                                                <label for="tpStartDateInput" class="form-label mb-0 fw-bold">Tour Start
+                                                    Date(Estimated):</label>
+                                                <input type="date" class="form-control" id="tpStartDateInput"
+                                                    onchange="inputValidatorText(this, '' ,'tourpkg' , 'tourstartdate');"
+                                                    onkeydown="return false">
+                                            </div>
+
                                             <!-- Tour Duration -->
-                                            <div class="col-6">
+                                            <!--<div class="col-6">
                                                 <label class="form-label fw-bold mb-1">Tour Duration <span
                                                         class="text-danger">*</span> :</label>
                                                 <div class="row">
@@ -188,18 +197,19 @@
                                                             for="multiDayTour">Multi Day</label>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
+
                                         </div>
 
                                         <!-- tour start date row -->
-                                        <div class="row mb-3">
-                                            <div class="col-4">
+                                        <div class="row mb-0">
+                                            <!--<div class="col-4">
                                                 <label for="tpStartDateInput" class="form-label mb-0 fw-bold">Tour Start
                                                     Date(Estimated):</label>
                                                 <input type="date" class="form-control" id="tpStartDateInput"
                                                     onchange="inputValidatorText(this, '' ,'tourpkg' , 'tourstartdate');"
                                                     onkeydown="return false">
-                                            </div>
+                                            </div>-->
                                         </div>
 
 
@@ -209,349 +219,390 @@
                                 <!-- Step 2 -->
                                 <div class="tab-pane fade" id="tpkgStep2" role="tabpanel"
                                     aria-labelledby="tpkgStep2-tab">
-                                    <div class="row">
+                                    <div class="row mx-auto">
 
-                                        <!-- this fieldset will be stored in a separate row/col-8 -->
-                                        <div class="col-8">
+                                        <!-- Left column: Itinerary builder -->
+                                        <div class="col-8 mt-2">
                                             <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                                <legend class="float-none w-auto px-2 text-primary mb-0">
+
+                                                <legend class="float-none w-auto px-2 text-primary mb-0">Choose
                                                     Itineraries
                                                 </legend>
 
-                                                <!-- Day #1 Section -->
-                                                <!--<div class="border border-secondary rounded p-3 mt-3 bg-white">
-                                                    <label class="form-label fw-bold mb-3">Day #1:</label>
-                                                    <div class="d-flex flex-wrap gap-2">
-                                                        <button class="btn btn-outline-success">
-                                                            Create New
-                                                        </button>
-                                                        <button class="btn btn-outline-primary">
-                                                            Edit Template
-                                                        </button>
-                                                        <button class="btn btn-outline-secondary">
-                                                            Use Existing
-                                                        </button>
-                                                    </div>
-                                                </div>-->
 
-                                                <!-- Top action section -->
-                                                <div
-                                                    class="d-flex align-items-center justify-content-between pb-2 mb-4 border-bottom">
-                                                    <label class="form-label fw-bold mb-0 me-3">Add a Day:</label>
-                                                    <div class="d-flex flex-wrap gap-2">
-                                                        <button class="btn btn-outline-success btn-sm">
-                                                            <i class="bi bi-plus-circle me-1"></i> Create New
-                                                        </button>
-                                                        <button class="btn btn-outline-primary btn-sm">
-                                                            <i class="bi bi-pencil-square me-1"></i> Edit Template
-                                                        </button>
-                                                        <button class="btn btn-outline-secondary btn-sm">
-                                                            <i class="bi bi-archive me-1"></i> Use Existing
-                                                        </button>
-                                                    </div>
-                                                </div>
+                                                <div class="row mt-2">
+                                                    <div id="pkgDaysContainerId" class="col-12 mt-0"></div>
 
-                                                <!-- Selected Days Section -->
-                                                <div class="d-flex flex-column gap-3">
+                                                    <!-- First day box -->
+                                                    <div class="col-12 mt-0">
+                                                        <div
+                                                            class="row border border-secondary rounded p-3 mb-3 bg-white shadow-sm">
 
-                                                    <!-- Day Group Card (Start Day) -->
-                                                    <div class="border border-secondary rounded p-3 bg-white shadow-sm">
-                                                        <label class="form-label fw-bold mb-2">Start Day:</label>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div>
-                                                                <div class="fw-semibold">Colombo City Tour</div>
-                                                                <small class="text-muted">Code: D001</small>
+                                                            <!-- Day selector and buttons -->
+                                                            <div class="col-12 d-flex align-items-center">
+                                                                <div class="col-2">
+                                                                    <label for="tpStartDaySelect"
+                                                                        class="form-label">First Day :</label>
+                                                                </div>
+
+                                                                <div class="col-7">
+                                                                    <select disabled id="tpkgFirstDaySelect"
+                                                                        class="form-control form-select"></select>
+                                                                </div>
+
+                                                                <div class="col-3 d-flex justify-content-end gap-2">
+                                                                    <button type="button" disabled id="showFirstDayBtn"
+                                                                        class="btn btn-all ">
+                                                                        View
+                                                                    </button>
+                                                                    <button type="button" disabled
+                                                                        id="changeFirstDayBtn" class="btn btn-all ">
+                                                                        Change
+                                                                    </button>
+                                                                </div>
                                                             </div>
-                                                            <div class="d-flex gap-2">
-                                                                <button class="btn btn-sm btn-info">View</button>
-                                                                <button class="btn btn-sm btn-danger">Delete</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
 
-                                                    <!-- Action Buttons Between Start and Middle Day -->
-                                                    <div class="d-flex justify-content-start gap-3 ps-1">
-                                                        <button class="btn btn-outline-dark btn-sm">
-                                                            <i class="bi bi-plus-circle me-1"></i> Add Middle Day
-                                                        </button>
-                                                        <button class="btn btn-outline-dark btn-sm">
-                                                            <i class="bi bi-flag me-1"></i> Add Final Day
-                                                        </button>
-                                                    </div>
-
-                                                    <!-- Day Group Card (Middle Day) -->
-                                                    <div class="border border-secondary rounded p-3 bg-white shadow-sm">
-                                                        <label class="form-label fw-bold mb-2">Middle Day:</label>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div>
-                                                                <div class="fw-semibold">Kandy Heritage Walk</div>
-                                                                <small class="text-muted">Code: D045</small>
-                                                            </div>
-                                                            <div class="d-flex gap-2">
-                                                                <button class="btn btn-sm btn-info">View</button>
-                                                                <button class="btn btn-sm btn-danger">Delete</button>
+                                                            <!-- Action buttons -->
+                                                            <div class="col-12 mt-3" id="firstDayActionBtnsRow">
+                                                                <div class="d-flex flex-wrap gap-2">
+                                                                    <button class="btn btn-outline-success btn-sm">
+                                                                        <i class="bi bi-plus-circle me-1"></i> Create
+                                                                        New
+                                                                    </button>
+                                                                    <button class="btn btn-outline-primary btn-sm">
+                                                                        <i class="bi bi-pencil-square me-1"></i> Use
+                                                                        Template
+                                                                    </button>
+                                                                    <button class="btn btn-outline-secondary btn-sm">
+                                                                        <i class="bi bi-archive me-1"></i> Use Existing
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <!-- Day Group Card (Last Day) -->
-                                                    <div class="border border-secondary rounded p-3 bg-white shadow-sm">
-                                                        <label class="form-label fw-bold mb-2">Last Day:</label>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div>
-                                                                <div class="fw-semibold">Southern Beach Escape</div>
-                                                                <small class="text-muted">Code: D109</small>
+                                                    <!-- Middle days section -->
+                                                    <div class="col-12 my-2" id="tpkgMidDaysSelectSection">
+                                                        <!-- dynamically generated content goes here -->
+                                                    </div>
+
+                                                    <!-- Add More Days button -->
+                                                    <div class="col-12 d-flex justify-content-center my-2">
+                                                        <button type="button" id="addNewDaysBtn" class="btn btn-warning"
+                                                            onclick="generateNormalDayPlanSelectors()">
+                                                            Add More Days
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Final day box -->
+                                                    <div class="col-12 mt-1">
+                                                        <div
+                                                            class="row border border-secondary rounded p-3 mb-3 bg-white shadow-sm">
+                                                            <!-- Day selector and buttons -->
+                                                            <div class="col-12 d-flex align-items-center">
+                                                                <div class="col-2">
+                                                                    <label for="tpFinalDaySelect"
+                                                                        class="form-label">Final Day :</label>
+                                                                </div>
+
+                                                                <div class="col-7">
+                                                                    <select disabled id="tpkgFinalDaySelect"
+                                                                        class="form-control form-select"></select>
+                                                                </div>
+
+                                                                <div class="col-3 d-flex justify-content-end gap-2">
+                                                                    <button type="button" disabled id="showFinalDayBtn"
+                                                                        class="btn btn-all ">
+                                                                        View
+                                                                    </button>
+                                                                    <button type="button" disabled
+                                                                        id="changeFinalDayBtn" class="btn btn-all ">
+                                                                        Edit
+                                                                    </button>
+                                                                </div>
                                                             </div>
-                                                            <div class="d-flex gap-2">
-                                                                <button class="btn btn-sm btn-info">View</button>
-                                                                <button class="btn btn-sm btn-danger">Delete</button>
+
+                                                            <!-- Action buttons -->
+                                                            <div class="col-12 mt-3" id="finalDayActionBtnsRow">
+                                                                <div class="d-flex flex-wrap gap-2">
+                                                                    <button class="btn btn-outline-success btn-sm">
+                                                                        <i class="bi bi-plus-circle me-1"></i> Create
+                                                                        New
+                                                                    </button>
+                                                                    <button class="btn btn-outline-primary btn-sm">
+                                                                        <i class="bi bi-pencil-square me-1"></i> Use
+                                                                        Template
+                                                                    </button>
+                                                                    <button class="btn btn-outline-secondary btn-sm">
+                                                                        <i class="bi bi-archive me-1"></i> Use Existing
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                 </div>
 
                                             </fieldset>
-
                                         </div>
 
-                                        <!-- import existing itineraries section -->
+                                        <!-- Right column: Import section -->
                                         <div class="col-4 mt-2">
-                                            <div class="card border-dark bg-light mb-4"
-                                                style="max-height: 100%; overflow-y: auto;">
-                                                <div class="card-header bg-white">
-                                                    <h5 class="fw-bold mb-0">Select Days</h5>
-                                                </div>
-                                                <div class="card-body">
+                                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                                <legend class="float-none w-auto px-2 text-primary mb-0">Import
+                                                    Templates</legend>
 
-                                                    <!-- Day Type Dropdown -->
-                                                    <div class="mb-3">
-                                                        <label for="dayType" class="form-label fw-bold mb-0">Day
-                                                            Type</label>
-                                                        <select id="dayType" class="form-select">
-                                                            <option selected disabled>Select day type</option>
-                                                            <option value="first">First/Single Days</option>
-                                                            <option value="middle">Middle Days</option>
-                                                            <option value="last">Last Days</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <!-- Start District Dropdown -->
-                                                    <div class="mb-3">
+                                                <!-- filters -->
+                                                <div class="row mb-3">
+                                                    <div class="col-12">
                                                         <label for="startDistrict" class="form-label fw-bold mb-0">Start
                                                             District</label>
-                                                        <select id="startDistrict" class="form-select">
-                                                            <option selected disabled>Select district</option>
-                                                            <option value="colombo">Colombo</option>
-                                                            <option value="kandy">Kandy</option>
-                                                            <option value="galle">Galle</option>
+
+                                                        <select id="dpTemplateStartDistrictInTpkg" class="form-select">
+
                                                         </select>
+
                                                     </div>
-
-                                                    <!-- Day Results -->
-                                                    <label class="form-label fw-bold mt-3 mb-2">Available Days</label>
-
-                                                    <!-- Sample Day Items -->
-                                                    <div class="mb-2">
-                                                        <div class="fw-bold">Colombo City Tour</div>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <small class="text-muted">Code: D001</small>
-                                                            <div>
-                                                                <button class="btn btn-sm btn-info me-1">View</button>
-                                                                <button class="btn btn-sm btn-success">Add</button>
-                                                            </div>
-                                                        </div>
-                                                        <hr class="my-2">
-                                                    </div>
-
-                                                    <div class="mb-2">
-                                                        <div class="fw-bold">Kandy Heritage Walk</div>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <small class="text-muted">Code: D045</small>
-                                                            <div>
-                                                                <button class="btn btn-sm btn-info me-1">View</button>
-                                                                <button class="btn btn-sm btn-success">Add</button>
-                                                            </div>
-                                                        </div>
-                                                        <hr class="my-2">
-                                                    </div>
-
-                                                    <div class="mb-2">
-                                                        <div class="fw-bold">Southern Beach Escape</div>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <small class="text-muted">Code: D109</small>
-                                                            <div>
-                                                                <button class="btn btn-sm btn-info me-1">View</button>
-                                                                <button class="btn btn-sm btn-success">Add</button>
-                                                            </div>
-                                                        </div>
-                                                        <hr class="my-2">
-                                                    </div>
-
                                                 </div>
-                                            </div>
+
+                                                <!-- Results section -->
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <label class="form-label fw-bold mt-3 mb-2">Available
+                                                            Days</label>
+                                                        <div id="availableDayTemplatesContainer"
+                                                            class="border rounded p-2 bg-white"
+                                                            style="max-height: 300px; overflow-y: auto;">
+                                                            <!-- Dynamically generated day templates will appear here -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </fieldset>
                                         </div>
 
 
                                     </div>
-
                                 </div>
 
                                 <!-- Step 3 -->
                                 <div class="tab-pane fade" id="tpkgStep3" role="tabpanel"
                                     aria-labelledby="tpkgStep3-tab">
 
-                                    <!-- Attraction Selection -->
+                                    <!-- Tour group and resources -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
 
-                                        <legend class="float-none w-auto px-2 text-primary">Select Attractions
+                                        <legend class="float-none w-auto px-2 text-primary">Tour Group Preferences
                                         </legend>
 
-                                        <!-- prov and dist -->
-                                        <div class="row mb-3">
-                                            <div class="col-6">
-                                                <label for="selectVPProv"
-                                                    class="form-label fw-bold mb-0">Province:</label>
-                                                <select id="selectVPProv" class="form-control form-select"
-                                                    onchange="getDistByProvince(selectVPProv,selectVPDist); "></select>
-                                            </div>
 
-                                            <div class="col-6">
-                                                <label for="selectVPDist"
-                                                    class="form-label fw-bold mb-0">District:</label>
-                                                <select disabled id="selectVPDist" class="form-select"
-                                                    onchange="selectVPDist.style.border='2px solid green'; getVPlacesByDistrict(); "></select>
+                                        <!-- Number of Travellers Section in Card -->
+                                        <div class="card shadow-sm border rounded-3 px-3 pt-3 pb-2 mt-0 mx-auto">
+                                            <h5 class="text-info mb-3 border-bottom pb-1">Number of Travellers</h5>
+                                            <div class="row">
+
+                                                <!-- Local Adults -->
+                                                <div class="col-md-3">
+                                                    <label for="tpkgLocalAdultCount" class="form-label mb-0 fw-bold">Local
+                                                        Adults</label>
+                                                    <input type="number" value="0" class="form-control"
+                                                        id="tpkgLocalAdultCount"
+                                                        onkeyup="inputFieldValidator(this, '^[1-9]{1,3}$', 'tourpkg', 'localadultcount'); enableChildCountInputs();">
+                                                </div>
+
+                                                <!-- Local Children -->
+                                                <div class="col-md-3">
+                                                    <label for="tpkgLocalChildCount" class="form-label mb-0 fw-bold">Local
+                                                        Children</label>
+                                                    <input type="number" value="0" class="form-control"
+                                                        id="tpkgLocalChildCount" disabled
+                                                        onchange="inputFieldValidator(this, '^[1-9]{1,3}$', 'tourpkg', 'localchildcount');">
+                                                </div>
+
+                                                <!-- Foreign Adults -->
+                                                <div class="col-md-3">
+                                                    <label for="tpkgForeignAdultCount" class="form-label mb-0 fw-bold">Foreign
+                                                        Adults</label>
+                                                    <input type="number" value="0" class="form-control"
+                                                        id="tpkgForeignAdultCount"
+                                                        onkeyup="inputFieldValidator(this, '^[1-9]{1,3}$', 'tourpkg', 'foreignadultcount'); enableChildCountInputs();">
+                                                </div>
+
+                                                <!-- Foreign Children -->
+                                                <div class="col-md-3">
+                                                    <label for="tpkgForeignChildCount" class="form-label mb-0 fw-bold">Foreign
+                                                        Children</label>
+                                                    <input type="number" value="0" class="form-control"
+                                                        id="tpkgForeignChildCount" disabled
+                                                        onchange="inputFieldValidator(this, '^[1-9]{1,3}$', 'tourpkg', 'foreignchildcount');">
+                                                </div>
+
                                             </div>
                                         </div>
 
-                                        <!-- visiting places -->
-                                        <div class="row mt-2">
 
-                                            <!-- All Places -->
-                                            <div class="col-5">
-                                                <label for="allVPs" class="form-label fw-bold mb-0">All
-                                                    Places</label>
-                                                <select class="form-select" size="8" id="allVPs"></select>
-                                            </div>
+                                        <!-- Check Resource Availability -->
+                                        <div class="row mt-4 px-3 py-3 border rounded shadow-sm bg-light mx-auto"
+                                            id="checkAvailabilitySection">
+                                            <h5 class="text-info border-bottom pb-2 mb-4 fw-semibold">Check Resource
+                                                Availability</h5>
 
-                                            <!-- Buttons -->
-                                            <div
-                                                class="col-2 text-center d-flex flex-column justify-content-center mt-3">
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="passOne"
-                                                    style="background-color: #4ea8de; color: white;"
-                                                    onclick="addOne()">Add</button>
+                                            <!-- Cards Row -->
+                                            <div class="row mx-auto">
+                                                <!-- Vehicle Section -->
+                                                <div class="col-md-4">
+                                                    <div class="border rounded p-3 h-100 bg-white shadow-sm">
+                                                        <h6 class="text-center text-primary fw-bold mb-3">Vehicle</h6>
 
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="passAll"
-                                                    style="background-color: #3b8bca; color: white;"
-                                                    onclick="addAll()">Add
-                                                    All</button>
+                                                        <!-- Vehicle Type -->
+                                                        <div class="mb-3">
+                                                            <label for="tpkgVehitype"
+                                                                class="form-label mb-0 fw-bold">Vehicle
+                                                                Type</label>
+                                                            <select id="tpkgVehitype" class="form-select"
+                                                                onchange="selectDynamicVal(this, '', 'tourpkg', 'vehicletype'); checkCompanyVehiAvailability();">
+                                                            </select>
+                                                        </div>
 
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedOne"
-                                                    style="background-color: #f67280; color: white;"
-                                                    onclick="removeOne()">Remove</button>
+                                                        <!-- Available Vehicles -->
+                                                        <div class="row mt-1">
+                                                            <div class="col-4">
+                                                                <label class="form-label mb-0">Availablity
+                                                                    :</label>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <p><span class="text-primary fw-bold"
+                                                                        id="showAvailableVehiList"> </span>
+                                                                    Vehicle(s) Available</p>
+                                                            </div>
+                                                        </div>
 
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedAll"
-                                                    style="background-color: #e84545; color: white;"
-                                                    onclick="removeAll()">Remove All</button>
-                                            </div>
+                                                        <!-- Vehicle Source Options -->
+                                                        <label class="form-label mb-0">Select Vehicle Source</label>
+                                                        <div class="btn-group w-100" role="group">
+                                                            <input type="radio" class="btn-check" id="yathraVehiCB"
+                                                                name="bookingVehiSource" value="companyOwn">
+                                                            <label class="btn btn-outline-success"
+                                                                for="yathraVehiCB">Company Vehicle</label>
 
-
-                                            <!-- Selected Places -->
-                                            <div class="col-5">
-                                                <label for="selectedVPs" class="form-label fw-bold mb-0">Selected
-                                                    Places</label>
-                                                <select size="8" id="selectedVPs" class="form-select"></select>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-
-                                    <!-- Costs and Distance -->
-                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                        <legend class="float-none w-auto px-2 text-primary">Costs & Distance
-                                        </legend>
-
-                                        <div class="row mb-1">
-                                            <!-- Local -->
-                                            <div class="col-6 ">
-                                                <div class="row mt-1 mb-0">
-                                                    <div class="col-6">
-                                                        <label class="form-label mb-0 fw-bold"
-                                                            for="dpTotalLocalAdultTktCost">Local Adult</label>
-                                                        <p id="dpTotalLocalAdultTktCost"
-                                                            class="p-1 text-center border rounded bg-white">LKR
-                                                            0.00</p>
+                                                            <input type="radio" class="btn-check" id="rentalVehiCB"
+                                                                name="bookingVehiSource" value="rental">
+                                                            <label class="btn btn-outline-warning"
+                                                                for="rentalVehiCB">Rental Vehicle</label>
+                                                        </div>
                                                     </div>
+                                                </div>
 
-                                                    <div class="col-6">
-                                                        <label class="form-label mb-0 fw-bold"
-                                                            for="dpTotalLocalChildTktCost">Local Children</label>
-                                                        <p id="dpTotalLocalChildTktCost"
-                                                            class="p-1 text-center border rounded bg-white">
-                                                            LKR
-                                                            0.00</p>
+                                                <!-- Driver Section -->
+                                                <div class="col-md-4">
+                                                    <div class="border rounded p-3 h-100 bg-white shadow-sm">
+                                                        <h6 class="text-center text-primary fw-bold mb-3">Driver</h6>
+
+                                                        <!-- available drivers -->
+                                                        <div class="row mt-1">
+                                                            <div class="col-4">
+                                                                <label class="form-label mb-0">Availablity
+                                                                    :</label>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <p><span class="text-primary fw-bold"
+                                                                        id="showAvailableDriverList"> </span>
+                                                                    Driver(s)
+                                                                    Available</p>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Driver Source Options -->
+                                                        <label class="form-label mb-0">Select Source</label>
+                                                        <div class="btn-group w-100" role="group">
+                                                            <input type="radio" class="btn-check" id="yathraDriverCB"
+                                                                name="bookingDriverSource" value="companyOwn">
+                                                            <label class="btn btn-outline-success"
+                                                                for="yathraDriverCB">Company Driver</label>
+
+                                                            <input type="radio" class="btn-check" id="rentalDriverCB"
+                                                                name="bookingDriverSource" value="rental">
+                                                            <label class="btn btn-outline-warning"
+                                                                for="rentalDriverCB">External Driver</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Guide Section -->
+                                                <div class="col-md-4">
+                                                    <div class="border rounded p-3 h-100 bg-white shadow-sm">
+                                                        <h6 class="text-center text-primary fw-bold mb-3">Guide</h6>
+
+                                                        <!-- available guides -->
+                                                        <div class="row mt-1">
+                                                            <div class="col-4">
+                                                                <label class="form-label mb-0">Availablity
+                                                                    :</label>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <p><span class="text-primary fw-bold"
+                                                                        id="showAvailableGuideList"> </span>
+                                                                    Gudie(s)
+                                                                    Available</p>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Guide Needed -->
+                                                        <label class="form-label mb-2">Do You Need a Guide?</label>
+                                                        <div class="btn-group w-100 mb-0" role="group">
+                                                            <input type="radio" class="btn-check" id="guideYesCB"
+                                                                name="bookingGuideYesOrNo" value="guideYes"
+                                                                onchange="guideSourceSectionID.classList.remove('d-none');">
+                                                            <label class="btn btn-outline-success px-0"
+                                                                for="guideYesCB">Include Guide</label>
+
+                                                            <input type="radio" class="btn-check" id="guideNoCB"
+                                                                name="bookingGuideYesOrNo" value="guideNo"
+                                                                onchange="guideSourceSectionID.classList.add('d-none');">
+                                                            <label class="btn btn-outline-warning" for="guideNoCB">No
+                                                                Guide</label>
+                                                        </div>
+
+                                                        <!-- Guide Source Options -->
+                                                        <div class="btn-group w-100 d-none mt-1"
+                                                            id="guideSourceSectionID" role="group">
+                                                            <input type="radio" class="btn-check" id="yathraGuideCB"
+                                                                name="bookingGuideSource" value="companyOwn">
+                                                            <label class="btn btn-outline-success"
+                                                                for="yathraGuideCB">Company Guide</label>
+
+                                                            <input type="radio" class="btn-check" id="rentalGuideCB"
+                                                                name="bookingGuideSource" value="rental">
+                                                            <label class="btn btn-outline-warning"
+                                                                for="rentalGuideCB">External Guide</label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <!-- Foreign -->
-                                            <div class="col-6 ">
-                                                <div class="row mt-1 mb-0">
-                                                    <div class="col-6">
-                                                        <label class="form-label mb-0 fw-bold"
-                                                            for="dpTotalForeignAdultTktCost">Foreign Adult</label>
-                                                        <p id="dpTotalForeignAdultTktCost"
-                                                            class="p-1 text-center border rounded bg-white">LKR
-                                                            0.00</p>
-                                                    </div>
-
-                                                    <div class="col-6">
-                                                        <label class="form-label mb-0 fw-bold"
-                                                            for="dpTotalForeignChildTktCost">Foreign
-                                                            Children</label>
-                                                        <p id="dpTotalForeignChildTktCost"
-                                                            class="p-1 text-center border rounded bg-white">LKR
-                                                            0.00</p>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
 
-                                        <hr style="border: 3px double blue;">
 
-                                        <!-- Other Costs -->
-                                        <div class="row mb-3">
-                                            <div class="col-3">
-                                                <label class="form-label fw-bold mb-0"
-                                                    for="dpTotalVehiParkingCost">Total
-                                                    Parking Fees</label>
-                                                <p id="dpTotalVehiParkingCost"
-                                                    class="p-1 text-center border rounded bg-white">LKR 0.00
-                                                </p>
-                                            </div>
-                                        </div>
+
                                     </fieldset>
-
-                                    <!-- add fieldsets later -->
-                                    <!-- day plans select/create -->
-                                    <div class="row mt-2">
-
-                                        <!-- btn to create a new day plan  💥💥💥-->
-                                        <div class="col-4"><button type="button">Create New Day Plan</button></div>
-
-                                        <!-- import existing days -->
-                                        <!-- 💥💥💥a type and search here -->
-                                        <div class="col-8"></div>
-
-                                    </div>
-
                                 </div>
 
+
+
+
+
+
                             </div>
-                        </form>
+
                     </div>
+                    </form>
 
                 </div>
+
             </div>
+
+        </div>
+        </div>
 
         </div>
 
