@@ -11,25 +11,7 @@
     <script src="controllerJSs/tpkg.js"></script>
 
     <style>
-        .custom-offcanvas {
-            top: 56px;
-            height: calc(100% - 56px);
-        }
 
-        .custom-itinerary-btn {
-            min-width: 180px;
-            background-color: #f8f9fa;
-            border: 1px solid #0d6efd;
-            color: #0d6efd;
-            transition: all 0.2s ease-in-out;
-            font-weight: 500;
-            border-radius: 6px;
-        }
-
-        .custom-itinerary-btn:hover {
-            background-color: #0d6efd;
-            color: #fff;
-        }
     </style>
 
 </head>
@@ -53,7 +35,7 @@
             <!-- for form side -->
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formTpkgHolderDiv" role="tab"
-                    aria-controls="formTpkgHolderDiv" aria-selected="false" onclick="setTpkgStatusAuto()">Form</a>
+                    aria-controls="formTpkgHolderDiv" aria-selected="false" onclick="setTpkgStatus()">Form</a>
             </li>
         </ul>
 
@@ -61,7 +43,7 @@
         <div class="tab-content mt-1" id="myTabContent">
             <!-- Table tab  -->
             <div id="tableTpkgHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3" role="tabpanel"
-                aria-labelledby="table-tab">               
+                aria-labelledby="table-tab">
             </div>
 
             <!-- Form tab -->
@@ -69,7 +51,7 @@
 
                 <!-- main area for form -->
                 <div class="card mx-auto" style="width: 1250px;">
-                   
+
                     <div class="card-body" style="background-color: ivory;">
 
                         <form id="formTpkg" onsubmit="return false">
@@ -167,11 +149,11 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-4">
+                                            <div class="col-4" id="startDateCol">
                                                 <label for="tpStartDateInput" class="form-label mb-0 fw-bold">Tour Start
                                                     Date(Estimated):</label>
                                                 <input type="date" class="form-control" id="tpStartDateInput"
-                                                    onchange="inputValidatorText(this, '' ,'tourpkg' , 'tourstartdate');"
+                                                    onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate');"
                                                     onkeydown="return false">
                                             </div>
 
@@ -202,13 +184,14 @@
                                         <!-- description row (only available for web site) -->
                                         <div class="row mb-0">
                                             <div class="col-6 d-none" id="tpDescRow">
-                                                <label for="tpDescription" class="form-label mb-1">Short Description
+                                                <label for="tpDescription" class="fw-bold form-label mb-0">Short
+                                                    Description
                                                     :</label>
 
                                                 <textarea class="form-control"
                                                     placeholder=" Short Description For Show In WebSite"
                                                     id="tpDescription"
-                                                    onkeyup="inputValidatorText(this,'','tourpkg','description')"
+                                                    onkeyup="inputValidatorText(this,'','tpkg','description')"
                                                     style="height: 120px;">
                                                 </textarea>
 
@@ -390,7 +373,7 @@
                                     aria-labelledby="tpkgStep3-tab">
 
                                     <!-- Tour group and resources -->
-                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light" id="preferencesFieldset">
 
                                         <legend class="float-none w-auto px-2 text-primary">Tour Group Preferences
                                         </legend>
@@ -399,49 +382,72 @@
                                         <!-- Number of Travellers Section in Card -->
                                         <div class="card shadow-sm border rounded-3 px-3 pt-3 pb-2 mt-0 mx-auto">
                                             <h5 class="text-info mb-3 border-bottom pb-1">Number of Travellers</h5>
+
                                             <div class="row">
 
                                                 <!-- Local Adults -->
-                                                <div class="col-md-3">
-                                                    <label for="tpkgLocalAdultCount"
-                                                        class="form-label mb-0 fw-bold">Local
-                                                        Adults</label>
-                                                    <input type="number" value="0" class="form-control"
-                                                        id="tpkgLocalAdultCount"
-                                                        onkeyup="inputValidatorText(this, '^[1-9]{1,3}$', 'tourpkg', 'localadultcount'); enableChildCountInputs();">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label for="tpkgLocalAdultCount"
+                                                            class="form-label mb-0 fw-bold">Local Adults</label>
+                                                        <input type="number" value="0" class="form-control"
+                                                            id="tpkgLocalAdultCount"
+                                                            onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'localadultcount'); enableChildCountInputs(); "
+                                                            oninput="updateTotalTravellers()">
+                                                    </div>
                                                 </div>
 
                                                 <!-- Local Children -->
-                                                <div class="col-md-3">
-                                                    <label for="tpkgLocalChildCount"
-                                                        class="form-label mb-0 fw-bold">Local
-                                                        Children</label>
-                                                    <input type="number" value="0" class="form-control"
-                                                        id="tpkgLocalChildCount" disabled
-                                                        onchange="inputValidatorText(this, '^[1-9]{1,3}$', 'tourpkg', 'localchildcount');">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label for="tpkgLocalChildCount"
+                                                            class="form-label mb-0 fw-bold">Local Children</label>
+                                                        <input type="number" value="0" class="form-control"
+                                                            id="tpkgLocalChildCount" disabled
+                                                            onchange="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'localchildcount');"
+                                                            oninput="updateTotalTravellers()">
+                                                    </div>
                                                 </div>
 
                                                 <!-- Foreign Adults -->
-                                                <div class="col-md-3">
-                                                    <label for="tpkgForeignAdultCount"
-                                                        class="form-label mb-0 fw-bold">Foreign
-                                                        Adults</label>
-                                                    <input type="number" value="0" class="form-control"
-                                                        id="tpkgForeignAdultCount"
-                                                        onkeyup="inputValidatorText(this, '^[1-9]{1,3}$', 'tourpkg', 'foreignadultcount'); enableChildCountInputs();">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label for="tpkgForeignAdultCount"
+                                                            class="form-label mb-0 fw-bold">Foreign Adults</label>
+                                                        <input type="number" value="0" class="form-control"
+                                                            id="tpkgForeignAdultCount"
+                                                            onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'foreignadultcount'); enableChildCountInputs();"
+                                                            oninput="updateTotalTravellers()">
+                                                    </div>
                                                 </div>
 
                                                 <!-- Foreign Children -->
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label for="tpkgForeignChildCount"
+                                                            class="form-label mb-0 fw-bold">Foreign Children</label>
+                                                        <input type="number" value="0" class="form-control"
+                                                            id="tpkgForeignChildCount" disabled
+                                                            onchange="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'foreignchildcount');"
+                                                            oninput="updateTotalTravellers()">
+                                                    </div>
+                                                </div>
+
+                                                <!-- Blank Space -->
+                                                <div class="col-md-1"></div>
+
+                                                <!-- Total Travellers -->
                                                 <div class="col-md-3">
-                                                    <label for="tpkgForeignChildCount"
-                                                        class="form-label mb-0 fw-bold">Foreign
-                                                        Children</label>
-                                                    <input type="number" value="0" class="form-control"
-                                                        id="tpkgForeignChildCount" disabled
-                                                        onchange="inputValidatorText(this, '^[1-9]{1,3}$', 'tourpkg', 'foreignchildcount');">
+                                                    <div class="form-group">
+                                                        <label for="tpkgTotalTravellers"
+                                                            class="form-label mb-0 fw-bold">Total Travellers</label>
+                                                        <input type="number" value="0" class="form-control"
+                                                            id="tpkgTotalTravellers" disabled>
+                                                    </div>
                                                 </div>
 
                                             </div>
+
                                         </div>
 
 
@@ -464,7 +470,7 @@
                                                                 class="form-label mb-0 fw-bold">Vehicle
                                                                 Type</label>
                                                             <select id="tpkgVehitype" class="form-select"
-                                                                onchange="dynamicSelectValidator(this, 'tourpkg', 'vehicletype'); checkCompanyVehiAvailability();">
+                                                                onchange="dynamicSelectValidator(this, 'tpkg', 'vehicletype'); checkCompanyVehiAvailability();">
                                                             </select>
                                                         </div>
 
@@ -538,6 +544,22 @@
                                                     <div class="border rounded p-3 h-100 bg-white shadow-sm">
                                                         <h6 class="text-center text-primary fw-bold mb-3">Guide</h6>
 
+                                                        <!-- Guide Needed -->
+                                                        <label class="form-label mb-2">Do You Need a Guide?</label>
+                                                        <div class="btn-group w-100 mb-0" role="group">
+                                                            <input type="radio" class="btn-check" id="guideYesCB"
+                                                                name="bookingGuideYesOrNo" value="guideYes"
+                                                                onchange="guideSourceSectionID.classList.remove('d-none'); ">
+                                                            <label class="btn btn-outline-success px-0"
+                                                                for="guideYesCB">Include Guide</label>
+
+                                                            <input type="radio" class="btn-check" id="guideNoCB"
+                                                                name="bookingGuideYesOrNo" value="guideNo"
+                                                                onchange="guideSourceSectionID.classList.add('d-none');">
+                                                            <label class="btn btn-outline-warning" for="guideNoCB">No
+                                                                Guide</label>
+                                                        </div>
+
                                                         <!-- available guides -->
                                                         <div class="row mt-1">
                                                             <div class="col-4">
@@ -551,22 +573,6 @@
                                                                     Available</p>
 
                                                             </div>
-                                                        </div>
-
-                                                        <!-- Guide Needed -->
-                                                        <label class="form-label mb-2">Do You Need a Guide?</label>
-                                                        <div class="btn-group w-100 mb-0" role="group">
-                                                            <input type="radio" class="btn-check" id="guideYesCB"
-                                                                name="bookingGuideYesOrNo" value="guideYes"
-                                                                onchange="guideSourceSectionID.classList.remove('d-none');">
-                                                            <label class="btn btn-outline-success px-0"
-                                                                for="guideYesCB">Include Guide</label>
-
-                                                            <input type="radio" class="btn-check" id="guideNoCB"
-                                                                name="bookingGuideYesOrNo" value="guideNo"
-                                                                onchange="guideSourceSectionID.classList.add('d-none');">
-                                                            <label class="btn btn-outline-warning" for="guideNoCB">No
-                                                                Guide</label>
                                                         </div>
 
                                                         <!-- Guide Source Options -->
@@ -592,7 +598,7 @@
                                     </fieldset>
 
                                     <!-- Image Upload Section -->
-                                    <fieldset class="border border-dark p-4 mt-4 bg-light " id="imageAddSection">
+                                    <fieldset class="border border-dark p-4 mt-4 bg-light " id="imagesFieldset">
                                         <legend class="float-none w-auto px-2 text-primary">Upload Package Images
                                         </legend>
 
@@ -606,7 +612,7 @@
                                                         style="width: 100px; height: 100px;" id="imgPreview1">
 
                                                     <input type="file" class="d-none" id="fileImg1"
-                                                        onchange="imgValidatorfortpkg(this,'tourpkg','img1',imgPreview1)">
+                                                        onchange="imgValidatorfortpkg(this,'tpkg','img1',imgPreview1)">
 
                                                     <button type="button" class="btn btn-primary btn-sm w-100 mb-2"
                                                         onclick="fileImg1.click();">Select Cover Image</button>
@@ -624,7 +630,7 @@
                                                         style="width: 100px; height: 100px;" id="imgPreview2">
 
                                                     <input type="file" class="d-none" id="fileImg2"
-                                                        onchange="imgValidatorfortpkg(this,'tourpkg','img2',imgPreview2)">
+                                                        onchange="imgValidatorfortpkg(this,'tpkg','img2',imgPreview2)">
 
                                                     <button type="button" class="btn btn-info btn-sm w-100 mb-2"
                                                         onclick="fileImg2.click();">Select Image 2</button>
@@ -642,7 +648,7 @@
                                                         style="width: 100px; height: 100px;" id="imgPreview3">
 
                                                     <input type="file" class="d-none" id="fileImg3"
-                                                        onchange="imgValidatorfortpkg(this,'tourpkg','img3',imgPreview3)">
+                                                        onchange="imgValidatorfortpkg(this,'tpkg','img3',imgPreview3)">
 
                                                     <button type="button" class="btn btn-info btn-sm w-100 mb-2"
                                                         onclick="fileImg3.click();">Select Image 3</button>
@@ -675,7 +681,7 @@
                                                     </span>
                                                     <input disabled type="text" id="totalTktCostInput"
                                                         class="form-control form-input p-1"
-                                                        onchange="inputValidatorText(this,'','tourpkg','totaltktcostforall');">
+                                                        onchange="inputValidatorText(this,'','tpkg','totaltktcostforall');">
                                                 </div>
                                             </div>
 
@@ -689,7 +695,7 @@
                                                     </span>
                                                     <input disabled type="number" id="totalVehicleParkingCost"
                                                         class="form-control form-input p-1"
-                                                        onchange="inputValidatorText(this,'','tourpkg','totalvehiparkingcost');">
+                                                        onchange="inputValidatorText(this,'','tpkg','totalvehiparkingcost');">
                                                 </div>
                                             </div>
 
@@ -703,7 +709,7 @@
                                                     </span>
                                                     <input disabled type="number" id="totalLunchCostForAll"
                                                         class="form-control form-input p-1"
-                                                        onchange="inputValidatorText(this,'','tourpkg','totallunchcost');">
+                                                        onchange="inputValidatorText(this,'','tpkg','totallunchcost');">
                                                 </div>
                                             </div>
                                         </div>
@@ -720,7 +726,7 @@
                                                     </span>
                                                     <input disabled type="number" id="totalVehiCost"
                                                         class="form-control form-input p-1"
-                                                        onchange="inputValidatorText(this,'','tourpkg','totalvehiclecost');">
+                                                        onchange="inputValidatorText(this,'','tpkg','totalvehiclecost');">
                                                 </div>
                                             </div>
 
@@ -734,7 +740,7 @@
                                                     </span>
                                                     <input disabled type="number" id="totalStayCostInput"
                                                         class="form-control form-input p-1"
-                                                        onchange="inputValidatorText(this,'','tourpkg','totalstaycost');">
+                                                        onchange="inputValidatorText(this,'','tpkg','totalstaycost');">
                                                 </div>
                                             </div>
 
@@ -748,7 +754,7 @@
                                                     </span>
                                                     <input disabled type="number" id="totalAdditionalCosts"
                                                         class="form-control form-input p-1"
-                                                        onchange="inputValidatorText(this,'','tourpkg','totaladditionalcosts');">
+                                                        onchange="inputValidatorText(this,'','tpkg','totaladditionalcosts');">
                                                 </div>
                                             </div>
                                         </div>
@@ -760,7 +766,7 @@
                                                 <label for="pkgDiscountPrec"
                                                     class="form-label mb-0 fw-bold text-success">Discount</label>
                                                 <select class="form-select" id="pkgDiscountPrec"
-                                                    onchange="selectStaticVal(this, '', 'tourpkg', 'discountprec');">
+                                                    onchange="selectStaticVal(this, '', 'tpkg', 'discountprec');">
                                                     <option selected value="0%">No Discount</option>
                                                     <option value="5%">5 %</option>
                                                     <option value="10%">10 %</option>
@@ -793,7 +799,7 @@
                                                     </span>
                                                     <input disabled type="number" id="pkgFinalCostInput"
                                                         class="form-control form-input p-1"
-                                                        onchange="inputValidatorText(this,'','tourpkg','pkgtotalcost');">
+                                                        onchange="inputValidatorText(this,'','tpkg','pkgtotalcost');">
                                                 </div>
                                             </div>
                                         </div>
@@ -812,7 +818,7 @@
                                                     </span>
                                                     <input disabled type="number" id="pkgAdvance"
                                                         class="form-control form-input p-1"
-                                                        onchange="inputValidatorText(this,'','tourpkg','advanceamount');">
+                                                        onchange="inputValidatorText(this,'','tpkg','advanceamount');">
                                                 </div>
                                             </div>
 
@@ -827,7 +833,7 @@
                                                     </span>
                                                     <input disabled type="number" id="pkgFinalPrice"
                                                         class="form-control form-input p-1"
-                                                        onchange="inputValidatorText(this,'','tourpkg','pkgprice');">
+                                                        onchange="inputValidatorText(this,'','tpkg','pkgprice');">
                                                 </div>
                                             </div>
                                         </div>
@@ -848,7 +854,7 @@
                                                 <label for="tpNote" class="form-label fw-bold mb-1">Note :</label>
                                                 <textarea class="form-control" id="tpNote" style="height: 150px;"
                                                     placeholder=" "
-                                                    onkeyup="inputValidatorText(this,'','tourpkg','note')"></textarea>
+                                                    onkeyup="inputValidatorText(this,'','tpkg','note')"></textarea>
                                             </div>
 
                                             <!-- Package Status -->
@@ -856,10 +862,13 @@
                                                 <label for="tpSelectStatus" class="form-label fw-bold mb-1">Status
                                                     :</label>
                                                 <select id="tpSelectStatus" class="form-control form-select"
-                                                    onchange="staticSelectValidator(this , 'employee' , 'tkg_status')">
+                                                    onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status')">
                                                     <option value="" selected disabled> Select Status </option>
-                                                    <option value="Working"> Working </option>
-                                                    <option value="Resigned"> Resigned </option>
+                                                    <option value="Draft"> Draft </option>
+                                                    <option value="Pending"> Pending </option>
+                                                    <option value="In_progress"> In Progress </option>
+                                                    <option value="Confirmed"> Confirmed </option>
+                                                    <option value="Completed"> Completed </option>
                                                     <option value="ifDeleted" class="d-none"> Deleted </option>
                                                 </select>
                                             </div>

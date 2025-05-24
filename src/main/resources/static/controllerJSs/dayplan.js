@@ -2,7 +2,7 @@ window.addEventListener('load', () => {
 
     buildDayPlanTable();
     refreshDayPlanForm();
-    updateDayTab();
+    //updateDayTab();
 
 });
 
@@ -578,7 +578,7 @@ const handleChangesBasedDPType = () => {
 const setDayPlanStatus = () => {
 
     const ddyPlanStatusSelectElement = document.getElementById('dpSelectStatus');
-    ddyPlanStatusSelectElement.classList.add = 'd-none';
+    //ddyPlanStatusSelectElement.classList.add = 'd-none';
     dayplan.dp_status = "Draft";
     ddyPlanStatusSelectElement.value = "Draft";
     ddyPlanStatusSelectElement.style.border = "2px solid lime";
