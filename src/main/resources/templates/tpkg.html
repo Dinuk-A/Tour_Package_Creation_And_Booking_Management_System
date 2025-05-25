@@ -104,8 +104,8 @@
                                                 <label for="inputPkgTitle" class="form-label fw-bold mb-0"> Package
                                                     Title
                                                     <span class="text-danger"> * </span> :</label>
-                                                <input id="inputPkgTitle" type="text" class="form-control"
-                                                    placeholder="Enter A Title for The Package"
+                                                <input id="inputPkgTitle" type="text"
+                                                    class="form-control" placeholder="Enter A Title for The Package"
                                                     onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')" required>
 
                                             </div>
@@ -225,23 +225,21 @@
                                                             <!-- Day selector and buttons -->
                                                             <div class="col-12 d-flex align-items-center">
                                                                 <div class="col-2">
-                                                                    <label for="tpStartDaySelect"
+                                                                    <label for="tpkgFirstDaySelect"
                                                                         class="form-label">First Day :</label>
                                                                 </div>
 
                                                                 <div class="col-7">
                                                                     <select disabled id="tpkgFirstDaySelect"
-                                                                        class="form-control form-select"></select>
+                                                                        class="form-control form-select"
+                                                                        onchange="showFirstDayBtn.disabled = false;"></select>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
                                                                     <button type="button" disabled id="showFirstDayBtn"
-                                                                        class="btn btn-all ">
+                                                                        class="btn btn-all"
+                                                                        onclick="showDayPlanDetails('tpkgFirstDaySelect')">
                                                                         View
-                                                                    </button>
-                                                                    <button type="button" disabled
-                                                                        id="changeFirstDayBtn" class="btn btn-all ">
-                                                                        Change
                                                                     </button>
                                                                 </div>
                                                             </div>
@@ -253,11 +251,13 @@
                                                                         <i class="bi bi-plus-circle me-1"></i> Create
                                                                         New
                                                                     </button>
-                                                                    <button class="btn btn-outline-primary btn-sm">
+                                                                    <button class="btn btn-outline-primary btn-sm"
+                                                                        onclick="loadTemplates(tpkgFirstDaySelect)">
                                                                         <i class="bi bi-pencil-square me-1"></i> Use
                                                                         Template
                                                                     </button>
-                                                                    <button class="btn btn-outline-secondary btn-sm">
+                                                                    <button class="btn btn-outline-secondary btn-sm"
+                                                                        onclick="loadExistingFDs(tpkgFirstDaySelect)">
                                                                         <i class="bi bi-archive me-1"></i> Use Existing
                                                                     </button>
                                                                 </div>
@@ -291,18 +291,17 @@
 
                                                                 <div class="col-7">
                                                                     <select disabled id="tpkgFinalDaySelect"
-                                                                        class="form-control form-select"></select>
+                                                                        class="form-control form-select"
+                                                                        onchange="showFinalDayBtn.disabled = false;"></select>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
                                                                     <button type="button" disabled id="showFinalDayBtn"
-                                                                        class="btn btn-all ">
+                                                                        class="btn btn-all"
+                                                                        onclick="showDayPlanDetails('tpkgFinalDaySelect')">
                                                                         View
                                                                     </button>
-                                                                    <button type="button" disabled
-                                                                        id="changeFinalDayBtn" class="btn btn-all ">
-                                                                        Edit
-                                                                    </button>
+
                                                                 </div>
                                                             </div>
 
@@ -313,11 +312,13 @@
                                                                         <i class="bi bi-plus-circle me-1"></i> Create
                                                                         New
                                                                     </button>
-                                                                    <button class="btn btn-outline-primary btn-sm">
+                                                                    <button class="btn btn-outline-primary btn-sm"
+                                                                        onclick="loadTemplates(tpkgFinalDaySelect)">
                                                                         <i class="bi bi-pencil-square me-1"></i> Use
-                                                                        Template
+                                                                        Templates
                                                                     </button>
-                                                                    <button class="btn btn-outline-secondary btn-sm">
+                                                                    <button class="btn btn-outline-secondary btn-sm"
+                                                                        onclick="loadExistingLDs(tpkgFinalDaySelect)">
                                                                         <i class="bi bi-archive me-1"></i> Use Existing
                                                                     </button>
                                                                 </div>
@@ -332,16 +333,18 @@
                                         <!-- Right column: Import section -->
                                         <div class="col-4 mt-2">
                                             <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                                <legend class="float-none w-auto px-2 text-primary mb-0">Import
-                                                    Templates</legend>
+                                                <legend class="float-none w-auto px-2 text-primary mb-0">Filter
+                                                    Itineraries</legend>
 
                                                 <!-- filters -->
                                                 <div class="row mb-3">
                                                     <div class="col-12">
-                                                        <label for="startDistrict" class="form-label fw-bold mb-0">Start
+                                                        <label for="startDistrict"
+                                                            class="form-label fw-bold mb-0">Select Starting
                                                             District</label>
 
-                                                        <select id="dpTemplateStartDistrictInTpkg" class="form-select">
+                                                        <select id="dpTemplateStartDistrictInTpkg" class="form-select"
+                                                            onchange="filterDayPlanTemplatesByDistrict()">
 
                                                         </select>
 
@@ -353,8 +356,7 @@
                                                     <div class="col-12">
                                                         <label class="form-label fw-bold mt-3 mb-2">Available
                                                             Days</label>
-                                                        <div id="availableDayTemplatesContainer"
-                                                            class="border rounded p-2 bg-white"
+                                                        <div id="availableDayTemplatesContainer" class="bg-white"
                                                             style="max-height: 300px; overflow-y: auto;">
                                                             <!-- Dynamically generated day templates will appear here -->
                                                         </div>
@@ -1029,6 +1031,97 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal to show day plan info -->
+        <div class="modal fade py-5" id="dayPlanModal" tabindex="-1" aria-labelledby="dayPlanInfoLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4 border-0">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white rounded-top-4">
+                        <h5 class="modal-title fw-bold" id="dayPlanInfoLabel">Day Plan Details</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body bg-light shadow-sm">
+                        <div class="container">
+
+                            <!-- Template Info -->
+                            <div id="tempInfoDisRow"
+                                class="mb-4 text-center p-3 bg-light border rounded shadow-sm d-none">
+                                <p id="dpInfoInTpkgIsTemplate" class="mb-0 text-primary fw-bold fs-5"></p>
+                            </div>
+
+                            <!-- Code -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <p class="fw-bold mb-1 text-primary">Code:</p>
+                                    <p id="dpInfoInTpkgCode" class="mb-0"></p>
+                                </div>
+                            </div>
+
+                            <!-- Title -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <p class="fw-bold mb-1 text-primary">Title:</p>
+                                    <p id="dpInfoInTpkgTitle" class="mb-0"></p>
+                                </div>
+                            </div>
+
+                            <!-- Start / Pickup Location -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <p class="fw-bold mb-1 text-primary">Start / Pickup Location:</p>
+                                    <p id="dpInfoInTpkgStartLocation" class="mb-0"></p>
+                                </div>
+                            </div>
+
+                            <!-- Lunch For Day -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <p class="fw-bold mb-1 text-primary">Lunch For Day:</p>
+                                    <p id="dpInfoInTpkgLunchPlace" class="mb-0"></p>
+                                </div>
+                            </div>
+
+                            <!-- End / DropOff Location Day -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <p class="fw-bold mb-1 text-primary">End / DropOff Location Day:</p>
+                                    <p id="dpInfoInTpkgDropPoint" class="mb-0"></p>
+                                </div>
+                            </div>
+
+                            <!-- Visiting Places -->
+                            <div class="mb-4">
+                                <p class="fw-bold mb-1 text-primary">Visiting Places:</p>
+                                <ul id="dpInfoInTpkgPlaces" class="ps-3 mb-0"></ul>
+                            </div>
+
+                            <!-- Additional Information -->
+                            <div class="mb-4">
+                                <p class="fw-bold mb-1 text-primary">Additional Information:</p>
+                                <p id="dpInfoInTpkgNote" class="mb-0"></p>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex justify-content-end bg-light">
+                        <button id="dayPlanInfoEditBtn" class="btn btn-primary fw-bold"
+                            onclick="editDayPlan()">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
 
     </main>
 

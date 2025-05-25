@@ -79,8 +79,8 @@ public class TourPkg {
     //private BigDecimal totalkmcountofpkg;
 
     // #### SUM OF COSTS STARTS#####
-    @Column(name = "totaltktcostforall")
-    private BigDecimal totaltktcostforall;
+    @Column(name = "totaltktcost")
+    private BigDecimal totaltktcost;
 
     @Column(name = "totallunchcost")
     private BigDecimal totallunchcost;
@@ -88,8 +88,8 @@ public class TourPkg {
     @Column(name = "totalvehiparkingcost")
     private BigDecimal totalvehiparkingcost;
 
-    @Column(name = "totalvehiclecost")
-    private BigDecimal totalvehiclecost;
+    @Column(name = "totalvehicost")
+    private BigDecimal totalvehicost;
 
     @Column(name = "totalstaycost")
     private BigDecimal totalstaycost;
@@ -121,8 +121,8 @@ public class TourPkg {
     @Column(name = "img3")
     private byte[] img3;
 
-    @Column(name = "web_discription")
-    private String web_discription;
+    @Column(name = "web_description")
+    private String web_description;
 
     // common 6
     @Column(name = "addeddatetime")

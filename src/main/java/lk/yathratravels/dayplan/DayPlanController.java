@@ -99,6 +99,12 @@ public class DayPlanController {
         return daoDP.getOnlyLastDays();
     }
 
+    // filter only template days
+    @GetMapping(value = "/dayplan/onlytemplatedays", produces = "application/json")
+    public List<DayPlan> getTemplateDaysOnly() {
+        return daoDP.getOnlyTemplateDays();
+    }
+
     // NEED TO CREATE 3 MORE, FILTER ALSO BY THE BASED INQUIRY💥💥💥
 
     @PostMapping(value = "/dayplan")
@@ -124,7 +130,7 @@ public class DayPlanController {
                 dplan.setStart_district_id(firstVPlace.getDistrict_id());
 
             }
-           
+
             // or custom dp elkakata nam, inquiry ekath ekka sambanda code ekak hadanna
             // 💥💥💥
 
