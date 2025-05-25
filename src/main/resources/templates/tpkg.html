@@ -232,7 +232,7 @@
                                                                 <div class="col-7">
                                                                     <select disabled id="tpkgFirstDaySelect"
                                                                         class="form-control form-select"
-                                                                        onchange="showFirstDayBtn.disabled = false;"></select>
+                                                                        onchange="dynamicSelectValidator(this,'tpkg','sd_dayplan_id'); showFirstDayBtn.disabled = false;"></select>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
@@ -292,7 +292,7 @@
                                                                 <div class="col-7">
                                                                     <select disabled id="tpkgFinalDaySelect"
                                                                         class="form-control form-select"
-                                                                        onchange="showFinalDayBtn.disabled = false;"></select>
+                                                                        onchange="dynamicSelectValidator(this,'tpkg','ed_dayplan_id'); showFinalDayBtn.disabled = false; "></select>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">

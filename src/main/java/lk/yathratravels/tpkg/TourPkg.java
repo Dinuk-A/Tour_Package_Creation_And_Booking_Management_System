@@ -66,7 +66,15 @@ public class TourPkg {
 
     @Column(name = "foreignchildcount")
     private Integer foreignchildcount;
-    // ####TRAVELLERS COUNT ENDS####    
+    // ####TRAVELLERS COUNT ENDS####  
+        
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "sd_dayplan_id", referencedColumnName = "id")
+    private DayPlan sd_dayplan_id;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "ed_dayplan_id", referencedColumnName = "id")
+    private DayPlan ed_dayplan_id;
 
     @ManyToMany
     @JoinTable(name = "tpkg_has_dayplan", joinColumns = @JoinColumn(name = "tpkg_id"), inverseJoinColumns = @JoinColumn(name = "dayplan_id"))

@@ -471,9 +471,11 @@ const showDayPlanDetails = (selectElementId) => {
 
 }
 
+//this will be needed for create dyamic IDs in mid days
 let midDayCounter = 1;
 
-function generateNormalDayPlanSelectSections() {
+const generateNormalDayPlanSelectSections = () => {
+
     const container = document.getElementById('tpkgMidDaysSelectSection');
 
     const selectId = `tpkgMidDaySelect${midDayCounter}`;
@@ -506,9 +508,40 @@ function generateNormalDayPlanSelectSections() {
     select.id = selectId;
     select.disabled = true;
     select.className = 'form-control form-select';
-    select.onchange = () => {
-        document.getElementById(btnId).disabled = false;
+    select.onchange = function () {
+
+        const selectedValue = JSON.parse(this.value);
+        console.log("Selected DayPlan:", selectedValue);
+
+        const slectday = this.parentNode.parentNode.children[0].children[0].innerText.split(" ")[2];
+        console.log("Selected Day Number:", slectday);
+        const index = parseInt(slectday) - 1;
+
+        let isDuplicate = tpkg.dayplans.some(dp => dp.id === selectedValue.id);
+
+        if (isDuplicate) {
+            alert("This DayPlan has already been selected!");
+            this.value = "";
+            this.style.border = "1px solid red";
+
+            document.getElementById(btnId).disabled = false;
+            document.getElementById(`midDayDeleteBtn${midDayCounter}`).disabled = false;
+        } else {
+            this.style.border = "1px solid lime";
+
+            //while (tpkg.dayplans.length <= index) {
+            //    tpkg.dayplans.push(null);
+            //}
+
+            tpkg.dayplans[index] = selectedValue;
+            console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+
+            document.getElementById(btnId).disabled = false;
+            document.getElementById(`midDayDeleteBtn${midDayCounter}`).disabled = false;
+        }
+
     };
+
     selectCol.appendChild(select);
 
     const btnCol = document.createElement('div');
@@ -523,6 +556,19 @@ function generateNormalDayPlanSelectSections() {
         showDayPlanDetails(selectId);
     };
     btnCol.appendChild(viewBtn);
+
+    //will be needed for delete button
+    const currentIndex = midDayCounter;
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'btn btn-outline-danger btn-sm';
+    deleteBtn.innerText = "Delete";
+    deleteBtn.id = `midDayDeleteBtn${midDayCounter}`;
+    deleteBtn.onclick = () => {
+        deleteMidDay(currentIndex);
+    };
+    btnCol.appendChild(deleteBtn);
 
     // Assemble selector row
     selectorRow.appendChild(labelCol);
@@ -570,6 +616,39 @@ function generateNormalDayPlanSelectSections() {
 
     midDayCounter++;
 }
+
+// Function to delete a new mid-day select section
+const deleteMidDay = (index) => {
+    const select = document.getElementById(`tpkgMidDaySelect${index}`);
+    if (!select || !select.value) return;
+
+    const deletedDayPlan = JSON.parse(select.value);
+
+    // Remove from DOM
+    const row = select.closest('.row').parentElement;
+    row.remove();
+
+    // Remove from tpkg.dayplans
+    tpkg.dayplans = tpkg.dayplans.filter(dp => dp.id !== deletedDayPlan.id);
+
+    // Shift remaining selects and update IDs/texts
+    for (let i = index + 1; i < midDayCounter; i++) {
+        const oldSelect = document.getElementById(`tpkgMidDaySelect${i}`);
+        if (!oldSelect) continue;
+
+        const oldRow = oldSelect.closest('.row').parentElement;
+        const newIndex = i - 1;
+
+        oldSelect.id = `tpkgMidDaySelect${newIndex}`;
+        oldRow.querySelector('label').textContent = `Middle Day ${newIndex} :`;
+        oldRow.querySelector('label').setAttribute('for', `tpkgMidDaySelect${newIndex}`);
+        oldRow.querySelector('button.btn-all').id = `showMidDayBtn${newIndex}`;
+        oldRow.querySelector('div.col-12.mt-3').id = `midDayActionBtnsRow${newIndex}`;
+    }
+
+    midDayCounter--;
+}
+
 
 
 
