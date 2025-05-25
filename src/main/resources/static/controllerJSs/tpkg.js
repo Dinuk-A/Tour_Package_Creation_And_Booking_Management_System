@@ -525,10 +525,13 @@ const generateNormalDayPlanSelectSections = () => {
             this.style.border = "1px solid red";
 
             document.getElementById(btnId).disabled = false;
-            document.getElementById(`midDayDeleteBtn${midDayCounter}`).disabled = false;
+            document.getElementById(`midDayDeleteBtn${currentIndex}`).disabled = false;
+
         } else {
             this.style.border = "1px solid lime";
 
+            // Ensure tpkg.dayplans is initialized(uncomment this if insertions didnt work)
+            //some arrays cant insert elements for specific indexes if its empty
             //while (tpkg.dayplans.length <= index) {
             //    tpkg.dayplans.push(null);
             //}
@@ -537,7 +540,8 @@ const generateNormalDayPlanSelectSections = () => {
             console.log("Updated tpkg.dayplans:", tpkg.dayplans);
 
             document.getElementById(btnId).disabled = false;
-            document.getElementById(`midDayDeleteBtn${midDayCounter}`).disabled = false;
+            //document.getElementById(`midDayDeleteBtn${midDayCounter}`).disabled = false;
+            document.getElementById(`midDayDeleteBtn${currentIndex}`).disabled = false;
         }
 
     };
@@ -619,17 +623,22 @@ const generateNormalDayPlanSelectSections = () => {
 
 // Function to delete a new mid-day select section
 const deleteMidDay = (index) => {
-    const select = document.getElementById(`tpkgMidDaySelect${index}`);
-    if (!select || !select.value) return;
 
-    const deletedDayPlan = JSON.parse(select.value);
+    const select = document.getElementById(`tpkgMidDaySelect${index}`);
+
+    // Remove from tpkg.dayplans if a valid plan was selected
+    if (select && select.value && select.value.trim() !== "") {
+        try {
+            const deletedDayPlan = JSON.parse(select.value);
+            tpkg.dayplans = tpkg.dayplans.filter(dp => dp && dp.id !== deletedDayPlan.id);
+        } catch (err) {
+            console.warn("Invalid JSON in select value, skipping removal from tpkg.dayplans");
+        }
+    }
 
     // Remove from DOM
     const row = select.closest('.row').parentElement;
     row.remove();
-
-    // Remove from tpkg.dayplans
-    tpkg.dayplans = tpkg.dayplans.filter(dp => dp.id !== deletedDayPlan.id);
 
     // Shift remaining selects and update IDs/texts
     for (let i = index + 1; i < midDayCounter; i++) {
@@ -644,10 +653,11 @@ const deleteMidDay = (index) => {
         oldRow.querySelector('label').setAttribute('for', `tpkgMidDaySelect${newIndex}`);
         oldRow.querySelector('button.btn-all').id = `showMidDayBtn${newIndex}`;
         oldRow.querySelector('div.col-12.mt-3').id = `midDayActionBtnsRow${newIndex}`;
+        oldRow.querySelector(`#midDayDeleteBtn${i}`).id = `midDayDeleteBtn${newIndex}`;
     }
 
     midDayCounter--;
-}
+};
 
 
 
