@@ -287,6 +287,7 @@ const updateTotalTravellers = () => {
     document.getElementById('tpkgTotalTravellers').value = total;
 }
 
+//not used
 const filterDayPlanTemplatesByDistrict = () => {
     const rawValue = document.getElementById('dpTemplateStartDistrictInTpkg').value;
     const selectedDistrict = JSON.parse(rawValue);
@@ -298,6 +299,7 @@ const filterDayPlanTemplatesByDistrict = () => {
     displayFilteredTemplates(filteredTemplates);
 }
 
+//not used
 const displayFilteredTemplates = (templates) => {
     const container = document.getElementById('availableDayTemplatesContainer');
     container.innerHTML = ''; // Clear previous results
@@ -341,6 +343,7 @@ const displayFilteredTemplates = (templates) => {
 
 }
 
+//not used
 const openDayPlanModal = (code, title) => {
     document.getElementById('modalDayPlanCode').textContent = code;
     document.getElementById('modalDayPlanTitle').textContent = title;
@@ -348,6 +351,9 @@ const openDayPlanModal = (code, title) => {
     const modal = new bootstrap.Modal(document.getElementById('dayPlanModal'));
     modal.show();
 }
+
+//this will be needed t change the functionality and text of a button , based on the type of middle day
+let midDayType = null; // "template" or "existing"
 
 // to reset data in dynamic selects
 const resetSelectElements = (selectElement, defaultText = "Please Select") => {
@@ -362,10 +368,19 @@ const resetSelectElements = (selectElement, defaultText = "Please Select") => {
 // to load templates 
 const loadTemplates = async (selectElementId) => {
 
+    if (tpkg.sd_dayplan_id?.id == null || tpkg.sd_dayplan_id == undefined) {
+        showFirstDayBtn.disabled = true;
+    }
+
+    if (tpkg.ed_dayplan_id?.id == null || tpkg.ed_dayplan_id == undefined) {
+        showFinalDayBtn.disabled = true;
+    }
+
     try {
         const onlyTemplates = await ajaxGetReq("/dayplan/onlytemplatedays");
         resetSelectElements(selectElementId, "Please Select");
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyTemplates, "daytitle");
+        midDayType = "template";
     } catch (error) {
         console.error("Error loading templates:", error);
     }
@@ -374,10 +389,13 @@ const loadTemplates = async (selectElementId) => {
 // to load existing first days
 const loadExistingFDs = async (selectElementId) => {
 
+    showFirstDayBtn.disabled = true;
+
     try {
         const onlyFirstDays = await ajaxGetReq("/dayplan/onlyfirstdays");
         resetSelectElements(selectElementId, "Please Select");
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyFirstDays, "daytitle");
+        midDayType = "existing";
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
@@ -390,6 +408,7 @@ const loadExistingMDs = async (selectElementId) => {
         const onlyMidDays = await ajaxGetReq("/dayplan/onlymiddays");
         resetSelectElements(selectElementId, "Please Select");
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyMidDays, "daytitle");
+        midDayType = "existing";
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
@@ -397,10 +416,14 @@ const loadExistingMDs = async (selectElementId) => {
 
 // to load existing last days
 const loadExistingLDs = async (selectElementId) => {
+
+    showFinalDayBtn.disabled = true;
+
     try {
         const onlyLastDays = await ajaxGetReq("/dayplan/onlylastdays");
         resetSelectElements(selectElementId, "Please Select");
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyLastDays, "daytitle");
+        midDayType = "existing";
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
@@ -465,6 +488,21 @@ const showDayPlanDetails = (selectElementId) => {
     // Set additional notes
     document.getElementById('dpInfoInTpkgNote').innerText = selectedDayPlan.note || 'N/A';
 
+    // Get reference to the Edit button
+    const editBtn = document.getElementById('dayPlanInfoEditBtn');
+
+    // Update button based on global midDayType
+    if (midDayType === null) {
+        editBtn.disabled = true;
+        editBtn.textContent = 'Edit'; 
+    } else if (midDayType === 'template') {
+        editBtn.disabled = false;
+        editBtn.textContent = 'Edit Template';
+    } else if (midDayType === 'existing') {
+        editBtn.disabled = false;
+        editBtn.textContent = 'Save As New';
+    }
+
     //open modal
     const modal = new bootstrap.Modal(document.getElementById('dayPlanModal'));
     modal.show();
@@ -513,22 +551,22 @@ const generateNormalDayPlanSelectSections = () => {
         const selectedValue = JSON.parse(this.value);
         console.log("Selected DayPlan:", selectedValue);
 
-        const slectday = this.parentNode.parentNode.children[0].children[0].innerText.split(" ")[2];
-        console.log("Selected Day Number:", slectday);
-        const index = parseInt(slectday) - 1;
+        const selectedDayNum = this.parentNode.parentNode.children[0].children[0].innerText.split(" ")[2];
+        console.log("Selected Day Number:", selectedDayNum);
+        const index = parseInt(selectedDayNum) - 1;
 
         let isDuplicate = tpkg.dayplans.some(dp => dp.id === selectedValue.id);
 
         if (isDuplicate) {
             alert("This DayPlan has already been selected!");
             this.value = "";
-            this.style.border = "1px solid red";
+            this.style.border = "2px solid red";
 
             document.getElementById(btnId).disabled = false;
             document.getElementById(`midDayDeleteBtn${currentIndex}`).disabled = false;
 
         } else {
-            this.style.border = "1px solid lime";
+            this.style.border = "2px solid lime";
 
             // Ensure tpkg.dayplans is initialized(uncomment this if insertions didnt work)
             //some arrays cant insert elements for specific indexes if its empty
@@ -601,7 +639,7 @@ const generateNormalDayPlanSelectSections = () => {
     const existingBtn = document.createElement('button');
     existingBtn.className = 'btn btn-outline-secondary btn-sm';
     existingBtn.onclick = () => {
-        loadExistingFDs(select);
+        loadExistingMDs(select);
     };
     existingBtn.innerHTML = `<i class="bi bi-archive me-1"></i> Use Existing`;
 

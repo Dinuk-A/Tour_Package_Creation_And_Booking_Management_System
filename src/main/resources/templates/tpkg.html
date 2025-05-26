@@ -104,9 +104,10 @@
                                                 <label for="inputPkgTitle" class="form-label fw-bold mb-0"> Package
                                                     Title
                                                     <span class="text-danger"> * </span> :</label>
-                                                <input id="inputPkgTitle" type="text"
-                                                    class="form-control" placeholder="Enter A Title for The Package"
-                                                    onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')" name="fakeName" required>
+                                                <input id="inputPkgTitle" type="text" class="form-control"
+                                                    placeholder="Enter A Title for The Package"
+                                                    onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')"
+                                                    name="fakeName" required>
 
                                             </div>
 
@@ -232,7 +233,7 @@
                                                                 <div class="col-7">
                                                                     <select disabled id="tpkgFirstDaySelect"
                                                                         class="form-control form-select"
-                                                                        onchange="dynamicSelectValidator(this,'tpkg','sd_dayplan_id'); showFirstDayBtn.disabled = false;"></select>
+                                                                        onchange="dynamicSelectValidator(this,'tpkg','sd_dayplan_id'); showFirstDayBtn.disabled = false; addNewDaysBtn.disabled=false;  "></select>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
@@ -272,7 +273,8 @@
 
                                                     <!-- Add More Days button -->
                                                     <div class="col-12 d-flex justify-content-center my-2">
-                                                        <button type="button" id="addNewDaysBtn" class="btn btn-warning"
+                                                        <button disabled type="button" id="addNewDaysBtn"
+                                                            class="btn btn-warning"
                                                             onclick="generateNormalDayPlanSelectSections()">
                                                             Add More Days
                                                         </button>
@@ -292,7 +294,7 @@
                                                                 <div class="col-7">
                                                                     <select disabled id="tpkgFinalDaySelect"
                                                                         class="form-control form-select"
-                                                                        onchange="dynamicSelectValidator(this,'tpkg','ed_dayplan_id'); showFinalDayBtn.disabled = false; "></select>
+                                                                        onchange="dynamicSelectValidator(this,'tpkg','ed_dayplan_id'); showFinalDayBtn.disabled = false;  "></select>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
