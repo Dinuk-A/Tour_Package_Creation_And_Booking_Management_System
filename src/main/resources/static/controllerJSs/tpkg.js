@@ -494,7 +494,7 @@ const showDayPlanDetails = (selectElementId) => {
     // Update button based on global midDayType
     if (midDayType === null) {
         editBtn.disabled = true;
-        editBtn.textContent = 'Edit'; 
+        editBtn.textContent = 'Edit';
     } else if (midDayType === 'template') {
         editBtn.disabled = false;
         editBtn.textContent = 'Edit Template';
@@ -696,6 +696,83 @@ const deleteMidDay = (index) => {
 
     midDayCounter--;
 };
+
+//for additional costs table 
+let addCostIdCounter = 1;
+
+const addNewAddCost = () => {
+
+    const name = document.getElementById('additionalCostName').value.trim();
+    const amount = document.getElementById('additionalCostAmount').value.trim();
+    const note = document.getElementById('additionalCostNote').value.trim();
+
+    if (!name || !amount) {
+        alert("Please enter both Cost Name and Amount.");
+        return;
+    }
+
+    // Create new row
+    const tbody = document.getElementById('additionalCostTableBody');
+    const row = document.createElement('tr');
+
+    // ID cell
+    const idCell = document.createElement('td');
+    idCell.innerText = addCostIdCounter++;
+    row.appendChild(idCell);
+
+    // Cost Name cell
+    const nameCell = document.createElement('td');
+    nameCell.innerText = name;
+    row.appendChild(nameCell);
+
+    // Amount cell
+    const amountCell = document.createElement('td');
+    amountCell.innerText = `LKR ${parseFloat(amount).toFixed(2)}`;
+    row.appendChild(amountCell);
+
+    // Action cell
+    const actionCell = document.createElement('td');
+    actionCell.className = 'text-center';
+
+    const btnGroup = document.createElement('div');
+    btnGroup.className = 'btn-group btn-group-sm';
+
+    // View button
+    const viewBtn = document.createElement('button');
+    viewBtn.className = 'btn btn-outline-primary';
+    viewBtn.innerText = 'View';
+    viewBtn.onclick = function () {
+        alert(`Note: ${note || 'No note provided'}`);
+    };
+    btnGroup.appendChild(viewBtn);
+
+    // Edit button (placeholder)
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn btn-outline-secondary';
+    editBtn.innerText = 'Edit';
+    editBtn.onclick = function () {
+        alert('Edit function not implemented yet');
+    };
+    btnGroup.appendChild(editBtn);
+
+    // Delete button (placeholder)
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'btn btn-outline-danger';
+    deleteBtn.innerText = 'Delete';
+    deleteBtn.onclick = function () {
+        row.remove();
+    };
+    btnGroup.appendChild(deleteBtn);
+
+    actionCell.appendChild(btnGroup);
+    row.appendChild(actionCell);
+
+    tbody.appendChild(row);
+
+    // Reset the form
+    document.getElementById('additionalCostForm').reset();
+}
+
 
 
 

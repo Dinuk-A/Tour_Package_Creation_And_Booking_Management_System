@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -68,7 +69,6 @@ public class TourPkgController {
     public List<TourPkg> getAllTourPkgs() {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "TOUR_PACKAGE");
 
         if (!privilegeLevelForLoggedUser.getPrvselect()) {
@@ -100,12 +100,35 @@ public class TourPkgController {
 
             tpkg.setAddeddatetime(LocalDateTime.now());
             tpkg.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
-
+            daoTPkg.save(tpkg);
+            return "OK";
         } catch (Exception e) {
             return "save Tour Package Failed. " + e.getMessage();
         }
-
-        daoTPkg.save(tpkg);
-        return "Tour package saved successfully.";
+              
     }
+
+    @PutMapping(value = "/tpkg")
+    public String updateTourPkg(@RequestBody TourPkg tpkg) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "TOUR_PACKAGE");
+
+        if (!privilegeLevelForLoggedUser.getPrvupdate()) {
+            return "You do not have permission to edit a tour package.";
+        }
+
+        try {
+            tpkg.setLastmodifieddatetime(LocalDateTime.now());
+            tpkg.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
+            daoTPkg.save(tpkg);
+            return "OK";
+        } catch (Exception e) {
+            return "Update Not Completed Because :" + e.getMessage();
+        }
+        
+    }
+
+    //think a logic for delete tour package 💥💥💥
+
+
 }

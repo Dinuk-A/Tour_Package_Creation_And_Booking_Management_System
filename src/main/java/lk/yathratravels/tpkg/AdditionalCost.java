@@ -34,14 +34,14 @@ public class AdditionalCost {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "reason")
-    private String reason;
+    @Column(name = "costname")
+    private String costname;
 
     @Column(name = "amount")
     private BigDecimal amount;
 
-    @Column(name = "note")
-    private String note;
+    @Column(name = "reason")
+    private String reason;
 
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
