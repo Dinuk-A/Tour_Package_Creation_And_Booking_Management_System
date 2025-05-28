@@ -699,12 +699,17 @@ const deleteMidDay = (index) => {
 
 //for additional costs table 
 let addCostIdCounter = 1;
+let editingRowData = null;
 
 const addNewAddCost = () => {
 
-    const name = document.getElementById('additionalCostName').value.trim();
-    const amount = document.getElementById('additionalCostAmount').value.trim();
-    const note = document.getElementById('additionalCostNote').value.trim();
+    const nameInput = document.getElementById('additionalCostName')
+    const amountInput = document.getElementById('additionalCostAmount')
+    const noteInput = document.getElementById('additionalCostNote')
+
+    const name = nameInput.value
+    const amount =amountInput.value
+    const note = noteInput.value
 
     if (!name || !amount) {
         alert("Please enter both Cost Name and Amount.");
@@ -751,7 +756,13 @@ const addNewAddCost = () => {
     editBtn.className = 'btn btn-outline-secondary';
     editBtn.innerText = 'Edit';
     editBtn.onclick = function () {
-        alert('Edit function not implemented yet');
+        editingRowData = {
+            rowElement: row,
+            costName: name,
+            amount: amount,
+            note: note
+        };
+        refillAdditionalCostForm();
     };
     btnGroup.appendChild(editBtn);
 
@@ -770,7 +781,68 @@ const addNewAddCost = () => {
     tbody.appendChild(row);
 
     // Reset the form
-    document.getElementById('additionalCostForm').reset();
+    //document.getElementById('additionalCostForm').reset();
+    nameInput.style.border = "1px solid #ced4da";
+    amountInput.style.border = "1px solid #ced4da";
+    noteInput.style.border = "1px solid #ced4da";
+
+    nameInput.value = '';
+    amountInput.value = '';
+    noteInput.value = '';
+}
+
+const refillAdditionalCostForm = () => {
+    // Populate form fields
+    document.getElementById('additionalCostName').value = editingRowData.costName;
+    document.getElementById('additionalCostAmount').value = editingRowData.amount;
+    document.getElementById('additionalCostNote').value = editingRowData.note || '';
+
+    // Show Update button, hide Add button
+    //document.getElementById('addCostAddBtn').style.display = 'none';
+    //document.getElementById('addCostUpdateBtn').style.display = 'inline-block';
+}
+
+const updateAddCost = () => {
+
+    const updatedName = document.getElementById('additionalCostName').value;
+    const updatedAmount = document.getElementById('additionalCostAmount').value;
+    const updatedNote = document.getElementById('additionalCostNote').value;
+
+    // Update the row in the table
+    const cells = editingRowData.rowElement.children;
+    cells[1].innerText = updatedName;
+    cells[2].innerText = `LKR ${parseFloat(updatedAmount).toFixed(2)}`;
+
+    // Update the "View" button note handler
+    const viewBtn = editingRowData.rowElement.querySelector('button.btn-outline-primary');
+    viewBtn.onclick = () => {
+        alert(`Note: ${updatedNote || 'No note provided'}`);
+    };
+
+    // Update the editBtn with the new data
+    const editBtn = editingRowData.rowElement.querySelector('button.btn-outline-secondary');
+    editBtn.onclick = () => {
+        editingRowData = {
+            rowElement: editingRowData.rowElement,
+            costName: updatedName,
+            amount: updatedAmount,
+            note: updatedNote
+        };
+        refillAdditionalCostForm();
+    };
+
+    document.getElementById('addCostAddBtn').style.display = 'inline-block';
+    document.getElementById('addCostUpdateBtn').style.display = 'none';
+    editingRowData = null;
+   
+};
+
+function updateTotalAmount() {
+    let total = 0;
+    additionalCosts.forEach(item => {
+        total += Number(item.amount);
+    });
+    document.getElementById("additionalCostTotalAmount").textContent = total.toFixed(2);
 }
 
 

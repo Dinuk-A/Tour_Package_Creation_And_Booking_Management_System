@@ -602,7 +602,7 @@
                                     </fieldset>
 
                                     <!-- Image Upload Section -->
-                                    <fieldset class="border border-dark p-4 mt-4 bg-light " id="imagesFieldset">
+                                    <fieldset class="border border-dark p-4 mt-4 bg-light d-none" id="imagesFieldset">
                                         <legend class="float-none w-auto px-2 text-primary">Upload Package Images
                                         </legend>
 
@@ -803,7 +803,6 @@
                                                     </div>
                                                 </div>
 
-
                                                 <!-- Row 3 (select discounts)-->
                                                 <div class="row mb-3 align-items-end">
                                                     <!-- Discount Selection -->
@@ -828,8 +827,6 @@
 
                                                     <div class="col-md-4"></div>
                                                 </div>
-
-
 
                                                 <!-- Row 4 -->
                                                 <div class="row mb-3">
@@ -904,8 +901,8 @@
                                                             <label for="additionalCostName"
                                                                 class="form-label fw-bold mb-0">Cost Name</label>
                                                             <input type="text" id="additionalCostName"
-                                                                class="form-control"
-                                                                onkeyup="inputValidatorText(this,'','addicost','costname');">
+                                                                class="form-control">
+                                                            <!--  onkeyup="inputValidatorText(this,'','addicost','costname');" -->
                                                         </div>
                                                     </div>
 
@@ -919,8 +916,8 @@
                                                                     <h6 class="mb-0">LKR</h6>
                                                                 </span>
                                                                 <input type="number" id="additionalCostAmount"
-                                                                    class="form-control form-input p-1"
-                                                                    onkeyup="inputValidatorText(this,'','addicost','amount');">
+                                                                    class="form-control form-input p-1">
+                                                                <!-- onkeyup="inputValidatorText(this,'','addicost','amount');" -->
                                                             </div>
 
                                                         </div>
@@ -933,8 +930,8 @@
                                                             <label for="additionalCostNote"
                                                                 class="form-label fw-bold mb-0">Note</label>
                                                             <textarea id="additionalCostNote" class="form-control"
-                                                                onkeyup="inputValidatorText(this,'','addicost','reason')"
                                                                 style="height: 100px;"></textarea>
+                                                            <!--  onkeyup="inputValidatorText(this,'','addicost','reason')" -->
                                                         </div>
                                                     </div>
 
