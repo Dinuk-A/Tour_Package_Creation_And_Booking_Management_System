@@ -126,6 +126,8 @@ const refreshDayPlanForm = async () => {
         'dropOffProvinceSelect',
         'dropOffDistrictSelect',
         'dropOffAccommodationSelect',
+        'altStay1Select',
+        'altStay2Select',
         'pickupProvinceSelect',
         'pickupDistrictSelect',
         'pickupAccommodationSelect',
@@ -188,6 +190,8 @@ const refreshDayPlanForm = async () => {
 
     //show EMPTY accomadation selects, before filtered by district
     fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Select The District First', emptyArray, 'name');
+    fillDataIntoDynamicSelects(altStay1Select, 'Select The District First', emptyArray, 'name');
+    fillDataIntoDynamicSelects(altStay2Select, 'Select The District First', emptyArray, 'name');
     fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Select The District First', emptyArray, 'name');
 
     //show EMPTY lunch selects, before filtered by district
@@ -354,6 +358,8 @@ const clearOtherInputsGenDropOff = () => {
         'dropOffProvinceSelect',
         'dropOffDistrictSelect',
         'dropOffAccommodationSelect',
+        'altStay1Select',
+        'altStay2Select',
         'manualLocationDropOff',
         'geoCoordsDropOff',
         'dpTotalKMcount'
@@ -370,12 +376,16 @@ const clearOtherInputsGenDropOff = () => {
 
     dayplan.droppoint = null;
     dayplan.drop_stay_id = null;
+    dayplan.alt_stay_1_id = null;
+    dayplan.alt_stay_2_id = null;
     dayplan.drop_manual_gcoords = null;
     dropoffPointGCoords = '';
     document.getElementById('dpTotalKMcount').style.border = "1px solid #ced4da";
     dayplan.totalkmcount = null;
     document.getElementById('dropOffDistrictSelect').disabled = true;
     document.getElementById('dropOffAccommodationSelect').disabled = true;
+    document.getElementById('altStay1Select').disabled = true;
+    document.getElementById('altStay2Select').disabled = true;
 }
 
 //when manual stay is selected in dropoff options
@@ -412,6 +422,8 @@ const clearOtherInputsManualDropOff = () => {
         'dropOffProvinceSelect',
         'dropOffDistrictSelect',
         'dropOffAccommodationSelect',
+        'altStay1Select',
+        'altStay2Select',
         'airportSelectDropOff',
         'dpTotalKMcount'
     ];
@@ -427,12 +439,16 @@ const clearOtherInputsManualDropOff = () => {
 
     dayplan.droppoint = null;
     dayplan.drop_stay_id = null;
+    dayplan.alt_stay_1_id = null;
+    dayplan.alt_stay_2_id = null;
     dayplan.drop_manual_gcoords = null;
     dropoffPointGCoords = '';
     document.getElementById('dpTotalKMcount').style.border = "1px solid #ced4da";
     dayplan.totalkmcount = null;
     document.getElementById('dropOffDistrictSelect').disabled = true;
     document.getElementById('dropOffAccommodationSelect').disabled = true;
+    document.getElementById('altStay1Select').disabled = true;
+    document.getElementById('altStay2Select').disabled = true;
 }
 
 //to select day type (FD,MD,LD)
@@ -472,6 +488,7 @@ const handleChangesBasedDPType = () => {
             if (radioCB) {
                 radioCB.disabled = true;
                 radioCB.checked = false;
+                radioCB.style.cursor = "not-allowed";
             }
         });
 
@@ -555,6 +572,7 @@ const handleChangesBasedDPType = () => {
             const radioCB = document.getElementById(radioId);
             if (radioCB) {
                 radioCB.disabled = false;
+                radioCB.style.cursor = "pointer";
             }
         });
 
@@ -985,22 +1003,22 @@ const removeAll = () => {
 
     calcTotalVehiParkingfee();
 
-    //remove and clear automatically binded lp and end stay info too
-    dayplan.lunchplace_id = null;
-    dayplan.drop_stay_id = null;
-
-    let lunchPlaceSelect = document.getElementById("selectDPLunch");
-    let endStaySelect = document.getElementById("dropOffAccommodationSelect");
-
-    lunchPlaceSelect.style.border = "1px solid #ced4da";
-    endStaySelect.style.border = "1px solid #ced4da";
-
-    let emptyArr = [];
-    fillDataIntoDynamicSelects(lunchPlaceSelect, 'Please Select The Restaurant', emptyArr, 'name');
-    fillDataIntoDynamicSelects(endStaySelect, 'Please Select The Accomodation', emptyArr, 'name');
-
-    lunchPlaceSelect.disabled = true;
-    endStaySelect.disabled = true;
+    //remove and clear automatically binded lp and end stay info too (not used)
+//    dayplan.lunchplace_id = null;
+//    dayplan.drop_stay_id = null;
+//
+//    let lunchPlaceSelect = document.getElementById("selectDPLunch");
+//    let endStaySelect = document.getElementById("dropOffAccommodationSelect");
+//
+//    lunchPlaceSelect.style.border = "1px solid #ced4da";
+//    endStaySelect.style.border = "1px solid #ced4da";
+//
+//    let emptyArr = [];
+//    fillDataIntoDynamicSelects(lunchPlaceSelect, 'Please Select The Restaurant', emptyArr, 'name');
+//    fillDataIntoDynamicSelects(endStaySelect, 'Please Select The Accomodation', emptyArr, 'name');
+//
+//    lunchPlaceSelect.disabled = true;
+//    endStaySelect.disabled = true;
 
 }
 
@@ -1272,6 +1290,16 @@ const checkDPFormErrors = () => {
         errors += "At least select one attraction \n";
     }
 
+    if (dayplan.drop_stay_id != null) {
+        if (dayplan.alt_stay_1_id == null) {
+            errors += " Alternative Stay 1 cannot be empty \n";            
+        }
+
+        if (dayplan.alt_stay_2_id == null) {
+            errors += " Alternative Stay 2 cannot be empty \n";            
+        }
+    }
+
     // if not a template, do additional checks
     if (!dayplan.is_template) {
 
@@ -1387,6 +1415,11 @@ const openModal = (dpObj) => {
         dpObj.lunchplace_id?.name || (dpObj.is_takepackedlunch ? 'Take Packed Lunch' : 'N/A');
 
     document.getElementById('modalDPStay').innerText = dpObj.drop_stay_id?.name || dpObj.droppoint || 'N/A';
+
+    if (dpObj.drop_stay_id) {
+        document.getElementById('modalDPAltStay1').innerText = dpObj.alt_stay_1_id?.name || 'N/A';
+        document.getElementById('modalDPAltStay2').innerText = dpObj.alt_stay_2_id?.name || 'N/A';
+    }
 
     document.getElementById('modalDPTktLocalAdult').innerText = 'LKR ' + dpObj.localadulttktcost.toFixed(2) || 'N/A';
     document.getElementById('modalDPTktLocalChild').innerText = 'LKR ' + dpObj.localchildtktcost.toFixed(2) || 'N/A';
@@ -1629,20 +1662,22 @@ const refillDayPlanForm = async (dpObj) => {
                 }
             });
 
-            try {
-
-                const stays = await ajaxGetReq("/stay/active");
-                fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Drop Off Accomodation', stays, 'name', dpObj.drop_stay_id.name);
-
-                const allDists = await ajaxGetReq('district/all');
-                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDists, 'name', dpObj.drop_stay_id.district_id.name);
-
-                const allProvinces = await ajaxGetReq("/province/all");
-                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
-
-            } catch (error) {
-                console.error('error fetching previous end stay info');
-            }
+//            try {
+//
+//                const stays = await ajaxGetReq("/stay/active");
+//                fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Drop Off Accomodation', stays, 'name', dpObj.drop_stay_id.name);
+//                fillDataIntoDynamicSelects(altStay1Select, 'Please Select Alternative Accomodation 1', stays, 'name', dpObj.alt_stay_1_id.name);
+//                fillDataIntoDynamicSelects(altStay2Select, 'Please Select Alternative Accomodation 2', stays, 'name', dpObj.alt_stay_2_id.name);
+//
+//                const allDists = await ajaxGetReq('district/all');
+//                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDists, 'name', dpObj.drop_stay_id.district_id.name);
+//
+//                const allProvinces = await ajaxGetReq("/province/all");
+//                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
+//
+//            } catch (error) {
+//                console.error('error fetching previous end stay info');
+//            }
 
             const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions');
             dropOffAccommodationRow.style.display = 'block';
@@ -1704,6 +1739,8 @@ const refillDayPlanForm = async (dpObj) => {
             try {
                 const allStays = await ajaxGetReq("/stay/all");
                 fillDataIntoDynamicSelects(dropOffAccommodationSelect, '', allStays, 'name', dpObj.drop_stay_id.name);
+                fillDataIntoDynamicSelects(altStay1Select, '', allStays, 'name', dpObj.alt_stay_1_id.name);
+                fillDataIntoDynamicSelects(altStay2Select, '', allStays, 'name', dpObj.alt_stay_2_id.name);
 
                 const allProvinces = await ajaxGetReq("/province/all");
                 fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Select Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
@@ -1765,10 +1802,19 @@ const showDPValueChanges = () => {
     if (dayplan.droppoint !== oldDayplan.droppoint) {
         updates += `Drop point will be changed to "${dayplan.droppoint}"\n`;
     }
+
     if ((dayplan.drop_stay_id?.id || null) !== (oldDayplan.drop_stay_id?.id || null)) {
         updates += `Drop location will be changed to "${dayplan.drop_stay_id?.name || 'N/A'}"\n`;
     }
 
+    if ((dayplan.alt_stay_1_id?.id || null) !== (oldDayplan.alt_stay_1_id?.id || null)) {
+        updates += `Alternative Stay 1 will be changed to "${dayplan.alt_stay_1_id?.name || 'N/A'}"\n`;
+    }
+    
+    if ((dayplan.alt_stay_2_id?.id || null) !== (oldDayplan.alt_stay_2_id?.id || null)) {
+        updates += `Alternative Stay 2 will be changed to "${dayplan.alt_stay_2_id?.name || 'N/A'}"\n`;
+    }
+    
     // Lunch place or packed lunch
     if ((dayplan.lunchplace_id?.id || null) !== (oldDayplan.lunchplace_id?.id || null)) {
         updates += `Lunch place will be changed to "${dayplan.lunchplace_id?.name || 'None'}"\n`;

@@ -120,6 +120,7 @@ const refreshStayForm = async () => {
         'inputGeoCoords',
         'inputStayMaxCap',
         'inputStayBasePrice',
+        'inputStayIncCostChild',
         'inputStayIncCost'
     ];
 
@@ -186,7 +187,11 @@ const checkStayFormErrors = () => {
     }
 
     if (stay.incremental_cost == null) {
-        errors = errors + " Please Enter The Incremental Cost \n";
+        errors = errors + " Please Enter The Adult's Incremental Cost \n";
+    }
+
+    if (stay.incremental_cost_kid == null) {
+        errors = errors + " Please Enter The Child's Incremental Cost \n";
     }
 
 
@@ -272,6 +277,7 @@ const openModal = (stayObj) => {
     document.getElementById('modalStayMaxCap').innerText = stayObj.maxguestscount || 'N/A';
     document.getElementById('modalStayBasePrice').innerText = `LKR ${parseFloat(stayObj.base_price).toFixed(2)}` || 'N/A';
     document.getElementById('modalStayIncCost').innerText = `LKR ${parseFloat(stayObj.incremental_cost).toFixed(2)}` || 'N/A';
+    document.getElementById('modalStayIncCostChild').innerText = `LKR ${parseFloat(stayObj.incremental_cost_kid).toFixed(2)}` || 'N/A';
 
     // Handle Deleted Stay
     if (stayObj.deleted_stay) {
@@ -336,9 +342,10 @@ const refillStayForm = async (ob) => {
     inputStayEmail.value = stay.email;
     inputStayNote.value = stay.note;
     inputGeoCoords.value = stay.gcoords;
-    inputStayMaxCap.value = stay.maxguestscount
-    inputStayBasePrice.value = stay.base_price
-    inputStayIncCost.value = stay.incremental_cost
+    inputStayMaxCap.value = stay.maxguestscount;
+    inputStayBasePrice.value = stay.base_price;
+    inputStayIncCost.value = stay.incremental_cost;
+    inputStayIncCostChild.value = stay.incremental_cost_kid;
 
     try {
 
@@ -420,7 +427,11 @@ const showStayValueChanges = () => {
     }
 
     if (stay.incremental_cost != stayOldObj.incremental_cost) {
-        updates = updates + "Incremental cost will be changed to " + stay.incremental_cost + "\n";
+        updates = updates + "Adult's Incremental cost will be changed to " + stay.incremental_cost + "\n";
+    }
+
+    if (stay.incremental_cost_kid != stayOldObj.incremental_cost_kid) {
+        updates = updates + "Child's Incremental cost will be changed to " + stay.incremental_cost_kid + "\n";
     }
 
     if (stay.note != stayOldObj.note) {
@@ -430,12 +441,6 @@ const showStayValueChanges = () => {
     if (stay.district_id.name != stayOldObj.district_id.name) {
         updates = updates + "District will be changed to " + stay.district_id.name + "\n";
     }
-
-
-
-    //if (stay.stay_type_id.name != stayOldObj.stay_type_id.name) {
-    //    updates = updates + "Stay type will be changed to " + stay.stay_type_id.name + "\n";
-    //}
 
     return updates
 

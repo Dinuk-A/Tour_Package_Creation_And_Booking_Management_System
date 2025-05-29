@@ -191,9 +191,8 @@
                                         <div class="d-none" id="pickupMsgForTemplate">
                                             <div class="row">
                                                 <div class="col-7 mx-auto">
-                                                    <div class="text-danger mb-3 ms-1 fw-bold"> Selecting Pickup
-                                                        Location Is
-                                                        This Is A Template </div>
+                                                    <div class="text-danger mb-3 ms-1 fw-bold"> Selecting A Pickup
+                                                        Location Is Disabled Because This Is A Template </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -394,8 +393,10 @@
 
                                     <!-- Costs and Distance -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                        <legend class="float-none w-auto px-2 text-primary">Costs & Distance
+                                        <legend class="float-none w-auto px-2 text-primary">Costs For Day
                                         </legend>
+
+                                        <p class="fw-semibold mb-1 mt-2">Total Entrance Fee Cost</p>
 
                                         <div class="row mb-1">
                                             <!-- Local -->
@@ -622,7 +623,7 @@
                                                 </div>
                                                 <div class="col-6">
                                                     <select disabled class="form-select" id="dropOffDistrictSelect"
-                                                        onchange="getStayByDistrict(dropOffDistrictSelect,dropOffAccommodationSelect);"></select>
+                                                        onchange="getStayByDistrict(dropOffDistrictSelect,dropOffAccommodationSelect); getStayByDistrict(dropOffDistrictSelect,altStay1Select); getStayByDistrict(dropOffDistrictSelect,altStay2Select); "></select>
                                                 </div>
                                             </div>
 
@@ -637,6 +638,30 @@
                                                         onchange="passStayGCoordsDropOff(); dynamicSelectValidator(this,'dayplan','drop_stay_id');"></select>
                                                 </div>
                                             </div>
+
+                                            <!-- Alternative Accommodations -->
+                                            <div class="row mb-2 align-items-center">
+                                                <!-- Alternative Stay 1 -->
+                                                <div class="col-6">
+                                                    <label for="altStay1Select"
+                                                        class="form-label fw-bold mb-0">Alternative Accommodation
+                                                        1</label>
+                                                    <select class="form-select" id="altStay1Select" disabled
+                                                        onchange="dynamicSelectValidator(this,'dayplan','alt_stay_1_id');">
+                                                    </select>
+                                                </div>
+
+                                                <!-- Alternative Stay 2 -->
+                                                <div class="col-6">
+                                                    <label for="altStay2Select"
+                                                        class="form-label fw-bold mb-0">Alternative Accommodation
+                                                        2</label>
+                                                    <select class="form-select" id="altStay2Select" disabled
+                                                        onchange="dynamicSelectValidator(this,'dayplan','alt_stay_2_id');">
+                                                    </select>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                         <!-- If Manual -->
@@ -749,7 +774,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                             </div>
 
                         </form>
@@ -813,6 +838,19 @@
                                     <p class="fw-bold mb-1 text-primary">End / DropOff Location Day:</p>
                                     <p id="modalDPStay" class="mb-0"></p>
                                 </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Alternative Stay 1:</p>
+                                    <p id="modalDPAltStay1" class="mb-0"></p>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Alternative Stay 2:</p>
+                                    <p id="modalDPAltStay2" class="mb-0"></p>
+                                </div>
+                                
                             </div>
 
                             <hr>

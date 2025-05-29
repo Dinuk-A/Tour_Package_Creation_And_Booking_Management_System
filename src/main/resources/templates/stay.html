@@ -151,35 +151,60 @@
                                 <legend class="float-none w-auto px-2 text-primary">Prices & Additional Details</legend>
 
                                 <!-- base and incremental prices -->
-                                <div class="row mb-2">
+                                <div class="row mb-2">                                   
+                                
+                                    <div class="col-3">
+                                        <label for="inputStayBasePrice" class="form-label fw-bold mb-0">Base Price 
+                                            <span class="text-danger">*</span> :</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text p-1 pb-0">
+                                                <h6 class="mb-0">LKR</h6>
+                                            </span>
+                                            <input type="text" class="form-control" placeholder="Enter The Base Price"
+                                                id="inputStayBasePrice"
+                                                onkeyup="inputValidatorText(this,'','stay','base_price')"
+                                                onblur="insertDecimals(this);">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-3">
+                                        <label for="inputStayIncCost" class="form-label fw-bold mb-0">Incremental Cost (Adult) 
+                                            <span class="text-danger">*</span> :</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text p-1 pb-0">
+                                                <h6 class="mb-0">LKR</h6>
+                                            </span>
+                                            <input type="text" class="form-control" placeholder="Enter The Incremental Cost"
+                                                id="inputStayIncCost"
+                                                onkeyup="inputValidatorText(this,'','stay','incremental_cost')"
+                                                onblur="insertDecimals(this);">
+                                        </div>
+                                    </div>
+                                
+                                    <div class="col-3">
+                                        <label for="inputStayIncCostChild" class="form-label fw-bold mb-0">Incremental Cost (Child) 
+                                            <span class="text-danger">*</span> :</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text p-1 pb-0">
+                                                <h6 class="mb-0">LKR</h6>
+                                            </span>
+                                            <input type="text" class="form-control" placeholder="Enter The Incremental Cost (Child)"
+                                                id="inputStayIncCostChild"
+                                                onkeyup="inputValidatorText(this,'','stay','incremental_cost_kid')"
+                                                onblur="insertDecimals(this);">
+                                        </div>
+                                    </div>
 
-                                    <div class="col-4">
-                                        <label for="inputStayMaxCap" class="form-label fw-bold mb-0">Max Guest
-                                            Count<span class="text-danger">*</span> :</label>
+                                    <div class="col-3">
+                                        <label for="inputStayMaxCap" class="form-label fw-bold mb-0">Max Guest Count
+                                            <span class="text-danger">*</span> :</label>
                                         <input type="text" class="form-control" placeholder="Enter Guest Capacity"
                                             id="inputStayMaxCap"
                                             onkeyup="inputValidatorText(this,'','stay','maxguestscount')">
                                     </div>
-
-                                    <div class="col-4">
-                                        <label for="inputStayBasePrice" class="form-label fw-bold mb-0">Base Price <span
-                                                class="text-danger">*</span> :</label>
-                                        <input type="text" class="form-control" placeholder="Enter The Base Price"
-                                            id="inputStayBasePrice"
-                                            onkeyup="inputValidatorText(this,'','stay','base_price')"
-                                            onblur="insertDecimals(this);">
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="inputStayIncCost" class="form-label fw-bold mb-0">Incremental Cost
-                                            (Per person) <span class="text-danger">*</span> :</label>
-                                        <input type="text" class="form-control" placeholder="Enter The Incremental Cost"
-                                            id="inputStayIncCost"
-                                            onkeyup="inputValidatorText(this,'','stay','incremental_cost')"
-                                            onblur="insertDecimals(this);">
-                                    </div>
-
+                                
                                 </div>
+                                
 
                                 <!-- note and status row -->
                                 <div class="row">
@@ -259,15 +284,19 @@
 
                             <!-- row for base price, incremental cost, max guest count -->
                             <div class="row mb-4 align-items-start">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <p class="fw-bold mb-1 text-primary">Base Price:</p>
                                     <p id="modalStayBasePrice" class="mb-2"></p>
                                 </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold mb-1 text-primary">Incremental Cost:</p>
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-1 text-primary">Incremental Cost(Adult):</p>
                                     <p id="modalStayIncCost" class="mb-2"></p>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-1 text-primary">Incremental Cost(Child):</p>
+                                    <p id="modalStayIncCostChild" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-3">
                                     <p class="fw-bold mb-1 text-primary">Guest Capacity:</p>
                                     <p id="modalStayMaxCap" class="mb-2"></p>
                                 </div>

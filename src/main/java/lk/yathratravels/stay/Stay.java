@@ -64,6 +64,9 @@ public class Stay {
     @Column(name = "incremental_cost")
     private BigDecimal incremental_cost;
 
+    @Column(name = "incremental_cost_kid")
+    private BigDecimal incremental_cost_kid;
+
     @Column(name = "note")
     private String note;
 
