@@ -902,7 +902,7 @@
                                                                 class="form-label fw-bold mb-0">Cost Name</label>
                                                             <input type="text" id="additionalCostName"
                                                                 class="form-control"
-                                                                onkeyup="inputValidatorText(this,'','addicost','costname');">
+                                                                onkeyup="inputValidatorText(this,'','addiCost','costname');">
                                                         </div>
                                                     </div>
 
@@ -917,7 +917,7 @@
                                                                 </span>
                                                                 <input type="number" id="additionalCostAmount"
                                                                     class="form-control form-input p-1"
-                                                                    onkeyup="inputValidatorText(this,'','addicost','amount');">
+                                                                    onkeyup="inputValidatorText(this,'','addiCost','amount');">
                                                             </div>
 
                                                         </div>
@@ -931,7 +931,7 @@
                                                                 class="form-label fw-bold mb-0">Note</label>
                                                             <textarea id="additionalCostNote" class="form-control"
                                                                 style="height: 100px;"
-                                                                onkeyup="inputValidatorText(this,'','addicost','reason')"></textarea>
+                                                                onkeyup="inputValidatorText(this,'','addiCost','note')"></textarea>
                                                         </div>
                                                     </div>
 
@@ -947,11 +947,11 @@
 
                                                                 <button type="submit" id="addCostUpdateBtn"
                                                                     class="btn btn-outline-primary btn-sm fw-semibold"
-                                                                    onclick="updateAddCost()">Update</button>
+                                                                    onclick="updateAddCost()" disabled>Update</button>
 
                                                                 <button type="submit" id="addCostAddBtn"
                                                                     class="btn btn-outline-success btn-sm fw-semibold"
-                                                                    onclick="addNewAddCost()">Add</button>
+                                                                    onclick="addAddiCostToTable()">Add</button>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -34,8 +34,8 @@ public class AdditionalCost {
     @Column(name = "amount")
     private BigDecimal amount;
 
-    @Column(name = "reason")
-    private String reason;
+    @Column(name = "note")
+    private String note;
 
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;

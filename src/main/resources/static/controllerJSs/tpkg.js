@@ -749,13 +749,14 @@ const checkTpkgFormErrors = () => {
 
 
 //######### additional costs related codes 
+addiCostList = new Array();
 
 const refreshAddiCostForm = () => {
 
-    addiCostList = new Array(); 
     addiCost = new Object();
 
-    document.getElementById('additionalCostForm').reset();
+    document.getElementById('addCostUpdateBtn').disabled = true;
+    document.getElementById('addCostUpdateBtn').style.cursor = 'not-allowed';
 
     const inputTagsIds = [
         'additionalCostName',
@@ -793,199 +794,102 @@ const checkAddiCostFormErrors = () => {
 let addCostIdCounter = 1;
 let editingRowData = null;
 
-//add a new additional cost to the table
-const addNewAddCostOri = () => {
 
-    const nameInput = document.getElementById('additionalCostName')
-    const amountInput = document.getElementById('additionalCostAmount')
-    const noteInput = document.getElementById('additionalCostNote')
+//create table(using)
+const createAddiCostTable = () => {
 
-    const name = nameInput.value
-    const amount = amountInput.value
-    const note = noteInput.value
-
-    if (!name || !amount) {
-        alert("Please enter both Cost Name and Amount.");
-        return;
-    }
-
-    // Create new row
     const tbody = document.getElementById('additionalCostTableBody');
-    const row = document.createElement('tr');
+    tbody.innerHTML = '';
 
-    // ID cell
-    const idCell = document.createElement('td');
-    idCell.innerText = addCostIdCounter++;
-    row.appendChild(idCell);
+    addiCostList.forEach((cost, index) => {
+        const row = document.createElement('tr');
 
-    // Cost Name cell
-    const nameCell = document.createElement('td');
-    nameCell.innerText = name;
-    row.appendChild(nameCell);
+        const idCell = document.createElement('td');
+        idCell.innerText = index + 1;
+        row.appendChild(idCell);
 
-    // Amount cell
-    const amountCell = document.createElement('td');
-    amountCell.innerText = `LKR ${parseFloat(amount).toFixed(2)}`;
-    row.appendChild(amountCell);
+        const nameCell = document.createElement('td');
+        nameCell.innerText = cost.costname;
+        row.appendChild(nameCell);
 
-    // Action cell
-    const actionCell = document.createElement('td');
-    actionCell.className = 'text-center';
+        const amountCell = document.createElement('td');
+        amountCell.innerText = `LKR ${parseFloat(cost.amount).toFixed(2)}`;
+        row.appendChild(amountCell);
 
-    const btnGroup = document.createElement('div');
-    btnGroup.className = 'btn-group btn-group-sm';
+        const actionCell = document.createElement('td');
+        actionCell.className = 'text-center';
 
-    // View button
-    const viewBtn = document.createElement('button');
-    viewBtn.className = 'btn btn-outline-primary';
-    viewBtn.innerText = 'View';
-    viewBtn.onclick = function () {
-        alert(`Note: ${note || 'No note provided'}`);
-    };
-    btnGroup.appendChild(viewBtn);
+        const btnGroup = document.createElement('div');
+        btnGroup.className = 'btn-group btn-group-sm';
 
-    // Edit button (placeholder)
-    const editBtn = document.createElement('button');
-    editBtn.className = 'btn btn-outline-secondary';
-    editBtn.innerText = 'Edit';
-    editBtn.onclick = function () {
-        editingRowData = {
-            rowElement: row,
-            costName: name,
-            amount: amount,
-            note: note
+        const viewBtn = document.createElement('button');
+        viewBtn.className = 'btn btn-outline-primary';
+        viewBtn.innerText = 'View';
+        viewBtn.onclick = () => showNote(cost);
+        btnGroup.appendChild(viewBtn);
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn btn-outline-secondary';
+        editBtn.innerText = 'Edit';
+        editBtn.onclick = () => refillAdditionalCostFormNew(cost);
+        btnGroup.appendChild(editBtn);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-outline-danger';
+        deleteBtn.innerText = 'Delete';
+        deleteBtn.onclick = () => {
+            addiCostList.splice(index, 1);
+            createAddiCostTable();
+            refreshAddiCostForm();
         };
-        refillAdditionalCostForm();
-    };
-    btnGroup.appendChild(editBtn);
+        btnGroup.appendChild(deleteBtn);
 
-    // Delete button (placeholder)
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'btn btn-outline-danger';
-    deleteBtn.innerText = 'Delete';
-    deleteBtn.onclick = function () {
-        row.remove();
-    };
-    btnGroup.appendChild(deleteBtn);
+        actionCell.appendChild(btnGroup);
+        row.appendChild(actionCell);
 
-    actionCell.appendChild(btnGroup);
-    row.appendChild(actionCell);
-
-    tbody.appendChild(row);
-
-    // Reset the form
-    //document.getElementById('additionalCostForm').reset();
-    nameInput.style.border = "1px solid #ced4da";
-    amountInput.style.border = "1px solid #ced4da";
-    noteInput.style.border = "1px solid #ced4da";
-
-    nameInput.value = '';
-    amountInput.value = '';
-    noteInput.value = '';
+        tbody.appendChild(row);
+    })
 }
 
-const addNewAddCost = () => {
+//new (using)
+const addAddiCostToTable = () => {
 
     const errors = checkAddiCostFormErrors();
-    if (errors) {
-        alert(errors);
-        return;
+
+    if (errors == '') {
+        const userConfirm = confirm("Are you sure you sure to add this additional cost?");
+        if (userConfirm) {
+            addiCostList.push(addiCost);
+            createAddiCostTable();
+            console.log("addAddiCostToTable success");
+            refreshAddiCostForm();
+        }
+    } else {
+        alert('Form Has Followimg Errors \n \n' + errors);
     }
+
+}
+
+// using
+const showNote = (addiCostObj) => {
+    alert(addiCostObj.costname + "\n" + addiCostObj.amount);
+}
+
+//using
+const refillAdditionalCostFormNew = (addiCostObj) => {
+
+    refreshAddiCostForm();
+
+    document.getElementById('additionalCostName').value = addiCostObj.costname;
+    document.getElementById('additionalCostAmount').value = addiCostObj.amount;
+    document.getElementById('additionalCostNote').value = addiCostObj.note || '';
+
+    document.getElementById('addCostAddBtn').style.cursor = 'not-allowed';
+    document.getElementById('addCostAddBtn').disabled = true;
+
+    document.getElementById('addCostUpdateBtn').style.cursor = 'pointer';
+    document.getElementById('addCostUpdateBtn').disabled = false;
     
-    const name = addiCost.costname.trim();
-    const amount = parseFloat(addiCost.amount);
-    const note = addiCost.note?.trim() || '';
-
-    // Create new row
-    const tbody = document.getElementById('additionalCostTableBody');
-    const row = document.createElement('tr');
-
-    // ID cell
-    const idCell = document.createElement('td');
-    idCell.innerText = addCostIdCounter++;
-    row.appendChild(idCell);
-
-    // Cost Name cell
-    const nameCell = document.createElement('td');
-    nameCell.innerText = name;
-    row.appendChild(nameCell);
-
-    // Amount cell
-    const amountCell = document.createElement('td');
-    amountCell.innerText = `LKR ${amount.toFixed(2)}`;
-    row.appendChild(amountCell);
-
-    // Action cell
-    const actionCell = document.createElement('td');
-    actionCell.className = 'text-center';
-
-    const btnGroup = document.createElement('div');
-    btnGroup.className = 'btn-group btn-group-sm';
-
-    // View button
-    const viewBtn = document.createElement('button');
-    viewBtn.className = 'btn btn-outline-primary';
-    viewBtn.innerText = 'View';
-    viewBtn.onclick = function () {
-        alert(`Note: ${note || 'No note provided'}`);
-    };
-    btnGroup.appendChild(viewBtn);
-
-    // Edit button
-    const editBtn = document.createElement('button');
-    editBtn.className = 'btn btn-outline-secondary';
-    editBtn.innerText = 'Edit';
-    editBtn.onclick = function () {
-        editingRowData = {
-            rowElement: row,
-            costName: name,
-            amount: amount,
-            note: note
-        };
-        refillAdditionalCostForm();
-    };
-    btnGroup.appendChild(editBtn);
-
-    // Delete button
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'btn btn-outline-danger';
-    deleteBtn.innerText = 'Delete';
-    deleteBtn.onclick = function () {
-        row.remove();
-    };
-    btnGroup.appendChild(deleteBtn);
-
-    actionCell.appendChild(btnGroup);
-    row.appendChild(actionCell);
-
-    tbody.appendChild(row);
-
-    // Reset the form object and input fields
-    addiCost.costname = '';
-    addiCost.amount = '';
-    addiCost.note = '';
-
-    document.getElementById('additionalCostName').value = '';
-    document.getElementById('additionalCostAmount').value = '';
-    document.getElementById('additionalCostNote').value = '';
-
-    // Reset styles if needed
-    document.getElementById('additionalCostName').style.border = "1px solid #ced4da";
-    document.getElementById('additionalCostAmount').style.border = "1px solid #ced4da";
-    document.getElementById('additionalCostNote').style.border = "1px solid #ced4da";
-};
-
-
-//refill the addi cost form to edit
-const refillAdditionalCostForm = () => {
-    // Populate form fields
-    document.getElementById('additionalCostName').value = editingRowData.costName;
-    document.getElementById('additionalCostAmount').value = editingRowData.amount;
-    document.getElementById('additionalCostNote').value = editingRowData.note || '';
-
-    // Show Update button, hide Add button
-    //document.getElementById('addCostAddBtn').style.display = 'none';
-    //document.getElementById('addCostUpdateBtn').style.display = 'inline-block';
 }
 
 //edit and update a row on additional costs table
@@ -1025,7 +929,7 @@ const updateAddCostOri = () => {
 };
 
 const updateAddCost = () => {
-    
+
     // Update the table row with the values from addiCost object
     const cells = editingRowData.rowElement.children;
     cells[1].innerText = addiCost.costname;
