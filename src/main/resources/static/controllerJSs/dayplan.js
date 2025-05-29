@@ -454,6 +454,80 @@ const clearOtherInputsManualDropOff = () => {
 //to select day type (FD,MD,LD)
 const selectDayType = (feild) => {
     dayplan.dayplancode = feild.value;
+
+    const cbAirPortPickup = document.getElementById('generalPickupCB');
+    const selectAirPortPickup = document.getElementById('airportSelect');
+    const cbAirPortDropOff = document.getElementById('generalDropOffCB');
+    const selectAirPortDropOff = document.getElementById('airportSelectDropOff');
+
+    if (dayplan.dayplancode == "MD") {
+
+        cbAirPortPickup.checked = false;
+        cbAirPortPickup.disabled = true;
+        cbAirPortPickup.style.cursor = "not-allowed";
+        selectAirPortPickup.value = "";
+        selectAirPortPickup.style.border = '1px solid #ced4da';
+        dayplan.pickuppoint = null;
+        pickupPointGCoords = '';
+
+        cbAirPortDropOff.checked = false;
+        cbAirPortDropOff.disabled = true;
+        cbAirPortDropOff.style.cursor = "not-allowed";
+        selectAirPortDropOff.value = "";
+        selectAirPortDropOff.style.border = '1px solid #ced4da';
+        dayplan.droppoint = null;
+        dropoffPointGCoords = '';
+
+    } else if (dayplan.dayplancode == "FD") {
+
+        cbAirPortPickup.disabled = false;
+        cbAirPortDropOff.disabled = true;
+        cbAirPortPickup.style.cursor = "pointer";
+        cbAirPortDropOff.style.cursor = "not-allowed";
+
+        //reset the airport select elements
+        selectAirPortPickup.value = "";
+        selectAirPortPickup.style.border = '1px solid #ced4da';
+        dayplan.pickuppoint = null;
+        pickupPointGCoords = '';
+
+        selectAirPortDropOff.value = "";
+        selectAirPortDropOff.style.border = '1px solid #ced4da';
+        dayplan.droppoint = null;
+        dropoffPointGCoords = '';
+
+    } else if (dayplan.dayplancode == "LD") {
+
+        cbAirPortPickup.disabled = true;
+        cbAirPortPickup.style.cursor = "not-allowed";
+
+        cbAirPortDropOff.disabled = false;
+        cbAirPortDropOff.style.cursor = "pointer";
+
+        //reset the airport select elements
+        selectAirPortPickup.value = "";
+        selectAirPortPickup.style.border = '1px solid #ced4da';
+        dayplan.pickuppoint = null;
+        pickupPointGCoords = '';
+
+    }
+
+    else if (dayplan.dayplancode == "TP") {
+
+        cbAirPortPickup.disabled = false;
+        cbAirPortPickup.style.cursor = "pointer";
+
+        selectAirPortPickup.value = "";
+        selectAirPortPickup.style.border = '1px solid #ced4da';
+        dayplan.pickuppoint = null;
+        pickupPointGCoords = '';
+
+        //selectAirPortDropOff.value = "";
+        //selectAirPortDropOff.style.border = '1px solid #ced4da';
+        //dayplan.droppoint = null;
+        //dropoffPointGCoords = '';
+
+    }
 }
 
 //handle values when the day type radio is selected
@@ -745,12 +819,11 @@ const calcTotalVehiParkingfee = () => {
     dayplan.vplaces.forEach(placeObj => {
         fee = (placeObj.vehicleparkingfee) * (placeObj.duration);
         cost = cost + fee;
-        return cost;
     });
 
-    dpTotalVehiParkingCost.value = parseFloat(cost).toFixed(2);
-    dpTotalVehiParkingCost.innerText = parseFloat(cost).toFixed(2);
-    dayplan.totalvehiparkcost = dpTotalVehiParkingCost.value;
+    const roundedCost = Math.ceil(cost / 10) * 10;
+    dpTotalVehiParkingCost.innerText = roundedCost;
+    dayplan.totalvehiparkcost = roundedCost;
 }
 
 //common fn for calculate the total cost of a single fee type
@@ -1004,21 +1077,21 @@ const removeAll = () => {
     calcTotalVehiParkingfee();
 
     //remove and clear automatically binded lp and end stay info too (not used)
-//    dayplan.lunchplace_id = null;
-//    dayplan.drop_stay_id = null;
-//
-//    let lunchPlaceSelect = document.getElementById("selectDPLunch");
-//    let endStaySelect = document.getElementById("dropOffAccommodationSelect");
-//
-//    lunchPlaceSelect.style.border = "1px solid #ced4da";
-//    endStaySelect.style.border = "1px solid #ced4da";
-//
-//    let emptyArr = [];
-//    fillDataIntoDynamicSelects(lunchPlaceSelect, 'Please Select The Restaurant', emptyArr, 'name');
-//    fillDataIntoDynamicSelects(endStaySelect, 'Please Select The Accomodation', emptyArr, 'name');
-//
-//    lunchPlaceSelect.disabled = true;
-//    endStaySelect.disabled = true;
+    //    dayplan.lunchplace_id = null;
+    //    dayplan.drop_stay_id = null;
+    //
+    //    let lunchPlaceSelect = document.getElementById("selectDPLunch");
+    //    let endStaySelect = document.getElementById("dropOffAccommodationSelect");
+    //
+    //    lunchPlaceSelect.style.border = "1px solid #ced4da";
+    //    endStaySelect.style.border = "1px solid #ced4da";
+    //
+    //    let emptyArr = [];
+    //    fillDataIntoDynamicSelects(lunchPlaceSelect, 'Please Select The Restaurant', emptyArr, 'name');
+    //    fillDataIntoDynamicSelects(endStaySelect, 'Please Select The Accomodation', emptyArr, 'name');
+    //
+    //    lunchPlaceSelect.disabled = true;
+    //    endStaySelect.disabled = true;
 
 }
 
@@ -1126,6 +1199,14 @@ async function calculateTotalDistance() {
     msgBox.innerText = '';
     kmInput.value = '';
 
+    const hasPickup = dayplan.pickup_stay_id || dayplan.pick_manual_gcoords;
+    const hasDrop = dayplan.drop_stay_id || dayplan.drop_manual_gcoords;
+
+    if (!dayplan.is_template && (!hasPickup || !hasDrop)) {
+        msgBox.innerText = '⚠️ Cannot calculate distance without both pickup and drop-off points.';
+        return;
+    }
+
     let coords = [];
 
     // Add pickup point if available
@@ -1180,7 +1261,7 @@ async function calculateTotalDistance() {
 
         const data = await response.json();
         const distanceMeters = data.features[0].properties.summary.distance;
-        const distanceKm = (distanceMeters / 1000).toFixed(2);
+        const distanceKm = Math.ceil(distanceMeters / 1000);
 
         // Update input and object
         kmInput.value = distanceKm;
@@ -1292,11 +1373,11 @@ const checkDPFormErrors = () => {
 
     if (dayplan.drop_stay_id != null) {
         if (dayplan.alt_stay_1_id == null) {
-            errors += " Alternative Stay 1 cannot be empty \n";            
+            errors += " Alternative Stay 1 cannot be empty \n";
         }
 
         if (dayplan.alt_stay_2_id == null) {
-            errors += " Alternative Stay 2 cannot be empty \n";            
+            errors += " Alternative Stay 2 cannot be empty \n";
         }
     }
 
@@ -1662,22 +1743,22 @@ const refillDayPlanForm = async (dpObj) => {
                 }
             });
 
-//            try {
-//
-//                const stays = await ajaxGetReq("/stay/active");
-//                fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Drop Off Accomodation', stays, 'name', dpObj.drop_stay_id.name);
-//                fillDataIntoDynamicSelects(altStay1Select, 'Please Select Alternative Accomodation 1', stays, 'name', dpObj.alt_stay_1_id.name);
-//                fillDataIntoDynamicSelects(altStay2Select, 'Please Select Alternative Accomodation 2', stays, 'name', dpObj.alt_stay_2_id.name);
-//
-//                const allDists = await ajaxGetReq('district/all');
-//                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDists, 'name', dpObj.drop_stay_id.district_id.name);
-//
-//                const allProvinces = await ajaxGetReq("/province/all");
-//                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
-//
-//            } catch (error) {
-//                console.error('error fetching previous end stay info');
-//            }
+            //            try {
+            //
+            //                const stays = await ajaxGetReq("/stay/active");
+            //                fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Drop Off Accomodation', stays, 'name', dpObj.drop_stay_id.name);
+            //                fillDataIntoDynamicSelects(altStay1Select, 'Please Select Alternative Accomodation 1', stays, 'name', dpObj.alt_stay_1_id.name);
+            //                fillDataIntoDynamicSelects(altStay2Select, 'Please Select Alternative Accomodation 2', stays, 'name', dpObj.alt_stay_2_id.name);
+            //
+            //                const allDists = await ajaxGetReq('district/all');
+            //                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDists, 'name', dpObj.drop_stay_id.district_id.name);
+            //
+            //                const allProvinces = await ajaxGetReq("/province/all");
+            //                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
+            //
+            //            } catch (error) {
+            //                console.error('error fetching previous end stay info');
+            //            }
 
             const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions');
             dropOffAccommodationRow.style.display = 'block';
@@ -1810,11 +1891,11 @@ const showDPValueChanges = () => {
     if ((dayplan.alt_stay_1_id?.id || null) !== (oldDayplan.alt_stay_1_id?.id || null)) {
         updates += `Alternative Stay 1 will be changed to "${dayplan.alt_stay_1_id?.name || 'N/A'}"\n`;
     }
-    
+
     if ((dayplan.alt_stay_2_id?.id || null) !== (oldDayplan.alt_stay_2_id?.id || null)) {
         updates += `Alternative Stay 2 will be changed to "${dayplan.alt_stay_2_id?.name || 'N/A'}"\n`;
     }
-    
+
     // Lunch place or packed lunch
     if ((dayplan.lunchplace_id?.id || null) !== (oldDayplan.lunchplace_id?.id || null)) {
         updates += `Lunch place will be changed to "${dayplan.lunchplace_id?.name || 'None'}"\n`;

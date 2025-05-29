@@ -396,7 +396,7 @@
                                         <legend class="float-none w-auto px-2 text-primary">Costs For Day
                                         </legend>
 
-                                        <p class="fw-semibold mb-1 mt-2">Total Entrance Fee Cost</p>
+                                        <p class="fw-semibold mb-1 mt-0 text-primary">Total Entrance Fee Cost</p>
 
                                         <div class="row mb-1">
                                             <!-- Local -->
@@ -635,7 +635,7 @@
                                                 </div>
                                                 <div class="col-12">
                                                     <select class="form-select" id="dropOffAccommodationSelect" disabled
-                                                        onchange="passStayGCoordsDropOff(); dynamicSelectValidator(this,'dayplan','drop_stay_id');"></select>
+                                                        onchange="dynamicSelectValidator(this,'dayplan','drop_stay_id'); passStayGCoordsDropOff(); altStay1Select.disabled = false; altStay2Select.disabled = false; "></select>
                                                 </div>
                                             </div>
 
