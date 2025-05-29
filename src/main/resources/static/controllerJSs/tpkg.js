@@ -2,6 +2,7 @@ window.addEventListener('load', () => {
 
     buildTpkgTable();
     refreshTpkgForm();
+    refreshAddiCostForm()
 
 });
 
@@ -287,7 +288,7 @@ const updateTotalTravellers = () => {
     document.getElementById('tpkgTotalTravellers').value = total;
 }
 
-//not used
+//not used 💥
 const filterDayPlanTemplatesByDistrict = () => {
     const rawValue = document.getElementById('dpTemplateStartDistrictInTpkg').value;
     const selectedDistrict = JSON.parse(rawValue);
@@ -299,7 +300,7 @@ const filterDayPlanTemplatesByDistrict = () => {
     displayFilteredTemplates(filteredTemplates);
 }
 
-//not used
+//not used 💥
 const displayFilteredTemplates = (templates) => {
     const container = document.getElementById('availableDayTemplatesContainer');
     container.innerHTML = ''; // Clear previous results
@@ -343,16 +344,7 @@ const displayFilteredTemplates = (templates) => {
 
 }
 
-//not used
-const openDayPlanModal = (code, title) => {
-    document.getElementById('modalDayPlanCode').textContent = code;
-    document.getElementById('modalDayPlanTitle').textContent = title;
-
-    const modal = new bootstrap.Modal(document.getElementById('dayPlanModal'));
-    modal.show();
-}
-
-//this will be needed t change the functionality and text of a button , based on the type of middle day
+//this will be needed to change the functionality and text of a button , based on the type of middle day
 let midDayType = null; // "template" or "existing"
 
 // to reset data in dynamic selects
@@ -429,6 +421,7 @@ const loadExistingLDs = async (selectElementId) => {
     }
 };
 
+//show selected day plan's info on a model
 const showDayPlanDetails = (selectElementId) => {
 
     // Clear previous details
@@ -451,7 +444,6 @@ const showDayPlanDetails = (selectElementId) => {
 
     console.log(selectedDayPlan);
 
-    //append the details to the modal
     // Show template info if it's a template
     if (selectedDayPlan.is_template) {
         document.getElementById('tempInfoDisRow').classList.remove('d-none');
@@ -697,18 +689,119 @@ const deleteMidDay = (index) => {
     midDayCounter--;
 };
 
+//check errors before adding
+const checkTpkgFormErrors = () => {
+
+    let errors = "";
+
+    if (tpkg.daytitle == null) {
+        errors += "Title cannot be empty \n";
+    }
+
+    if (tpkg.is_custompkg == null) {
+        errors += " Please select the type of package \n";
+    }
+
+    if (tpkg.sd_dayplan_id == null) {
+        errors += " Please select the first day plan \n";
+    }
+
+    if (tpkg.ed_dayplan_id == null) {
+        errors += " Please select the Last day plan \n";
+    }
+
+    if ((tpkg.localadultcount == null || tpkg.localadultcount < 0) && (tpkg.foreignadultcount == null || tpkg.foreignadultcount < 0)) {
+        errors += "At least one adult count must be greater than 0 \n";
+    }
+
+    if (tpkg.tpkg_status == null) {
+        errors += "Please select the status of the package \n";
+    }
+
+    if (tpkg.is_custompkg && tpkg.tourstartdate == null) {
+        errors += "Please select the start date of the tour \n";
+    }
+
+    if (!tpkg.is_custompkg && (tpkg.web_discription == null || tpkg.web_discription == "")) {
+        errors += "Please enter the description for the website \n";
+    }
+
+    if (!tpkg.is_custompkg && (tpkg.img1 == null || tpkg.img1 == "")) {
+        errors += "Please upload the first image for the website \n";
+    }
+
+    if (!tpkg.is_custompkg && (tpkg.img2 == null || tpkg.img2 == "")) {
+        errors += "Please upload the second image for the website \n";
+    }
+
+    if (!tpkg.is_custompkg && (tpkg.img3 == null || tpkg.img3 == "")) {
+        errors += "Please upload the third image for the website \n";
+    }
+
+    return errors;
+
+
+}
+
+
+
+
+
+
+//######### additional costs related codes 
+
+const refreshAddiCostForm = () => {
+
+    addiCostList = new Array(); 
+    addiCost = new Object();
+
+    document.getElementById('additionalCostForm').reset();
+
+    const inputTagsIds = [
+        'additionalCostName',
+        'additionalCostAmount',
+        'additionalCostNote'
+    ]
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+
+}
+
+//check errors in additional costs form
+const checkAddiCostFormErrors = () => {
+
+    let errors = "";
+
+    if (addiCost.costname == null || addiCost.costname.trim() === "") {
+        errors += "Cost Name cannot be empty \n";
+    }
+
+    if (addiCost.amount == null || addiCost.amount <= 0) {
+        errors += "Please enter a valid amount greater than 0 \n";
+    }
+
+    return errors;
+}
+
 //for additional costs table 
 let addCostIdCounter = 1;
 let editingRowData = null;
 
-const addNewAddCost = () => {
+//add a new additional cost to the table
+const addNewAddCostOri = () => {
 
     const nameInput = document.getElementById('additionalCostName')
     const amountInput = document.getElementById('additionalCostAmount')
     const noteInput = document.getElementById('additionalCostNote')
 
     const name = nameInput.value
-    const amount =amountInput.value
+    const amount = amountInput.value
     const note = noteInput.value
 
     if (!name || !amount) {
@@ -791,6 +884,99 @@ const addNewAddCost = () => {
     noteInput.value = '';
 }
 
+const addNewAddCost = () => {
+
+    const errors = checkAddiCostFormErrors();
+    if (errors) {
+        alert(errors);
+        return;
+    }
+    
+    const name = addiCost.costname.trim();
+    const amount = parseFloat(addiCost.amount);
+    const note = addiCost.note?.trim() || '';
+
+    // Create new row
+    const tbody = document.getElementById('additionalCostTableBody');
+    const row = document.createElement('tr');
+
+    // ID cell
+    const idCell = document.createElement('td');
+    idCell.innerText = addCostIdCounter++;
+    row.appendChild(idCell);
+
+    // Cost Name cell
+    const nameCell = document.createElement('td');
+    nameCell.innerText = name;
+    row.appendChild(nameCell);
+
+    // Amount cell
+    const amountCell = document.createElement('td');
+    amountCell.innerText = `LKR ${amount.toFixed(2)}`;
+    row.appendChild(amountCell);
+
+    // Action cell
+    const actionCell = document.createElement('td');
+    actionCell.className = 'text-center';
+
+    const btnGroup = document.createElement('div');
+    btnGroup.className = 'btn-group btn-group-sm';
+
+    // View button
+    const viewBtn = document.createElement('button');
+    viewBtn.className = 'btn btn-outline-primary';
+    viewBtn.innerText = 'View';
+    viewBtn.onclick = function () {
+        alert(`Note: ${note || 'No note provided'}`);
+    };
+    btnGroup.appendChild(viewBtn);
+
+    // Edit button
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn btn-outline-secondary';
+    editBtn.innerText = 'Edit';
+    editBtn.onclick = function () {
+        editingRowData = {
+            rowElement: row,
+            costName: name,
+            amount: amount,
+            note: note
+        };
+        refillAdditionalCostForm();
+    };
+    btnGroup.appendChild(editBtn);
+
+    // Delete button
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'btn btn-outline-danger';
+    deleteBtn.innerText = 'Delete';
+    deleteBtn.onclick = function () {
+        row.remove();
+    };
+    btnGroup.appendChild(deleteBtn);
+
+    actionCell.appendChild(btnGroup);
+    row.appendChild(actionCell);
+
+    tbody.appendChild(row);
+
+    // Reset the form object and input fields
+    addiCost.costname = '';
+    addiCost.amount = '';
+    addiCost.note = '';
+
+    document.getElementById('additionalCostName').value = '';
+    document.getElementById('additionalCostAmount').value = '';
+    document.getElementById('additionalCostNote').value = '';
+
+    // Reset styles if needed
+    document.getElementById('additionalCostName').style.border = "1px solid #ced4da";
+    document.getElementById('additionalCostAmount').style.border = "1px solid #ced4da";
+    document.getElementById('additionalCostNote').style.border = "1px solid #ced4da";
+};
+
+
+//refill the addi cost form to edit
 const refillAdditionalCostForm = () => {
     // Populate form fields
     document.getElementById('additionalCostName').value = editingRowData.costName;
@@ -802,7 +988,8 @@ const refillAdditionalCostForm = () => {
     //document.getElementById('addCostUpdateBtn').style.display = 'inline-block';
 }
 
-const updateAddCost = () => {
+//edit and update a row on additional costs table
+const updateAddCostOri = () => {
 
     const updatedName = document.getElementById('additionalCostName').value;
     const updatedAmount = document.getElementById('additionalCostAmount').value;
@@ -834,10 +1021,43 @@ const updateAddCost = () => {
     document.getElementById('addCostAddBtn').style.display = 'inline-block';
     document.getElementById('addCostUpdateBtn').style.display = 'none';
     editingRowData = null;
-   
+
 };
 
-function updateTotalAmount() {
+const updateAddCost = () => {
+    
+    // Update the table row with the values from addiCost object
+    const cells = editingRowData.rowElement.children;
+    cells[1].innerText = addiCost.costname;
+    cells[2].innerText = `LKR ${parseFloat(addiCost.amount).toFixed(2)}`;
+
+    // Update the "View" button note handler
+    const viewBtn = editingRowData.rowElement.querySelector('button.btn-outline-primary');
+    viewBtn.onclick = () => {
+        alert(`Note: ${addiCost.note || 'No note provided'}`);
+    };
+
+    // Update the editBtn with the new data
+    const editBtn = editingRowData.rowElement.querySelector('button.btn-outline-secondary');
+    editBtn.onclick = () => {
+        editingRowData = {
+            rowElement: editingRowData.rowElement,
+            costName: addiCost.costname,
+            amount: addiCost.amount,
+            note: addiCost.note
+        };
+        refillAdditionalCostForm();
+    };
+
+    // Reset UI buttons and clear editing state
+    document.getElementById('addCostAddBtn').style.display = 'inline-block';
+    document.getElementById('addCostUpdateBtn').style.display = 'none';
+    editingRowData = null;
+};
+
+
+//update the total additional cost
+const updateTotalAmount = () => {
     let total = 0;
     additionalCosts.forEach(item => {
         total += Number(item.amount);

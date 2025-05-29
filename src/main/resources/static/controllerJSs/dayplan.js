@@ -91,7 +91,6 @@ const showDayPlanStatus = (dpObj) => {
     }
 }
 
-
 //to ready the main form 
 const refreshDayPlanForm = async () => {
 
@@ -848,7 +847,7 @@ const handleLunchRadio = (fieldId) => {
 }
 
 //this will be triggered when a real value in lunch place is selected
-function checkPackedLunchNo() {
+const checkPackedLunchNo=()=> {
     const lunchSelect = document.getElementById('selectDPLunch');
     const packedLunchNo = document.getElementById('packedLunchNo');
 
@@ -858,7 +857,7 @@ function checkPackedLunchNo() {
     }
 }
 
-
+//if the lunch for the day is taken as packed lunch
 const takePackedLunchYes = () => {
 
     const lunchProv = document.getElementById('selectLPProv');
@@ -889,6 +888,7 @@ const takePackedLunchYes = () => {
 
 }
 
+//if lunch is from a restaurant
 const takePackedLunchNo = () => {
 
     const lunchProv = document.getElementById('selectLPProv');
@@ -1017,8 +1017,6 @@ const addAll = () => {
         }
     }
 
-    //calculateRoadDistanceFromDayplan(dayplan);
-
     //original
     vplaces = [];
     fillDataIntoDynamicSelects(allVPs, '', vplaces, 'name');
@@ -1030,8 +1028,6 @@ const addAll = () => {
     calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "foreignchildtktcost");
 
     calcTotalVehiParkingfee();
-
-    //getLunchAndHotelAuto()
 
 }
 
@@ -1359,11 +1355,11 @@ const checkDPFormErrors = () => {
     let errors = "";
 
     //always check these fields
-    if (!dayplan.daytitle) {
+    if (dayplan.daytitle == null) {
         errors += "Name cannot be empty \n";
     }
 
-    if (!dayplan.dp_status) {
+    if (dayplan.dp_status == null) {
         errors += "Status cannot be empty \n";
     }
 

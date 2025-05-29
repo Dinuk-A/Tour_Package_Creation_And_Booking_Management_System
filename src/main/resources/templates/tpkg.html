@@ -901,8 +901,8 @@
                                                             <label for="additionalCostName"
                                                                 class="form-label fw-bold mb-0">Cost Name</label>
                                                             <input type="text" id="additionalCostName"
-                                                                class="form-control">
-                                                            <!--  onkeyup="inputValidatorText(this,'','addicost','costname');" -->
+                                                                class="form-control"
+                                                                onkeyup="inputValidatorText(this,'','addicost','costname');">
                                                         </div>
                                                     </div>
 
@@ -916,8 +916,8 @@
                                                                     <h6 class="mb-0">LKR</h6>
                                                                 </span>
                                                                 <input type="number" id="additionalCostAmount"
-                                                                    class="form-control form-input p-1">
-                                                                <!-- onkeyup="inputValidatorText(this,'','addicost','amount');" -->
+                                                                    class="form-control form-input p-1"
+                                                                    onkeyup="inputValidatorText(this,'','addicost','amount');">
                                                             </div>
 
                                                         </div>
@@ -930,26 +930,32 @@
                                                             <label for="additionalCostNote"
                                                                 class="form-label fw-bold mb-0">Note</label>
                                                             <textarea id="additionalCostNote" class="form-control"
-                                                                style="height: 100px;"></textarea>
-                                                            <!--  onkeyup="inputValidatorText(this,'','addicost','reason')" -->
+                                                                style="height: 100px;"
+                                                                onkeyup="inputValidatorText(this,'','addicost','reason')"></textarea>
                                                         </div>
                                                     </div>
 
 
                                                     <!-- ADDITIONAL COST BUTTONS -->
                                                     <div class="row mt-4">
-
                                                         <div class="col-12 mx-auto">
-                                                            <button type="reset" class="btn-clear w-50 fw-bold"
-                                                                onclick="refreshAddCostForm()">Reset Form</button>
-                                                            <button type="submit" id="addCostUpdateBtn"
-                                                                class="btn-update fw-bold"
-                                                                onclick="updateAddCost()">Update Entry</button>
-                                                            <button type="submit" id="addCostAddBtn"
-                                                                class="btn-add fw-bold" onclick="addNewAddCost()">Add
-                                                                Entry</button>
+                                                            <div class="d-grid gap-2">
+                                                                <!-- Bootstrap grid for vertical spacing -->
+                                                                <button type="reset"
+                                                                    class="btn btn-outline-secondary btn-sm fw-semibold"
+                                                                    onclick="refreshAddCostForm()">Reset</button>
+
+                                                                <button type="submit" id="addCostUpdateBtn"
+                                                                    class="btn btn-outline-primary btn-sm fw-semibold"
+                                                                    onclick="updateAddCost()">Update</button>
+
+                                                                <button type="submit" id="addCostAddBtn"
+                                                                    class="btn btn-outline-success btn-sm fw-semibold"
+                                                                    onclick="addNewAddCost()">Add</button>
+                                                            </div>
                                                         </div>
                                                     </div>
+
                                                 </form>
 
                                                 <!-- Additional Costs List -->
@@ -961,63 +967,64 @@
                                         </div>
 
                                     </div>
+                                </div>
 
-                                    <!-- Step 5 -->
-                                    <div class="tab-pane fade" id="tpkgStep5" role="tabpanel" aria-labelledby="tpkg">
+                                <!-- Step 5 -->
+                                <div class="tab-pane fade" id="tpkgStep5" role="tabpanel" aria-labelledby="tpkg">
 
-                                        <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                            <legend class="float-none w-auto px-2 text-primary">Additional Details
-                                            </legend>
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Additional Details
+                                        </legend>
 
-                                            <div class="row mt-2">
+                                        <div class="row mt-2">
 
-                                                <!-- Note -->
-                                                <div class="col-md-8 mb-3">
-                                                    <label for="tpNote" class="form-label fw-bold mb-1">Note :</label>
-                                                    <textarea class="form-control" id="tpNote" style="height: 150px;"
-                                                        placeholder=" "
-                                                        onkeyup="inputValidatorText(this,'','tpkg','note')"></textarea>
-                                                </div>
-
-                                                <!-- Package Status -->
-                                                <div class="col-md-4 mb-3">
-                                                    <label for="tpSelectStatus" class="form-label fw-bold mb-1">Status
-                                                        :</label>
-                                                    <select id="tpSelectStatus" class="form-control form-select"
-                                                        onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status')">
-                                                        <option value="" selected disabled> Select Status </option>
-                                                        <option value="Draft"> Draft </option>
-                                                        <option value="Pending"> Pending </option>
-                                                        <option value="In_progress"> In Progress </option>
-                                                        <option value="Confirmed"> Confirmed </option>
-                                                        <option value="Completed"> Completed </option>
-                                                        <option value="ifDeleted" class="d-none"> Deleted </option>
-                                                    </select>
-                                                </div>
-
+                                            <!-- Note -->
+                                            <div class="col-md-8 mb-3">
+                                                <label for="tpNote" class="form-label fw-bold mb-1">Note :</label>
+                                                <textarea class="form-control" id="tpNote" style="height: 150px;"
+                                                    placeholder=" "
+                                                    onkeyup="inputValidatorText(this,'','tpkg','note')"></textarea>
                                             </div>
 
-                                        </fieldset>
+                                            <!-- Package Status -->
+                                            <div class="col-md-4 mb-3">
+                                                <label for="tpSelectStatus" class="form-label fw-bold mb-1">Status
+                                                    :</label>
+                                                <select id="tpSelectStatus" class="form-control form-select"
+                                                    onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status')">
+                                                    <option value="" selected disabled> Select Status </option>
+                                                    <option value="Draft"> Draft </option>
+                                                    <option value="Pending"> Pending </option>
+                                                    <option value="In_progress"> In Progress </option>
+                                                    <option value="Confirmed"> Confirmed </option>
+                                                    <option value="Completed"> Completed </option>
+                                                    <option value="ifDeleted" class="d-none"> Deleted </option>
+                                                </select>
+                                            </div>
 
-                                        <!-- MAIN BUTTONS -->
-                                        <div class="row mt-4 mb-2">
-                                            <div class="col-4">
-                                                <button type="reset" class="btn-clear w-50 fw-bold"
-                                                    onclick="refreshTpkgForm()">Reset
-                                                    Form</button>
-                                            </div>
-                                            <div class="col-8 text-end">
-                                                <button type="submit" id="tpkgUpdateBtn" class="btn-update fw-bold"
-                                                    onclick="updateTpkg()">Update Entry</button>
-                                                <button type="submit" id="tpkgAddBtn" class="btn-add fw-bold"
-                                                    onclick="addNewTpkg()">Add
-                                                    Entry</button>
-                                            </div>
                                         </div>
 
+                                    </fieldset>
+
+                                    <!-- MAIN BUTTONS -->
+                                    <div class="row mt-4 mb-2">
+                                        <div class="col-4">
+                                            <button type="reset" class="btn-clear w-50 fw-bold"
+                                                onclick="refreshTpkgForm()">Reset
+                                                Form</button>
+                                        </div>
+                                        <div class="col-8 text-end">
+                                            <button type="submit" id="tpkgUpdateBtn" class="btn-update fw-bold"
+                                                onclick="updateTpkg()">Update Entry</button>
+                                            <button type="submit" id="tpkgAddBtn" class="btn-add fw-bold"
+                                                onclick="addNewTpkg()">Add
+                                                Entry</button>
+                                        </div>
                                     </div>
 
                                 </div>
+
+                            </div>
 
                         </form>
 
@@ -1154,7 +1161,7 @@
             </div>
         </div>
 
-        <!-- Modal to show day plan info -->
+        <!-- Modal to show selected day plan's info -->
         <div class="modal fade py-5" id="dayPlanModal" tabindex="-1" aria-labelledby="dayPlanInfoLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
