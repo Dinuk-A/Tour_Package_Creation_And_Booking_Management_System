@@ -95,7 +95,7 @@ const refreshTpkgForm = async () => {
     //ajax's to fill days/templates
     try {
         const vehiTypes = await ajaxGetReq("/vehitypes/all");
-        fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'vehi_type_name', 'name');
+        fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'vehi_type_name', 'vehiclename');
 
         const districts = await ajaxGetReq("district/all");
         fillDataIntoDynamicSelects(dpTemplateStartDistrictInTpkg, 'Please Select District', districts, 'name');
@@ -748,7 +748,7 @@ const checkTpkgFormErrors = () => {
 
 
 
-//######### additional costs related codes 
+//################ additional costs related codes ###################
 addiCostList = new Array();
 
 const refreshAddiCostForm = () => {
@@ -793,7 +793,6 @@ const checkAddiCostFormErrors = () => {
 //for additional costs table 
 let addCostIdCounter = 1;
 let editingRowData = null;
-
 
 //create table(using)
 const createAddiCostTable = () => {
@@ -840,6 +839,7 @@ const createAddiCostTable = () => {
         deleteBtn.onclick = () => {
             addiCostList.splice(index, 1);
             createAddiCostTable();
+            updateTotalAdditionalCost();
             refreshAddiCostForm();
         };
         btnGroup.appendChild(deleteBtn);
@@ -861,6 +861,7 @@ const addAddiCostToTable = () => {
         if (userConfirm) {
             addiCostList.push(addiCost);
             createAddiCostTable();
+            updateTotalAdditionalCost();
             console.log("addAddiCostToTable success");
             refreshAddiCostForm();
         }
@@ -882,92 +883,64 @@ const refillAdditionalCostFormNew = (addiCostObj) => {
 
     document.getElementById('additionalCostName').value = addiCostObj.costname;
     document.getElementById('additionalCostAmount').value = addiCostObj.amount;
-    document.getElementById('additionalCostNote').value = addiCostObj.note || '';
+    document.getElementById('additionalCostNote').value = addiCostObj.note;
 
     document.getElementById('addCostAddBtn').style.cursor = 'not-allowed';
     document.getElementById('addCostAddBtn').disabled = true;
 
     document.getElementById('addCostUpdateBtn').style.cursor = 'pointer';
     document.getElementById('addCostUpdateBtn').disabled = false;
-    
+
+    //to support updating the same row
+    editingRowData = addiCostObj;
+
 }
 
-//edit and update a row on additional costs table
-const updateAddCostOri = () => {
-
-    const updatedName = document.getElementById('additionalCostName').value;
-    const updatedAmount = document.getElementById('additionalCostAmount').value;
-    const updatedNote = document.getElementById('additionalCostNote').value;
-
-    // Update the row in the table
-    const cells = editingRowData.rowElement.children;
-    cells[1].innerText = updatedName;
-    cells[2].innerText = `LKR ${parseFloat(updatedAmount).toFixed(2)}`;
-
-    // Update the "View" button note handler
-    const viewBtn = editingRowData.rowElement.querySelector('button.btn-outline-primary');
-    viewBtn.onclick = () => {
-        alert(`Note: ${updatedNote || 'No note provided'}`);
-    };
-
-    // Update the editBtn with the new data
-    const editBtn = editingRowData.rowElement.querySelector('button.btn-outline-secondary');
-    editBtn.onclick = () => {
-        editingRowData = {
-            rowElement: editingRowData.rowElement,
-            costName: updatedName,
-            amount: updatedAmount,
-            note: updatedNote
-        };
-        refillAdditionalCostForm();
-    };
-
-    document.getElementById('addCostAddBtn').style.display = 'inline-block';
-    document.getElementById('addCostUpdateBtn').style.display = 'none';
-    editingRowData = null;
-
-};
-
+//USING 
 const updateAddCost = () => {
 
-    // Update the table row with the values from addiCost object
-    const cells = editingRowData.rowElement.children;
-    cells[1].innerText = addiCost.costname;
-    cells[2].innerText = `LKR ${parseFloat(addiCost.amount).toFixed(2)}`;
+    const costName = document.getElementById('additionalCostName').value.trim();
+    const amount = parseFloat(document.getElementById('additionalCostAmount').value);
+    const note = document.getElementById('additionalCostNote').value.trim();
 
-    // Update the "View" button note handler
-    const viewBtn = editingRowData.rowElement.querySelector('button.btn-outline-primary');
-    viewBtn.onclick = () => {
-        alert(`Note: ${addiCost.note || 'No note provided'}`);
-    };
+    const errors = checkAddiCostFormErrors();
 
-    // Update the editBtn with the new data
-    const editBtn = editingRowData.rowElement.querySelector('button.btn-outline-secondary');
-    editBtn.onclick = () => {
-        editingRowData = {
-            rowElement: editingRowData.rowElement,
-            costName: addiCost.costname,
-            amount: addiCost.amount,
-            note: addiCost.note
-        };
-        refillAdditionalCostForm();
-    };
+    if (errors !== '') {
 
-    // Reset UI buttons and clear editing state
-    document.getElementById('addCostAddBtn').style.display = 'inline-block';
-    document.getElementById('addCostUpdateBtn').style.display = 'none';
-    editingRowData = null;
+        const userConfirm = confirm("Are you sure you want to update this additional cost?");
+        if (userConfirm) {
+
+            editingRowData.costname = costName;
+            editingRowData.amount = amount;
+            editingRowData.note = note;
+
+            createAddiCostTable();
+            refreshAddiCostForm();
+            updateTotalAdditionalCost();
+            editingRowData = null;
+
+            document.getElementById('addCostAddBtn').style.cursor = 'pointer';
+            document.getElementById('addCostAddBtn').disabled = false;
+
+            console.log("updateAddCost success");
+        }
+    } else {
+        alert('Form Has Following Errors \n \n' + errors);
+    }
 };
 
-
-//update the total additional cost
-const updateTotalAmount = () => {
+// using
+const updateTotalAdditionalCost = () => {
     let total = 0;
-    additionalCosts.forEach(item => {
-        total += Number(item.amount);
+
+    addiCostList.forEach(cost => {
+        total += parseFloat(cost.amount);
     });
-    document.getElementById("additionalCostTotalAmount").textContent = total.toFixed(2);
-}
+
+    const totalAmountField = document.getElementById("additionalCostTotalAmount");
+    totalAmountField.innerText = `LKR ${total.toFixed(2)}`;
+};
+
 
 
 

@@ -192,7 +192,7 @@
                                                 <textarea class="form-control"
                                                     placeholder=" Short Description For Show In WebSite"
                                                     id="tpDescription"
-                                                    onkeyup="inputValidatorText(this,'','tpkg','description')"
+                                                    onkeyup="inputValidatorText(this,'','tpkg','web_description')"
                                                     style="height: 120px;">
                                                 </textarea>
 
@@ -794,11 +794,12 @@
                                                             <tfoot class="table-light">
                                                                 <tr>
                                                                     <td colspan="2" class="text-end fw-bold">Total</td>
-                                                                    <td id="additionalCostTotalAmount" class="fw-bold">
-                                                                        0.00</td>
-                                                                    <td></td>
+                                                                    <td colspan="2" class="fw-bold text-success fs-6" id="additionalCostTotalAmount">
+                                                                        LKR 0.00
+                                                                    </td>
                                                                 </tr>
                                                             </tfoot>
+                                                            
                                                         </table>
                                                     </div>
                                                 </div>
@@ -943,7 +944,7 @@
                                                                 <!-- Bootstrap grid for vertical spacing -->
                                                                 <button type="reset"
                                                                     class="btn btn-outline-secondary btn-sm fw-semibold"
-                                                                    onclick="refreshAddCostForm()">Reset</button>
+                                                                    onclick="refreshAddiCostForm()">Reset</button>
 
                                                                 <button type="submit" id="addCostUpdateBtn"
                                                                     class="btn btn-outline-primary btn-sm fw-semibold"
