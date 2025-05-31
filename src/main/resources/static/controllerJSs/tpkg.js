@@ -92,16 +92,15 @@ const refreshTpkgForm = async () => {
     tpkg.dayplans = new Array();
     document.getElementById('formTpkg').reset();
 
-    //ajax's to fill days/templates
+    //set the min start date to 7 days future
+    setTpkgStartDateToFuture();
+
     try {
         const vehiTypes = await ajaxGetReq("/vehitypes/all");
-        fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'vehi_type_name', 'vehiclename');
-
-        const districts = await ajaxGetReq("district/all");
-        fillDataIntoDynamicSelects(dpTemplateStartDistrictInTpkg, 'Please Select District', districts, 'name');
+        fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'vehiclename');
 
         //this will be only fetched yet,later will be filtered by districts
-        allItineraryTemplates = await ajaxGetReq("dayplan/onlytemplatedays");
+        //allItineraryTemplates = await ajaxGetReq("dayplan/onlytemplatedays");
 
     } catch (error) {
         console.error("Failed to fetch form data:", error);
@@ -169,6 +168,18 @@ const setTpkgStatus = () => {
     tpkgStatusSelectElement.children[3].classList.add('d-none');
     tpkgStatusSelectElement.children[4].classList.add('d-none');
     tpkgStatusSelectElement.children[5].classList.add('d-none');
+}
+
+//set the start date to 7 days future
+const setTpkgStartDateToFuture = () => {
+
+    const dateInput = document.getElementById('tpStartDateInput');
+
+    const today = new Date();
+    const minDate = new Date(today.setDate(today.getDate() + 7));
+    const formattedDate = minDate.toISOString().split('T')[0];
+    dateInput.setAttribute('min', formattedDate);
+
 }
 
 //for first 2 radio buttons
@@ -344,9 +355,6 @@ const displayFilteredTemplates = (templates) => {
 
 }
 
-//this will be needed to change the functionality and text of a button , based on the type of middle day
-let midDayType = null; // "template" or "existing"
-
 // to reset data in dynamic selects
 const resetSelectElements = (selectElement, defaultText = "Please Select") => {
     selectElement.disabled = false;
@@ -360,11 +368,11 @@ const resetSelectElements = (selectElement, defaultText = "Please Select") => {
 // to load templates 
 const loadTemplates = async (selectElementId) => {
 
-    if (tpkg.sd_dayplan_id?.id == null || tpkg.sd_dayplan_id == undefined) {
+    if (tpkg.sd_dayplan_id?.id == null) {
         showFirstDayBtn.disabled = true;
     }
 
-    if (tpkg.ed_dayplan_id?.id == null || tpkg.ed_dayplan_id == undefined) {
+    if (tpkg.ed_dayplan_id?.id == null) {
         showFinalDayBtn.disabled = true;
     }
 
@@ -372,7 +380,8 @@ const loadTemplates = async (selectElementId) => {
         const onlyTemplates = await ajaxGetReq("/dayplan/onlytemplatedays");
         resetSelectElements(selectElementId, "Please Select");
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyTemplates, "daytitle");
-        midDayType = "template";
+        const editBtn = document.getElementById('dayPlanInfoEditBtn');
+        editBtn.disabled = true;
     } catch (error) {
         console.error("Error loading templates:", error);
     }
@@ -381,13 +390,16 @@ const loadTemplates = async (selectElementId) => {
 // to load existing first days
 const loadExistingFDs = async (selectElementId) => {
 
-    showFirstDayBtn.disabled = true;
+    if (tpkg.sd_dayplan_id?.id == null) {
+        showFirstDayBtn.disabled = true;
+    }
 
     try {
         const onlyFirstDays = await ajaxGetReq("/dayplan/onlyfirstdays");
         resetSelectElements(selectElementId, "Please Select");
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyFirstDays, "daytitle");
-        midDayType = "existing";
+        const editBtn = document.getElementById('dayPlanInfoEditBtn');
+        editBtn.disabled = true;
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
@@ -396,11 +408,16 @@ const loadExistingFDs = async (selectElementId) => {
 // to load existing mid days
 const loadExistingMDs = async (selectElementId) => {
 
+    if (selectElementId.value == null) {
+        showMidDayBtn.disabled = true;
+    }
+
     try {
         const onlyMidDays = await ajaxGetReq("/dayplan/onlymiddays");
         resetSelectElements(selectElementId, "Please Select");
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyMidDays, "daytitle");
-        midDayType = "existing";
+        const editBtn = document.getElementById('dayPlanInfoEditBtn');
+        editBtn.disabled = true;
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
@@ -409,19 +426,25 @@ const loadExistingMDs = async (selectElementId) => {
 // to load existing last days
 const loadExistingLDs = async (selectElementId) => {
 
-    showFinalDayBtn.disabled = true;
+    if (tpkg.ed_dayplan_id?.id == null) {
+        showFinalDayBtn.disabled = true;
+    }
 
     try {
         const onlyLastDays = await ajaxGetReq("/dayplan/onlylastdays");
         resetSelectElements(selectElementId, "Please Select");
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyLastDays, "daytitle");
-        midDayType = "existing";
+        const editBtn = document.getElementById('dayPlanInfoEditBtn');
+        editBtn.disabled = true;
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
 };
 
-//show selected day plan's info on a model
+//this will helps in refilling the dayplan when editing
+let editingDPsSelectElement = null;
+
+//show selected day plan's info
 const showDayPlanDetails = (selectElementId) => {
 
     // Clear previous details
@@ -439,26 +462,22 @@ const showDayPlanDetails = (selectElementId) => {
     // Get the selected option value
     const selectedOption = document.getElementById(selectElementId).value;
 
-    //parse the selected option to get the day plan info
+    // Parse the selected option to get the day plan info
     const selectedDayPlan = JSON.parse(selectedOption);
-
     console.log(selectedDayPlan);
 
-    // Show template info if it's a template
+    // Template info
     if (selectedDayPlan.is_template) {
         document.getElementById('tempInfoDisRow').classList.remove('d-none');
         document.getElementById('dpInfoInTpkgIsTemplate').innerText = 'This Is A Template Itinerary';
-    } else {
-        document.getElementById('tempInfoDisRow').classList.add('d-none');
-        document.getElementById('dpInfoInTpkgIsTemplate').innerText = '';
     }
 
-    // Set basic fields
+    // Set fields
     document.getElementById('dpInfoInTpkgCode').innerText = selectedDayPlan.dayplancode || 'N/A';
     document.getElementById('dpInfoInTpkgTitle').innerText = selectedDayPlan.daytitle || 'N/A';
 
     document.getElementById('dpInfoInTpkgStartLocation').innerText =
-        selectedDayPlan.pickuppoint || (selectedDayPlan.pickup_stay_id && selectedDayPlan.pickup_stay_id.name) || 'N/A';
+        selectedDayPlan.pickuppoint || (selectedDayPlan.pickup_stay_id?.name) || 'N/A';
 
     document.getElementById('dpInfoInTpkgLunchPlace').innerText =
         selectedDayPlan.lunchplace_id?.name || (selectedDayPlan.is_takepackedlunch ? 'Take Packed Lunch' : 'N/A');
@@ -466,7 +485,7 @@ const showDayPlanDetails = (selectElementId) => {
     document.getElementById('dpInfoInTpkgDropPoint').innerText =
         selectedDayPlan.drop_stay_id?.name || selectedDayPlan.droppoint || 'N/A';
 
-    // Set visiting places
+    // Visiting places
     const placesElement = document.getElementById('dpInfoInTpkgPlaces');
     if (Array.isArray(selectedDayPlan.vplaces) && selectedDayPlan.vplaces.length > 0) {
         const placeItems = selectedDayPlan.vplaces.map((place, index) =>
@@ -477,29 +496,32 @@ const showDayPlanDetails = (selectElementId) => {
         placesElement.innerHTML = '<li>N/A</li>';
     }
 
-    // Set additional notes
+    // Notes
     document.getElementById('dpInfoInTpkgNote').innerText = selectedDayPlan.note || 'N/A';
 
-    // Get reference to the Edit button
+    // Edit button 
     const editBtn = document.getElementById('dayPlanInfoEditBtn');
+    editBtn.disabled = false;
+    editBtn.onclick = function () {
+        refillSelectedDayPlan(selectedDayPlan);
+    };
+    
+    //this will helps in refilling the dayplan when editing
+    editingDPsSelectElement = selectElementId;
 
-    // Update button based on global midDayType
-    if (midDayType === null) {
-        editBtn.disabled = true;
-        editBtn.textContent = 'Edit';
-    } else if (midDayType === 'template') {
-        editBtn.disabled = false;
-        editBtn.textContent = 'Edit Template';
-    } else if (midDayType === 'existing') {
-        editBtn.disabled = false;
-        editBtn.textContent = 'Save As New';
-    }
+};
 
-    //open modal
-    const modal = new bootstrap.Modal(document.getElementById('dayPlanModal'));
-    modal.show();
+// to refill the selected day plan in order to prepare for edit
+const refillSelectedDayPlan = (dpObj) => {
+
+    $("#dayPlanModalInTpkg").modal("show");
+}
+
+// save newly edited day plan
+const saveNSelectEditedDp = () => {
 
 }
+
 
 //this will be needed for create dyamic IDs in mid days
 let midDayCounter = 1;
@@ -743,6 +765,58 @@ const checkTpkgFormErrors = () => {
 
 }
 
+//add a tpkg
+const addNewTpkg = async () => {
+
+    const errors = checkTpkgFormErrors();
+    if (errors == "") {
+        const userConfirm = confirm("Are you sure you want to add this package?");
+        if (userConfirm) {
+            try {
+
+                //bind addiCost array with the tpkg obj 💥💥💥
+
+                const postServerResponse = await ajaxPPDRequest("/tpkg", "POST", tpkg);
+                if (postServerResponse === 'OK') {
+                    showAlertModal('suc', 'Saved Successfully');
+                    refreshAddiCostForm();
+                    refreshTpkgForm();
+                    buildTpkgTable();
+                    var tpkgTblTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    tpkgTblTab.show();
+                } else { showAlertModal('err', 'Submit Failed ' + postServerResponse); }
+            } catch (error) { showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message)); }
+        } else { showAlertModal('inf', 'User cancelled the task'); }
+    } else { showAlertModal('war', errors); }
+
+}
+
+//image binding
+const imgValidatorfortpkg = (fileElement, object, imgProperty, previewId) => {
+    if (fileElement.files && fileElement.files[0]) {
+        let file = fileElement.files[0];
+        let fileReader = new FileReader();
+
+        fileReader.onload = function (e) {
+            previewId.src = e.target.result;
+            window[object][imgProperty] = btoa(e.target.result);
+        }
+        fileReader.readAsDataURL(file);
+    }
+}
+
+// clear image
+const clearImg = (imgProperty, previewId) => {
+    if (tpkg[imgProperty] != null) {
+        let userConfirmImgDlt = confirm("Are You Sure To Remove This Image?");
+        if (userConfirmImgDlt) {
+            tpkg[imgProperty] = null;
+            previewId.src = 'images/sigiriya.jpg';
+        } else {
+            alert("User Cancelled The Image Deletion Task");
+        }
+    }
+}
 
 
 

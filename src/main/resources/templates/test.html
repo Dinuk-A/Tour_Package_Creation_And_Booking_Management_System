@@ -1,284 +1,648 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- Day Plan Modal -->
+<div class="modal fade" id="dayPlanModalInTpkg" tabindex="-1" aria-labelledby="dayPlanModalLabelInTpkg"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dayPlanModalLabelInTpkg">Day Plan Builder</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
 
-<head th:replace="~{thymeleafFrs :: commonHeadFr}">
-    <style>
-        .container {
-            max-width: 700px;
-            margin-top: 50px;
-        }
+                <form id="formDayPlanInTpkg" onsubmit="return false">
 
-        .form-container {
-            background-color: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
+                    <!-- Tabs Navigation -->
+                    <ul class="nav nav-tabs" id="dayPlanTabsInTpkg" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active border border-dark" id="dayStep1InTpkg-tab" data-bs-toggle="tab"
+                                href="#dayStep1InTpkg" role="tab" aria-controls="dayStep1InTpkg"
+                                aria-selected="true">Basic Details</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link border border-dark" id="dayStep2InTpkg-tab" data-bs-toggle="tab"
+                                href="#dayStep2InTpkg" role="tab" aria-controls="dayStep2InTpkg"
+                                aria-selected="false">Pickup Location</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link border border-dark" id="dayStep3InTpkg-tab" data-bs-toggle="tab"
+                                href="#dayStep3InTpkg" role="tab" aria-controls="dayStep3InTpkg"
+                                aria-selected="false">Attractions</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link border border-dark" id="dayStep4InTpkg-tab" data-bs-toggle="tab"
+                                href="#dayStep4InTpkg" role="tab" aria-controls="dayStep4InTpkg"
+                                aria-selected="false">Accommodations</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link border border-dark" id="dayStep5InTpkg-tab" data-bs-toggle="tab"
+                                href="#dayStep5InTpkg" role="tab" aria-controls="dayStep5InTpkg"
+                                aria-selected="false">Other</a>
+                        </li>
+                    </ul>
 
-        .form-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-        }
+                    <!-- Tabs Content -->
+                    <div class="tab-content" id="dayPlanTabsContentInTpkg">
 
-        .nav-tabs .nav-link {
-            border-radius: 0;
-            font-weight: 600;
-            color: #6c757d;
-            transition: all 0.3s ease;
-        }
+                        <!-- Step 1 -->
+                        <div class="tab-pane fade show active" id="dayStep1InTpkg" role="tabpanel"
+                            aria-labelledby="dayStep1InTpkg-tab">
 
-        .nav-tabs .nav-link.active {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
+                            <fieldset class="border border-dark p-4 mb-4 bg-light mt-3">
+                                <legend class="float-none w-auto px-2 text-primary"> Basic Details
+                                </legend>
 
-        .nav-tabs {
-            border-bottom: 2px solid #e9ecef;
-        }
+                                <!-- title and code -->
+                                <div class="row">
+                                    <!-- title -->
+                                    <div class="col-8 mb-3">
+                                        <label for="dpTitleInTpkg" class="form-label fw-bold mb-0">Itinerary Title
+                                            <span class="text-danger">*</span> :</label>
+                                        <input id="dpTitleInTpkg" class="form-control"
+                                            placeholder="Enter The Itinerary Title">
+                                    </div>
 
-        .tab-content {
-            margin-top: 20px;
-        }
+                                    <!-- code hidden -->
+                                    <div id="dpCodeRowInTpkg" class="col-4 d-none">
+                                        <label for="dpCodeInTpkg" class="form-label fw-bold mb-0">Itinerary Code
+                                            <span><small class="text-info">(Generated By System)</small></span>
+                                            :</label>
+                                        <input id="dpCodeInTpkg" class="form-control" disabled>
+                                    </div>
+                                </div>
 
-        .tab-pane {
-            display: none;
-        }
+                                <!-- Day Type -->
+                                <div class="row mb-3" id="DayTypeCBsRowInTpkg">
+                                    <label class="form-label fw-bold mb-1">Day Type <span class="text-danger">*</span>
+                                        :</label>
 
-        .tab-pane.active {
-            display: block;
-        }
-    </style>
-</head>
+                                    <div class="col-4">
+                                        <input type="radio" class="btn-check" id="firstDayCBInTpkg" autocomplete="off"
+                                            name="dpDayTypeInTpkg" value="FD">
+                                        <label class="btn btn-outline-success w-100 fw-bold text-uppercase"
+                                            for="firstDayCBInTpkg">First Day</label>
+                                    </div>
 
-<body>
-    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
-    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
-    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
-    <!--<div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>-->
-    <!--<div th:replace="~{thymeleafFrs :: customConfirmFragment}"></div>-->
+                                    <div class="col-4">
+                                        <input type="radio" class="btn-check" id="middleDayCBInTpkg" autocomplete="off"
+                                            name="dpDayTypeInTpkg" value="MD">
+                                        <label class="btn btn-outline-warning w-100 fw-bold text-uppercase"
+                                            for="middleDayCBInTpkg">Middle Day</label>
+                                    </div>
 
-    <main id="mainAreaID" class="main">
+                                    <div class="col-4">
+                                        <input type="radio" class="btn-check" id="lastDayCBInTpkg" autocomplete="off"
+                                            name="dpDayTypeInTpkg" value="LD">
+                                        <label class="btn btn-outline-danger w-100 fw-bold text-uppercase"
+                                            for="lastDayCBInTpkg">Last Day</label>
+                                    </div>
+                                </div>
 
-        <form action="">
-            <!-- Top action section -->
-<div class="d-flex align-items-center justify-content-between pb-2 mb-4 border-bottom">
-    <label class="form-label fw-bold mb-0 me-3">Add a Day:</label>
-    <div class="d-flex flex-wrap gap-2">
-        <button class="btn btn-outline-success btn-sm">
-            <i class="bi bi-plus-circle me-1"></i> Create New
-        </button>
-        <button class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-pencil-square me-1"></i> Edit Template
-        </button>
-        <button class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-archive me-1"></i> Use Existing
-        </button>
+                            </fieldset>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="tab-pane fade" id="dayStep2InTpkg" role="tabpanel"
+                            aria-labelledby="dayStep2InTpkg-tab">
+                            <fieldset class="border border-dark p-4 mt-2 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary"> Pickup Location
+                                </legend>
+
+                                <!-- Pickup Type Radios -->
+                                <div class="row mb-3" id="PickupTypeCBsRowInTpkg">
+                                    <label class="form-label fw-bold mb-1">Pickup Type <span
+                                            class="text-danger">*</span> :</label>
+                                    <div class="col-4">
+                                        <input type="radio" class="btn-check" id="generalPickupCBInTpkg"
+                                            autocomplete="off" name="pickupTypeInTpkg" value="GENERAL">
+                                        <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
+                                            for="generalPickupCBInTpkg">General</label>
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="radio" class="btn-check" id="accommodationsPickupCBInTpkg"
+                                            autocomplete="off" name="pickupTypeInTpkg" value="ACCOMMODATIONS">
+                                        <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
+                                            for="accommodationsPickupCBInTpkg">Accommodations</label>
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="radio" class="btn-check" id="manualPickupCBInTpkg"
+                                            autocomplete="off" name="pickupTypeInTpkg" value="MANUAL">
+                                        <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
+                                            for="manualPickupCBInTpkg">Manual</label>
+                                    </div>
+                                </div>
+
+                                <!-- If General -->
+                                <div class="row mb-3 align-items-center" id="generalPickupOptionsInTpkg"
+                                    style="display: none;">
+                                    <div class="col-auto">
+                                        <label for="airportSelectInTpkg" class="form-label fw-bold mb-0">General
+                                            Pickup Locations</label>
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-select" id="airportSelectInTpkg">
+                                            <option value="" selected disabled>Please Select The Pickup Location
+                                            </option>
+                                            <option data-location='{"name":"BIA","geo":"7.18111,79.88361"}'>
+                                                Bandaranaike
+                                                International Airport</option>
+                                            <option data-location='{"name":"MATTALA","geo":"6.28889,81.12361"}'>
+                                                Mattala
+                                                Rajapaksa International Airport</option>
+                                            <option data-location='{"name":"RATMALANA","geo":"6.82199,79.88621"}'>
+                                                Ratmalana
+                                                Airport</option>
+                                            <option data-location='{"name":"JAFFNA","geo":"9.79263,80.07030"}'>
+                                                Jaffna
+                                                International Airport</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- If Accommodations -->
+                                <div id="accommodationPickupOptionsInTpkg" style="display: none;">
+                                    <!-- Province & District Labels -->
+                                    <div class="row mb-0">
+                                        <div class="col-6">
+                                            <label for="pickupProvinceSelectInTpkg"
+                                                class="form-label fw-bold mb-0">Province</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="pickupDistrictSelectInTpkg"
+                                                class="form-label fw-bold mb-0">District</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Province & District Inputs -->
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <select class="form-select" id="pickupProvinceSelectInTpkg"></select>
+                                        </div>
+                                        <div class="col-6">
+                                            <select disabled class="form-select"
+                                                id="pickupDistrictSelectInTpkg"></select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Accommodation Label + Input -->
+                                    <div class="row mb-2 align-items-center">
+                                        <div class="col-auto">
+                                            <label for="pickupAccommodationSelectInTpkg"
+                                                class="form-label fw-bold mb-0">Pickup Accommodation</label>
+                                        </div>
+                                        <div class="col-12">
+                                            <select class="form-select" id="pickupAccommodationSelectInTpkg"
+                                                disabled></select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- If Manual -->
+                                <div id="manualPickupOptionsInTpkg" style="display: none;">
+                                    <!-- Labels Row -->
+                                    <div class="row mb-1">
+                                        <div class="col-6">
+                                            <label for="manualLocationPickupInTpkg"
+                                                class="form-label fw-bold mb-0">Location
+                                                / Address</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="geoCoordsInTpkg" class="form-label fw-bold mb-0">Geo
+                                                Coords</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Inputs Row -->
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <input type="text" class="form-control" id="manualLocationPickupInTpkg"
+                                                placeholder="Enter Pickup Location/Address">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" class="form-control" id="geoCoordsInTpkg"
+                                                placeholder="Latitude, Longitude">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </fieldset>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="tab-pane fade" id="dayStep3InTpkg" role="tabpanel"
+                            aria-labelledby="dayStep3InTpkg-tab">
+
+                            <!-- Attraction Selection -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+
+                                <legend class="float-none w-auto px-2 text-primary">Select Attractions
+                                </legend>
+
+                                <!-- prov and dist -->
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <label for="selectVPProvInTpkg"
+                                            class="form-label fw-bold mb-0">Province:</label>
+                                        <select id="selectVPProvInTpkg" class="form-control form-select"></select>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label for="selectVPDistInTpkg"
+                                            class="form-label fw-bold mb-0">District:</label>
+                                        <select disabled id="selectVPDistInTpkg" class="form-select"></select>
+                                    </div>
+                                </div>
+
+                                <!-- visiting places -->
+                                <div class="row mt-2">
+
+                                    <!-- All Places -->
+                                    <div class="col-5">
+                                        <label for="allVPsInTpkg" class="form-label fw-bold mb-0">All
+                                            Places</label>
+                                        <select class="form-select" size="8" id="allVPsInTpkg"></select>
+                                    </div>
+
+                                    <!-- Buttons -->
+                                    <div class="col-2 text-center d-flex flex-column justify-content-center mt-3">
+                                        <button class="btn btn-sm fw-bold my-1 btn-pill" id="passOneInTpkg"
+                                            style="background-color: #4ea8de; color: white;">Add</button>
+
+                                        <button class="btn btn-sm fw-bold my-1 btn-pill" id="passAllInTpkg"
+                                            style="background-color: #3b8bca; color: white;">Add All</button>
+
+                                        <button class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedOneInTpkg"
+                                            style="background-color: #f67280; color: white;">Remove</button>
+
+                                        <button class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedAllInTpkg"
+                                            style="background-color: #e84545; color: white;">Remove All</button>
+                                    </div>
+
+
+                                    <!-- Selected Places -->
+                                    <div class="col-5">
+                                        <label for="selectedVPsInTpkg" class="form-label fw-bold mb-0">Selected
+                                            Places</label>
+                                        <select size="8" id="selectedVPsInTpkg" class="form-select"></select>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- Costs and Distance -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Costs For Day
+                                </legend>
+
+                                <p class="fw-semibold mb-1 mt-0 text-primary">Total Entrance Fee Cost</p>
+
+                                <div class="row mb-1">
+                                    <!-- Local -->
+                                    <div class="col-6 ">
+                                        <div class="row mt-1 mb-0">
+                                            <div class="col-6">
+                                                <label class="form-label mb-0 fw-bold"
+                                                    for="dpTotalLocalAdultTktCostInTpkg">Local Adult</label>
+                                                <p id="dpTotalLocalAdultTktCostInTpkg"
+                                                    class="p-1 text-center border rounded bg-white">LKR
+                                                    0.00</p>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="form-label mb-0 fw-bold"
+                                                    for="dpTotalLocalChildTktCostInTpkg">Local Children</label>
+                                                <p id="dpTotalLocalChildTktCostInTpkg"
+                                                    class="p-1 text-center border rounded bg-white">
+                                                    LKR
+                                                    0.00</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Foreign -->
+                                    <div class="col-6 ">
+                                        <div class="row mt-1 mb-0">
+                                            <div class="col-6">
+                                                <label class="form-label mb-0 fw-bold"
+                                                    for="dpTotalForeignAdultTktCostInTpkg">Foreign Adult</label>
+                                                <p id="dpTotalForeignAdultTktCostInTpkg"
+                                                    class="p-1 text-center border rounded bg-white">LKR
+                                                    0.00</p>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="form-label mb-0 fw-bold"
+                                                    for="dpTotalForeignChildTktCostInTpkg">Foreign
+                                                    Children</label>
+                                                <p id="dpTotalForeignChildTktCostInTpkg"
+                                                    class="p-1 text-center border rounded bg-white">LKR
+                                                    0.00</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr style="border: 3px double blue;">
+
+                                <!-- Other Costs -->
+                                <div class="row mb-3">
+                                    <div class="col-3">
+                                        <label class="form-label fw-bold mb-0" for="dpTotalVehiParkingCostInTpkg">Total
+                                            Parking Fees</label>
+                                        <p id="dpTotalVehiParkingCostInTpkg"
+                                            class="p-1 text-center border rounded bg-white">LKR 0.00
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div class="tab-pane fade" id="dayStep4InTpkg" role="tabpanel"
+                            aria-labelledby="dayStep4InTpkg-tab">
+
+                            <!-- Lunch / Restaurant Section -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary"> Lunch / Restaurant
+                                </legend>
+
+                                <!-- Province & District -->
+                                <div class="row mb-2">
+                                    <!-- Province -->
+                                    <div class="col-6">
+                                        <label for="selectLPProvInTpkg"
+                                            class="form-label fw-bold mb-0">Province:</label>
+                                        <select id="selectLPProvInTpkg" class="form-control form-select"></select>
+                                    </div>
+
+                                    <!-- District -->
+                                    <div class="col-6">
+                                        <label for="selectLPDistInTpkg"
+                                            class="form-label fw-bold mb-0">District:</label>
+                                        <select id="selectLPDistInTpkg" class="form-select" disabled></select>
+                                    </div>
+                                </div>
+
+                                <!-- Lunch Hotel -->
+                                <div class="row my-1">
+                                    <div class="col-6">
+                                        <label for="selectDPLunchInTpkg" class="form-label fw-bold mb-0">Lunch
+                                            Hotel:</label>
+                                        <select id="selectDPLunchInTpkg" class="form-select" disabled></select>
+                                    </div>
+
+                                    <!-- option to select if hotel parceled lunch is taken -->
+                                    <div class="col-6">
+                                        <label class="form-label mb-0 fw-bold">Take packed lunch?</label>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" name="packedLunchInTpkg"
+                                                    id="packedLunchYesInTpkg" value="true" autocomplete="off">
+                                                <label class="btn btn-outline-success w-100 fw-bold text-uppercase"
+                                                    for="packedLunchYesInTpkg">Yes</label>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" name="packedLunchInTpkg"
+                                                    id="packedLunchNoInTpkg" value="false" autocomplete="off">
+                                                <label class="btn btn-outline-danger w-100 fw-bold text-uppercase"
+                                                    for="packedLunchNoInTpkg">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+
+                            <!-- DropOff Section -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary"> DropOff
+                                </legend>
+
+                                <!-- DropOff Type Radios -->
+                                <div class="row mb-3" id="DropoffTypeCBsRowInTpkg">
+                                    <label class="form-label fw-bold mb-1">DropOff Type <span
+                                            class="text-danger">*</span> :</label>
+                                    <div class="col-4">
+                                        <input type="radio" class="btn-check" id="generalDropOffCBInTpkg"
+                                            autocomplete="off" name="dropOffTypeInTpkg" value="GENERAL">
+                                        <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
+                                            for="generalDropOffCBInTpkg">General</label>
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="radio" class="btn-check" id="accommodationsDropOffCBInTpkg"
+                                            autocomplete="off" name="dropOffTypeInTpkg" value="ACCOMMODATIONS">
+                                        <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
+                                            for="accommodationsDropOffCBInTpkg">Accommodations</label>
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="radio" class="btn-check" id="manualDropOffCBInTpkg"
+                                            autocomplete="off" name="dropOffTypeInTpkg" value="MANUAL">
+                                        <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
+                                            for="manualDropOffCBInTpkg">Manual</label>
+                                    </div>
+                                </div>
+
+                                <!-- If General -->
+                                <div class="row mb-3 align-items-center" id="generalDropOffOptionsInTpkg"
+                                    style="display: none;">
+                                    <div class="col-auto">
+                                        <label for="airportSelectDropOffInTpkg" class="form-label fw-bold mb-0">General
+                                            DropOff Locations</label>
+                                    </div>
+                                    <div class="col">
+                                        <select class="form-select" id="airportSelectDropOffInTpkg">
+                                            <option value="" selected disabled>Please Select The Drop Off
+                                                Location</option>
+                                            <option data-location='{"name":"BIA","geo":"7.18111,79.88361"}'>
+                                                Bandaranaike
+                                                International Airport</option>
+                                            <option data-location='{"name":"MATTALA","geo":"6.28889,81.12361"}'>
+                                                Mattala
+                                                Rajapaksa International Airport</option>
+                                            <option data-location='{"name":"RATMALANA","geo":"6.82199,79.88621"}'>
+                                                Ratmalana
+                                                Airport</option>
+                                            <option data-location='{"name":"JAFFNA","geo":"9.79263,80.07030"}'>
+                                                Jaffna
+                                                International Airport</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- If Accommodations -->
+                                <div id="accommodationDropOffOptionsInTpkg" style="display: none;">
+                                    <!-- Province & District Labels -->
+                                    <div class="row mb-0">
+                                        <div class="col-6">
+                                            <label for="dropOffProvinceSelectInTpkg"
+                                                class="form-label fw-bold mb-0">Province</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="dropOffDistrictSelectInTpkg"
+                                                class="form-label fw-bold mb-0">District</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Province & District Inputs -->
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <select class="form-select" id="dropOffProvinceSelectInTpkg"></select>
+                                        </div>
+                                        <div class="col-6">
+                                            <select disabled class="form-select"
+                                                id="dropOffDistrictSelectInTpkg"></select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Accommodation Label + Input -->
+                                    <div class="row mb-2 align-items-center">
+                                        <div class="col-auto">
+                                            <label for="dropOffAccommodationSelectInTpkg"
+                                                class="form-label fw-bold mb-0">Dropoff Accommodation</label>
+                                        </div>
+                                        <div class="col-12">
+                                            <select class="form-select" id="dropOffAccommodationSelectInTpkg"
+                                                disabled></select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Alternative Accommodations -->
+                                    <div class="row mb-2 align-items-center">
+                                        <!-- Alternative Stay 1 -->
+                                        <div class="col-6">
+                                            <label for="altStay1SelectInTpkg"
+                                                class="form-label fw-bold mb-0">Alternative Accommodation
+                                                1</label>
+                                            <select class="form-select" id="altStay1SelectInTpkg" disabled>
+                                            </select>
+                                        </div>
+
+                                        <!-- Alternative Stay 2 -->
+                                        <div class="col-6">
+                                            <label for="altStay2SelectInTpkg"
+                                                class="form-label fw-bold mb-0">Alternative Accommodation
+                                                2</label>
+                                            <select class="form-select" id="altStay2SelectInTpkg" disabled>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- If Manual -->
+                                <div id="manualDropOffOptionsInTpkg" style="display: none;">
+                                    <!-- Labels Row -->
+                                    <div class="row mb-1">
+                                        <div class="col-6">
+                                            <label for="manualLocationDropOffInTpkg"
+                                                class="form-label fw-bold mb-0">Location
+                                                / Address</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="geoCoordsDropOffInTpkg" class="form-label fw-bold mb-0">Geo
+                                                Coords</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Inputs Row -->
+                                    <div class="row mb-2">
+                                        <div class="col-6">
+                                            <input type="text" class="form-control" id="manualLocationDropOffInTpkg"
+                                                placeholder="Enter Location/Address"
+                                                onkeyup="inputValidatorText(this, '', 'dayplan' , 'droppoint')">
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="text" class="form-control" id="geoCoordsDropOffInTpkg"
+                                                placeholder="Latitude, Longitude"
+                                                oninput="passManualGeoCoordsDropOff();">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+
+                        </div>
+
+                        <!-- Step 5 -->
+                        <div class="tab-pane fade" id="dayStep5InTpkg" role="tabpanel"
+                            aria-labelledby="dayStep5InTpkg-tab">
+
+                            <!-- Final Notes Section -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary"> Additional Details</legend>
+
+                                <!-- Distance -->
+                                <div class="row mb-3" id="calcDistanceRowInTpkg">
+                                    <!-- Calculate Button and Message -->
+                                    <div class="col-6 mb-0 my-auto">
+                                        <div class="d-flex flex-column align-items-start">
+                                            <button id="distanceCalcBtnInTpkg"
+                                                class="btn btn-outline-primary btn-lg fw-bold shadow-sm"
+                                                onclick="calculateTotalDistance()">Calculate Total
+                                                Distance</button>
+                                            <small id="calcDistanceMsgInTpkg"
+                                                class="text-danger mt-1 ms-1 fw-bold"></small>
+                                        </div>
+                                    </div>
+
+                                    <!-- Distance Input Field -->
+                                    <div class="col-6">
+                                        <label for="dpTotalKMcountInTpkg" class="form-label fw-bold mb-0">Total
+                                            Distance
+                                            Covered:</label>
+                                        <div class="input-group">
+                                            <input type="number" min="0" id="dpTotalKMcountInTpkg"
+                                                class="form-control text-center"
+                                                placeholder="Click Calculate Button/Enter Manually"
+                                                onkeyup="inputValidatorText(this,'','dayplan','totalkmcount')">
+                                            <span class="input-group-text">Kilometer(s)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <!-- Note Textarea -->
+                                    <div class="col-7 mb-3">
+                                        <label for="dpNoteInTpkg" class="form-label fw-bold mb-0">Additional
+                                            Information:</label>
+                                        <textarea class="form-control" id="dpNoteInTpkg" style="height: 100px;"
+                                            placeholder="Enter Any Additional Information "
+                                            onkeyup="inputValidatorText(this,'','dayplan','note')"></textarea>
+                                    </div>
+
+                                    <!-- Status Dropdown -->
+                                    <div class="col-5 mb-3">
+                                        <label for="dpSelectStatusInTpkg"
+                                            class="form-label fw-bold mb-0">Status:</label>
+                                        <select id="dpSelectStatusInTpkg" class="form-select"
+                                            onchange="staticSelectValidator(this , 'dayplan' , 'dp_status')">
+                                            <option value="" selected disabled> Select Status </option>
+                                            <option value="Draft">This Is A Draft </option>
+                                            <option value="Confirmed"> Added To A Package </option>
+                                            <option value="Completed"> Tour Completed </option>
+                                            <option value="ifDeleted" class="d-none"> Deleted Record </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- MAIN BUTTONS -->
+                            <div class="row mt-4 mb-2">
+                                <div class="col-4">
+                                    <button type="reset" class="btn-clear w-50 fw-bold"
+                                        onclick="refreshDayPlanFormInTpkg()">Reset Form</button>
+                                </div>
+                                <div class="col-8 text-end">
+                                    <button type="submit" id="dpAddBtnInTpkg" class="btn-add fw-bold"
+                                        onclick="addNewDayPlanInTpkg()">Add Entry</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
     </div>
 </div>
-
-<!-- Selected Days Section -->
-<div class="d-flex flex-column gap-3">
-
-    <!-- Day Group Card (Start Day) -->
-    <div class="border border-secondary rounded p-3 bg-white shadow-sm">
-        <label class="form-label fw-bold mb-2">Start Day:</label>
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <div class="fw-semibold">Colombo City Tour</div>
-                <small class="text-muted">Code: D001</small>
-            </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-info">View</button>
-                <button class="btn btn-sm btn-danger">Delete</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Action Buttons Between Start and Middle Day -->
-    <div class="d-flex justify-content-start gap-3 ps-1">
-        <button class="btn btn-outline-dark btn-sm">
-            <i class="bi bi-plus-circle me-1"></i> Add Middle Day
-        </button>
-        <button class="btn btn-outline-dark btn-sm">
-            <i class="bi bi-flag me-1"></i> Add Final Day
-        </button>
-    </div>
-
-    <!-- Day Group Card (Middle Day) -->
-    <div class="border border-secondary rounded p-3 bg-white shadow-sm">
-        <label class="form-label fw-bold mb-2">Middle Day:</label>
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <div class="fw-semibold">Kandy Heritage Walk</div>
-                <small class="text-muted">Code: D045</small>
-            </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-info">View</button>
-                <button class="btn btn-sm btn-danger">Delete</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Day Group Card (Last Day) -->
-    <div class="border border-secondary rounded p-3 bg-white shadow-sm">
-        <label class="form-label fw-bold mb-2">Final Day:</label>
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <div class="fw-semibold">Southern Beach Escape</div>
-                <small class="text-muted">Code: D109</small>
-            </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-info">View</button>
-                <button class="btn btn-sm btn-danger">Delete</button>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-        </form>
-
-        <div class="container bg-light p-4">
-            <div class="form-container bg-warning p-2">
-                <div class="form-title">
-                    <h2>Modern Multi-Step Form</h2>
-                </div>
-
-                <!-- Tabs Navigation -->
-                <ul class="nav nav-tabs" id="formTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="step1-tab" data-bs-toggle="tab" href="#step1" role="tab"
-                            aria-controls="step1" aria-selected="true">Step 1</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="step2-tab" data-bs-toggle="tab" href="#step2" role="tab"
-                            aria-controls="step2" aria-selected="false">Step 2</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="step3-tab" data-bs-toggle="tab" href="#step3" role="tab"
-                            aria-controls="step3" aria-selected="false">Step 3</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="step4-tab" data-bs-toggle="tab" href="#step4" role="tab"
-                            aria-controls="step4" aria-selected="false">Step 4</a>
-                    </li>
-                </ul>
-
-                <!-- Tabs Content -->
-                <div class="tab-content" id="formTabsContent">
-                    <!-- Step 1: Personal Information -->
-                    <div class="tab-pane fade show active" id="step1" role="tabpanel" aria-labelledby="step1-tab">
-                        <h5>Step 1: Personal Information</h5>
-                        <div class="mb-3">
-                            <label for="firstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="firstName" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="lastName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" required>
-                        </div>
-                    </div>
-
-                    <!-- Step 2: Contact Information -->
-                    <div class="tab-pane fade" id="step2" role="tabpanel" aria-labelledby="step2-tab">
-                        <h5>Step 2: Contact Information</h5>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control" id="phone" required>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: Address -->
-                    <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="step3-tab">
-                        <h5>Step 3: Address</h5>
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Street Address</label>
-                            <input type="text" class="form-control" id="address" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="city" class="form-label">City</label>
-                            <input type="text" class="form-control" id="city" required>
-                        </div>
-                    </div>
-
-                    <!-- Step 4: Review -->
-                    <div class="tab-pane fade" id="step4" role="tabpanel" aria-labelledby="step4-tab">
-                        <h5>Step 4: Review</h5>
-                        <p>Please review your information before submitting:</p>
-                        <ul class="review-list" id="reviewDetails"></ul>
-                    </div>
-                </div>
-
-                <!-- Navigation Buttons -->
-                <div class="btn-container">
-                    <button type="button" class="btn btn-secondary" id="prevBtn" disabled>Previous</button>
-                    <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
-                </div>
-            </div>
-        </div>
-
-
-        <script>
-            const nextBtn = document.getElementById('nextBtn');
-            const prevBtn = document.getElementById('prevBtn');
-            const tabLinks = document.querySelectorAll('.nav-link');
-            let currentStep = 0;
-
-            function updateTab() {
-                tabLinks.forEach((link, index) => {
-                    if (index === currentStep) {
-                        link.classList.add('active');
-                        link.setAttribute('aria-selected', 'true');
-                    } else {
-                        link.classList.remove('active');
-                        link.setAttribute('aria-selected', 'false');
-                    }
-                });
-
-                // Disable the 'Previous' button on the first step
-                prevBtn.disabled = currentStep === 0;
-                nextBtn.textContent = currentStep === tabLinks.length - 1 ? 'Submit' : 'Next';
-
-                // Show/Hide review section on the last step
-                if (currentStep === tabLinks.length - 1) {
-                    document.getElementById('reviewDetails').innerHTML = `
-                        <li><strong>First Name:</strong> ${document.getElementById('firstName').value}</li>
-                        <li><strong>Last Name:</strong> ${document.getElementById('lastName').value}</li>
-                        <li><strong>Email:</strong> ${document.getElementById('email').value}</li>
-                        <li><strong>Phone:</strong> ${document.getElementById('phone').value}</li>
-                        <li><strong>Address:</strong> ${document.getElementById('address').value}</li>
-                        <li><strong>City:</strong> ${document.getElementById('city').value}</li>
-                    `;
-                }
-            }
-
-            nextBtn.addEventListener('click', () => {
-                if (currentStep < tabLinks.length - 1) {
-                    currentStep++;
-                    updateTab();
-                } else {
-                    alert('Form Submitted!');
-                    // Here you can handle the form submission logic
-                }
-            });
-
-            prevBtn.addEventListener('click', () => {
-                if (currentStep > 0) {
-                    currentStep--;
-                    updateTab();
-                }
-            });
-
-            updateTab(); // Initialize the form
-        </script>
-
-    </main>
-</body>
-
-</html>
