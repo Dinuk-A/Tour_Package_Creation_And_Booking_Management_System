@@ -4,15 +4,12 @@
 <head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
 
 <head>
-    <!-- link tpkg css -->
-    <!--<link rel="stylesheet" href="css/tpkg.css">-->
 
     <!-- link tpkg js -->
     <script src="controllerJSs/tpkg.js"></script>
 
-    <style>
-
-    </style>
+    <!-- link dayplan js -->
+    <script src="controllerJSs/dayplan.js"></script>
 
 </head>
 
@@ -339,22 +336,22 @@
                                                 </legend>
 
                                                 <div class="mb-2 text-danger fw-bold d-none" id="tempInfoDisRow">
-                                                    <span id="dpInfoInTpkgIsTemplate"></span>
+                                                    <span id="dpInfoIsTemplate"></span>
                                                 </div>
 
-                                                <p><strong>Code:</strong> <span id="dpInfoInTpkgCode">N/A</span></p>
-                                                <p><strong>Title:</strong> <span id="dpInfoInTpkgTitle">N/A</span></p>
+                                                <p><strong>Code:</strong> <span id="dpInfoCode">N/A</span></p>
+                                                <p><strong>Title:</strong> <span id="dpInfoTitle">N/A</span></p>
                                                 <p><strong>Start Location:</strong> <span
-                                                        id="dpInfoInTpkgStartLocation">N/A</span></p>
-                                                <p><strong>Lunch Place:</strong> <span
-                                                        id="dpInfoInTpkgLunchPlace">N/A</span></p>
-                                                <p><strong>Drop Point:</strong> <span
-                                                        id="dpInfoInTpkgDropPoint">N/A</span></p>
+                                                        id="dpInfoStartLocation">N/A</span></p>
+                                                <p><strong>Lunch Place:</strong> <span id="dpInfoLunchPlace">N/A</span>
+                                                </p>
+                                                <p><strong>Drop Point:</strong> <span id="dpInfoDropPoint">N/A</span>
+                                                </p>
                                                 <p><strong>Visiting Places:</strong></p>
-                                                <ul id="dpInfoInTpkgPlaces">
+                                                <ul id="dpInfoPlaces">
                                                     <li>N/A</li>
                                                 </ul>
-                                                <p><strong>Note:</strong> <span id="dpInfoInTpkgNote">N/A</span></p>
+                                                <p><strong>Note:</strong> <span id="dpInfoNote">N/A</span></p>
 
                                                 <div class="d-flex justify-content-end mt-2">
                                                     <button type="button" id="dayPlanInfoEditBtn"
@@ -363,8 +360,6 @@
                                                 </div>
                                             </fieldset>
                                         </div>
-
-
 
                                     </div>
                                 </div>
@@ -1065,12 +1060,12 @@
         </div>
 
         <!-- Day Plan Modal in Tpkg-->
-        <div class="modal fade" id="dayPlanModalInTpkg" tabindex="-1" aria-labelledby="dayPlanModalLabelInTpkg"
-            aria-hidden="true">
+        <div class="modal fade" id="dayPlanModalInTpkg" tabindex="-1" aria-labelledby="dayPlanModalLabel"
+            aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="dayPlanModalLabelInTpkg">Edit Itinerary</h5>
+                        <h5 class="modal-title" id="dayPlanModalLabel">Edit Itinerary</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -1078,40 +1073,40 @@
                         <form id="formDayPlanInTpkg" onsubmit="return false">
 
                             <!-- Tabs Navigation -->
-                            <ul class="nav nav-tabs" id="dayPlanTabsInTpkg" role="tablist">
+                            <ul class="nav nav-tabs" id="dayPlanTabs" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link active border border-dark" id="dayStep1InTpkg-tab"
-                                        data-bs-toggle="tab" href="#dayStep1InTpkg" role="tab"
-                                        aria-controls="dayStep1InTpkg" aria-selected="true">Basic Details</a>
+                                    <a class="nav-link active border border-dark" id="dayStep1-tab" data-bs-toggle="tab"
+                                        href="#dayStep1" role="tab" aria-controls="dayStep1" aria-selected="true">Basic
+                                        Details</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark" id="dayStep2InTpkg-tab" data-bs-toggle="tab"
-                                        href="#dayStep2InTpkg" role="tab" aria-controls="dayStep2InTpkg"
+                                    <a class="nav-link border border-dark" id="dayStep2-tab" data-bs-toggle="tab"
+                                        href="#dayStep2" role="tab" aria-controls="dayStep2"
                                         aria-selected="false">Pickup Location</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark" id="dayStep3InTpkg-tab" data-bs-toggle="tab"
-                                        href="#dayStep3InTpkg" role="tab" aria-controls="dayStep3InTpkg"
+                                    <a class="nav-link border border-dark" id="dayStep3-tab" data-bs-toggle="tab"
+                                        href="#dayStep3" role="tab" aria-controls="dayStep3"
                                         aria-selected="false">Attractions</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark" id="dayStep4InTpkg-tab" data-bs-toggle="tab"
-                                        href="#dayStep4InTpkg" role="tab" aria-controls="dayStep4InTpkg"
+                                    <a class="nav-link border border-dark" id="dayStep4-tab" data-bs-toggle="tab"
+                                        href="#dayStep4" role="tab" aria-controls="dayStep4"
                                         aria-selected="false">Accommodations</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark" id="dayStep5InTpkg-tab" data-bs-toggle="tab"
-                                        href="#dayStep5InTpkg" role="tab" aria-controls="dayStep5InTpkg"
+                                    <a class="nav-link border border-dark" id="dayStep5-tab" data-bs-toggle="tab"
+                                        href="#dayStep5" role="tab" aria-controls="dayStep5"
                                         aria-selected="false">Other</a>
                                 </li>
                             </ul>
 
                             <!-- Tabs Content -->
-                            <div class="tab-content" id="dayPlanTabsContentInTpkg">
+                            <div class="tab-content" id="dayPlanTabsContent">
 
                                 <!-- Step 1 -->
-                                <div class="tab-pane fade show active" id="dayStep1InTpkg" role="tabpanel"
-                                    aria-labelledby="dayStep1InTpkg-tab">
+                                <div class="tab-pane fade show active" id="dayStep1" role="tabpanel"
+                                    aria-labelledby="dayStep1 -tab">
 
                                     <fieldset class="border border-dark p-4 mb-4 bg-light mt-3">
                                         <legend class="float-none w-auto px-2 text-primary"> Basic Details
@@ -1121,47 +1116,50 @@
                                         <div class="row">
                                             <!-- title -->
                                             <div class="col-8 mb-3">
-                                                <label for="dpTitleInTpkg" class="form-label fw-bold mb-0">Itinerary
+                                                <label for="dpTitle" class="form-label fw-bold mb-0">Itinerary
                                                     Title
                                                     <span class="text-danger">*</span> :</label>
-                                                <input id="dpTitleInTpkg" class="form-control"
-                                                    placeholder="Enter The Itinerary Title">
+                                                <input id="dpTitle" class="form-control"
+                                                    placeholder="Enter The Itinerary Title"
+                                                    onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle')">
                                             </div>
 
-                                            <!-- code hidden -->
-                                            <div id="dpCodeRowInTpkg" class="col-4 d-none">
-                                                <label for="dpCodeInTpkg" class="form-label fw-bold mb-0">Itinerary Code
+                                            <!-- code  -->
+                                            <div id="dpCodeRow " class="col-4">
+                                                <label for="dpCode" class="form-label fw-bold mb-0">Itinerary Code
                                                     <span><small class="text-info">(Generated By System)</small></span>
                                                     :</label>
-                                                <input id="dpCodeInTpkg" class="form-control" disabled>
+                                                <input id="dpCode" class="form-control" disabled>
                                             </div>
                                         </div>
 
                                         <!-- Day Type -->
-                                        <div class="row mb-3" id="DayTypeCBsRowInTpkg">
+                                        <div class="row mb-3" id="DayTypeCBsRow">
                                             <label class="form-label fw-bold mb-1">Day Type <span
                                                     class="text-danger">*</span>
                                                 :</label>
 
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="firstDayCBInTpkg"
-                                                    autocomplete="off" name="dpDayTypeInTpkg" value="FD">
+                                                <input type="radio" class="btn-check" id="firstDayCB "
+                                                    autocomplete="off" name="dpDayType" value="FD"
+                                                    onchange="selectDayType(this);">
                                                 <label class="btn btn-outline-success w-100 fw-bold text-uppercase"
-                                                    for="firstDayCBInTpkg">First Day</label>
+                                                    for="firstDayCB ">First Day</label>
                                             </div>
 
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="middleDayCBInTpkg"
-                                                    autocomplete="off" name="dpDayTypeInTpkg" value="MD">
+                                                <input type="radio" class="btn-check" id="middleDayCB"
+                                                    autocomplete="off" name="dpDayType" value="MD"
+                                                    onchange="selectDayType(this);">
                                                 <label class="btn btn-outline-warning w-100 fw-bold text-uppercase"
-                                                    for="middleDayCBInTpkg">Middle Day</label>
+                                                    for="middleDayCB ">Middle Day</label>
                                             </div>
 
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="lastDayCBInTpkg"
-                                                    autocomplete="off" name="dpDayTypeInTpkg" value="LD">
+                                                <input type="radio" class="btn-check" id="lastDayCB" autocomplete="off"
+                                                    name="dpDayType" value="LD" onchange="selectDayType(this);">
                                                 <label class="btn btn-outline-danger w-100 fw-bold text-uppercase"
-                                                    for="lastDayCBInTpkg">Last Day</label>
+                                                    for="lastDayCB ">Last Day</label>
                                             </div>
                                         </div>
 
@@ -1169,45 +1167,49 @@
                                 </div>
 
                                 <!-- Step 2 -->
-                                <div class="tab-pane fade" id="dayStep2InTpkg" role="tabpanel"
-                                    aria-labelledby="dayStep2InTpkg-tab">
+                                <div class="tab-pane fade" id="dayStep2" role="tabpanel"
+                                    aria-labelledby="dayStep2 -tab">
                                     <fieldset class="border border-dark p-4 mt-2 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary"> Pickup Location
                                         </legend>
 
                                         <!-- Pickup Type Radios -->
-                                        <div class="row mb-3" id="PickupTypeCBsRowInTpkg">
+                                        <div class="row mb-3" id="PickupTypeCBsRow">
                                             <label class="form-label fw-bold mb-1">Pickup Type <span
                                                     class="text-danger">*</span> :</label>
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="generalPickupCBInTpkg"
-                                                    autocomplete="off" name="pickupTypeInTpkg" value="GENERAL">
+                                                <input type="radio" class="btn-check" id="generalPickupCB"
+                                                    autocomplete="off" name="pickupType" value="GENERAL"
+                                                    onchange="clearOtherInputsGenPickup(); selectPickupType(this);">
                                                 <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
-                                                    for="generalPickupCBInTpkg">General</label>
+                                                    for="generalPickupCB ">General</label>
                                             </div>
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="accommodationsPickupCBInTpkg"
-                                                    autocomplete="off" name="pickupTypeInTpkg" value="ACCOMMODATIONS">
+                                                <input type="radio" class="btn-check" id="accommodationsPickupCB"
+                                                    autocomplete="off" name="pickupType" value="ACCOMMODATIONS"
+                                                    onchange="clearOtherInputsStayPickup(); selectPickupType(this);">
                                                 <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
-                                                    for="accommodationsPickupCBInTpkg">Accommodations</label>
+                                                    for="accommodationsPickupCB ">Accommodations</label>
                                             </div>
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="manualPickupCBInTpkg"
-                                                    autocomplete="off" name="pickupTypeInTpkg" value="MANUAL">
+                                                <input type="radio" class="btn-check" id="manualPickupCB"
+                                                    autocomplete="off" name="pickupType" value="MANUAL"
+                                                    onchange="clearOtherInputsManualPickup(); selectPickupType(this);">
                                                 <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
-                                                    for="manualPickupCBInTpkg">Manual</label>
+                                                    for="manualPickupCB ">Manual</label>
                                             </div>
                                         </div>
 
                                         <!-- If General -->
-                                        <div class="row mb-3 align-items-center" id="generalPickupOptionsInTpkg"
+                                        <div class="row mb-3 align-items-center" id="generalPickupOptions"
                                             style="display: none;">
                                             <div class="col-auto">
-                                                <label for="airportSelectInTpkg" class="form-label fw-bold mb-0">General
+                                                <label for="airportSelect" class="form-label fw-bold mb-0">General
                                                     Pickup Locations</label>
                                             </div>
                                             <div class="col">
-                                                <select class="form-select" id="airportSelectInTpkg">
+                                                <select class="form-select" id="airportSelect"
+                                                    onchange="airportSelectionPickup(); ">
                                                     <option value="" selected disabled>Please Select The Pickup Location
                                                     </option>
                                                     <option data-location='{"name":"BIA","geo":"7.18111,79.88361"}'>
@@ -1228,15 +1230,15 @@
                                         </div>
 
                                         <!-- If Accommodations -->
-                                        <div id="accommodationPickupOptionsInTpkg" style="display: none;">
+                                        <div id="accommodationPickupOptions" style="display: none;">
                                             <!-- Province & District Labels -->
                                             <div class="row mb-0">
                                                 <div class="col-6">
-                                                    <label for="pickupProvinceSelectInTpkg"
+                                                    <label for="pickupProvinceSelect"
                                                         class="form-label fw-bold mb-0">Province</label>
                                                 </div>
                                                 <div class="col-6">
-                                                    <label for="pickupDistrictSelectInTpkg"
+                                                    <label for="pickupDistrictSelect"
                                                         class="form-label fw-bold mb-0">District</label>
                                                 </div>
                                             </div>
@@ -1244,39 +1246,39 @@
                                             <!-- Province & District Inputs -->
                                             <div class="row mb-2">
                                                 <div class="col-6">
-                                                    <select class="form-select"
-                                                        id="pickupProvinceSelectInTpkg"></select>
+                                                    <select class="form-select" id="pickupProvinceSelect"
+                                                        onchange="getDistByProvince(pickupProvinceSelect,pickupDistrictSelect);"></select>
                                                 </div>
                                                 <div class="col-6">
-                                                    <select disabled class="form-select"
-                                                        id="pickupDistrictSelectInTpkg"></select>
+                                                    <select disabled class="form-select" id="pickupDistrictSelect"
+                                                        onchange="getStayByDistrict(pickupDistrictSelect,pickupAccommodationSelect);"></select>
                                                 </div>
                                             </div>
 
                                             <!-- Accommodation Label + Input -->
                                             <div class="row mb-2 align-items-center">
                                                 <div class="col-auto">
-                                                    <label for="pickupAccommodationSelectInTpkg"
+                                                    <label for="pickupAccommodationSelect"
                                                         class="form-label fw-bold mb-0">Pickup Accommodation</label>
                                                 </div>
                                                 <div class="col-12">
-                                                    <select class="form-select" id="pickupAccommodationSelectInTpkg"
-                                                        disabled></select>
+                                                    <select class="form-select" id="pickupAccommodationSelect" disabled
+                                                        onchange="passStayGCoords(); "></select>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <!-- If Manual -->
-                                        <div id="manualPickupOptionsInTpkg" style="display: none;">
+                                        <div id="manualPickupOptions" style="display: none;">
                                             <!-- Labels Row -->
                                             <div class="row mb-1">
                                                 <div class="col-6">
-                                                    <label for="manualLocationPickupInTpkg"
+                                                    <label for="manualLocationPickup"
                                                         class="form-label fw-bold mb-0">Location
                                                         / Address</label>
                                                 </div>
                                                 <div class="col-6">
-                                                    <label for="geoCoordsInTpkg" class="form-label fw-bold mb-0">Geo
+                                                    <label for="geoCoords" class="form-label fw-bold mb-0">Geo
                                                         Coords</label>
                                                 </div>
                                             </div>
@@ -1284,13 +1286,14 @@
                                             <!-- Inputs Row -->
                                             <div class="row mb-2">
                                                 <div class="col-6">
-                                                    <input type="text" class="form-control"
-                                                        id="manualLocationPickupInTpkg"
-                                                        placeholder="Enter Pickup Location/Address">
+                                                    <input type="text" class="form-control" id="manualLocationPickup"
+                                                        placeholder="Enter Pickup Location/Address"
+                                                        onkeyup="inputValidatorText(this, '', 'dayplan' , 'pickuppoint'); dayplan.pickup_stay_id = null; ">
                                                 </div>
                                                 <div class="col-6">
-                                                    <input type="text" class="form-control" id="geoCoordsInTpkg"
-                                                        placeholder="Latitude, Longitude">
+                                                    <input type="text" class="form-control" id="geoCoords"
+                                                        placeholder="Latitude, Longitude"
+                                                        oninput="passManualGeoCoords();">
                                                 </div>
                                             </div>
 
@@ -1300,8 +1303,8 @@
                                 </div>
 
                                 <!-- Step 3 -->
-                                <div class="tab-pane fade" id="dayStep3InTpkg" role="tabpanel"
-                                    aria-labelledby="dayStep3InTpkg-tab">
+                                <div class="tab-pane fade" id="dayStep3" role="tabpanel"
+                                    aria-labelledby="dayStep3 -tab">
 
                                     <!-- Attraction Selection -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
@@ -1312,16 +1315,17 @@
                                         <!-- prov and dist -->
                                         <div class="row mb-3">
                                             <div class="col-6">
-                                                <label for="selectVPProvInTpkg"
+                                                <label for="selectVPProv"
                                                     class="form-label fw-bold mb-0">Province:</label>
-                                                <select id="selectVPProvInTpkg"
-                                                    class="form-control form-select"></select>
+                                                <select id="selectVPProv" class="form-control form-select"
+                                                    onchange="getDistByProvince(selectVPProv,selectVPDist); "> </select>
                                             </div>
 
                                             <div class="col-6">
-                                                <label for="selectVPDistInTpkg"
+                                                <label for="selectVPDist"
                                                     class="form-label fw-bold mb-0">District:</label>
-                                                <select disabled id="selectVPDistInTpkg" class="form-select"></select>
+                                                <select disabled id="selectVPDist" class="form-select"
+                                                    onchange="selectVPDist.style.border='2px solid green'; getVPlacesByDistrict(); "></select>
                                             </div>
                                         </div>
 
@@ -1330,35 +1334,33 @@
 
                                             <!-- All Places -->
                                             <div class="col-5">
-                                                <label for="allVPsInTpkg" class="form-label fw-bold mb-0">All
+                                                <label for="allVPs" class="form-label fw-bold mb-0">All
                                                     Places</label>
-                                                <select class="form-select" size="8" id="allVPsInTpkg"></select>
+                                                <select class="form-select" size="8" id="allVPs"></select>
                                             </div>
 
                                             <!-- Buttons -->
                                             <div
                                                 class="col-2 text-center d-flex flex-column justify-content-center mt-3">
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="passOneInTpkg"
+                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="passOne"
                                                     style="background-color: #4ea8de; color: white;">Add</button>
 
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="passAllInTpkg"
+                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="passAll"
                                                     style="background-color: #3b8bca; color: white;">Add All</button>
 
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill"
-                                                    id="removeSelectedOneInTpkg"
+                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedOne"
                                                     style="background-color: #f67280; color: white;">Remove</button>
 
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill"
-                                                    id="removeSelectedAllInTpkg"
+                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedAll"
                                                     style="background-color: #e84545; color: white;">Remove All</button>
                                             </div>
 
 
                                             <!-- Selected Places -->
                                             <div class="col-5">
-                                                <label for="selectedVPsInTpkg" class="form-label fw-bold mb-0">Selected
+                                                <label for="selectedVPs" class="form-label fw-bold mb-0">Selected
                                                     Places</label>
-                                                <select size="8" id="selectedVPsInTpkg" class="form-select"></select>
+                                                <select size="8" id="selectedVPs" class="form-select"></select>
                                             </div>
                                         </div>
                                     </fieldset>
@@ -1376,16 +1378,16 @@
                                                 <div class="row mt-1 mb-0">
                                                     <div class="col-6">
                                                         <label class="form-label mb-0 fw-bold"
-                                                            for="dpTotalLocalAdultTktCostInTpkg">Local Adult</label>
-                                                        <p id="dpTotalLocalAdultTktCostInTpkg"
+                                                            for="dpTotalLocalAdultTktCost">Local Adult</label>
+                                                        <p id="dpTotalLocalAdultTktCost"
                                                             class="p-1 text-center border rounded bg-white">LKR
                                                             0.00</p>
                                                     </div>
 
                                                     <div class="col-6">
                                                         <label class="form-label mb-0 fw-bold"
-                                                            for="dpTotalLocalChildTktCostInTpkg">Local Children</label>
-                                                        <p id="dpTotalLocalChildTktCostInTpkg"
+                                                            for="dpTotalLocalChildTktCost">Local Children</label>
+                                                        <p id="dpTotalLocalChildTktCost"
                                                             class="p-1 text-center border rounded bg-white">
                                                             LKR
                                                             0.00</p>
@@ -1398,17 +1400,17 @@
                                                 <div class="row mt-1 mb-0">
                                                     <div class="col-6">
                                                         <label class="form-label mb-0 fw-bold"
-                                                            for="dpTotalForeignAdultTktCostInTpkg">Foreign Adult</label>
-                                                        <p id="dpTotalForeignAdultTktCostInTpkg"
+                                                            for="dpTotalForeignAdultTktCost">Foreign Adult</label>
+                                                        <p id="dpTotalForeignAdultTktCost"
                                                             class="p-1 text-center border rounded bg-white">LKR
                                                             0.00</p>
                                                     </div>
 
                                                     <div class="col-6">
                                                         <label class="form-label mb-0 fw-bold"
-                                                            for="dpTotalForeignChildTktCostInTpkg">Foreign
+                                                            for="dpTotalForeignChildTktCost">Foreign
                                                             Children</label>
-                                                        <p id="dpTotalForeignChildTktCostInTpkg"
+                                                        <p id="dpTotalForeignChildTktCost"
                                                             class="p-1 text-center border rounded bg-white">LKR
                                                             0.00</p>
                                                     </div>
@@ -1422,9 +1424,9 @@
                                         <div class="row mb-3">
                                             <div class="col-3">
                                                 <label class="form-label fw-bold mb-0"
-                                                    for="dpTotalVehiParkingCostInTpkg">Total
+                                                    for="dpTotalVehiParkingCost ">Total
                                                     Parking Fees</label>
-                                                <p id="dpTotalVehiParkingCostInTpkg"
+                                                <p id="dpTotalVehiParkingCost"
                                                     class="p-1 text-center border rounded bg-white">LKR 0.00
                                                 </p>
                                             </div>
@@ -1435,8 +1437,8 @@
                                 </div>
 
                                 <!-- Step 4 -->
-                                <div class="tab-pane fade" id="dayStep4InTpkg" role="tabpanel"
-                                    aria-labelledby="dayStep4InTpkg-tab">
+                                <div class="tab-pane fade" id="dayStep4" role="tabpanel"
+                                    aria-labelledby="dayStep4 -tab">
 
                                     <!-- Lunch / Restaurant Section -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
@@ -1447,26 +1449,28 @@
                                         <div class="row mb-2">
                                             <!-- Province -->
                                             <div class="col-6">
-                                                <label for="selectLPProvInTpkg"
+                                                <label for="selectLPProv"
                                                     class="form-label fw-bold mb-0">Province:</label>
-                                                <select id="selectLPProvInTpkg"
-                                                    class="form-control form-select"></select>
+                                                <select id="selectLPProv" class="form-control form-select"
+                                                    onchange="getDistByProvince(selectLPProv,selectLPDist);"></select>
                                             </div>
 
                                             <!-- District -->
                                             <div class="col-6">
-                                                <label for="selectLPDistInTpkg"
+                                                <label for="selectLPDist"
                                                     class="form-label fw-bold mb-0">District:</label>
-                                                <select id="selectLPDistInTpkg" class="form-select" disabled></select>
+                                                <select id="selectLPDist" class="form-select" disabled
+                                                    onchange="getLunchHotelByDistrict(selectLPDist,selectDPLunch)"></select>
                                             </div>
                                         </div>
 
                                         <!-- Lunch Hotel -->
                                         <div class="row my-1">
                                             <div class="col-6">
-                                                <label for="selectDPLunchInTpkg" class="form-label fw-bold mb-0">Lunch
+                                                <label for="selectDPLunch" class="form-label fw-bold mb-0">Lunch
                                                     Hotel:</label>
-                                                <select id="selectDPLunchInTpkg" class="form-select" disabled></select>
+                                                <select id="selectDPLunch" class="form-select" disabled
+                                                    onchange="dynamicSelectValidator(this,'dayplan','lunchplace_id'); checkPackedLunchNo();"></select>
                                             </div>
 
                                             <!-- option to select if hotel parceled lunch is taken -->
@@ -1474,18 +1478,20 @@
                                                 <label class="form-label mb-0 fw-bold">Take packed lunch?</label>
                                                 <div class="row">
                                                     <div class="col-6">
-                                                        <input type="radio" class="btn-check" name="packedLunchInTpkg"
-                                                            id="packedLunchYesInTpkg" value="true" autocomplete="off">
+                                                        <input type="radio" class="btn-check" name="packedLunch"
+                                                            id="packedLunchYes" value="true" autocomplete="off"
+                                                            onchange="handleLunchRadio(this); takePackedLunchYes();">
                                                         <label
                                                             class="btn btn-outline-success w-100 fw-bold text-uppercase"
-                                                            for="packedLunchYesInTpkg">Yes</label>
+                                                            for="packedLunchYes">Yes</label>
                                                     </div>
                                                     <div class="col-6">
-                                                        <input type="radio" class="btn-check" name="packedLunchInTpkg"
-                                                            id="packedLunchNoInTpkg" value="false" autocomplete="off">
+                                                        <input type="radio" class="btn-check" name="packedLunch "
+                                                            id="packedLunchNo" value="false" autocomplete="off"
+                                                            onchange="handleLunchRadio(this); takePackedLunchNo();">
                                                         <label
                                                             class="btn btn-outline-danger w-100 fw-bold text-uppercase"
-                                                            for="packedLunchNoInTpkg">No</label>
+                                                            for="packedLunchNo">No</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1499,39 +1505,43 @@
                                         </legend>
 
                                         <!-- DropOff Type Radios -->
-                                        <div class="row mb-3" id="DropoffTypeCBsRowInTpkg">
+                                        <div class="row mb-3" id="DropoffTypeCBsRow">
                                             <label class="form-label fw-bold mb-1">DropOff Type <span
                                                     class="text-danger">*</span> :</label>
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="generalDropOffCBInTpkg"
-                                                    autocomplete="off" name="dropOffTypeInTpkg" value="GENERAL">
+                                                <input type="radio" class="btn-check" id="generalDropOffCB"
+                                                    autocomplete="off" name="dropOffType" value="GENERAL"
+                                                    onchange="clearOtherInputsGenDropOff(); selectDropOffType(this);">
                                                 <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
-                                                    for="generalDropOffCBInTpkg">General</label>
+                                                    for="generalDropOffCB ">General</label>
                                             </div>
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="accommodationsDropOffCBInTpkg"
-                                                    autocomplete="off" name="dropOffTypeInTpkg" value="ACCOMMODATIONS">
+                                                <input type="radio" class="btn-check" id="accommodationsDropOffCB"
+                                                    autocomplete="off" name="dropOffType" value="ACCOMMODATIONS"
+                                                    onchange="clearOtherInputsStayDropOff(); selectDropOffType(this);">
                                                 <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
-                                                    for="accommodationsDropOffCBInTpkg">Accommodations</label>
+                                                    for="accommodationsDropOffCB ">Accommodations</label>
                                             </div>
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="manualDropOffCBInTpkg"
-                                                    autocomplete="off" name="dropOffTypeInTpkg" value="MANUAL">
+                                                <input type="radio" class="btn-check" id="manualDropOffCB"
+                                                    autocomplete="off" name="dropOffType" value="MANUAL"
+                                                    onchange="clearOtherInputsManualDropOff(); selectDropOffType(this);">
                                                 <label class="btn btn-outline-primary w-100 fw-bold text-uppercase"
-                                                    for="manualDropOffCBInTpkg">Manual</label>
+                                                    for="manualDropOffCB ">Manual</label>
                                             </div>
                                         </div>
 
                                         <!-- If General -->
-                                        <div class="row mb-3 align-items-center" id="generalDropOffOptionsInTpkg"
+                                        <div class="row mb-3 align-items-center" id="generalDropOffOptions"
                                             style="display: none;">
                                             <div class="col-auto">
-                                                <label for="airportSelectDropOffInTpkg"
+                                                <label for="airportSelectDropOff"
                                                     class="form-label fw-bold mb-0">General
                                                     DropOff Locations</label>
                                             </div>
                                             <div class="col">
-                                                <select class="form-select" id="airportSelectDropOffInTpkg">
+                                                <select class="form-select" id="airportSelectDropOff"
+                                                    onchange="airportSelectionDropOff(); ">
                                                     <option value="" selected disabled>Please Select The Drop Off
                                                         Location</option>
                                                     <option data-location='{"name":"BIA","geo":"7.18111,79.88361"}'>
@@ -1552,15 +1562,15 @@
                                         </div>
 
                                         <!-- If Accommodations -->
-                                        <div id="accommodationDropOffOptionsInTpkg" style="display: none;">
+                                        <div id="accommodationDropOffOptions" style="display: none;">
                                             <!-- Province & District Labels -->
                                             <div class="row mb-0">
                                                 <div class="col-6">
-                                                    <label for="dropOffProvinceSelectInTpkg"
+                                                    <label for="dropOffProvinceSelect"
                                                         class="form-label fw-bold mb-0">Province</label>
                                                 </div>
                                                 <div class="col-6">
-                                                    <label for="dropOffDistrictSelectInTpkg"
+                                                    <label for="dropOffDistrictSelect"
                                                         class="form-label fw-bold mb-0">District</label>
                                                 </div>
                                             </div>
@@ -1568,24 +1578,24 @@
                                             <!-- Province & District Inputs -->
                                             <div class="row mb-2">
                                                 <div class="col-6">
-                                                    <select class="form-select"
-                                                        id="dropOffProvinceSelectInTpkg"></select>
+                                                    <select class="form-select" id="dropOffProvinceSelect"
+                                                        onchange="getDistByProvince(dropOffProvinceSelect,dropOffDistrictSelect);"></select>
                                                 </div>
                                                 <div class="col-6">
-                                                    <select disabled class="form-select"
-                                                        id="dropOffDistrictSelectInTpkg"></select>
+                                                    <select disabled class="form-select" id="dropOffDistrictSelect"
+                                                        onchange="getStayByDistrict(dropOffDistrictSelect,dropOffAccommodationSelect); getStayByDistrict(dropOffDistrictSelect,altStay1Select); getStayByDistrict(dropOffDistrictSelect,altStay2Select); "></select>
                                                 </div>
                                             </div>
 
                                             <!-- Accommodation Label + Input -->
                                             <div class="row mb-2 align-items-center">
                                                 <div class="col-auto">
-                                                    <label for="dropOffAccommodationSelectInTpkg"
+                                                    <label for="dropOffAccommodationSelect"
                                                         class="form-label fw-bold mb-0">Dropoff Accommodation</label>
                                                 </div>
                                                 <div class="col-12">
-                                                    <select class="form-select" id="dropOffAccommodationSelectInTpkg"
-                                                        disabled></select>
+                                                    <select class="form-select" id="dropOffAccommodationSelect" disabled
+                                                        onchange="dynamicSelectValidator(this,'dayplan','drop_stay_id'); passStayGCoordsDropOff(); altStay1Select.disabled = false; altStay2Select.disabled = false; "></select>
                                                 </div>
                                             </div>
 
@@ -1593,19 +1603,21 @@
                                             <div class="row mb-2 align-items-center">
                                                 <!-- Alternative Stay 1 -->
                                                 <div class="col-6">
-                                                    <label for="altStay1SelectInTpkg"
+                                                    <label for="altStay1Select"
                                                         class="form-label fw-bold mb-0">Alternative Accommodation
                                                         1</label>
-                                                    <select class="form-select" id="altStay1SelectInTpkg" disabled>
+                                                    <select class="form-select" id="altStay1Select" disabled
+                                                        onchange="dynamicSelectValidator(this,'dayplan','alt_stay_1_id');">
                                                     </select>
                                                 </div>
 
                                                 <!-- Alternative Stay 2 -->
                                                 <div class="col-6">
-                                                    <label for="altStay2SelectInTpkg"
+                                                    <label for="altStay2Select"
                                                         class="form-label fw-bold mb-0">Alternative Accommodation
                                                         2</label>
-                                                    <select class="form-select" id="altStay2SelectInTpkg" disabled>
+                                                    <select class="form-select" id="altStay2Select" disabled
+                                                        onchange="dynamicSelectValidator(this,'dayplan','alt_stay_2_id');">
                                                     </select>
                                                 </div>
                                             </div>
@@ -1613,17 +1625,16 @@
                                         </div>
 
                                         <!-- If Manual -->
-                                        <div id="manualDropOffOptionsInTpkg" style="display: none;">
+                                        <div id="manualDropOffOptions" style="display: none;">
                                             <!-- Labels Row -->
                                             <div class="row mb-1">
                                                 <div class="col-6">
-                                                    <label for="manualLocationDropOffInTpkg"
+                                                    <label for="manualLocationDropOff"
                                                         class="form-label fw-bold mb-0">Location
                                                         / Address</label>
                                                 </div>
                                                 <div class="col-6">
-                                                    <label for="geoCoordsDropOffInTpkg"
-                                                        class="form-label fw-bold mb-0">Geo
+                                                    <label for="geoCoordsDropOff" class="form-label fw-bold mb-0">Geo
                                                         Coords</label>
                                                 </div>
                                             </div>
@@ -1631,13 +1642,12 @@
                                             <!-- Inputs Row -->
                                             <div class="row mb-2">
                                                 <div class="col-6">
-                                                    <input type="text" class="form-control"
-                                                        id="manualLocationDropOffInTpkg"
+                                                    <input type="text" class="form-control" id="manualLocationDropOff"
                                                         placeholder="Enter Location/Address"
                                                         onkeyup="inputValidatorText(this, '', 'dayplan' , 'droppoint')">
                                                 </div>
                                                 <div class="col-6">
-                                                    <input type="text" class="form-control" id="geoCoordsDropOffInTpkg"
+                                                    <input type="text" class="form-control" id="geoCoordsDropOff"
                                                         placeholder="Latitude, Longitude"
                                                         oninput="passManualGeoCoordsDropOff();">
                                                 </div>
@@ -1649,34 +1659,34 @@
                                 </div>
 
                                 <!-- Step 5 -->
-                                <div class="tab-pane fade" id="dayStep5InTpkg" role="tabpanel"
-                                    aria-labelledby="dayStep5InTpkg-tab">
+                                <div class="tab-pane fade" id="dayStep5" role="tabpanel"
+                                    aria-labelledby="dayStep5 -tab">
 
                                     <!-- Final Notes Section -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary"> Additional Details</legend>
 
                                         <!-- Distance -->
-                                        <div class="row mb-3" id="calcDistanceRowInTpkg">
+                                        <div class="row mb-3" id="calcDistanceRow">
                                             <!-- Calculate Button and Message -->
                                             <div class="col-6 mb-0 my-auto">
                                                 <div class="d-flex flex-column align-items-start">
-                                                    <button id="distanceCalcBtnInTpkg"
+                                                    <button id="distanceCalcBtn"
                                                         class="btn btn-outline-primary btn-lg fw-bold shadow-sm"
                                                         onclick="calculateTotalDistance()">Calculate Total
                                                         Distance</button>
-                                                    <small id="calcDistanceMsgInTpkg"
+                                                    <small id="calcDistanceMsg"
                                                         class="text-danger mt-1 ms-1 fw-bold"></small>
                                                 </div>
                                             </div>
 
                                             <!-- Distance Input Field -->
                                             <div class="col-6">
-                                                <label for="dpTotalKMcountInTpkg" class="form-label fw-bold mb-0">Total
+                                                <label for="dpTotalKMcount" class="form-label fw-bold mb-0">Total
                                                     Distance
                                                     Covered:</label>
                                                 <div class="input-group">
-                                                    <input type="number" min="0" id="dpTotalKMcountInTpkg"
+                                                    <input type="number" min="0" id="dpTotalKMcount"
                                                         class="form-control text-center"
                                                         placeholder="Click Calculate Button/Enter Manually"
                                                         onkeyup="inputValidatorText(this,'','dayplan','totalkmcount')">
@@ -1688,18 +1698,18 @@
                                         <div class="row">
                                             <!-- Note Textarea -->
                                             <div class="col-7 mb-3">
-                                                <label for="dpNoteInTpkg" class="form-label fw-bold mb-0">Additional
+                                                <label for="dpNote " class="form-label fw-bold mb-0">Additional
                                                     Information:</label>
-                                                <textarea class="form-control" id="dpNoteInTpkg" style="height: 100px;"
-                                                    placeholder="Enter Any Additional Information "
+                                                <textarea class="form-control" id="dpNote" style="height: 100px;"
+                                                    placeholder="Enter Any Additional Information"
                                                     onkeyup="inputValidatorText(this,'','dayplan','note')"></textarea>
                                             </div>
 
                                             <!-- Status Dropdown -->
                                             <div class="col-5 mb-3">
-                                                <label for="dpSelectStatusInTpkg"
+                                                <label for="dpSelectStatus"
                                                     class="form-label fw-bold mb-0">Status:</label>
-                                                <select id="dpSelectStatusInTpkg" class="form-select"
+                                                <select id="dpSelectStatus" class="form-select"
                                                     onchange="staticSelectValidator(this , 'dayplan' , 'dp_status')">
                                                     <option value="" selected disabled> Select Status </option>
                                                     <option value="Draft">This Is A Draft </option>
@@ -1715,11 +1725,11 @@
                                     <div class="row mt-4 mb-2">
                                         <div class="col-4">
                                             <button type="reset" class="btn-clear w-50 fw-bold"
-                                                onclick="refreshDayPlanFormInTpkg()">Reset Form</button>
+                                                onclick="refreshDpFormInTpkg()">Reset Form</button>
                                         </div>
                                         <div class="col-8 text-end">
-                                            <button type="submit" id="dpAddBtnInTpkg" class="btn-add fw-bold"
-                                                onclick="addNewDayPlanInTpkg()">Add Entry</button>
+                                            <button type="submit" id="dpAddBtn" class="btn-add fw-bold"
+                                                onclick="saveAndSelectEditedDp()">Save As New</button>
                                         </div>
                                     </div>
                                 </div>

@@ -2,7 +2,6 @@ window.addEventListener('load', () => {
 
     buildDayPlanTable();
     refreshDayPlanForm();
-    //updateDayTab();
 
 });
 
@@ -29,6 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 //to create and refresh content in main dayplan table
 const buildDayPlanTable = async () => {
+
+    //this is added because we use the dayplan.js inside the tpkg.html too
+    const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
+    if (!tableDayPlanHolderDivElement) {
+        console.error("Table holder div not found.");
+        return;
+    }
 
     try {
         const dayplans = await ajaxGetReq("/dayplan/all");
@@ -93,6 +99,13 @@ const showDayPlanStatus = (dpObj) => {
 
 //to ready the main form 
 const refreshDayPlanForm = async () => {
+
+    //this is added because we use the dayplan.js inside the tpkg.html too
+    const dpFormElement = document.getElementById('formDayPlan');
+    if (!dpFormElement) {
+        console.error("dpFormElement not found.");
+        return;
+    }
 
     dayplan = new Object();
 
@@ -847,7 +860,7 @@ const handleLunchRadio = (fieldId) => {
 }
 
 //this will be triggered when a real value in lunch place is selected
-const checkPackedLunchNo=()=> {
+const checkPackedLunchNo = () => {
     const lunchSelect = document.getElementById('selectDPLunch');
     const packedLunchNo = document.getElementById('packedLunchNo');
 
@@ -1428,14 +1441,12 @@ const addNewDayPlan = async () => {
                     showAlertModal('err', 'Submit Failed ' + postServerResponse);
                 }
             } catch (error) {
-                // Handle errors (such as network issues or server errors)
                 showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         } else {
             showAlertModal('inf', 'User cancelled the task');
         }
     } else {
-        //showAlertModal('war',' \n' + errors);
         showAlertModal('war', errors);
     }
 }
