@@ -533,7 +533,7 @@ const showDayPlanDetails = (selectElementId) => {
 //++++++++++++++++++++++ DayPlan form codes ++++++++++++++++++++++
 
 // to refresh the day plan form in the tpkg module 💥
-const  refreshDpFormInTpkg = async () => {
+const refreshDpFormInTpkg = async () => {
 
     dayplan = new Object();
 
@@ -649,10 +649,12 @@ const  refreshDpFormInTpkg = async () => {
 const refillSelectedDayPlan = async (dpObj) => {
 
     // Clear previous styles
-     refreshDpFormInTpkg();
+    refreshDpFormInTpkg();
 
-    document.getElementById('dpTitle').value = dpObj.daytitle;
-    document.getElementById('dpCode').value = dpObj.dayplancode;
+    dayplan = JSON.parse(JSON.stringify(dpObj));
+
+    //document.getElementById('dpTitle').value = dpObj.daytitle;
+    //document.getElementById('dpCode').value = dpObj.dayplancode;
 
     //if the pickup point was an airport or manual location
     if (dpObj.pickuppoint != null) {
@@ -699,12 +701,6 @@ const refillSelectedDayPlan = async (dpObj) => {
                 manualPickupCBVar.checked = true;
                 break;
         }
-    }
-
-    if (dpObj.is_takepackedlunch) {
-        packedLunchYes.checked = true;
-    } else if (!dpObj.is_takepackedlunch || dpObj.is_takepackedlunch == null) {
-        packedLunchNo.checked = true;
     }
 
     //if pickup point was a stay
@@ -787,12 +783,18 @@ const refillSelectedDayPlan = async (dpObj) => {
     //if droppoint is a stay
     if (dpObj.drop_stay_id != null) {
 
+        document.getElementById('dropOffAccommodationSelect').disabled = false;
+        document.getElementById('altStay1Select').disabled = false;
+        document.getElementById('altStay2Select').disabled = false;
+        document.getElementById('dropOffDistrictSelect').disabled = false;
+        document.getElementById('dropOffProvinceSelect').disabled = false;
+
         try {
 
             const stays = await ajaxGetReq("/stay/active");
             fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Drop Off Accomodation', stays, 'name', dpObj.drop_stay_id.name);
-            //fillDataIntoDynamicSelects(altStay1Select , 'Please Select Alternative Accomodation 1', stays, 'name', dpObj.alt_stay_1_id.name);
-            //fillDataIntoDynamicSelects(altStay2Select , 'Please Select Alternative Accomodation 2', stays, 'name', dpObj.alt_stay_2_id.name);
+            fillDataIntoDynamicSelects(altStay1Select, 'Please Select Alternative Accomodation 1', stays, 'name', dpObj.alt_stay_1_id.name);
+            fillDataIntoDynamicSelects(altStay2Select, 'Please Select Alternative Accomodation 2', stays, 'name', dpObj.alt_stay_2_id.name);
 
             const allDists = await ajaxGetReq('district/all');
             fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDists, 'name', dpObj.drop_stay_id.district_id.name);
@@ -804,19 +806,25 @@ const refillSelectedDayPlan = async (dpObj) => {
             console.error('error fetching previous end stay info');
         }
 
-        const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions ');
+        const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions');
         dropOffAccommodationRow.style.display = 'block';
 
-        const dropOffAccommodationCB = document.getElementById('accommodationsDropOffCB ');
+        const dropOffAccommodationCB = document.getElementById('accommodationsDropOffCB');
         dropOffAccommodationCB.checked = true;
 
-        const manualDropRow = document.getElementById('manualDropOffOptions ');
+        const manualDropRow = document.getElementById('manualDropOffOptions');
         manualDropRow.style.display = 'none';
 
     }
 
-    document.getElementById('dpTotalKMcount').value = dpObj.totalkmcount;
+    if (dpObj.is_takepackedlunch) {
+        packedLunchYes.checked = true;
+    } else if (!dpObj.is_takepackedlunch || dpObj.is_takepackedlunch == null) {
+        packedLunchNo.checked = true;
+    }
+
     document.getElementById('dpTitle').value = dpObj.daytitle;
+    document.getElementById('dpTotalKMcount').value = dpObj.totalkmcount;
     document.getElementById('dpCode').value = dpObj.dayplancode;
     document.getElementById('dpSelectStatus').value = dpObj.dp_status;
     document.getElementById('dpNote').value = dpObj.note;
@@ -863,6 +871,8 @@ const refillSelectedDayPlan = async (dpObj) => {
 
 const addNewDayPlanInTpkg = async () => {
 
+    console.log("Adding new day plan in tpkg...");
+
     const errors = checkDPFormErrors();
     if (errors == '') {
         const userConfirm = confirm('Are you sure to add?');
@@ -874,7 +884,7 @@ const addNewDayPlanInTpkg = async () => {
                 if (postServerResponse === 'OK') {
                     showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formDayPlanInTpkg').reset();
-                     refreshDpFormInTpkg();
+                    refreshDpFormInTpkg();
                     $('#dayPlanModalInTpkg').modal('hide');
                 } else {
                     showAlertModal('err', 'Submit Failed ' + postServerResponse);
@@ -892,9 +902,9 @@ const addNewDayPlanInTpkg = async () => {
 
 // save newly edited day plan
 const saveAndSelectEditedDp = () => {
-    //check errors
-    //show changes
 
+    addNewDayPlanInTpkg();
+    console.log("Saving and selecting edited day plan...");
 
 }
 

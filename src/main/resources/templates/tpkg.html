@@ -104,7 +104,7 @@
                                                 <input id="inputPkgTitle" type="text" class="form-control"
                                                     placeholder="Enter A Title for The Package"
                                                     onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')"
-                                                    name="fakeName" required>
+                                                    name="fakeName" >
 
                                             </div>
 
@@ -1060,7 +1060,7 @@
         </div>
 
         <!-- Day Plan Modal in Tpkg-->
-        <div class="modal fade" id="dayPlanModalInTpkg" tabindex="-1" aria-labelledby="dayPlanModalLabel"
+        <div class="modal fade mt-5" id="dayPlanModalInTpkg" tabindex="-1" aria-labelledby="dayPlanModalLabel"
             aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
@@ -1342,16 +1342,16 @@
                                             <!-- Buttons -->
                                             <div
                                                 class="col-2 text-center d-flex flex-column justify-content-center mt-3">
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="passOne"
+                                                <button onclick="addOne()" class="btn btn-sm fw-bold my-1 btn-pill" id="passOne"
                                                     style="background-color: #4ea8de; color: white;">Add</button>
 
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="passAll"
+                                                <button onclick="addAll()" class="btn btn-sm fw-bold my-1 btn-pill" id="passAll"
                                                     style="background-color: #3b8bca; color: white;">Add All</button>
 
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedOne"
+                                                <button onclick="removeOne()" class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedOne"
                                                     style="background-color: #f67280; color: white;">Remove</button>
 
-                                                <button class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedAll"
+                                                <button onclick="removeAll()" class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedAll"
                                                     style="background-color: #e84545; color: white;">Remove All</button>
                                             </div>
 
@@ -1486,7 +1486,7 @@
                                                             for="packedLunchYes">Yes</label>
                                                     </div>
                                                     <div class="col-6">
-                                                        <input type="radio" class="btn-check" name="packedLunch "
+                                                        <input type="radio" class="btn-check" name="packedLunch"
                                                             id="packedLunchNo" value="false" autocomplete="off"
                                                             onchange="handleLunchRadio(this); takePackedLunchNo();">
                                                         <label

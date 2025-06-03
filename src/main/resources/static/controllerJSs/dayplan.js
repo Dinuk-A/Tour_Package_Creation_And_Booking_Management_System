@@ -32,7 +32,6 @@ const buildDayPlanTable = async () => {
     //this is added because we use the dayplan.js inside the tpkg.html too
     const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
     if (!tableDayPlanHolderDivElement) {
-        console.error("Table holder div not found.");
         return;
     }
 
@@ -103,7 +102,6 @@ const refreshDayPlanForm = async () => {
     //this is added because we use the dayplan.js inside the tpkg.html too
     const dpFormElement = document.getElementById('formDayPlan');
     if (!dpFormElement) {
-        console.error("dpFormElement not found.");
         return;
     }
 

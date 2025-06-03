@@ -85,7 +85,8 @@
                     <img src="images/employee.png" alt="Avatar" class="rounded-circle avatar-large mb-2">
                     <p class="mb-0 fw-bold" th:text="${loggedUserUN}"></p>
                     <!-- meka hadanna one -->
-                    <p id="loggedUserCompanyEmailDisplayId" class="text-muted mb-0" th:text="${loggedUserCompanyEmail}"></p>
+                    <p id="loggedUserCompanyEmailDisplayId" class="text-muted mb-0" th:text="${loggedUserCompanyEmail}">
+                    </p>
                 </li>
                 <li>
                     <hr class="dropdown-divider">
@@ -134,7 +135,7 @@
             <a class="nav-link " href="http://localhost:8081/vehicle">
                 <span>Vehicle Management</span>
             </a>
-        </li>        
+        </li>
 
         <!-- main items -->
         <li class="nav-item">
@@ -338,7 +339,7 @@
 </div>
 
 <!-- modal for use as a custom alert -->
-<div th:fragment="customAlertFragment" class="alert-modal" id="customAlertModal">
+<div th:fragment="customAlertFragment" class="alert-modal" id="customAlertModal" >
     <p id="alertTitle">Alert</p>
     <img id="alertIcon" src="images/warning.png" alt="Alert Icon">
     <p id="alertMsg">This is a custom alert!</p>
