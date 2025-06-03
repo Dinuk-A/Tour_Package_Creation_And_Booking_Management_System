@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import lk.yathratravels.activity.Activity;
 import lk.yathratravels.attraction.Attraction;
 import lk.yathratravels.attraction.District;
 import lk.yathratravels.privilege.Privilege;
@@ -124,25 +123,25 @@ public class DayPlanController {
             // remove activities after attr == type == activity 💥💥
 
             // if activities have data
-            if (!dplan.getVplaces().isEmpty()) {
-
-                Attraction firstVPlace = dplan.getVplaces().iterator().next();
-                dplan.setStart_district_id(firstVPlace.getDistrict_id());
-
-            }
+//            if (!dplan.getVplaces().isEmpty()) {
+//
+//                Attraction firstVPlace = dplan.getVplaces().iterator().next();
+//                dplan.setStart_district_id(firstVPlace.getDistrict_id());
+//
+//            }
 
             // or custom dp elkakata nam, inquiry ekath ekka sambanda code ekak hadanna
             // 💥💥💥
 
             // Generate the dayplancode
             String nextCode;
-            List<DayPlan> codeCountByDistrict = daoDP.getDayPlansByStartDistrict(dplan.getStart_district_id().getId());
-            if (codeCountByDistrict.size() == 0) {
+            List<DayPlan> dpCountByDistrict = daoDP.getDayPlansByStartDistrict(dplan.getStart_district_id().getId());
+            if (dpCountByDistrict.size() == 0) {
                 nextCode = dplan.getDayplancode() + dplan.getStart_district_id().getName().substring(0, 3).toUpperCase()
                         + "1";
             } else {
                 nextCode = dplan.getDayplancode() + dplan.getStart_district_id().getName().substring(0, 3).toUpperCase()
-                        + (codeCountByDistrict.size() + 1);
+                        + (dpCountByDistrict.size() + 1);
             }
 
             if (dplan.getIs_template()) {
@@ -160,7 +159,40 @@ public class DayPlanController {
     }
 
     // to save the same record but with new attributes 💥💥💥
-    // also a POST, not a PUT
+    @PostMapping(value = "/dayplan/saveasnew")
+    public String saveDayPlanAsNew(@RequestBody DayPlan dplan) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "DAYPLAN");
+
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "Day Plan Save Not Completed; You Dont Have Permission";
+        }
+
+        try {
+                     
+            // Generate the dayplancode
+            String nextCode;
+            List<DayPlan> dpCountByDistrict = daoDP.getDayPlansByStartDistrict(dplan.getStart_district_id().getId());
+            if (dpCountByDistrict.size() == 0) {
+                nextCode = dplan.getDayplancode() + dplan.getStart_district_id().getName().substring(0, 3).toUpperCase()
+                        + "1";
+            } else {
+                nextCode = dplan.getDayplancode() + dplan.getStart_district_id().getName().substring(0, 3).toUpperCase()
+                        + (dpCountByDistrict.size() + 1);
+            }
+
+            dplan.setDayplancode(nextCode);
+            dplan.setAddeddatetime(LocalDateTime.now());
+            dplan.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+            daoDP.save(dplan);
+            return "OK";
+        } catch (Exception e) {
+            return "save not completed : " + e.getMessage();
+        }
+    }
+   
 
     // to update a dayplan
     @PutMapping(value = "/dayplan")

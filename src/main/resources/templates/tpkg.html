@@ -1033,7 +1033,7 @@
 
         <!-- Modal to display full details of a row -->
         <div class="modal fade py-5" id="infoModalTpkg" tabindex="-1" aria-labelledby="infoModalLabel"
-            aria-hidden="true">
+            aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content shadow-lg rounded-4">
                     <!-- Modal Header -->
@@ -1140,11 +1140,11 @@
                                                 :</label>
 
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="firstDayCB "
+                                                <input type="radio" class="btn-check" id="firstDayCB"
                                                     autocomplete="off" name="dpDayType" value="FD"
                                                     onchange="selectDayType(this);">
                                                 <label class="btn btn-outline-success w-100 fw-bold text-uppercase"
-                                                    for="firstDayCB ">First Day</label>
+                                                    for="firstDayCB">First Day</label>
                                             </div>
 
                                             <div class="col-4">
@@ -1152,14 +1152,14 @@
                                                     autocomplete="off" name="dpDayType" value="MD"
                                                     onchange="selectDayType(this);">
                                                 <label class="btn btn-outline-warning w-100 fw-bold text-uppercase"
-                                                    for="middleDayCB ">Middle Day</label>
+                                                    for="middleDayCB">Middle Day</label>
                                             </div>
 
                                             <div class="col-4">
                                                 <input type="radio" class="btn-check" id="lastDayCB" autocomplete="off"
                                                     name="dpDayType" value="LD" onchange="selectDayType(this);">
                                                 <label class="btn btn-outline-danger w-100 fw-bold text-uppercase"
-                                                    for="lastDayCB ">Last Day</label>
+                                                    for="lastDayCB">Last Day</label>
                                             </div>
                                         </div>
 

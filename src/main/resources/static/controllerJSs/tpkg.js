@@ -473,6 +473,9 @@ const clearDpInfoShowSection = () => {
 //this will helps in refilling the dayplan when editing
 let editingDPsSelectElement = null;
 
+//this will be helps when refilling a dp and set the correct day type auto
+let selectedDayTypeToEdit = null;
+
 //show selected day plan's info
 const showDayPlanDetails = (selectElementId) => {
 
@@ -528,7 +531,21 @@ const showDayPlanDetails = (selectElementId) => {
     //this will helps in refilling the dayplan when editing
     editingDPsSelectElement = selectElementId;
 
+    //this will be helps when refilling a dp and set the correct day type auto
+    selectedDayTypeToEdit = getDayTypeFromLabel(selectElementId);
+    console.log(selectedDayTypeToEdit);
+
 };
+
+// to get the day type from the label of the select element
+const getDayTypeFromLabel = (selectId) => {
+    const label = document.querySelector(`label[for="${selectId}"]`);
+    if (label) {
+        const text = label.innerText.trim();
+        return text.replace(':', '').split(' ')[0].toLowerCase();
+    }
+    return null;
+}
 
 //++++++++++++++++++++++ DayPlan form codes ++++++++++++++++++++++
 
@@ -649,12 +666,25 @@ const refreshDpFormInTpkg = async () => {
 const refillSelectedDayPlan = async (dpObj) => {
 
     // Clear previous styles
-    refreshDpFormInTpkg();
+    //refreshDpFormInTpkg();
 
     dayplan = JSON.parse(JSON.stringify(dpObj));
 
-    //document.getElementById('dpTitle').value = dpObj.daytitle;
-    //document.getElementById('dpCode').value = dpObj.dayplancode;
+    //anith 2 disable wennath one 💥
+    if (selectedDayTypeToEdit === "first") {
+        document.getElementById('firstDayCB').checked = true;
+        console.log(document.getElementById('firstDayCB').checked);
+        dayplan.dayplancode = 'FD';
+    } else if (selectedDayTypeToEdit === "middle") {
+        document.getElementById('middleDayCB').checked = true;
+        dayplan.dayplancode = 'MD';
+    } else if (selectedDayTypeToEdit === "final") {
+        document.getElementById('lastDayCB').checked = true;
+        dayplan.dayplancode = 'LD';
+    } else {
+        console.log("else");
+    }
+
 
     //if the pickup point was an airport or manual location
     if (dpObj.pickuppoint != null) {
@@ -791,7 +821,7 @@ const refillSelectedDayPlan = async (dpObj) => {
 
         try {
 
-            const stays = await ajaxGetReq("/stay/active");
+            const stays = await ajaxGetReq("/stay/all");
             fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Drop Off Accomodation', stays, 'name', dpObj.drop_stay_id.name);
             fillDataIntoDynamicSelects(altStay1Select, 'Please Select Alternative Accomodation 1', stays, 'name', dpObj.alt_stay_1_id.name);
             fillDataIntoDynamicSelects(altStay2Select, 'Please Select Alternative Accomodation 2', stays, 'name', dpObj.alt_stay_2_id.name);
@@ -860,12 +890,6 @@ const refillSelectedDayPlan = async (dpObj) => {
     var step1Tab = new bootstrap.Tab(document.getElementById('dayStep1-tab'));
     step1Tab.show();
 
-    //auto check the day type (fd, md, ld) 
-    // + auto set the value too (fd, md, ld) 
-
-
-
-
     $("#dayPlanModalInTpkg").modal("show");
 }
 
@@ -879,6 +903,8 @@ const addNewDayPlanInTpkg = async () => {
 
         if (userConfirm) {
             try {
+                dayplan.id = null;
+                dayplan.is_template = false; 
                 const postServerResponse = await ajaxPPDRequest("/dayplan", "POST", dayplan);
 
                 if (postServerResponse === 'OK') {
