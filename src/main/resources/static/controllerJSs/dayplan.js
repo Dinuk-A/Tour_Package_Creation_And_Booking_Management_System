@@ -962,7 +962,7 @@ const getLunchAndHotelAuto = async () => {
             fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Accomodation', staysByDist, 'name');
             dropOffAccommodationSelect.disabled = false
         } catch (error) {
-            console.error('getStayByDistrict failed')
+            console.error('getLunchAndHotelAuto failed')
         }
 
     }
@@ -1306,7 +1306,7 @@ async function calculateTotalDistance() {
 }
 
 //get districts list by the selected province
-const getDistByProvince = async (provinceSelectid, districtSelectId) => {
+const getDistByProvince = async (provinceSelectid, districtSelectId, selectedValue = "") => {
 
     districtSelectId.disabled = false;
     districtSelectId.style.border = '1px solid #ced4da';
@@ -1314,13 +1314,64 @@ const getDistByProvince = async (provinceSelectid, districtSelectId) => {
     const currentProvinceID = JSON.parse(provinceSelectid.value).id;
     try {
         const districts = await ajaxGetReq("districts/byprovinceid/" + currentProvinceID);
-        fillDataIntoDynamicSelects(districtSelectId, " Please Select The District ", districts, 'name');
+        fillDataIntoDynamicSelects(districtSelectId, " Please Select The District ", districts, 'name', selectedValue);
+        console.log("getDistByProvince ran for districtSelectId: " + districtSelectId.id);
     } catch (error) {
         console.error("Failed to fetch districts:", error);
     }
-    provinceSelectid.style.border = '2px solid lime';
 
+    if (selectedValue == "") {
+        provinceSelectid.style.border = '2px solid lime';
+    } else if (selectedValue != "") {
+        provinceSelectid.style.border = '1px solid #ced4da';
+    }
+    //provinceSelectid.style.border = '2px solid lime';
 
+}
+
+//get accomadations list by the selected district
+const getStayByDistrict = async (distSelectID, staySelectID, selectedValue = "") => {
+
+    const selectedDistrict = JSON.parse(distSelectID.value).id;
+    staySelectID.disabled = false;
+    staySelectID.style.border = '1px solid #ced4da';
+
+    if (selectedValue == "") {
+        distSelectID.style.border = '2px solid lime';
+    } else if (selectedValue != "") {
+        distSelectID.style.border = '1px solid #ced4da';
+    }
+
+    try {
+        staysByDist = await ajaxGetReq("/stay/bydistrict/" + selectedDistrict);
+        fillDataIntoDynamicSelects(staySelectID, 'Please Select The Accomodation', staysByDist, 'name', selectedValue);
+        console.log("getStayByDistrict ran for staySelectID: " + staySelectID.id);
+        console.log(staysByDist);
+    } catch (error) {
+        console.error('getStayByDistrict failed')
+    }
+}
+
+//get lunch hotel by the selected district
+const getLunchHotelByDistrict = async (distSelectID, lhSelectID, selectedValue = "") => {
+
+    const selectedDistrict = JSON.parse(distSelectID.value).id;
+    lhSelectID.disabled = false;
+    lhSelectID.style.border = '1px solid #ced4da';
+
+    if (selectedValue == "") {
+        distSelectID.style.border = '2px solid lime';
+    } else if (selectedValue != "") {
+        distSelectID.style.border = '1px solid #ced4da';
+    }
+
+    try {
+        lunchByDist = await ajaxGetReq("/lunchplace/bydistrict/" + selectedDistrict);
+        fillDataIntoDynamicSelects(lhSelectID, 'Please Select The Hotel', lunchByDist, 'name', selectedValue);
+        console.log("getLunchHotelByDistrict ran for lhSelectID: " + lhSelectID.id);
+    } catch (error) {
+        console.error('getLunchHotelByDistrict');
+    }
 }
 
 //get visiting places list by the selected district
@@ -1336,38 +1387,6 @@ const getVPlacesByDistrict = async () => {
         console.error('get V PlacesByDistrict failed')
     }
 
-}
-
-//get accomadations list by the selected district
-const getStayByDistrict = async (distSelectID, staySelectID) => {
-
-    const selectedDistrict = JSON.parse(distSelectID.value).id;
-    distSelectID.style.border = '2px solid lime';
-    staySelectID.disabled = false;
-    staySelectID.style.border = '1px solid #ced4da';
-
-    try {
-        staysByDist = await ajaxGetReq("/stay/bydistrict/" + selectedDistrict);
-        fillDataIntoDynamicSelects(staySelectID, 'Please Select The Accomodation', staysByDist, 'name');
-    } catch (error) {
-        console.error('getStayByDistrict failed')
-    }
-}
-
-//get lunch hotel by the selected district
-const getLunchHotelByDistrict = async (distSelectID, lhSelectID) => {
-
-    const selectedDistrict = JSON.parse(distSelectID.value).id;
-    distSelectID.style.border = '2px solid lime';
-    lhSelectID.disabled = false;
-    lhSelectID.style.border = '1px solid #ced4da';
-
-    try {
-        lunchByDist = await ajaxGetReq("/lunchplace/bydistrict/" + selectedDistrict);
-        fillDataIntoDynamicSelects(lhSelectID, 'Please Select The Hotel', lunchByDist, 'name');
-    } catch (error) {
-        console.error('getLunchHotelByDistrict');
-    }
 }
 
 // Check errors before submitting
@@ -1659,9 +1678,9 @@ const refillDayPlanForm = async (dpObj) => {
                 const allProvinces = await ajaxGetReq("/province/all");
                 fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.pickup_stay_id.district_id.province_id.name);
 
-                getDistByProvince(pickupProvinceSelect, pickupDistrictSelect);
+                await getDistByProvince(pickupProvinceSelect, pickupDistrictSelect);
 
-                getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect);
+                await getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect);
 
             } catch (error) {
                 console.error('error fetching previous start stay info')
@@ -1759,11 +1778,11 @@ const refillDayPlanForm = async (dpObj) => {
                 const allProvinces = await ajaxGetReq("/province/all");
                 fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
 
-                getDistByProvince(dropOffProvinceSelect, dropOffDistrictSelect);
+                await getDistByProvince(dropOffProvinceSelect, dropOffDistrictSelect);
 
-                getStayByDistrict(dropOffDistrictSelect, dropOffAccommodationSelect);
-                getStayByDistrict(dropOffDistrictSelect, altStay1Select);
-                getStayByDistrict(dropOffDistrictSelect, altStay2Select);
+                await getStayByDistrict(dropOffDistrictSelect, dropOffAccommodationSelect);
+                await getStayByDistrict(dropOffDistrictSelect, altStay1Select);
+                await getStayByDistrict(dropOffDistrictSelect, altStay2Select);
 
             } catch (error) {
                 console.error('error fetching previous end stay info');
