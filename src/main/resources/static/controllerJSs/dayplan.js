@@ -58,11 +58,20 @@ const buildDayPlanTable = async () => {
 //to support fill main table
 const showDayType = (dpObj) => {
     if (dpObj.is_template) {
-        return "Template"
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #9b59b6; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Template
+            </p>`;
     } else {
-        return "Not Template"
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #16a085; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Custom
+            </p>`;
     }
-}
+};
+
 
 //to support fill main table
 const showDayPlanStatus = (dpObj) => {
@@ -1647,15 +1656,12 @@ const refillDayPlanForm = async (dpObj) => {
 
             try {
 
-                const stays = await ajaxGetReq("/stay/active");
-                fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Please Select The Pickup Accomodation', stays, 'name', dpObj.pickup_stay_id.name);
-
-                const allDists = await ajaxGetReq('district/all');
-                fillDataIntoDynamicSelects(pickupDistrictSelect, 'Please Select The District', allDists, 'name', dpObj.pickup_stay_id.district_id.name);
-
                 const allProvinces = await ajaxGetReq("/province/all");
                 fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.pickup_stay_id.district_id.province_id.name);
 
+                getDistByProvince(pickupProvinceSelect, pickupDistrictSelect);
+
+                getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect);
 
             } catch (error) {
                 console.error('error fetching previous start stay info')
@@ -1748,22 +1754,20 @@ const refillDayPlanForm = async (dpObj) => {
                 }
             });
 
-            //            try {
-            //
-            //                const stays = await ajaxGetReq("/stay/active");
-            //                fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Drop Off Accomodation', stays, 'name', dpObj.drop_stay_id.name);
-            //                fillDataIntoDynamicSelects(altStay1Select, 'Please Select Alternative Accomodation 1', stays, 'name', dpObj.alt_stay_1_id.name);
-            //                fillDataIntoDynamicSelects(altStay2Select, 'Please Select Alternative Accomodation 2', stays, 'name', dpObj.alt_stay_2_id.name);
-            //
-            //                const allDists = await ajaxGetReq('district/all');
-            //                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDists, 'name', dpObj.drop_stay_id.district_id.name);
-            //
-            //                const allProvinces = await ajaxGetReq("/province/all");
-            //                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
-            //
-            //            } catch (error) {
-            //                console.error('error fetching previous end stay info');
-            //            }
+            try {
+
+                const allProvinces = await ajaxGetReq("/province/all");
+                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
+
+                getDistByProvince(dropOffProvinceSelect, dropOffDistrictSelect);
+
+                getStayByDistrict(dropOffDistrictSelect, dropOffAccommodationSelect);
+                getStayByDistrict(dropOffDistrictSelect, altStay1Select);
+                getStayByDistrict(dropOffDistrictSelect, altStay2Select);
+
+            } catch (error) {
+                console.error('error fetching previous end stay info');
+            }
 
             const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions');
             dropOffAccommodationRow.style.display = 'block';
@@ -1821,23 +1825,22 @@ const refillDayPlanForm = async (dpObj) => {
             }
         }
 
-        if (oldDayplan.drop_stay_id != null) {
-            try {
-                const allStays = await ajaxGetReq("/stay/all");
-                fillDataIntoDynamicSelects(dropOffAccommodationSelect, '', allStays, 'name', dpObj.drop_stay_id.name);
-                fillDataIntoDynamicSelects(altStay1Select, '', allStays, 'name', dpObj.alt_stay_1_id.name);
-                fillDataIntoDynamicSelects(altStay2Select, '', allStays, 'name', dpObj.alt_stay_2_id.name);
+        const selectIdsToEnable = [
+            'pickupDistrictSelect',
+            'pickupAccommodationSelect',
+            'dropOffDistrictSelect',
+            'dropOffAccommodationSelect',
+            'altStay1Select',
+            'altStay2Select'
+        ]
 
-                const allProvinces = await ajaxGetReq("/province/all");
-                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Select Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
-
-                const allDistricts = await ajaxGetReq("/district/all");
-                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Select District', allDistricts, 'name', dpObj.drop_stay_id.district_id.name);
-
-            } catch (error) {
-                console.error('error fetching previous end stay info')
+        selectIdsToEnable.forEach(selectId => {
+            const selectElement = document.getElementById(selectId);
+            if (selectElement) {
+                selectElement.disabled = false;
+                selectElement.style.border = '1px solid #ced4da';
             }
-        }
+        })
 
         fillDataIntoDynamicSelects(selectedVPs, '', dpObj.vplaces, 'name');
 
@@ -2042,6 +2045,50 @@ const updateDayTab = () => {
 
     //prevDayBtn.disabled = currentDayStep === 0;
     //nextDayBtn.textContent = currentDayStep === dayTabLinks.length - 1 ? 'Submit' : 'Next';
+}
+
+//check if alt stays and main dropoff accos are same
+const checkMainStayDuplications = () => {
+    const dropOff = document.getElementById('dropOffAccommodationSelect');
+    const alt1 = document.getElementById('altStay1Select');
+    const alt2 = document.getElementById('altStay2Select');
+
+    const dropVal = dropOff.value;
+    const alt1Val = alt1.value;
+    const alt2Val = alt2.value;
+
+    if (dropVal && alt1Val && dropVal == alt1Val) {
+        alert("Drop-off accommodation and Alternative Stay 1 cannot be the same.");
+        alt1.value = '';
+        alt1.style.border = '2px solid red';
+        dayplan.alt_stay_1_id = null;
+    }
+    if (dropVal && alt2Val && dropVal == alt2Val) {
+        alert("Drop-off accommodation and Alternative Stay 2 cannot be the same.");
+        alt2.value = '';
+        alt2.style.border = '2px solid red';
+        dayplan.alt_stay_2_id = null;
+    }
+
+}
+
+const checkAltStayDuplications = () => {
+    const alt1 = document.getElementById('altStay1Select');
+    const alt2 = document.getElementById('altStay2Select');
+
+    const alt1Val = alt1.value;
+    const alt2Val = alt2.value;
+
+    if (alt1Val && alt2Val && alt1Val === alt2Val) {
+        alert("Alternative Stay 1 and Alternative Stay 2 cannot be the same.");
+        alt2.value = '';
+        alt2.style.border = '2px solid red';
+        dayplan.alt_stay_2_id = null;
+
+        //alt1.value = '';
+        //alt1.style.border = '2px solid red';
+        //dayplan.alt_stay_1_id = null;
+    }
 }
 
 //💥💥💥💥 print day plan

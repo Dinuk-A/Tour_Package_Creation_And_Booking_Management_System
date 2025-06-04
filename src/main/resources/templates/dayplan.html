@@ -635,7 +635,7 @@
                                                 </div>
                                                 <div class="col-12">
                                                     <select class="form-select" id="dropOffAccommodationSelect" disabled
-                                                        onchange="dynamicSelectValidator(this,'dayplan','drop_stay_id'); passStayGCoordsDropOff(); altStay1Select.disabled = false; altStay2Select.disabled = false; "></select>
+                                                        onchange="checkMainStayDuplications(); dynamicSelectValidator(this,'dayplan','drop_stay_id'); passStayGCoordsDropOff(); altStay1Select.disabled = false; altStay2Select.disabled = false; "></select>
                                                 </div>
                                             </div>
 
@@ -647,7 +647,7 @@
                                                         class="form-label fw-bold mb-0">Alternative Accommodation
                                                         1</label>
                                                     <select class="form-select" id="altStay1Select" disabled
-                                                        onchange="dynamicSelectValidator(this,'dayplan','alt_stay_1_id');">
+                                                        onchange="checkMainStayDuplications(); checkAltStayDuplications(); dynamicSelectValidator(this,'dayplan','alt_stay_1_id');">
                                                     </select>
                                                 </div>
 
@@ -657,7 +657,7 @@
                                                         class="form-label fw-bold mb-0">Alternative Accommodation
                                                         2</label>
                                                     <select class="form-select" id="altStay2Select" disabled
-                                                        onchange="dynamicSelectValidator(this,'dayplan','alt_stay_2_id');">
+                                                        onchange="checkMainStayDuplications(); checkAltStayDuplications(); dynamicSelectValidator(this,'dayplan','alt_stay_2_id');">
                                                     </select>
                                                 </div>
                                             </div>

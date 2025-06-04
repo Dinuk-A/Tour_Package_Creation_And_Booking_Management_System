@@ -189,6 +189,11 @@ const changesTpkgCustomOrTemp = () => {
 
         tpkg.is_custompkg = true;
 
+        //add me-5 
+        const input = document.getElementById('customTP');
+        const col7Div = input.parentElement.parentElement.parentElement;
+        col7Div.classList.add('me-5');
+
         // hide
         tpDescRow.classList.add('d-none');
         imagesFieldset.classList.add('d-none');
@@ -215,6 +220,11 @@ const changesTpkgCustomOrTemp = () => {
 
         //if a package is for show in website
     } else if (forWebSite.checked) {
+
+        //remove me-5 
+        const input = document.getElementById('customTP');
+        const col7Div = input.parentElement.parentElement.parentElement;
+        col7Div.classList.remove('me-5');
 
         tpkg.is_custompkg = false;
 
@@ -738,15 +748,13 @@ const refillSelectedDayPlan = async (dpObj) => {
 
         try {
 
-            const stays = await ajaxGetReq("/stay/active");
-            fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Please Select The Pickup Accomodation', stays, 'name', dpObj.pickup_stay_id.name);
-
             const allDists = await ajaxGetReq('district/all');
             fillDataIntoDynamicSelects(pickupDistrictSelect, 'Please Select The District', allDists, 'name', dpObj.pickup_stay_id.district_id.name);
 
             const allProvinces = await ajaxGetReq("/province/all");
             fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.pickup_stay_id.district_id.province_id.name);
 
+            getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect);
 
         } catch (error) {
             console.error('error fetching previous start stay info')
@@ -813,24 +821,17 @@ const refillSelectedDayPlan = async (dpObj) => {
     //if droppoint is a stay
     if (dpObj.drop_stay_id != null) {
 
-        document.getElementById('dropOffAccommodationSelect').disabled = false;
-        document.getElementById('altStay1Select').disabled = false;
-        document.getElementById('altStay2Select').disabled = false;
-        document.getElementById('dropOffDistrictSelect').disabled = false;
-        document.getElementById('dropOffProvinceSelect').disabled = false;
-
         try {
-
-            const stays = await ajaxGetReq("/stay/all");
-            fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Drop Off Accomodation', stays, 'name', dpObj.drop_stay_id.name);
-            fillDataIntoDynamicSelects(altStay1Select, 'Please Select Alternative Accomodation 1', stays, 'name', dpObj.alt_stay_1_id.name);
-            fillDataIntoDynamicSelects(altStay2Select, 'Please Select Alternative Accomodation 2', stays, 'name', dpObj.alt_stay_2_id.name);
 
             const allDists = await ajaxGetReq('district/all');
             fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDists, 'name', dpObj.drop_stay_id.district_id.name);
 
             const allProvinces = await ajaxGetReq("/province/all");
             fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
+
+            getStayByDistrict(dropOffDistrictSelect, dropOffAccommodationSelect);
+            getStayByDistrict(dropOffDistrictSelect, altStay1Select);
+            getStayByDistrict(dropOffDistrictSelect, altStay2Select);
 
         } catch (error) {
             console.error('error fetching previous end stay info');
@@ -882,6 +883,22 @@ const refillSelectedDayPlan = async (dpObj) => {
         }
     }
 
+    const selectIdsToEnable = [
+        'pickupDistrictSelect',
+        'pickupAccommodationSelect',
+        'dropOffDistrictSelect',
+        'dropOffAccommodationSelect',
+        'altStay1Select',
+        'altStay2Select'
+    ]
+
+    selectIdsToEnable.forEach(selectId => {
+        const selectElement = document.getElementById(selectId);
+        if (selectElement) {
+            selectElement.disabled = false;
+            selectElement.style.border = '1px solid #ced4da';
+        }
+    })
 
     fillDataIntoDynamicSelects(selectedVPs, '', dpObj.vplaces, 'name');
 
@@ -893,6 +910,7 @@ const refillSelectedDayPlan = async (dpObj) => {
     $("#dayPlanModalInTpkg").modal("show");
 }
 
+// add new day plan in the tpkg module
 const addNewDayPlanInTpkg = async () => {
 
     console.log("Adding new day plan in tpkg...");
@@ -904,7 +922,7 @@ const addNewDayPlanInTpkg = async () => {
         if (userConfirm) {
             try {
                 dayplan.id = null;
-                dayplan.is_template = false; 
+                dayplan.is_template = false;
                 const postServerResponse = await ajaxPPDRequest("/dayplan", "POST", dayplan);
 
                 if (postServerResponse === 'OK') {
@@ -930,7 +948,6 @@ const addNewDayPlanInTpkg = async () => {
 const saveAndSelectEditedDp = () => {
 
     addNewDayPlanInTpkg();
-    console.log("Saving and selecting edited day plan...");
 
 }
 
@@ -1003,8 +1020,9 @@ const generateNormalDayPlanSelectSections = () => {
             tpkg.dayplans[index] = selectedValue;
             console.log("Updated tpkg.dayplans:", tpkg.dayplans);
 
+            updateTourEndDate();
+
             document.getElementById(btnId).disabled = false;
-            //document.getElementById(`midDayDeleteBtn${midDayCounter}`).disabled = false;
             document.getElementById(`midDayDeleteBtn${currentIndex}`).disabled = false;
         }
 
@@ -1228,6 +1246,39 @@ const clearImg = (imgProperty, previewId) => {
             alert("User Cancelled The Image Deletion Task");
         }
     }
+}
+
+//calc tour end date and display it
+const updateTourEndDate = () => {
+    const startDateInput = document.getElementById('tpStartDateInput').value;
+    const display = document.getElementById('tourEndDateDisplay');
+
+    if (!startDateInput) {
+        display.textContent = '';
+        return;
+    }
+
+    const startDate = new Date(startDateInput);
+    let dayCount = 1; // minimum 1 day tour
+
+    // Add number of day plans
+    if (tpkg.dayplans && Array.isArray(tpkg.dayplans)) {
+        dayCount += tpkg.dayplans.length;
+    }
+
+    // Add 1 more if extra day is selected
+    const hasExtraDay = tpkg.ed_dayplan_id || document.getElementById('tpkgFinalDaySelect')?.value;
+    if (hasExtraDay) {
+        dayCount += 1;
+    }
+
+    // Calculate end date
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + dayCount - 1); // Subtract 1 so day 1 is the start
+
+    // Format as yyyy-mm-dd
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+    display.textContent = formattedEndDate;
 }
 
 

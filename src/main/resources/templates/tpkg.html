@@ -104,7 +104,7 @@
                                                 <input id="inputPkgTitle" type="text" class="form-control"
                                                     placeholder="Enter A Title for The Package"
                                                     onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')"
-                                                    name="fakeName" >
+                                                    name="fakeName">
 
                                             </div>
 
@@ -124,7 +124,7 @@
                                         <div class="row mb-3">
 
                                             <!-- Package Type -->
-                                            <div class="col-8">
+                                            <div class="col-7 me-5">
                                                 <label class="form-label fw-bold mb-0">Package Type <span
                                                         class="text-danger">*</span> :</label>
                                                 <div class="row">
@@ -147,41 +147,17 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-4" id="startDateCol">
+                                            <div class="col-4 ms-5" id="startDateCol">
                                                 <label for="tpStartDateInput" class="form-label mb-0 fw-bold">Tour Start
                                                     Date(Estimated):</label>
                                                 <input type="date" class="form-control" id="tpStartDateInput"
                                                     onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate');"
+                                                    oninput="document.getElementById('tourStartDateDisplay').textContent = this.value;"
                                                     onkeydown="return false">
                                             </div>
 
-                                            <!-- Tour Duration -->
-                                            <!--<div class="col-6">
-                                                <label class="form-label fw-bold mb-1">Tour Duration <span
-                                                        class="text-danger">*</span> :</label>
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <input type="radio" class="btn-check" id="oneDayTour"
-                                                            autocomplete="off" name="pkgDaysType" onchange="">
-                                                        <label
-                                                            class="btn btn-outline-success w-100 rounded-start fw-bold text-uppercase"
-                                                            for="oneDayTour">Single Day</label>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <input type="radio" class="btn-check" id="multiDayTour"
-                                                            autocomplete="off" name="pkgDaysType" onchange="">
-                                                        <label
-                                                            class="btn btn-outline-primary w-100 rounded-end fw-bold text-uppercase"
-                                                            for="multiDayTour">Multi Day</label>
-                                                    </div>
-                                                </div>
-                                            </div>-->
-
-                                        </div>
-
-                                        <!-- description row (only available for web site) -->
-                                        <div class="row mb-0">
-                                            <div class="col-6 d-none" id="tpDescRow">
+                                            <!-- description (only available for web site) -->
+                                            <div class="col-5 d-none" id="tpDescRow">
                                                 <label for="tpDescription" class="fw-bold form-label mb-0">Short
                                                     Description
                                                     :</label>
@@ -195,6 +171,7 @@
 
                                             </div>
                                         </div>
+
                                     </fieldset>
                                 </div>
 
@@ -230,7 +207,7 @@
                                                                 <div class="col-7">
                                                                     <select disabled id="tpkgFirstDaySelect"
                                                                         class="form-control form-select"
-                                                                        onchange="dynamicSelectValidator(this,'tpkg','sd_dayplan_id'); showFirstDayBtn.disabled = false; addNewDaysBtn.disabled=false;  "></select>
+                                                                        onchange="dynamicSelectValidator(this,'tpkg','sd_dayplan_id'); showFirstDayBtn.disabled = false; addNewDaysBtn.disabled=false;  updateTourEndDate();"></select>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
@@ -291,7 +268,7 @@
                                                                 <div class="col-7">
                                                                     <select disabled id="tpkgFinalDaySelect"
                                                                         class="form-control form-select"
-                                                                        onchange="dynamicSelectValidator(this,'tpkg','ed_dayplan_id'); showFinalDayBtn.disabled = false;  "></select>
+                                                                        onchange="dynamicSelectValidator(this,'tpkg','ed_dayplan_id'); showFinalDayBtn.disabled = false; updateTourEndDate(); "></select>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
@@ -374,78 +351,95 @@
                                         <legend class="float-none w-auto px-2 text-primary">Tour Group Preferences
                                         </legend>
 
+                                        <div class="row">
+                                            <!-- Number of Travellers Section in Card -->
+                                            <div class="col-9">
+                                                <div class="card shadow-sm border rounded-3 px-3 pt-3 pb-2 mt-0 ms-0">
+                                                    <h5 class="text-info mb-3 border-bottom pb-1 fw-bold">Number of
+                                                        Travellers
+                                                    </h5>
 
-                                        <!-- Number of Travellers Section in Card -->
-                                        <div class="card shadow-sm border rounded-3 px-3 pt-3 pb-2 mt-0 mx-auto">
-                                            <h5 class="text-info mb-3 border-bottom pb-1">Number of Travellers</h5>
+                                                    <div class="row">
 
-                                            <div class="row">
+                                                        <!-- Local Adults -->
+                                                        <div class="col-md-2">
+                                                            <label for="tpkgLocalAdultCount"
+                                                                class="form-label mb-0 fs-6">Local Adults</label>
+                                                            <input type="number" value="0" class="form-control"
+                                                                id="tpkgLocalAdultCount"
+                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'localadultcount'); enableChildCountInputs(); "
+                                                                oninput="updateTotalTravellers()">
+                                                        </div>
 
-                                                <!-- Local Adults -->
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label for="tpkgLocalAdultCount"
-                                                            class="form-label mb-0 fw-bold">Local Adults</label>
-                                                        <input type="number" value="0" class="form-control"
-                                                            id="tpkgLocalAdultCount"
-                                                            onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'localadultcount'); enableChildCountInputs(); "
-                                                            oninput="updateTotalTravellers()">
+                                                        <!-- Local Children -->
+                                                        <div class="col-md-2">
+                                                            <label for="tpkgLocalChildCount"
+                                                                class="form-label mb-0 fs-6">Local Children</label>
+                                                            <input type="number" value="0" class="form-control"
+                                                                id="tpkgLocalChildCount" disabled
+                                                                onchange="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'localchildcount');"
+                                                                oninput="updateTotalTravellers()">
+                                                        </div>
+
+                                                        <!-- Foreign Adults -->
+                                                        <div class="col-md-2">
+                                                            <label for="tpkgForeignAdultCount"
+                                                                class="form-label mb-0 fs-6">Foreign Adults</label>
+                                                            <input type="number" value="0" class="form-control"
+                                                                id="tpkgForeignAdultCount"
+                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'foreignadultcount'); enableChildCountInputs();"
+                                                                oninput="updateTotalTravellers()">
+                                                        </div>
+
+                                                        <!-- Foreign Children -->
+                                                        <div class="col-md-2 pe-0">
+                                                            <label for="tpkgForeignChildCount"
+                                                                class="form-label mb-0 fs-6">Foreign Children</label>
+                                                            <input type="number" value="0" class="form-control"
+                                                                id="tpkgForeignChildCount" disabled
+                                                                onchange="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'foreignchildcount');"
+                                                                oninput="updateTotalTravellers()">
+                                                        </div>
+
+                                                        <!-- Blank Space -->
+                                                        <div class="col-md-1"></div>
+
+                                                        <!-- Total Travellers -->
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <label for="tpkgTotalTravellers"
+                                                                    class="form-label mb-0 fw-bold">Total
+                                                                    Travellers</label>
+                                                                <input type="number" value="0" class="form-control"
+                                                                    id="tpkgTotalTravellers" disabled>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
+
                                                 </div>
-
-                                                <!-- Local Children -->
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label for="tpkgLocalChildCount"
-                                                            class="form-label mb-0 fw-bold">Local Children</label>
-                                                        <input type="number" value="0" class="form-control"
-                                                            id="tpkgLocalChildCount" disabled
-                                                            onchange="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'localchildcount');"
-                                                            oninput="updateTotalTravellers()">
-                                                    </div>
-                                                </div>
-
-                                                <!-- Foreign Adults -->
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label for="tpkgForeignAdultCount"
-                                                            class="form-label mb-0 fw-bold">Foreign Adults</label>
-                                                        <input type="number" value="0" class="form-control"
-                                                            id="tpkgForeignAdultCount"
-                                                            onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'foreignadultcount'); enableChildCountInputs();"
-                                                            oninput="updateTotalTravellers()">
-                                                    </div>
-                                                </div>
-
-                                                <!-- Foreign Children -->
-                                                <div class="col-md-2">
-                                                    <div class="form-group">
-                                                        <label for="tpkgForeignChildCount"
-                                                            class="form-label mb-0 fw-bold">Foreign Children</label>
-                                                        <input type="number" value="0" class="form-control"
-                                                            id="tpkgForeignChildCount" disabled
-                                                            onchange="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'foreignchildcount');"
-                                                            oninput="updateTotalTravellers()">
-                                                    </div>
-                                                </div>
-
-                                                <!-- Blank Space -->
-                                                <div class="col-md-1"></div>
-
-                                                <!-- Total Travellers -->
-                                                <div class="col-md-3">
-                                                    <div class="form-group">
-                                                        <label for="tpkgTotalTravellers"
-                                                            class="form-label mb-0 fw-bold">Total Travellers</label>
-                                                        <input type="number" value="0" class="form-control"
-                                                            id="tpkgTotalTravellers" disabled>
-                                                    </div>
-                                                </div>
-
                                             </div>
 
-                                        </div>
+                                            <!-- Dates section -->
+                                            <div class="col-md-3">
+                                                <div class="card shadow-sm border rounded-3 p-3 mt-0">
+                                                    <h5 class="fw-bold text-primary mb-3">Tour Dates</h5>
 
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-bold mb-0">Start Date:</label>
+                                                        <p id="tourStartDateDisplay" class="mb-0 text-secondary"></p>
+                                                    </div>
+
+                                                    <div>
+                                                        <label class="form-label fw-bold mb-0">End Date:</label>
+                                                        <p id="tourEndDateDisplay" class="mb-0 text-secondary"></p>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
 
                                         <!-- Check Resource Availability -->
                                         <div class="row mt-4 px-3 py-3 border rounded shadow-sm bg-light mx-auto"
@@ -1140,9 +1134,8 @@
                                                 :</label>
 
                                             <div class="col-4">
-                                                <input type="radio" class="btn-check" id="firstDayCB"
-                                                    autocomplete="off" name="dpDayType" value="FD"
-                                                    onchange="selectDayType(this);">
+                                                <input type="radio" class="btn-check" id="firstDayCB" autocomplete="off"
+                                                    name="dpDayType" value="FD" onchange="selectDayType(this);">
                                                 <label class="btn btn-outline-success w-100 fw-bold text-uppercase"
                                                     for="firstDayCB">First Day</label>
                                             </div>
@@ -1342,16 +1335,20 @@
                                             <!-- Buttons -->
                                             <div
                                                 class="col-2 text-center d-flex flex-column justify-content-center mt-3">
-                                                <button onclick="addOne()" class="btn btn-sm fw-bold my-1 btn-pill" id="passOne"
+                                                <button onclick="addOne()" class="btn btn-sm fw-bold my-1 btn-pill"
+                                                    id="passOne"
                                                     style="background-color: #4ea8de; color: white;">Add</button>
 
-                                                <button onclick="addAll()" class="btn btn-sm fw-bold my-1 btn-pill" id="passAll"
-                                                    style="background-color: #3b8bca; color: white;">Add All</button>
+                                                <button onclick="addAll()" class="btn btn-sm fw-bold my-1 btn-pill"
+                                                    id="passAll" style="background-color: #3b8bca; color: white;">Add
+                                                    All</button>
 
-                                                <button onclick="removeOne()" class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedOne"
+                                                <button onclick="removeOne()" class="btn btn-sm fw-bold my-1 btn-pill"
+                                                    id="removeSelectedOne"
                                                     style="background-color: #f67280; color: white;">Remove</button>
 
-                                                <button onclick="removeAll()" class="btn btn-sm fw-bold my-1 btn-pill" id="removeSelectedAll"
+                                                <button onclick="removeAll()" class="btn btn-sm fw-bold my-1 btn-pill"
+                                                    id="removeSelectedAll"
                                                     style="background-color: #e84545; color: white;">Remove All</button>
                                             </div>
 
