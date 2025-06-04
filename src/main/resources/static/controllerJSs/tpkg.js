@@ -211,12 +211,9 @@ const changesTpkgCustomOrTemp = () => {
         tpkg.img1 = null;
         tpkg.img2 = null;
         tpkg.img3 = null;
-
+       
         //refresh border colours + remove frontend values
         tpDescription.style.border = "1px solid #ced4da";
-
-        //calcTotalDayCount();
-
 
         //if a package is for show in website
     } else if (forWebSite.checked) {
@@ -557,6 +554,24 @@ const getDayTypeFromLabel = (selectId) => {
     return null;
 }
 
+const handleFirstDayChange=(selectElement) =>{
+    dynamicSelectValidator(selectElement, 'tpkg', 'sd_dayplan_id');
+    showFirstDayBtn.disabled = false;
+    addNewDaysBtn.disabled = false;
+    updateTourEndDate();
+    finalDaySelectUseTempsBtn.disabled = false;
+    finalDaySelectUseExistingBtn.disabled = false;
+}
+
+const handleFinalDayChange=(selectElement) =>{
+    dynamicSelectValidator(selectElement, 'tpkg', 'ed_dayplan_id');
+    showFinalDayBtn.disabled = false;
+    removeFinalDayBtn.disabled = false;
+    updateTourEndDate();
+}
+
+
+
 //++++++++++++++++++++++ DayPlan form codes ++++++++++++++++++++++
 
 // to refresh the day plan form in the tpkg module 💥
@@ -667,7 +682,7 @@ const refreshDpFormInTpkg = async () => {
     //show EMPTY selected visiting places selects
     fillDataIntoDynamicSelects(selectedVPs, 'Selected Places', emptyArray, 'name');
 
-    //status eka auto set karanna one kohomada kiyalath hithanna
+    //status eka auto set karanna one kohomada kiyalath hithanna 💥💥💥
     //document.getElementById('dpSelectStatus ').children[2].removeAttribute('class', 'd-none');
 
 }
@@ -814,8 +829,6 @@ const refillSelectedDayPlan = async (dpObj) => {
                 manualDropCBVar.checked = true;
                 break;
         }
-
-
     }
 
     //if droppoint is a stay
@@ -930,6 +943,7 @@ const addNewDayPlanInTpkg = async () => {
                     document.getElementById('formDayPlanInTpkg').reset();
                     refreshDpFormInTpkg();
                     $('#dayPlanModalInTpkg').modal('hide');
+
                 } else {
                     showAlertModal('err', 'Submit Failed ' + postServerResponse);
                 }
@@ -1067,11 +1081,11 @@ const generateNormalDayPlanSelectSections = () => {
     actionsWrapper.id = actionRowId;
 
     const btnGroup = document.createElement('div');
-    btnGroup.className = 'd-flex flex-wrap gap-2';
+    btnGroup.className = 'd-flex justify-content-center flex-wrap gap-2';
 
-    const createBtn = document.createElement('button');
-    createBtn.className = 'btn btn-outline-success btn-sm';
-    createBtn.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Create New`;
+    //const createBtn = document.createElement('button');
+    //createBtn.className = 'btn btn-outline-success btn-sm';
+    //createBtn.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Create New`;
 
     const templateBtn = document.createElement('button');
     templateBtn.className = 'btn btn-outline-primary btn-sm';
@@ -1139,7 +1153,18 @@ const deleteMidDay = (index) => {
     }
 
     midDayCounter--;
+    updateTourEndDate();
 };
+
+// remove the final day from the tpkg
+const removeFinalDay = (finalDaySelectElement) => {
+    finalDaySelectElement.value = "";
+    tpkg.ed_dayplan_id = null;
+    document.getElementById('showFinalDayBtn').disabled = true;
+    finalDaySelectElement.disabled = true;
+    finalDaySelectElement.style.border = "1px solid #ced4da";
+    updateTourEndDate();
+}
 
 //check errors before adding
 const checkTpkgFormErrors = () => {

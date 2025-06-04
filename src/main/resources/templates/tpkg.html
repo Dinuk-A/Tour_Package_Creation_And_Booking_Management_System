@@ -152,7 +152,7 @@
                                                     Date(Estimated):</label>
                                                 <input type="date" class="form-control" id="tpStartDateInput"
                                                     onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate');"
-                                                    oninput="document.getElementById('tourStartDateDisplay').textContent = this.value;"
+                                                    oninput="document.getElementById('tourStartDateDisplay').textContent = this.value; updateTourEndDate();"
                                                     onkeydown="return false">
                                             </div>
 
@@ -201,13 +201,13 @@
                                                             <div class="col-12 d-flex align-items-center">
                                                                 <div class="col-2">
                                                                     <label for="tpkgFirstDaySelect"
-                                                                        class="form-label">First Day :</label>
+                                                                        class="form-label my-auto">First Day :</label>
                                                                 </div>
 
                                                                 <div class="col-7">
                                                                     <select disabled id="tpkgFirstDaySelect"
                                                                         class="form-control form-select"
-                                                                        onchange="dynamicSelectValidator(this,'tpkg','sd_dayplan_id'); showFirstDayBtn.disabled = false; addNewDaysBtn.disabled=false;  updateTourEndDate();"></select>
+                                                                        onchange="handleFirstDayChange(this);"></select>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
@@ -221,11 +221,11 @@
 
                                                             <!-- Action buttons -->
                                                             <div class="col-12 mt-3" id="firstDayActionBtnsRow">
-                                                                <div class="d-flex flex-wrap gap-2">
-                                                                    <button class="btn btn-outline-success btn-sm">
+                                                                <div class="d-flex justify-content-center flex-wrap gap-2">
+                                                                    <!--<button class="btn btn-outline-success btn-sm">
                                                                         <i class="bi bi-plus-circle me-1"></i> Create
                                                                         New
-                                                                    </button>
+                                                                    </button>-->
                                                                     <button class="btn btn-outline-primary btn-sm"
                                                                         onclick="loadTemplates(tpkgFirstDaySelect)">
                                                                         <i class="bi bi-pencil-square me-1"></i> Use
@@ -262,13 +262,13 @@
                                                             <div class="col-12 d-flex align-items-center">
                                                                 <div class="col-2">
                                                                     <label for="tpFinalDaySelect"
-                                                                        class="form-label">Final Day :</label>
+                                                                        class="form-label  my-auto">Final Day :</label>
                                                                 </div>
 
                                                                 <div class="col-7">
                                                                     <select disabled id="tpkgFinalDaySelect"
                                                                         class="form-control form-select"
-                                                                        onchange="dynamicSelectValidator(this,'tpkg','ed_dayplan_id'); showFinalDayBtn.disabled = false; updateTourEndDate(); "></select>
+                                                                        onchange="handleFinalDayChange(); "></select>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
@@ -277,23 +277,28 @@
                                                                         onclick="showDayPlanDetails('tpkgFinalDaySelect')">
                                                                         View
                                                                     </button>
+                                                                    <button type="button" disabled
+                                                                        id="removeFinalDayBtn" class="btn btn-all"
+                                                                        onclick="removeFinalDay(this);">
+                                                                        Remove
+                                                                    </button>
 
                                                                 </div>
                                                             </div>
 
                                                             <!-- Action buttons -->
                                                             <div class="col-12 mt-3" id="finalDayActionBtnsRow">
-                                                                <div class="d-flex flex-wrap gap-2">
-                                                                    <button class="btn btn-outline-success btn-sm">
+                                                                <div class="d-flex justify-content-center flex-wrap gap-2">
+                                                                    <!--<button class="btn btn-outline-success btn-sm">
                                                                         <i class="bi bi-plus-circle me-1"></i> Create
                                                                         New
-                                                                    </button>
-                                                                    <button class="btn btn-outline-primary btn-sm"
+                                                                    </button>-->
+                                                                    <button id="finalDaySelectUseTempsBtn" disabled class="btn btn-outline-primary btn-sm"
                                                                         onclick="loadTemplates(tpkgFinalDaySelect)">
                                                                         <i class="bi bi-pencil-square me-1"></i> Use
                                                                         Templates
                                                                     </button>
-                                                                    <button class="btn btn-outline-secondary btn-sm"
+                                                                    <button id="finalDaySelectUseExistingBtn" disabled class="btn btn-outline-secondary btn-sm"
                                                                         onclick="loadExistingLDs(tpkgFinalDaySelect)">
                                                                         <i class="bi bi-archive me-1"></i> Use Existing
                                                                     </button>
