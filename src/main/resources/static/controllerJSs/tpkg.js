@@ -460,6 +460,26 @@ const loadExistingLDs = async (selectElementId) => {
     }
 };
 
+const handleFirstDayChange = (selectElement) => {
+    dynamicSelectValidator(selectElement, 'tpkg', 'sd_dayplan_id');
+    showFirstDayBtn.disabled = false;
+    addNewDaysBtn.disabled = false;
+    updateTourEndDate();
+    finalDaySelectUseTempsBtn.disabled = false;
+    finalDaySelectUseExistingBtn.disabled = false;
+}
+
+const handleFinalDayChange = (selectElement) => {
+    dynamicSelectValidator(selectElement, 'tpkg', 'ed_dayplan_id');
+    showFinalDayBtn.disabled = false;
+    removeFinalDayBtn.disabled = false;
+    updateTourEndDate();
+}
+
+
+
+//++++++++++++++++++++++ DayPlan related codes ++++++++++++++++++++++
+
 //this will helps in refilling the dayplan when editing
 let editingDPsSelectElement = null;
 
@@ -536,6 +556,7 @@ const showDayPlanDetails = (selectElementId) => {
     };
 
     //this will helps in refilling the dayplan when editing
+    //the view button is clicked from this select element's card
     editingDPsSelectElement = selectElementId;
 
     //this will be helps when refilling a dp and set the correct day type auto
@@ -553,26 +574,6 @@ const getDayTypeFromLabel = (selectId) => {
     }
     return null;
 }
-
-const handleFirstDayChange = (selectElement) => {
-    dynamicSelectValidator(selectElement, 'tpkg', 'sd_dayplan_id');
-    showFirstDayBtn.disabled = false;
-    addNewDaysBtn.disabled = false;
-    updateTourEndDate();
-    finalDaySelectUseTempsBtn.disabled = false;
-    finalDaySelectUseExistingBtn.disabled = false;
-}
-
-const handleFinalDayChange = (selectElement) => {
-    dynamicSelectValidator(selectElement, 'tpkg', 'ed_dayplan_id');
-    showFinalDayBtn.disabled = false;
-    removeFinalDayBtn.disabled = false;
-    updateTourEndDate();
-}
-
-
-
-//++++++++++++++++++++++ DayPlan form codes ++++++++++++++++++++++
 
 // to refresh the day plan form in the tpkg module 💥
 const refreshDpFormInTpkg = async () => {
@@ -808,8 +809,6 @@ const refillSelectedDayPlan = async (dpObj) => {
         }
     }
 
-
-
     //if pickup point was a stay
     if (dpObj.pickup_stay_id?.id != null) {
 
@@ -948,8 +947,6 @@ const refillSelectedDayPlan = async (dpObj) => {
         }
     }
 
-
-
     //all selected visiting places
     fillDataIntoDynamicSelects(selectedVPs, '', dpObj.vplaces, 'name');
     fillDataIntoDynamicSelects(selectVPDist, 'Please Select The District', allDists, 'name');
@@ -977,14 +974,36 @@ const refillSelectedDayPlan = async (dpObj) => {
 }
 
 //auto select the newly added dp into the correct select element
-const feedAndSelectNewlyAddedDp = () => {
-    console.log("dayplan code: " + dayplan.dayplancode);
+const feedAndSelectNewlyAddedDp = async () => {
+
+    if (editingDPsSelectElement === "tpkgFirstDaySelect") {
+        resetSelectElements(tpkgFirstDaySelect, "Please Select Default");
+        try {
+            tpkg.sd_dayplan_id = null;
+            const onlyFirstDays = await ajaxGetReq("/dayplan/onlyfirstdays");
+            const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
+            console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
+            fillDataIntoDynamicSelects(tpkgFirstDaySelect, "Please Select First Day", onlyFirstDays, "daytitle", newlyAddedDayTitle);
+            const selectedVal = tpkgFirstDaySelect.value;
+            if (selectedVal) {
+                tpkg.sd_dayplan_id = JSON.parse(selectedVal);
+            } else {
+                console.warn("No value selected in tpkgFirstDaySelect");
+            }
+
+        } catch (error) {
+            console.error("first day fetch failed " + error)
+        }
+    } else {
+
+        //💥💥💥💥💥💥💥💥anithwath danna
+        console.log("NOTTTTTTTTTTT");
+    }
+
 }
 
 // add new day plan in the tpkg module
 const addNewDayPlanInTpkg = async () => {
-
-    console.log("Adding new day plan in tpkg...");
 
     const errors = checkDPFormErrors();
     if (errors == '') {
@@ -1001,6 +1020,7 @@ const addNewDayPlanInTpkg = async () => {
                     feedAndSelectNewlyAddedDp();
                     document.getElementById('formDayPlanInTpkg').reset();
                     refreshDpFormInTpkg();
+                    clearDpInfoShowSection();
                     $('#dayPlanModalInTpkg').modal('hide');
                 } else {
                     showAlertModal('err', 'Submit Failed ' + postServerResponse);
@@ -1019,10 +1039,12 @@ const addNewDayPlanInTpkg = async () => {
 // save newly edited day plan
 const saveAndSelectEditedDp = () => {
 
+    //check errors here, create a brand new fn 💥💥💥💥
     addNewDayPlanInTpkg();
 
 }
 
+//######################################################
 
 //this will be needed for create dyamic IDs in mid days
 let midDayCounter = 1;
