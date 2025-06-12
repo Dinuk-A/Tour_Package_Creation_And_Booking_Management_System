@@ -467,7 +467,7 @@ const handleFirstDayChange = (selectElement) => {
     updateTourEndDate();
     finalDaySelectUseTempsBtn.disabled = false;
     finalDaySelectUseExistingBtn.disabled = false;
-    
+
     //💥💥💥
     //refreshMainCostCard();
 
@@ -489,10 +489,21 @@ const refreshMainCostCard = () => {
 
 //to calculate the total costs of the tour package 💥💥💥
 const calculateMainCosts = () => {
+
+    updateTotalTravellers();
+
+    const totalTravellersCount = parseInt(document.getElementById('tpkgTotalTravellers').value);
+    if (totalTravellersCount === 0) {
+        alert("Total traveller count is 0. Please enter at least one traveler.");
+        return;
+    }
+
     calcTotalTktCosts();
+    calcTotalLunchCost();
+    //calcTotalStayCost();
 }
 
-//to calculate the total costs of the tour package 
+//to calculate the total costs of the tour package  ✅✅✅
 const calcTotalTktCosts = () => {
     let totalLocalAdultCost = 0;
     let totalLocalChildCost = 0;
@@ -503,14 +514,6 @@ const calcTotalTktCosts = () => {
     const localChildCount = parseInt(document.getElementById('tpkgLocalChildCount').value);
     const foreignAdultCount = parseInt(document.getElementById('tpkgForeignAdultCount').value);
     const foreignChildCount = parseInt(document.getElementById('tpkgForeignChildCount').value);
-
-    updateTotalTravellers();
-
-    const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
-    if (totalTravellers === 0) {
-        alert("Total traveller count is 0. Please enter at least one traveler.");
-        return;
-    }
 
     if (document.getElementById('tpkgFirstDaySelect').value !== "" &&
         tpkg.sd_dayplan_id != null) {
@@ -546,6 +549,96 @@ const calcTotalTktCosts = () => {
 
 }
 
+//calc total lunch cost ✅
+const calcTotalLunchCost = () => {
+
+    updateTotalTravellers();
+    const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
+
+    //lunch cost for first day , for 1 person
+    let lunchCostFirstDay;
+    if (!tpkg.sd_dayplan_id.is_takepackedlunch || tpkg.sd_dayplan_id.is_takepackedlunch == null) {
+        lunchCostFirstDay = tpkg.sd_dayplan_id.lunchplace_id?.costperhead || 0.00;
+    }
+
+
+    //lunch cost for all mid days , for 1 person
+    let lunchCostMidDays = 0.00;
+    if (tpkg.dayplans.length > 0) {
+        tpkg.dayplans.forEach(day => {
+            if (!day.is_takepackedlunch || day.is_takepackedlunch == null) {
+                lunchCostMidDays += day.lunchplace_id?.costperhead || 0.00;
+            }
+        });
+    }
+
+    //let midDaysLCost = day.lunchplace_id.costperhead;
+    //lunchCostMidDays += midDaysLCost;
+
+    //lunch cost for last day , for 1 person
+    let lunchCostLastDay;
+    if (tpkg.ed_dayplan_id == null) {
+        lunchCostLastDay = 0.00;
+    } else {
+        if (!tpkg.ed_dayplan_id.is_takepackedlunch || tpkg.ed_dayplan_id.is_takepackedlunch == null) {
+            lunchCostLastDay = tpkg.ed_dayplan_id.lunchplace_id?.costperhead || 0.00;
+        }
+    }
+
+    //final lunch cost for all
+    const totalLunchCost = (lunchCostFirstDay + lunchCostMidDays + lunchCostLastDay) * totalTravellers;
+    document.getElementById('totalLunchCostForAll').value = totalLunchCost.toFixed(2);
+    tpkg.totallunchcost = totalLunchCost.toFixed(2);
+
+}
+
+//to calculate the total stay cost of the tour package
+//add incremental cost for KIDS 💥💥💥
+const calcTotalStayCost = () => {
+
+    updateTotalTravellers();
+    const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
+
+    // First day
+    const firstDayBasePrice = tpkg.sd_dayplan_id.drop_stay_id.base_price;
+    const firstDayIncrementalCost = tpkg.sd_dayplan_id.drop_stay_id.incremental_cost;
+
+    // Last day
+    let lastDayBasePrice = 0;
+    let lastDayIncrementalCost = 0;
+    if (tpkg.ed_dayplan_id.drop_stay_id != null && tpkg.ed_dayplan_id.droppoint == null) {
+        lastDayBasePrice = tpkg.ed_dayplan_id.drop_stay_id.base_price;
+        lastDayIncrementalCost = tpkg.ed_dayplan_id.drop_stay_id.incremental_cost;
+
+    } else if (tpkg.ed_dayplan_id.drop_stay_id == null && tpkg.ed_dayplan_id.droppoint != null) {
+        lastDayBasePrice = 0;
+        lastDayIncrementalCost = 0;
+    }
+
+    // Mid days
+    let totalMidDaysBasePrice = 0;
+    let totalMidDaysIncrementalCost = 0;
+    if (tpkg.dayplans.length > 0) {
+        tpkg.dayplans.forEach(day => {
+            totalMidDaysBasePrice += day.drop_stay_id.base_price;
+            totalMidDaysIncrementalCost += day.drop_stay_id.incremental_cost;
+        });
+    }
+
+    console.log('totalMidDaysBasePrice:', totalMidDaysBasePrice);
+    console.log('totalMidDaysIncrementalCost:', totalMidDaysIncrementalCost);
+
+    const firstDayCost = firstDayBasePrice + (firstDayIncrementalCost * totalTravellers);
+    const lastDayCost = lastDayBasePrice + (lastDayIncrementalCost * totalTravellers);
+    const midDaysCost = totalMidDaysBasePrice + (totalMidDaysIncrementalCost * totalTravellers);
+
+    const totalStayCost = firstDayCost + lastDayCost + midDaysCost;
+
+    totalStayCostInput.value = totalStayCost.toFixed(2);
+    tpkg.totalstaycost = totalStayCost;
+
+    return totalStayCost;
+};
 
 
 //++++++++++++++++++++++ DayPlan form related codes ++++++++++++++++++++++
