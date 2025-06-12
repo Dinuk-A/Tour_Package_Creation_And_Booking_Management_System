@@ -13,9 +13,14 @@
 
     <style>
         .no-hover:hover {
-          all: unset;
+            background-color: inherit !important;
+            cursor: default !important;
+            transform: none !important;
+            box-shadow: none !important;
+            transition: none !important;
+            filter: none !important;
         }
-      </style>
+    </style>
 
 </head>
 
@@ -713,11 +718,14 @@
 
                                                 <!-- card for main costs -->
                                                 <div class="card mx-auto mb-3 shadow-sm">
-                                                    <div class="card-header d-flex justify-content-between align-items-center text-primary fw-bold">
+                                                    <div
+                                                        class="card-header d-flex justify-content-between align-items-center text-primary fw-bold">
                                                         <span>Main Costs</span>
-                                                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="calculateMainCosts()">Calculate Costs</button>
-                                                      </div>
-                                                      
+                                                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                                            onclick="calculateMainCosts()">Calculate Main Cost
+                                                            Totals</button>
+                                                    </div>
+
                                                     <div class="card-body">
                                                         <!-- Row 1 (Main costs) -->
                                                         <div class="row mb-3">
