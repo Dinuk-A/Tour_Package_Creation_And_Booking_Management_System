@@ -467,6 +467,10 @@ const handleFirstDayChange = (selectElement) => {
     updateTourEndDate();
     finalDaySelectUseTempsBtn.disabled = false;
     finalDaySelectUseExistingBtn.disabled = false;
+    
+    //💥💥💥
+    //refreshMainCostCard();
+
 }
 
 const handleFinalDayChange = (selectElement) => {
@@ -474,11 +478,77 @@ const handleFinalDayChange = (selectElement) => {
     showFinalDayBtn.disabled = false;
     removeFinalDayBtn.disabled = false;
     updateTourEndDate();
+    //💥💥💥
+    //refreshMainCostCard();
+}
+
+//for every change in selected days,number of travellers,dates the main cost card must be refreshed
+const refreshMainCostCard = () => {
+    //and also show a hidden msg
+}
+
+//to calculate the total costs of the tour package 💥💥💥
+const calculateMainCosts = () => {
+    calcTotalTktCosts();
+}
+
+//to calculate the total costs of the tour package 
+const calcTotalTktCosts = () => {
+    let totalLocalAdultCost = 0;
+    let totalLocalChildCost = 0;
+    let totalForeignAdultCost = 0;
+    let totalForeignChildCost = 0;
+
+    const localAdultCount = parseInt(document.getElementById('tpkgLocalAdultCount').value);
+    const localChildCount = parseInt(document.getElementById('tpkgLocalChildCount').value);
+    const foreignAdultCount = parseInt(document.getElementById('tpkgForeignAdultCount').value);
+    const foreignChildCount = parseInt(document.getElementById('tpkgForeignChildCount').value);
+
+    updateTotalTravellers();
+
+    const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
+    if (totalTravellers === 0) {
+        alert("Total traveller count is 0. Please enter at least one traveler.");
+        return;
+    }
+
+    if (document.getElementById('tpkgFirstDaySelect').value !== "" &&
+        tpkg.sd_dayplan_id != null) {
+        totalLocalAdultCost += (tpkg.sd_dayplan_id.localadulttktcost) * localAdultCount;
+        totalLocalChildCost += (tpkg.sd_dayplan_id.localchildtktcost) * localChildCount;
+        totalForeignAdultCost += (tpkg.sd_dayplan_id.foreignadulttktcost) * foreignAdultCount;
+        totalForeignChildCost += (tpkg.sd_dayplan_id.foreignchildtktcost) * foreignChildCount;
+    }
+
+    //check how many middle days pkg has
+    if (tpkg.dayplans.length > 0) {
+        tpkg.dayplans.forEach(day => {
+            totalLocalAdultCost += (day.localadulttktcost) * localAdultCount;
+            totalLocalChildCost += (day.localchildtktcost) * localChildCount;
+            totalForeignAdultCost += (day.foreignadulttktcost) * foreignAdultCount;
+            totalForeignChildCost += (day.foreignchildtktcost) * foreignChildCount;
+        });
+    }
+
+    //check if tpkg has a final day
+    if (document.getElementById('tpkgFinalDaySelect').value !== "" &&
+        tpkg.ed_dayplan_id != null) {
+        totalLocalAdultCost += (tpkg.ed_dayplan_id.localadulttktcost) * localAdultCount;
+        totalLocalChildCost += (tpkg.ed_dayplan_id.localchildtktcost) * localChildCount;
+        totalForeignAdultCost += (tpkg.ed_dayplan_id.foreignadulttktcost) * foreignAdultCount;
+        totalForeignChildCost += (tpkg.ed_dayplan_id.foreignchildtktcost) * foreignChildCount;
+    }
+
+    //set the total costs to the input fields
+    let totalTktCost = (totalLocalAdultCost + totalLocalChildCost + totalForeignAdultCost + totalForeignChildCost).toFixed(2);
+    document.getElementById('totalTktCostInput').value = totalTktCost;
+    tpkg.totaltktcost = totalTktCost;
+
 }
 
 
 
-//++++++++++++++++++++++ DayPlan related codes ++++++++++++++++++++++
+//++++++++++++++++++++++ DayPlan form related codes ++++++++++++++++++++++
 
 //this will helps in refilling the dayplan when editing
 let editingDPsSelectElement = null;
@@ -1182,7 +1252,7 @@ const generateNormalDayPlanSelectSections = () => {
     existingBtn.innerHTML = `<i class="bi bi-archive me-1"></i> Use Existing`;
 
     // Assemble buttons
-    btnGroup.appendChild(createBtn);
+    //btnGroup.appendChild(createBtn);
     btnGroup.appendChild(templateBtn);
     btnGroup.appendChild(existingBtn);
 
@@ -1444,6 +1514,7 @@ const createAddiCostTable = () => {
 
     addiCostList.forEach((cost, index) => {
         const row = document.createElement('tr');
+        row.classList.add('no-hover');
 
         const idCell = document.createElement('td');
         idCell.innerText = index + 1;
