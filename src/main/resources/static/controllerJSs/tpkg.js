@@ -97,7 +97,7 @@ const refreshTpkgForm = async () => {
 
     try {
         const vehiTypes = await ajaxGetReq("/vehitypes/all");
-        fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'vehiclename');
+        fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'name');
 
         //this will be only fetched yet,later will be filtered by districts
         //allItineraryTemplates = await ajaxGetReq("dayplan/onlytemplatedays");
@@ -294,6 +294,41 @@ const enableChildCountInputs = () => {
     }
 }
 
+// to delay the execution of a function
+function debounce(func, delay) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
+// to get vehicle types by minimum seats based on total travellers
+const getVehicleTypesByMinSeats = async () => {
+    const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value) || 0;
+    const vehitypeSelect = document.getElementById('tpkgVehitype');
+
+    vehitypeSelect.disabled = false;
+    vehitypeSelect.style.border = '1px solid #ced4da';
+
+    try {
+        const vehicleTypes = await ajaxGetReq("vehicletypes/byminseats/" + totalTravellers);
+
+        fillDataIntoDynamicSelects(
+            vehitypeSelect,
+            " Please Select Vehicle Type ",
+            vehicleTypes, 'name'
+        );
+
+        console.log("getVehicleTypesByMinSeats ran with traveller count: " + totalTravellers);
+    } catch (error) {
+        console.error("Failed to fetch vehicle types:", error);
+    }
+};
+
+// debounced version to limit query calls
+const debouncedGetVehicleTypesByMinSeats = debounce(getVehicleTypesByMinSeats, 300);
+
 // to calculate total travellers
 const updateTotalTravellers = () => {
     const localAdult = parseInt(document.getElementById('tpkgLocalAdultCount').value) || 0;
@@ -304,7 +339,12 @@ const updateTotalTravellers = () => {
     const total = localAdult + localChild + foreignAdult + foreignChild;
 
     document.getElementById('tpkgTotalTravellers').value = total;
+
+    //function to update the predered vehicle type select input
+    debouncedGetVehicleTypesByMinSeats();
+
 }
+
 
 //not used 💥
 const filterDayPlanTemplatesByDistrict = () => {
@@ -492,7 +532,7 @@ const calculateMainCosts = () => {
 
     calcTotalVehiParkingfeeTpkg();
 
-    updateTotalTravellers();
+    //updateTotalTravellers();
     const totalTravellersCount = parseInt(document.getElementById('tpkgTotalTravellers').value);
     if (totalTravellersCount === 0) {
         alert("Total traveller count is 0. Please enter at least one traveler.");
@@ -553,7 +593,7 @@ const calcTotalTktCosts = () => {
 //calc total lunch cost ✅
 const calcTotalLunchCost = () => {
 
-    updateTotalTravellers();
+    //updateTotalTravellers();
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
 
     //lunch cost for first day , for 1 person
@@ -597,7 +637,7 @@ const calcTotalLunchCost = () => {
 //add incremental cost for KIDS 💥💥💥
 const calcTotalStayCost = () => {
 
-    updateTotalTravellers();
+    //updateTotalTravellers();
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
 
     // First day

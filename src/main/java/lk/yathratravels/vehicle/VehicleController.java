@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,6 +79,12 @@ public class VehicleController {
         }
 
         return vehiDao.findAll(Sort.by(Direction.DESC, "id"));
+    }
+
+    // mapping for get vehicle names by seats count
+    @GetMapping("/vehicletypes/byminseats/{seats}")
+    public List<VehicleType> getVehicleTypesByMinSeats(@PathVariable Integer seats) {
+        return vehiDao.findVehicleTypeNamesByMinSeats(seats);
     }
 
     // POST mapping for add

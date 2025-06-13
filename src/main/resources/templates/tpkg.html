@@ -373,13 +373,13 @@
 
                                         <div class="row">
                                             <!-- Number of Travellers Section in Card -->
-                                            <div class="col-9">
+                                            <div class="col-8">
                                                 <div class="card shadow-sm border rounded-3 px-3 pt-3 pb-2 mt-0 ms-0">
                                                     <h5 class="text-info mb-3 border-bottom pb-1 fw-bold">Number of
                                                         Travellers
                                                     </h5>
 
-                                                    <div class="row">
+                                                    <div class="d-flex gap-3 align-items-end flex-wrap">
 
                                                         <!-- Local Adults -->
                                                         <div class="col-md-2">
@@ -421,11 +421,8 @@
                                                                 oninput="updateTotalTravellers()">
                                                         </div>
 
-                                                        <!-- Blank Space -->
-                                                        <div class="col-md-1"></div>
-
                                                         <!-- Total Travellers -->
-                                                        <div class="col-md-3">
+                                                        <div class="ms-4 col-md-2">
                                                             <div class="form-group">
                                                                 <label for="tpkgTotalTravellers"
                                                                     class="form-label mb-0 fw-bold">Total
@@ -440,8 +437,45 @@
                                                 </div>
                                             </div>
 
+                                            <!-- section 2 -->
+                                            <div class="col-md-4">
+                                                <div class="card shadow-sm border rounded-3 p-3 mt-0">
+
+                                                    <!-- vehicle Type -->
+                                                    <div class="mb-1">
+                                                        <label for="tpkgVehitype"
+                                                            class="form-label mb-0 fw-bold">Preferred Transport
+                                                            Type</label>
+                                                        <select id="tpkgVehitype" class="form-select"
+                                                            onchange="dynamicSelectValidator(this, 'tpkg', 'vehicletype'); checkCompanyVehiAvailability();">
+                                                        </select>
+                                                    </div>
+
+                                                    <!-- guide options -->
+                                                    <div class="mt-2">
+
+                                                        <label class="form-check-label fw-semibold"
+                                                            for="tpkgNeedsGuide">Needs a Guide</label>
+                                                            <div class="btn-group w-100" role="group" aria-label="Guide Needed Toggle">
+                                                                <input type="radio" class="btn-check" name="needsGuide" id="guideYes" autocomplete="off" onchange="handleGuideToggle(true)">
+                                                                <label class="btn btn-outline-success fw-bold text-uppercase" for="guideYes">Yes</label>
+                                                              
+                                                                <input type="radio" class="btn-check" name="needsGuide" id="guideNo" autocomplete="off" onchange="handleGuideToggle(false)" checked>
+                                                                <label class="btn btn-outline-secondary fw-bold text-uppercase" for="guideNo">No</label>
+                                                              </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                        <!-- new -->
+                                        <div class="row mt-1">
                                             <!-- Dates section -->
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <div class="card shadow-sm border rounded-3 p-3 mt-0">
                                                     <h5 class="fw-bold text-primary mb-3">Tour Dates</h5>
 
@@ -457,8 +491,6 @@
 
                                                 </div>
                                             </div>
-
-
                                         </div>
 
                                         <!-- Check Resource Availability -->
@@ -477,7 +509,7 @@
                                                         <!-- Vehicle Type -->
                                                         <div class="mb-3">
                                                             <label for="tpkgVehitype"
-                                                                class="form-label mb-0 fw-bold">Vehicle
+                                                                class="form-label mb-0 fw-bold">Preferred Transport
                                                                 Type</label>
                                                             <select id="tpkgVehitype" class="form-select"
                                                                 onchange="dynamicSelectValidator(this, 'tpkg', 'vehicletype'); checkCompanyVehiAvailability();">
