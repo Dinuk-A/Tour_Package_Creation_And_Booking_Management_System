@@ -862,17 +862,17 @@ const calcTktCost = (vpCostType, dpInputFieldID, dpPropertName) => {
 }
 
 //handle values when the day type radio is selected
-const handleLunchRadio = (fieldId) => {
-    dayplan.is_takepackedlunch = fieldId.value;
-}
+//const handleLunchRadio = (fieldId) => {
+//    dayplan.is_takepackedlunch = fieldId.value;
+//}
 
 //this will be triggered when a real value in lunch place is selected
 const checkPackedLunchNo = () => {
     const lunchSelect = document.getElementById('selectDPLunch');
-    const packedLunchNo = document.getElementById('packedLunchNo');
+    const packedLunchNoVar = document.getElementById('packedLunchNo');
 
     if (lunchSelect.value && lunchSelect.value !== '') {
-        packedLunchNo.checked = true;
+        packedLunchNoVar.checked = true;
         dayplan.is_takepackedlunch = false;
     }
 }
@@ -905,6 +905,7 @@ const takePackedLunchYes = () => {
     lunchHotel.disabled = true;
 
     dayplan.lunchplace_id = null;
+    dayplan.is_takepackedlunch = true;
 
 }
 
@@ -935,6 +936,8 @@ const takePackedLunchNo = () => {
     lunchProv.style.border = "1px solid ced4da";
     lunchDist.style.border = "1px solid ced4da";
     lunchHotel.style.border = "1px solid ced4da";
+
+    dayplan.is_takepackedlunch = false;
 
 }
 

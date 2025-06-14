@@ -832,7 +832,7 @@ const calcTotalVehiParkingfeeTpkg = () => {
 //++++++++++++++++++++++ DayPlan form related codes ++++++++++++++++++++++
 
 //this will helps in refilling the dayplan when editing
-let editingDPsSelectElement = null;
+let editingDPsSelectElementIdVal = null;
 
 // to clear the day plan info section
 const clearDpInfoShowSection = () => {
@@ -847,7 +847,9 @@ const clearDpInfoShowSection = () => {
     document.getElementById('dpInfoPlaces').innerHTML = 'N/A';
     document.getElementById('dayPlanInfoEditBtn').disabled = true;
 
-    editingDPsSelectElement = null;
+    refreshDpFormInTpkg();
+
+    editingDPsSelectElementIdVal = null;
 
 }
 
@@ -908,11 +910,10 @@ const showDayPlanDetails = (selectElementId) => {
 
     //this will helps in refilling the dayplan when editing
     //the view button is clicked from this select element's card
-    editingDPsSelectElement = selectElementId;
+    editingDPsSelectElementIdVal = selectElementId;
 
     //this will be helps when refilling a dp and set the correct day type auto
     selectedDayTypeToEdit = getDayTypeFromLabel(selectElementId);
-
 
 };
 
@@ -925,6 +926,18 @@ const getDayTypeFromLabel = (selectId) => {
     }
     return null;
 }
+
+// to get the day number from the label of the select element 💥💥💥 new
+const getDayNumberFromLabel = (selectId) => {
+    const label = document.querySelector(`label[for="${selectId}"]`);
+    if (label) {
+        const text = label.innerText.trim().replace(':', '');
+        const match = text.match(/\d+/); // Finds the first number in the string
+        return match ? parseInt(match[0]) : null;
+    }
+    return null;
+};
+
 
 // to refresh the day plan form in the tpkg module 💥
 const refreshDpFormInTpkg = async () => {
@@ -1042,8 +1055,6 @@ const refreshDpFormInTpkg = async () => {
 // to refill the selected day plan in order to prepare for edit
 const refillSelectedDayPlan = async (dpObj) => {
 
-    console.log("refillSelectedDayPlan RUNNING");
-
     dayplan = JSON.parse(JSON.stringify(dpObj));
 
     //declaring global variables to use in this function
@@ -1092,6 +1103,7 @@ const refillSelectedDayPlan = async (dpObj) => {
         midDayCbVar.style.cursor = 'not-allowed';
 
     } else {
+        console.log("selectedDayTypeToEdit: " + selectedDayTypeToEdit);
         console.log("else");
     }
 
@@ -1327,8 +1339,10 @@ const refillSelectedDayPlan = async (dpObj) => {
 //auto select the newly added dp into the correct select element
 const feedAndSelectNewlyAddedDp = async () => {
 
-    if (editingDPsSelectElement === "tpkgFirstDaySelect") {
+    if (editingDPsSelectElementIdVal === "tpkgFirstDaySelect") {
+
         resetSelectElements(tpkgFirstDaySelect, "Please Select Default");
+
         try {
             tpkg.sd_dayplan_id = null;
             const onlyFirstDays = await ajaxGetReq("/dayplan/onlyfirstdays");
@@ -1336,19 +1350,67 @@ const feedAndSelectNewlyAddedDp = async () => {
             console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
             fillDataIntoDynamicSelects(tpkgFirstDaySelect, "Please Select First Day", onlyFirstDays, "daytitle", newlyAddedDayTitle);
             const selectedVal = tpkgFirstDaySelect.value;
+
             if (selectedVal) {
                 tpkg.sd_dayplan_id = JSON.parse(selectedVal);
             } else {
                 console.warn("No value selected in tpkgFirstDaySelect");
             }
-
         } catch (error) {
             console.error("first day fetch failed " + error)
         }
+
+    } else if (editingDPsSelectElementIdVal === "tpkgFinalDaySelect") {
+
+        resetSelectElements(tpkgFinalDaySelect, "Please Select Default");
+
+        try {
+            tpkg.ed_dayplan_id = null;
+            const onlyLastDays = await ajaxGetReq("/dayplan/onlylastdays");
+            const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
+            console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
+            fillDataIntoDynamicSelects(tpkgFinalDaySelect, "Please Select Final Day", onlyLastDays, "daytitle", newlyAddedDayTitle);
+            const selectedVal = tpkgFinalDaySelect.value;
+
+            if (selectedVal) {
+                tpkg.ed_dayplan_id = JSON.parse(selectedVal);
+            } else {
+                console.warn("No value selected in tpkgFinalDaySelect");
+            }
+        } catch (error) {
+            console.error("final day fetch failed " + error)
+        }
+
+
+
     } else {
 
-        //💥💥💥💥💥💥💥💥anithwath danna
-        console.log("NOTTTTTTTTTTT");
+        //for mid days
+        const midDaySelect = document.getElementById(editingDPsSelectElementIdVal);
+        if (midDaySelect) {
+            resetSelectElements(midDaySelect, "Please Select Default catttt");
+
+            try {
+                const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
+                console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
+                const onlyMidDays = await ajaxGetReq("/dayplan/onlymiddays");
+                fillDataIntoDynamicSelects(midDaySelect, "Please Select Middle Day catttt222", onlyMidDays, "daytitle", newlyAddedDayTitle);
+                const selectedVal = midDaySelect.value;
+
+                if (selectedVal) {
+                    const selectedDayPlan = JSON.parse(selectedVal);
+                    //const index = parseInt(getDayTypeFromLabel(editingDPsSelectElementIdVal).split(" ")[1]) - 1;
+                    //tpkg.dayplans[index] = selectedDayPlan;
+                    const index = getDayNumberFromLabel(editingDPsSelectElementIdVal) - 1;
+                    tpkg.dayplans[index] = selectedDayPlan;
+                    console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+                } else {
+                    console.warn("No value selected in mid day select");
+                }
+            } catch (error) {
+                console.error("mid day fetch failed " + error)
+            }
+        }
     }
 
 }
@@ -1592,7 +1654,7 @@ const deleteMidDay = (index) => {
 const removeFinalDay = () => {
 
     const finalDaySelectElement = document.getElementById('tpkgFinalDaySelect');
-   
+
     tpkg.ed_dayplan_id = null;
 
     document.getElementById('showFinalDayBtn').disabled = true;
@@ -1601,7 +1663,7 @@ const removeFinalDay = () => {
     finalDaySelectElement.value = "";
     finalDaySelectElement.style.border = "1px solid #ced4da";
     finalDaySelectElement.disabled = true;
-    
+
     //updateTourEndDate();
     updateTotalDaysCount();
 }

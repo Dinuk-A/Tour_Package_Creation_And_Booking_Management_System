@@ -1,7 +1,7 @@
 //+++++++ fns to populate data into form elements +++++++++
 
 // fill and display <option> inside <select> elements of forms (data recieved from databases)
-const fillDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropertyName, selectedValue) => {
+const fillDataIntoDynamicSelectsOri = (tagId, msg, dataContainer, displayingPropertyName, selectedValue) => {
 
     tagId.innerHTML = "";
 
@@ -10,7 +10,7 @@ const fillDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropert
         const firstOption = document.createElement('option');
         firstOption.innerText = msg;
         firstOption.value = "";
-        firstOption.selected = true;
+        //firstOption.selected = true;
         firstOption.disabled = true;
         tagId.appendChild(firstOption);
     }
@@ -25,10 +25,9 @@ const fillDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropert
         //while going through all the data list and if this given value is found, select it(that option) by default
         if (selectedValue != "") {
             if (selectedValue == element[displayingPropertyName]) {
+
                 selectableOption.selected = true;
 
-                //for testing
-                console.log('match found' + selectedValue + selectableOption.innerText);
             }
         }
 
@@ -37,6 +36,45 @@ const fillDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropert
     })
 
 }
+
+//new
+const fillDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropertyName, selectedValue) => {
+    tagId.innerHTML = "";
+
+    let foundMatch = false;
+
+    // Create the first placeholder option
+    if (msg !== "") {
+        const firstOption = document.createElement('option');
+        firstOption.innerText = msg;
+        firstOption.value = "";
+        firstOption.selected = true;
+        firstOption.disabled = true;
+        tagId.appendChild(firstOption);
+    }
+
+    // Create other options
+    dataContainer.forEach((element) => {
+        const selectableOption = document.createElement('option');
+        selectableOption.innerText = element[displayingPropertyName];
+        selectableOption.value = JSON.stringify(element);
+
+        if (selectedValue && selectedValue === element[displayingPropertyName]) {
+            foundMatch = true;
+        }
+
+        tagId.appendChild(selectableOption);
+    });
+
+    // ✅ Set the selected value on the <select> itself
+    if (foundMatch) {
+        const matchedOption = [...tagId.options].find(opt => opt.text === selectedValue);
+        if (matchedOption) {
+            tagId.value = matchedOption.value;
+        }
+    }
+};
+
 
 //fill and display 2 values into the same <option>
 const fillMultDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropertyName1, displayingPropertyName2, selectedValue) => {
@@ -47,7 +85,7 @@ const fillMultDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPro
         const firstOption = document.createElement('option');
         firstOption.innerText = msg;
         firstOption.value = "";
-        firstOption.selected = true;
+        //firstOption.selected = true;
         firstOption.disabled = true;
         tagId.appendChild(firstOption);
     }
