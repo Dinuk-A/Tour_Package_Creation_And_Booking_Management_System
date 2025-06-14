@@ -120,6 +120,12 @@ public class TourPkg {
     @Column(name = "deleted_tpkg")
     private Boolean deleted_tpkg;
 
+    @Column(name = "is_guide_needed")
+    private Boolean is_guide_needed;
+
+    @Column(name = "is_company_guide")
+    private Boolean is_company_guide;
+
     @Column(name = "img1")
     private byte[] img1;
 

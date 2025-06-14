@@ -451,20 +451,36 @@
                                                         </select>
                                                     </div>
 
-                                                    <!-- guide options -->
-                                                    <div class="mt-2">
+                                                    <div class="row mt-2 align-items-center">
 
-                                                        <label class="form-check-label fw-semibold"
-                                                            for="tpkgNeedsGuide">Needs a Guide</label>
-                                                            <div class="btn-group w-100" role="group" aria-label="Guide Needed Toggle">
-                                                                <input type="radio" class="btn-check" name="needsGuide" id="guideYes" autocomplete="off" onchange="handleGuideToggle(true)">
-                                                                <label class="btn btn-outline-success fw-bold text-uppercase" for="guideYes">Yes</label>
-                                                              
-                                                                <input type="radio" class="btn-check" name="needsGuide" id="guideNo" autocomplete="off" onchange="handleGuideToggle(false)" checked>
-                                                                <label class="btn btn-outline-secondary fw-bold text-uppercase" for="guideNo">No</label>
-                                                              </div>
+                                                        <!-- Label -->
+                                                        <div class="col-6">
+                                                            <label class="form-label fw-semibold mb-0"
+                                                                for="tpkgNeedsGuide">Include Tour Guide: </label>
+                                                        </div>
+
+                                                        <!-- Yes Option -->
+                                                        <div class="col-3">
+                                                            <input type="radio" class="btn-check" name="guideNeedOrNot"
+                                                                id="guideYes" autocomplete="off"
+                                                                onchange="handleNeedGuideCB(true)">
+                                                            <label
+                                                                class="btn btn-outline-success w-100 fw-bold text-uppercase"
+                                                                for="guideYes">Yes</label>
+                                                        </div>
+
+                                                        <!-- No Option -->
+                                                        <div class="col-3">
+                                                            <input type="radio" class="btn-check" name="guideNeedOrNot"
+                                                                id="guideNo" autocomplete="off"
+                                                                onchange="handleNeedGuideCB(false)">
+                                                            <label
+                                                                class="btn btn-outline-secondary w-100 fw-bold text-uppercase"
+                                                                for="guideNo">No</label>
+                                                        </div>
 
                                                     </div>
+
 
                                                 </div>
                                             </div>
@@ -496,8 +512,7 @@
                                         <!-- Check Resource Availability -->
                                         <div class="row mt-4 px-3 py-3 border rounded shadow-sm bg-light mx-auto"
                                             id="checkAvailabilitySection">
-                                            <h5 class="text-info border-bottom pb-2 mb-4 fw-semibold">Check Resource
-                                                Availability</h5>
+                                            <h5 class="text-info border-bottom pb-2 mb-4 fw-semibold">Company-Owned Resources Status</h5>
 
                                             <!-- Cards Row -->
                                             <div class="row mx-auto">
@@ -505,16 +520,6 @@
                                                 <div class="col-md-4">
                                                     <div class="border rounded p-3 h-100 bg-white shadow-sm">
                                                         <h6 class="text-center text-primary fw-bold mb-3">Vehicle</h6>
-
-                                                        <!-- Vehicle Type -->
-                                                        <div class="mb-3">
-                                                            <label for="tpkgVehitype"
-                                                                class="form-label mb-0 fw-bold">Preferred Transport
-                                                                Type</label>
-                                                            <select id="tpkgVehitype" class="form-select"
-                                                                onchange="dynamicSelectValidator(this, 'tpkg', 'vehicletype'); checkCompanyVehiAvailability();">
-                                                            </select>
-                                                        </div>
 
                                                         <!-- Available Vehicles -->
                                                         <div class="row mt-1">
@@ -586,22 +591,6 @@
                                                     <div class="border rounded p-3 h-100 bg-white shadow-sm">
                                                         <h6 class="text-center text-primary fw-bold mb-3">Guide</h6>
 
-                                                        <!-- Guide Needed -->
-                                                        <label class="form-label mb-2">Do You Need a Guide?</label>
-                                                        <div class="btn-group w-100 mb-0" role="group">
-                                                            <input type="radio" class="btn-check" id="guideYesCB"
-                                                                name="bookingGuideYesOrNo" value="guideYes"
-                                                                onchange="guideSourceSectionID.classList.remove('d-none'); ">
-                                                            <label class="btn btn-outline-success px-0"
-                                                                for="guideYesCB">Include Guide</label>
-
-                                                            <input type="radio" class="btn-check" id="guideNoCB"
-                                                                name="bookingGuideYesOrNo" value="guideNo"
-                                                                onchange="guideSourceSectionID.classList.add('d-none');">
-                                                            <label class="btn btn-outline-warning" for="guideNoCB">No
-                                                                Guide</label>
-                                                        </div>
-
                                                         <!-- available guides -->
                                                         <div class="row mt-1">
                                                             <div class="col-4">
@@ -618,24 +607,23 @@
                                                         </div>
 
                                                         <!-- Guide Source Options -->
-                                                        <div class="btn-group w-100 d-none mt-1"
-                                                            id="guideSourceSectionID" role="group">
-                                                            <input type="radio" class="btn-check" id="yathraGuideCB"
-                                                                name="bookingGuideSource" value="companyOwn">
-                                                            <label class="btn btn-outline-success"
-                                                                for="yathraGuideCB">Company Guide</label>
+                                                        <label class="form-label fw-semibold mb-1">Select Guide Source</label>
 
-                                                            <input type="radio" class="btn-check" id="rentalGuideCB"
-                                                                name="bookingGuideSource" value="rental">
-                                                            <label class="btn btn-outline-warning"
-                                                                for="rentalGuideCB">External Guide</label>
+                                                        <div class="row mt-2" id="guideSourceSectionID">
+                                                            <div class="col-md-6">
+                                                                <input type="radio" class="btn-check" id="yathraGuideCB" name="bookingGuideSource" value="companyOwn" autocomplete="off" onchange="handleGuideSourceChange()">
+                                                                <label class="btn btn-outline-success w-100" for="yathraGuideCB">Company Guide</label>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="radio" class="btn-check" id="rentalGuideCB" name="bookingGuideSource" value="rental" autocomplete="off" onchange="handleGuideSourceChange()">
+                                                                <label class="btn btn-outline-warning w-100" for="rentalGuideCB">External Guide</label>
+                                                            </div>
                                                         </div>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
-
 
                                     </fieldset>
 

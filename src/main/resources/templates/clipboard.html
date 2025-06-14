@@ -1,109 +1,23 @@
-<div class="container mt-5">
-    <!-- Tour Package Form -->
-    <h2>Create Tour Package</h2>
-    <form id="tourPackageForm" onsubmit="return false" >
-        <!-- Tour Package Name -->
-        <div class="mb-3">
-            <label for="tourPackageName" class="form-label">Tour Package Name</label>
-            <input type="text" class="form-control" id="tourPackageName" placeholder="Enter Tour Package Name"
-                required>
+<div class="col-7 me-5">
+    <label class="form-label fw-bold mb-0">Package Type <span
+            class="text-danger">*</span> :</label>
+            
+    <div class="row">
+        <div class="col-6">
+            <input type="radio" class="btn-check" id="customTP"
+                autocomplete="off" name="packageType"
+                onchange="changesTpkgCustomOrTemp();">
+            <label
+                class="btn btn-outline-success w-100 rounded-start fw-bold text-uppercase"
+                for="customTP">Custom Package</label>
         </div>
-
-        <!-- Add a New Day -->
-        <div class="mb-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#addDayModal">Add a New Day</button>
-        </div>
-
-        <!-- Select Existing Day Plan -->
-        <div class="mb-3">
-            <label for="existingDayPlans" class="form-label">Select Existing Day Plan</label>
-            <select class="form-select" id="existingDayPlans" required>
-               
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-success">Save Tour Package</button>
-    </form>
-
-    <!-- Modal to Add a New Day -->
-    <div class="modal fade" id="addDayModal" aria-hidden="true" aria-labelledby="staticBackdropLabel"
-    data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addDayModalLabel">Add a New Day</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.location.reload()"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addDayForm" onsubmit="return false">
-                        <!-- Day Name -->
-                        <div class="mb-3">
-                            <label for="dayName" class="form-label">Day Name</label>
-                            <input type="text" class="form-control" id="dayName" placeholder="Enter Day Name"
-                                required onchange="inputValidatorText(this,'','dayplan','daytitle')">
-                        </div>
-
-                        <!-- Select Attractions -->
-                        <div class="row mt-2">
-
-                            <div class="col-5">
-
-                                <label for="allPlaces" class="form-label">All Places</label>
-
-                                <!-- LEFT SELECT -->
-                                <select class="form-select" size="8" id="allPlaces"></select>
-
-
-                            </div>
-
-                            <!-- buttons -->
-                            <div class="col-2">
-
-                                <div class="row mt-5">
-                                    <button class="btn btn-primary fw-bold  btn-pill" id="passOne"
-                                        onclick="addOne()"> + </button>
-                                </div>
-
-                                <div class="row mt-2">
-                                    <button class="btn btn-dark fw-bold" id="passAll" onclick="addAll()">
-                                        Add
-                                        All </button>
-                                </div>
-
-                                <div class="row mt-2">
-                                    <button class="btn btn-danger fw-bold " id="removeSelectedOne"
-                                        onclick="removeOne()"> -
-                                    </button>
-
-                                </div>
-
-                                <div class="row mt-2">
-                                    <button class="btn btn-success fw-bold " id="removeSelectedAll"
-                                        onclick="removeAll()">
-                                        Remove All </button>
-                                </div>
-                            </div>
-
-                            <!-- RIGHT SELECT -->
-                            <div class="col-5">
-
-                                <label for="passedVPlaces" class="form-label">Selected
-                                    Places</label>
-                                <select size="8" id="passedVPlaces" class="form-select"></select>
-
-                            </div>
-
-                        </div>
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="saveDayButton" onclick="addNewDay()">Save Day</button>
-                </div>
-            </div>
+        <div class="col-6">
+            <input type="radio" class="btn-check" id="forWebSite"
+                autocomplete="off" name="packageType"
+                onchange="changesTpkgCustomOrTemp();">
+            <label
+                class="btn btn-outline-primary w-100 rounded-end fw-bold text-uppercase"
+                for="forWebSite">Show in Website (Template)</label>
         </div>
     </div>
-
 </div>

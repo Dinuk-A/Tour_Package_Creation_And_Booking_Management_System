@@ -345,6 +345,37 @@ const updateTotalTravellers = () => {
 
 }
 
+//function to save guide need or not
+const handleNeedGuideCB = () => {
+
+    if (guideYes.checked) {
+
+        tpkg.is_guide_needed = true;     
+        yathraGuideCB.disabled = false;
+        rentalGuideCB.disabled = false;
+
+        tpkg.is_company_guide = null; 
+        
+    } else if (guideNo.checked) {
+
+        tpkg.is_guide_needed = false;
+        yathraGuideCB.disabled = true;
+        rentalGuideCB.disabled = true;
+
+        tpkg.is_company_guide = null; 
+
+    }
+}
+
+// function to flag which guide source is selected
+const handleGuideSourceChange = () => {
+    if (yathraGuideCB.checked) {
+        tpkg.is_company_guide = true;
+    } else if (rentalGuideCB.checked) {
+        tpkg.is_company_guide = false;
+    }
+}
+
 
 //not used 💥
 const filterDayPlanTemplatesByDistrict = () => {
