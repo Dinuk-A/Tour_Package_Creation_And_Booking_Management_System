@@ -126,6 +126,12 @@ public class TourPkg {
     @Column(name = "is_company_guide")
     private Boolean is_company_guide;
 
+    @Column(name = "is_company_vehicle")
+    private Boolean is_company_vehicle;
+
+    @Column(name = "is_company_driver")
+    private Boolean is_company_driver;
+
     @Column(name = "img1")
     private byte[] img1;
 

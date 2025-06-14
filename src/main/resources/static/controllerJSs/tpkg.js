@@ -350,21 +350,45 @@ const handleNeedGuideCB = () => {
 
     if (guideYes.checked) {
 
-        tpkg.is_guide_needed = true;     
+        tpkg.is_guide_needed = true;
         yathraGuideCB.disabled = false;
         rentalGuideCB.disabled = false;
 
-        tpkg.is_company_guide = null; 
-        
+        tpkg.is_company_guide = null;
+        yathraGuideCB.checked = false;
+
     } else if (guideNo.checked) {
 
         tpkg.is_guide_needed = false;
         yathraGuideCB.disabled = true;
         rentalGuideCB.disabled = true;
 
-        tpkg.is_company_guide = null; 
+        tpkg.is_company_guide = null;
+        rentalGuideCB.checked = false;
 
     }
+}
+
+//function to save vehicle source
+const handleVehicleSourceChange = () => {
+
+    if (yathraVehiCB.checked) {
+        tpkg.is_company_vehicle = true;
+    } else if (rentalVehiCB.checked) {
+        tpkg.is_company_vehicle = false;
+    }
+
+}
+
+//function to flag which driver source is selected
+const handleDriverSourceChange = () => {
+
+    if (yathraDriverCB.checked) {
+        tpkg.is_company_driver = true;
+    } else if (rentalDriverCB.checked) {
+        tpkg.is_company_driver = false;
+    }
+
 }
 
 // function to flag which guide source is selected
@@ -446,6 +470,16 @@ const resetSelectElements = (selectElement, defaultText = "Please Select") => {
 // to load templates 
 const loadTemplates = async (selectElementId) => {
 
+    if (selectElementId.id == "tpkgFirstDaySelect") {
+        console.log(' if (selectElementId == "tpkgFirstDaySelect") called');
+        tpkg.sd_dayplan_id = null;
+    }
+
+    if (selectElementId.id == "tpkgFinalDaySelect") {
+        console.log(' if (selectElementId == "tpkgFinalDaySelect") called');
+        tpkg.ed_dayplan_id = null;
+    }
+
     selectElementId.style.border = "1px solid #ced4da";
     clearDpInfoShowSection();
 
@@ -466,10 +500,14 @@ const loadTemplates = async (selectElementId) => {
     } catch (error) {
         console.error("Error loading templates:", error);
     }
+
+    updateTotalDaysCount();
 };
 
 // to load existing first days
 const loadExistingFDs = async (selectElementId) => {
+
+    tpkg.sd_dayplan_id = null;
 
     selectElementId.style.border = "1px solid #ced4da";
     clearDpInfoShowSection();
@@ -487,6 +525,8 @@ const loadExistingFDs = async (selectElementId) => {
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
+
+    updateTotalDaysCount();
 };
 
 // to load existing mid days
@@ -508,10 +548,14 @@ const loadExistingMDs = async (selectElementId) => {
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
+
+    updateTotalDaysCount();
 };
 
 // to load existing last days
 const loadExistingLDs = async (selectElementId) => {
+
+    tpkg.ed_dayplan_id = null;
 
     selectElementId.style.border = "1px solid #ced4da";
     clearDpInfoShowSection();
@@ -529,29 +573,60 @@ const loadExistingLDs = async (selectElementId) => {
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
+
+    updateTotalDaysCount();
 };
 
+// to handle first day changes
 const handleFirstDayChange = (selectElement) => {
     dynamicSelectValidator(selectElement, 'tpkg', 'sd_dayplan_id');
     showFirstDayBtn.disabled = false;
     addNewDaysBtn.disabled = false;
-    updateTourEndDate();
+    //updateTourEndDate();
     finalDaySelectUseTempsBtn.disabled = false;
     finalDaySelectUseExistingBtn.disabled = false;
+    updateTotalDaysCount();
 
     //💥💥💥
     //refreshMainCostCard();
 
 }
 
+// to handle last day changes
 const handleFinalDayChange = (selectElement) => {
     dynamicSelectValidator(selectElement, 'tpkg', 'ed_dayplan_id');
     showFinalDayBtn.disabled = false;
     removeFinalDayBtn.disabled = false;
-    updateTourEndDate();
+    //updateTourEndDate();
+    updateTotalDaysCount();
+
     //💥💥💥
     //refreshMainCostCard();
 }
+
+// fn to calculate the total days count of the tour package
+const updateTotalDaysCount = () => {
+
+    let total = 0;
+
+    // add 1 if start dayplan is selected
+    if (tpkg.sd_dayplan_id?.id != null) {
+        total += 1;
+    }
+
+    // add 1 if end dayplan is selected
+    if (tpkg.ed_dayplan_id?.id != null) {
+        total += 1;
+    }
+
+    // add number of middle day plans
+    if (tpkg.dayplans && Array.isArray(tpkg.dayplans)) {
+        total += tpkg.dayplans.length;
+    }
+
+    document.getElementById('showTotalDaysCount').value = total;
+    tpkg.totaldays = total;
+};
 
 //for every change in selected days,number of travellers,dates the main cost card must be refreshed
 const refreshMainCostCard = () => {
@@ -1381,7 +1456,6 @@ const generateNormalDayPlanSelectSections = () => {
         } else {
             this.style.border = "2px solid lime";
 
-            // Ensure tpkg.dayplans is initialized(uncomment this if insertions didnt work)
             //some arrays cant insert elements for specific indexes if its empty
             //while (tpkg.dayplans.length <= index) {
             //    tpkg.dayplans.push(null);
@@ -1390,7 +1464,8 @@ const generateNormalDayPlanSelectSections = () => {
             tpkg.dayplans[index] = selectedValue;
             console.log("Updated tpkg.dayplans:", tpkg.dayplans);
 
-            updateTourEndDate();
+            //updateTourEndDate();
+            updateTotalDaysCount();
 
             document.getElementById(btnId).disabled = false;
             document.getElementById(`midDayDeleteBtn${currentIndex}`).disabled = false;
@@ -1509,17 +1584,26 @@ const deleteMidDay = (index) => {
     }
 
     midDayCounter--;
-    updateTourEndDate();
+    //updateTourEndDate();
+    updateTotalDaysCount();
 };
 
 // remove the final day from the tpkg
-const removeFinalDay = (finalDaySelectElement) => {
-    finalDaySelectElement.value = "";
+const removeFinalDay = () => {
+
+    const finalDaySelectElement = document.getElementById('tpkgFinalDaySelect');
+   
     tpkg.ed_dayplan_id = null;
+
     document.getElementById('showFinalDayBtn').disabled = true;
-    finalDaySelectElement.disabled = true;
+    document.getElementById('removeFinalDayBtn').disabled = true;
+
+    finalDaySelectElement.value = "";
     finalDaySelectElement.style.border = "1px solid #ced4da";
-    updateTourEndDate();
+    finalDaySelectElement.disabled = true;
+    
+    //updateTourEndDate();
+    updateTotalDaysCount();
 }
 
 //check errors before adding
@@ -1629,37 +1713,60 @@ const clearImg = (imgProperty, previewId) => {
     }
 }
 
+// show the tour start date 
+const showTourStartDate = () => {
+
+    const startDateDisplay = document.getElementById('tourStartDateDisplay');
+    //const firstDaySelectInput = document.getElementById('tpkgFirstDaySelect');
+
+    //if (!firstDaySelectInput.value && tpkg.sd_dayplan_id?.id == null) {
+    //    startDateDisplay.textContent = 'Start Date Not Selected';
+    //    return;
+    //}
+
+    startDateDisplay.textContent = this.value;
+
+}
+
 //calc tour end date and display it
 const updateTourEndDate = () => {
-    const startDateInput = document.getElementById('tpStartDateInput').value;
-    const display = document.getElementById('tourEndDateDisplay');
 
-    if (!startDateInput) {
-        display.textContent = '';
+    const startDateInputValue = document.getElementById('tpStartDateInput').value;
+    const endDateDisplay = document.getElementById('tourEndDateDisplay');
+
+    const firstDaySelectInput = document.getElementById('tpkgFirstDaySelect');
+
+    if (!startDateInputValue) {
+        endDateDisplay.textContent = 'End Date Not Selected';
         return;
     }
 
-    const startDate = new Date(startDateInput);
+    if (!firstDaySelectInput.value || tpkg.sd_dayplan_id?.id == null) {
+        endDateDisplay.textContent = 'End Date Not Selected';
+        return;
+    }
+
+    const startDate = new Date(startDateInputValue);
     let dayCount = 1; // minimum 1 day tour
 
-    // Add number of day plans
-    if (tpkg.dayplans && Array.isArray(tpkg.dayplans)) {
+    // Add number of mid day plans
+    if (Array.isArray(tpkg.dayplans) && tpkg.dayplans.length > 0) {
         dayCount += tpkg.dayplans.length;
     }
 
-    // Add 1 more if extra day is selected
-    const hasExtraDay = tpkg.ed_dayplan_id || document.getElementById('tpkgFinalDaySelect')?.value;
-    if (hasExtraDay) {
+    // Add 1 more if end day is selected
+    const hasEndDateSelected = tpkg.ed_dayplan_id.id && document.getElementById('tpkgFinalDaySelect')?.value;
+    if (hasEndDateSelected) {
         dayCount += 1;
     }
 
     // Calculate end date
     const endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + dayCount - 1); // Subtract 1 so day 1 is the start
+    endDate.setDate(endDate.getDate() + dayCount - 1);
 
     // Format as yyyy-mm-dd
     const formattedEndDate = endDate.toISOString().split('T')[0];
-    display.textContent = formattedEndDate;
+    endDateDisplay.textContent = formattedEndDate;
 }
 
 

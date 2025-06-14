@@ -163,7 +163,7 @@
                                                     Date(Estimated):</label>
                                                 <input type="date" class="form-control" id="tpStartDateInput"
                                                     onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate');"
-                                                    oninput="document.getElementById('tourStartDateDisplay').textContent = this.value; updateTourEndDate();"
+                                                    oninput="showTourStartDate(); updateTourEndDate();"
                                                     onkeydown="return false">
                                             </div>
 
@@ -199,9 +199,21 @@
                                                     Itineraries
                                                 </legend>
 
+                                                <!-- display total days selected -->
+                                                <div class="row mx-auto mb-3s justify-content-end align-items-center">
+                                                    <div class="col-3">
+                                                        <label for="showTotalDaysCount"
+                                                            class="form-label fw-semibold mb-0">Total Days
+                                                            Counter:</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <input type="number" value="0" class="text-center text-primary form-control"
+                                                            id="showTotalDaysCount" disabled oninput="calcEndDate();">
+                                                    </div>
+                                                </div>
 
                                                 <div class="row mt-2">
-                                                    <div id="pkgDaysContainerId" class="col-12 mt-0"></div>
+                                                    <!--<div id="pkgDaysContainerId" class="col-12 mt-0"></div>-->
 
                                                     <!-- First day box -->
                                                     <div class="col-12 mt-0">
@@ -291,7 +303,7 @@
                                                                     </button>
                                                                     <button type="button" disabled
                                                                         id="removeFinalDayBtn" class="btn btn-all"
-                                                                        onclick="removeFinalDay(this);">
+                                                                        onclick="removeFinalDay();">
                                                                         Remove
                                                                     </button>
 
@@ -379,7 +391,7 @@
                                                         Travellers
                                                     </h5>
 
-                                                    <div class="d-flex gap-3 align-items-end flex-wrap">
+                                                    <div class="mb-4 d-flex gap-3 align-items-end flex-wrap">
 
                                                         <!-- Local Adults -->
                                                         <div class="col-md-2">
@@ -484,144 +496,180 @@
 
                                                 </div>
                                             </div>
-
-
                                         </div>
 
-                                        <!-- new -->
-                                        <div class="row mt-1">
-                                            <!-- Dates section -->
-                                            <div class="col-md-4">
-                                                <div class="card shadow-sm border rounded-3 p-3 mt-0">
-                                                    <h5 class="fw-bold text-primary mb-3">Tour Dates</h5>
+                                        <div class="row">
 
-                                                    <div class="mb-3">
-                                                        <label class="form-label fw-bold mb-0">Start Date:</label>
-                                                        <p id="tourStartDateDisplay" class="mb-0 text-secondary"></p>
+                                            <!-- to show how many available -->
+                                            <div class="col-6">
+                                                <div class="card mt-4 px-3 py-3 border rounded shadow-sm mx-auto"
+                                                    id="checkAvailabilitySection">
+                                                    <h5 class="text-info border-bottom pb-2 mb-0 fw-semibold">
+                                                        Company-Owned
+                                                        Resources Status</h5>
+
+                                                    <div class="card-body">
+                                                        <!-- Tour Dates as Range -->
+                                                        <div class="row mb-2">
+                                                            <div class="col-12 text-center">
+                                                                <h6 class="fw-bold text-primary mb-0">Tour Dates
+                                                                </h6>
+                                                                <p class="text-secondary mb-0">
+                                                                    <span id="tourStartDateDisplay">Start Date Not
+                                                                        Selected</span>
+                                                                    <span class="mx-2">→</span>
+                                                                    <span id="tourEndDateDisplay">End Date Not
+                                                                        Selected</span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Vehicle Availability -->
+                                                        <div class="row border rounded p-2 bg-light mb-2">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-8">
+                                                                    <label class="form-label mb-0 fw-semibold">Vehicle
+                                                                        Availability:</label>
+                                                                </div>
+                                                                <div class="col-4 text-center">
+                                                                    <span class="text-primary fw-bold fs-5"
+                                                                        id="showAvailableVehiCount">55</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Driver Availability -->
+                                                        <div class="row border rounded p-2 bg-light mb-2">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-8">
+                                                                    <label class="form-label mb-0 fw-semibold">Driver
+                                                                        Availability:</label>
+                                                                </div>
+                                                                <div class="col-4 text-center">
+                                                                    <span class="text-primary fw-bold fs-5"
+                                                                        id="showAvailableDriverCount"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Guide Availability -->
+                                                        <div class="row border rounded p-2 bg-light mb-2">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-8">
+                                                                    <label class="form-label mb-0 fw-semibold">Guide
+                                                                        Availability:</label>
+                                                                </div>
+                                                                <div class="col-4 text-center">
+                                                                    <span class="text-primary fw-bold fs-5"
+                                                                        id="showAvailableGuideCount"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-
-                                                    <div>
-                                                        <label class="form-label fw-bold mb-0">End Date:</label>
-                                                        <p id="tourEndDateDisplay" class="mb-0 text-secondary"></p>
-                                                    </div>
-
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <!-- Check Resource Availability -->
-                                        <div class="row mt-4 px-3 py-3 border rounded shadow-sm bg-light mx-auto"
-                                            id="checkAvailabilitySection">
-                                            <h5 class="text-info border-bottom pb-2 mb-4 fw-semibold">Company-Owned Resources Status</h5>
+                                            <!-- to flag which kinda resource is  used -->
+                                            <div class="col-6">
+                                                <div class="card mt-4 px-3 py-3 border rounded shadow-sm mx-auto"
+                                                    id="selectSourceSection">
 
-                                            <!-- Cards Row -->
-                                            <div class="row mx-auto">
-                                                <!-- Vehicle Section -->
-                                                <div class="col-md-4">
-                                                    <div class="border rounded p-3 h-100 bg-white shadow-sm">
-                                                        <h6 class="text-center text-primary fw-bold mb-3">Vehicle</h6>
+                                                    <h5 class="text-info border-bottom pb-2 mb-0 fw-semibold">
+                                                        Choose Service Sources Type</h5>
 
-                                                        <!-- Available Vehicles -->
-                                                        <div class="row mt-1">
-                                                            <div class="col-4">
-                                                                <label class="form-label mb-0">Availablity
-                                                                    :</label>
+                                                    <div class="card-body">
+
+                                                        <!-- vehicle -->
+                                                        <div class="row align-items-center mt-3">
+
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold mb-0">Vehicle
+                                                                    Source</label>
                                                             </div>
-                                                            <div class="col-8">
-                                                                <p><span class="text-primary fw-bold"
-                                                                        id="showAvailableVehiList"> </span>
-                                                                    Vehicle(s) Available</p>
+
+                                                            <div class="col-md-8" id="vehicleSourceSectionID">
+                                                                <div class="row g-2">
+                                                                    <div class="col-md-6">
+                                                                        <input type="radio" class="btn-check"
+                                                                            id="yathraVehiCB" name="bookingVehiSource"
+                                                                            value="companyOwn" autocomplete="off"
+                                                                            onchange="handleVehicleSourceChange()">
+                                                                        <label class="btn btn-outline-success w-100"
+                                                                            for="yathraVehiCB">Company Vehicle</label>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <input type="radio" class="btn-check"
+                                                                            id="rentalVehiCB" name="bookingVehiSource"
+                                                                            value="rental" autocomplete="off"
+                                                                            onchange="handleVehicleSourceChange()">
+                                                                        <label class="btn btn-outline-primary w-100"
+                                                                            for="rentalVehiCB">Rental Vehicle</label>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
 
-                                                        <!-- Vehicle Source Options -->
-                                                        <label class="form-label mb-0">Select Vehicle Source</label>
-                                                        <div class="btn-group w-100" role="group">
-                                                            <input type="radio" class="btn-check" id="yathraVehiCB"
-                                                                name="bookingVehiSource" value="companyOwn">
-                                                            <label class="btn btn-outline-success"
-                                                                for="yathraVehiCB">Company Vehicle</label>
-
-                                                            <input type="radio" class="btn-check" id="rentalVehiCB"
-                                                                name="bookingVehiSource" value="rental">
-                                                            <label class="btn btn-outline-warning"
-                                                                for="rentalVehiCB">Rental Vehicle</label>
+                                                        <!-- driver -->
+                                                        <div class="row align-items-center mt-3">
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold mb-0">Driver
+                                                                    Source</label>
+                                                            </div>
+                                                            <div class="col-md-8" id="driverSourceSectionID">
+                                                                <div class="row g-2">
+                                                                    <div class="col-md-6">
+                                                                        <input type="radio" class="btn-check"
+                                                                            id="yathraDriverCB"
+                                                                            name="bookingDriverSource"
+                                                                            value="companyOwn" autocomplete="off"
+                                                                            onchange="handleDriverSourceChange()">
+                                                                        <label class="btn btn-outline-success w-100"
+                                                                            for="yathraDriverCB">Company Driver</label>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <input type="radio" class="btn-check"
+                                                                            id="rentalDriverCB"
+                                                                            name="bookingDriverSource" value="rental"
+                                                                            autocomplete="off"
+                                                                            onchange="handleDriverSourceChange()">
+                                                                        <label class="btn btn-outline-primary w-100"
+                                                                            for="rentalDriverCB">External Driver</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
+
+                                                        <!-- guide -->
+                                                        <div class="row align-items-center mt-3">
+                                                            <div class="col-md-4">
+                                                                <label class="form-label fw-semibold mb-0">Guide
+                                                                    Source</label>
+                                                            </div>
+                                                            <div class="col-md-8" id="guideSourceSectionID">
+                                                                <div class="row g-2">
+                                                                    <div class="col-md-6">
+                                                                        <input type="radio" class="btn-check"
+                                                                            id="yathraGuideCB" name="bookingGuideSource"
+                                                                            value="companyOwn" autocomplete="off"
+                                                                            onchange="handleGuideSourceChange()">
+                                                                        <label class="btn btn-outline-success w-100"
+                                                                            for="yathraGuideCB">Company Guide</label>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <input type="radio" class="btn-check"
+                                                                            id="rentalGuideCB" name="bookingGuideSource"
+                                                                            value="rental" autocomplete="off"
+                                                                            onchange="handleGuideSourceChange()">
+                                                                        <label class="btn btn-outline-primary w-100"
+                                                                            for="rentalGuideCB">External Guide</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
 
-                                                <!-- Driver Section -->
-                                                <div class="col-md-4">
-                                                    <div class="border rounded p-3 h-100 bg-white shadow-sm">
-                                                        <h6 class="text-center text-primary fw-bold mb-3">Driver</h6>
-
-                                                        <!-- available drivers -->
-                                                        <div class="row mt-1">
-                                                            <div class="col-4">
-                                                                <label class="form-label mb-0">Availablity
-                                                                    :</label>
-                                                            </div>
-                                                            <div class="col-8">
-                                                                <p><span class="text-primary fw-bold"
-                                                                        id="showAvailableDriverList"> </span>
-                                                                    Driver(s)
-                                                                    Available</p>
-
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Driver Source Options -->
-                                                        <label class="form-label mb-0">Select Source</label>
-                                                        <div class="btn-group w-100" role="group">
-                                                            <input type="radio" class="btn-check" id="yathraDriverCB"
-                                                                name="bookingDriverSource" value="companyOwn">
-                                                            <label class="btn btn-outline-success"
-                                                                for="yathraDriverCB">Company Driver</label>
-
-                                                            <input type="radio" class="btn-check" id="rentalDriverCB"
-                                                                name="bookingDriverSource" value="rental">
-                                                            <label class="btn btn-outline-warning"
-                                                                for="rentalDriverCB">External Driver</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Guide Section -->
-                                                <div class="col-md-4">
-                                                    <div class="border rounded p-3 h-100 bg-white shadow-sm">
-                                                        <h6 class="text-center text-primary fw-bold mb-3">Guide</h6>
-
-                                                        <!-- available guides -->
-                                                        <div class="row mt-1">
-                                                            <div class="col-4">
-                                                                <label class="form-label mb-0">Availablity
-                                                                    :</label>
-                                                            </div>
-                                                            <div class="col-8">
-                                                                <p><span class="text-primary fw-bold"
-                                                                        id="showAvailableGuideList"> </span>
-                                                                    Gudie(s)
-                                                                    Available</p>
-
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Guide Source Options -->
-                                                        <label class="form-label fw-semibold mb-1">Select Guide Source</label>
-
-                                                        <div class="row mt-2" id="guideSourceSectionID">
-                                                            <div class="col-md-6">
-                                                                <input type="radio" class="btn-check" id="yathraGuideCB" name="bookingGuideSource" value="companyOwn" autocomplete="off" onchange="handleGuideSourceChange()">
-                                                                <label class="btn btn-outline-success w-100" for="yathraGuideCB">Company Guide</label>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <input type="radio" class="btn-check" id="rentalGuideCB" name="bookingGuideSource" value="rental" autocomplete="off" onchange="handleGuideSourceChange()">
-                                                                <label class="btn btn-outline-warning w-100" for="rentalGuideCB">External Guide</label>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
 
