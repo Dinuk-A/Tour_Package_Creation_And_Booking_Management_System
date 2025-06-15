@@ -459,7 +459,8 @@
                                                             class="form-label mb-0 fw-bold">Preferred Transport
                                                             Type</label>
                                                         <select id="tpkgVehitype" class="form-select"
-                                                            onchange="dynamicSelectValidator(this, 'tpkg', 'pref_vehi_type'); checkCompanyVehiAvailability();">
+                                                            onchange="dynamicSelectValidator(this, 'tpkg', 'pref_vehi_type'); ">
+                                                            <!-- checkCompanyVehiAvailability(); -->
                                                         </select>
                                                     </div>
 
@@ -527,12 +528,12 @@
                                                         <!-- Vehicle Availability -->
                                                         <div class="row border rounded p-2 bg-light mb-2">
                                                             <div class="row align-items-center">
-                                                                <div class="col-8">
+                                                                <div class="col-4">
                                                                     <label class="form-label mb-0 fw-semibold">Vehicle
                                                                         Availability:</label>
                                                                 </div>
-                                                                <div class="col-4 text-center">
-                                                                    <span class="fw-bold fs-5"
+                                                                <div class="col-8">
+                                                                    <span class="fw-bold"
                                                                         id="showAvailableVehiCount"></span>
                                                                 </div>
                                                             </div>
@@ -541,12 +542,12 @@
                                                         <!-- Driver Availability -->
                                                         <div class="row border rounded p-2 bg-light mb-2">
                                                             <div class="row align-items-center">
-                                                                <div class="col-8">
+                                                                <div class="col-4">
                                                                     <label class="form-label mb-0 fw-semibold">Driver
                                                                         Availability:</label>
                                                                 </div>
-                                                                <div class="col-4 text-center">
-                                                                    <span class="text-primary fw-bold fs-5"
+                                                                <div class="col-8">
+                                                                    <span class="text-primary fw-bold"
                                                                         id="showAvailableDriverCount"></span>
                                                                 </div>
                                                             </div>
@@ -555,12 +556,12 @@
                                                         <!-- Guide Availability -->
                                                         <div class="row border rounded p-2 bg-light mb-2">
                                                             <div class="row align-items-center">
-                                                                <div class="col-8">
+                                                                <div class="col-4">
                                                                     <label class="form-label mb-0 fw-semibold">Guide
                                                                         Availability:</label>
                                                                 </div>
-                                                                <div class="col-4 text-center">
-                                                                    <span class="text-primary fw-bold fs-5"
+                                                                <div class="col-8">
+                                                                    <span class="text-primary fw-bold"
                                                                         id="showAvailableGuideCount"></span>
                                                                 </div>
                                                             </div>
