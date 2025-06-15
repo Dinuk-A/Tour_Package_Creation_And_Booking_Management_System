@@ -144,6 +144,9 @@ public class TourPkg {
     @Column(name = "web_description")
     private String web_description;
 
+    @Column(name = "pref_vehi_type")
+    private String pref_vehi_type;
+
     // common 6
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;

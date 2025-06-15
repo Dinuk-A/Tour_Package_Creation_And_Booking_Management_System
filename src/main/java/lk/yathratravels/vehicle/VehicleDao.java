@@ -11,6 +11,7 @@ public interface VehicleDao extends JpaRepository<Vehicle, Integer> {
     @Query(value = "select v from Vehicle v where v.numberplate=?1")
     Vehicle getVehicleByNumberPlate(String numberplate);
 
+    // filter vehicles by given vehicle type + a given seat count
     @Query("select v.vehicletype_id from Vehicle v where v.passengerseats >= ?1")
     List<VehicleType> findVehicleTypeNamesByMinSeats(Integer seatCount);
    

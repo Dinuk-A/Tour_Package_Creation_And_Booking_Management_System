@@ -439,7 +439,7 @@
                                                                 <label for="tpkgTotalTravellers"
                                                                     class="form-label mb-0 fw-bold">Total
                                                                     Travellers</label>
-                                                                <input type="number" value="0" class="form-control"
+                                                                <input type="number" value="0" class="text-center form-control"
                                                                     id="tpkgTotalTravellers" disabled>
                                                             </div>
                                                         </div>
@@ -459,7 +459,7 @@
                                                             class="form-label mb-0 fw-bold">Preferred Transport
                                                             Type</label>
                                                         <select id="tpkgVehitype" class="form-select"
-                                                            onchange="dynamicSelectValidator(this, 'tpkg', 'vehicletype'); checkCompanyVehiAvailability();">
+                                                            onchange="dynamicSelectValidator(this, 'tpkg', 'pref_vehi_type'); checkCompanyVehiAvailability();">
                                                         </select>
                                                     </div>
 
@@ -475,7 +475,7 @@
                                                         <div class="col-3">
                                                             <input type="radio" class="btn-check" name="guideNeedOrNot"
                                                                 id="guideYes" autocomplete="off"
-                                                                onchange="handleNeedGuideCB(true)">
+                                                                onchange="handleNeedGuideCB()">
                                                             <label
                                                                 class="btn btn-outline-success w-100 fw-bold text-uppercase"
                                                                 for="guideYes">Yes</label>
@@ -485,9 +485,9 @@
                                                         <div class="col-3">
                                                             <input type="radio" class="btn-check" name="guideNeedOrNot"
                                                                 id="guideNo" autocomplete="off"
-                                                                onchange="handleNeedGuideCB(false)">
+                                                                onchange="handleNeedGuideCB()">
                                                             <label
-                                                                class="btn btn-outline-secondary w-100 fw-bold text-uppercase"
+                                                                class="btn btn-outline-primary w-100 fw-bold text-uppercase"
                                                                 for="guideNo">No</label>
                                                         </div>
 
@@ -532,8 +532,8 @@
                                                                         Availability:</label>
                                                                 </div>
                                                                 <div class="col-4 text-center">
-                                                                    <span class="text-primary fw-bold fs-5"
-                                                                        id="showAvailableVehiCount">55</span>
+                                                                    <span class="fw-bold fs-5"
+                                                                        id="showAvailableVehiCount"></span>
                                                                 </div>
                                                             </div>
                                                         </div>

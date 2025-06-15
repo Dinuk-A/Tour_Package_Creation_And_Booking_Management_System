@@ -156,6 +156,9 @@ const refreshTpkgForm = async () => {
         }
     });
 
+    document.getElementById('yathraGuideCB').disabled = true;
+    document.getElementById('rentalGuideCB').disabled = true;
+
 }
 
 //set status auto
@@ -308,17 +311,39 @@ const getVehicleTypesByMinSeats = async () => {
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value) || 0;
     const vehitypeSelect = document.getElementById('tpkgVehitype');
 
+    vehitypeSelect.value = "";
     vehitypeSelect.disabled = false;
     vehitypeSelect.style.border = '1px solid #ced4da';
+
+    yathraVehiCB.disabled = false;
+    rentalVehiCB.checked = false;
 
     try {
         const vehicleTypes = await ajaxGetReq("vehicletypes/byminseats/" + totalTravellers);
 
-        fillDataIntoDynamicSelects(
-            vehitypeSelect,
-            " Please Select Vehicle Type ",
-            vehicleTypes, 'name'
-        );
+        if (vehicleTypes.length === 0) {
+
+            vehitypeSelect.style.border = '2px solid lime';
+            vehitypeSelect.disabled = true;
+            vehitypeSelect.innerHTML = "<option selected disabled>Requires Multiple External Vehicles</option>";
+            tpkg.prefered_vehicle_type = "Requires multiple vehicles";
+            
+            rentalVehiCB.checked = true;
+            yathraVehiCB.disabled = true;
+
+            //check vehicel availability query+function doesnt need to run 
+            const msgElement = document.getElementById('showAvailableVehiCount');
+            msgElement.innerText = "No Company Vehicles Available";
+            msgElement.classList.add('text-danger');
+            
+        } else {
+
+            fillDataIntoDynamicSelects(
+                vehitypeSelect,
+                " Please Select Vehicle Type ",
+                vehicleTypes, 'name'
+            );
+        }
 
         console.log("getVehicleTypesByMinSeats ran with traveller count: " + totalTravellers);
     } catch (error) {
@@ -356,6 +381,7 @@ const handleNeedGuideCB = () => {
 
         tpkg.is_company_guide = null;
         yathraGuideCB.checked = false;
+        rentalGuideCB.checked = false;
 
     } else if (guideNo.checked) {
 
@@ -365,6 +391,7 @@ const handleNeedGuideCB = () => {
 
         tpkg.is_company_guide = null;
         rentalGuideCB.checked = false;
+        yathraGuideCB.checked = false;
 
     }
 }
@@ -1805,9 +1832,13 @@ const updateTourEndDate = () => {
     const endDate = new Date(startDate);
     endDate.setDate(startDate.getDate() + totalDays - 1);
 
-    endDateDisplay.innerText = endDate.toISOString().split('T')[0];
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+    endDateDisplay.innerText = formattedEndDate;
 
-        // format and display the end date
+    tpkg.tourenddate = formattedEndDate;
+
+
+    // format and display the end date
     //const options = { year: 'numeric', month: 'long', day: 'numeric' };
     //endDateDisplay.innerText = endDate.toLocaleDateString(undefined, options);
 };
