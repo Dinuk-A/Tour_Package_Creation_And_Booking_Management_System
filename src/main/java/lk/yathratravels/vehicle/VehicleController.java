@@ -1,5 +1,6 @@
 package lk.yathratravels.vehicle;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +86,15 @@ public class VehicleController {
     @GetMapping("/vehicletypes/byminseats/{seats}")
     public List<VehicleType> getVehicleTypesByMinSeats(@PathVariable Integer seats) {
         return vehiDao.findVehicleTypeNamesByMinSeats(seats);
+    }
+
+    // mapping for get vehicle by availability
+    @GetMapping(value = "vehi/availablevehiclesbyvehitype/{startDate}/{endDate}/{vehitype}", produces = "application/JSON")
+    public List<Vehicle> getAvailableVehicles(@PathVariable("startDate") String startDate,
+            @PathVariable("endDate") String endDate, @PathVariable("vehitype") Integer vehitype) {
+
+        return vehiDao.getAvailableVehicleListByVehiType(LocalDate.parse(startDate), LocalDate.parse(endDate),
+                vehitype);
     }
 
     // POST mapping for add

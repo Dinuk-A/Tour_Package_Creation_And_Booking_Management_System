@@ -1,5 +1,5 @@
-//package lk.yathratravels.bookings;
-//
-//public class BookingController {
-//    
-//}
+package lk.yathratravels.bookings;
+
+public class BookingController {
+    
+}

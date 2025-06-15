@@ -2043,7 +2043,22 @@ const updateTotalAdditionalCost = () => {
 };
 
 
+/**document.addEventListener("DOMContentLoaded", () => {
+    const vehitypeSelect = document.getElementById('tpkgVehitype');
 
+    vehitypeSelect.addEventListener('change', () => {
+        const selectedOptionValue = vehitypeSelect.value;
+
+        try {
+            const selectedVehicleType = JSON.parse(selectedOptionValue);
+            tpkg.pref_vehi_type = selectedVehicleType.name;
+        } catch (error) {
+            console.warn("Invalid vehicle type JSON value");
+            tpkg.pref_vehi_type = "";
+        }
+    });
+});
+ */
 
 
 
