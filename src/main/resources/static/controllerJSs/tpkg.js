@@ -306,6 +306,14 @@ function debounce(func, delay) {
     };
 }
 
+//clear availaabiliry results (NOT USED 💥💥💥)
+const clearAvailableCounts = () => {
+
+    document.getElementById('showAvailableDriverCount').innerText = "";
+    document.getElementById('showAvailableGuideCount').innerText = "";
+
+}
+
 // to get vehicle types by minimum seats based on total travellers
 const getVehicleTypesByMinSeats = async () => {
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value) || 0;
@@ -318,6 +326,9 @@ const getVehicleTypesByMinSeats = async () => {
     yathraVehiCB.disabled = false;
     rentalVehiCB.checked = false;
 
+    //reset the available vehicle count message
+    document.getElementById('showAvailableVehiCount').innerText = "";
+
     try {
         const vehicleTypes = await ajaxGetReq("vehicletypes/byminseats/" + totalTravellers);
 
@@ -326,15 +337,15 @@ const getVehicleTypesByMinSeats = async () => {
             vehitypeSelect.style.border = '2px solid lime';
             vehitypeSelect.disabled = true;
             vehitypeSelect.innerHTML = "<option selected disabled>Requires Multiple External Vehicles</option>";
-            tpkg.prefered_vehicle_type = "Requires multiple vehicles";
-            
+            tpkg.pref_vehi_type = "Requires multiple vehicles";
+
             rentalVehiCB.checked = true;
             yathraVehiCB.disabled = true;
 
             //check vehicel availability query+function doesnt need to run 
             const msgElement = document.getElementById('showAvailableVehiCount');
-            msgElement.innerText = "No Company Vehicles Available";
             msgElement.classList.add('text-danger');
+            msgElement.innerText = "No Company Vehicles Available";
             
         } else {
 
@@ -350,6 +361,7 @@ const getVehicleTypesByMinSeats = async () => {
         console.error("Failed to fetch vehicle types:", error);
     }
 };
+
 
 // debounced version to limit query calls
 const debouncedGetVehicleTypesByMinSeats = debounce(getVehicleTypesByMinSeats, 300);
@@ -653,6 +665,8 @@ const updateTotalDaysCount = () => {
 
     document.getElementById('showTotalDaysCount').value = total;
     tpkg.totaldays = total;
+
+    updateTourEndDate();
 };
 
 //for every change in selected days,number of travellers,dates the main cost card must be refreshed
@@ -825,6 +839,7 @@ const calcTotalStayCost = () => {
 
 };
 
+
 //calc total vehicle fee ✅
 const calcTotalVehiParkingfeeTpkg = () => {
 
@@ -852,6 +867,49 @@ const calcTotalVehiParkingfeeTpkg = () => {
 
     totalVehicleParkingCost.value = totalParkingCost.toFixed(2);
     tpkg.totalvehiparkingcost = parseFloat(totalParkingCost.toFixed(2));
+
+}
+
+// save the preferred vehi types name only., as a string
+const savePrefVehitype = (selectElement) => {
+
+    const selectedOption = selectElement.value;
+
+    if (selectedOption != "") {
+        const selectedVehicleTypeName = JSON.parse(selectedOption).name;
+        tpkg.pref_vehi_type = selectedVehicleTypeName;
+        selectElement.style.border = "2px solid lime";
+        getAvailableVehiCount(); 
+    } else {
+        tpkg.pref_vehi_type = null;
+        selectElement.style.border = "1px solid #ced4da";
+    }
+
+}
+
+//get available vehi count based on date range and vehi type
+const getAvailableVehiCount = async () => {
+
+    const startDate = tpkg.tourstartdate;
+    const endDate = tpkg.tourenddate;
+
+    const selectedVehitype = document.getElementById('tpkgVehitype').value;
+    const selectedVehitypeObjid = JSON.parse(selectedVehitype).id;
+
+    const vehicleResultSection = document.getElementById('showAvailableVehiCount');
+
+    try {
+        const availablevehiListByTypeAndDates = await ajaxGetReq("vehi/availablevehiclesbyvehitype/" + startDate + "/" + endDate + "/" + selectedVehitypeObjid);
+        const availableCount = availablevehiListByTypeAndDates.length;
+        vehicleResultSection.classList.remove('text-danger');
+        vehicleResultSection.classList.add('text-success');
+        vehicleResultSection.innerText = ` ${availableCount} Vehicles Available `;
+    } catch (error) {
+        console.error("Error fetching available vehicles:", error);
+        vehicleResultSection.classList.remove('text-success');
+        vehicleResultSection.classList.add('text-danger');
+        vehicleResultSection.innerText = "Error fetching available vehicles";
+    }
 
 }
 
@@ -1816,6 +1874,7 @@ const showTourStartDate = () => {
 
 //calc tour end date and display it
 const updateTourEndDate = () => {
+
     const startDateInputValue = document.getElementById('tpStartDateInput').value;
     const totalDaysCounterDisplay = document.getElementById('showTotalDaysCount').value;
     const endDateDisplay = document.getElementById('tourEndDateDisplay');
@@ -1836,6 +1895,10 @@ const updateTourEndDate = () => {
     endDateDisplay.innerText = formattedEndDate;
 
     tpkg.tourenddate = formattedEndDate;
+
+    console.log("startDate:", startDate);
+    console.log("totalDays:", totalDays);
+    console.log("endDate:", endDate);
 
 
     // format and display the end date
@@ -2043,22 +2106,6 @@ const updateTotalAdditionalCost = () => {
 };
 
 
-/**document.addEventListener("DOMContentLoaded", () => {
-    const vehitypeSelect = document.getElementById('tpkgVehitype');
-
-    vehitypeSelect.addEventListener('change', () => {
-        const selectedOptionValue = vehitypeSelect.value;
-
-        try {
-            const selectedVehicleType = JSON.parse(selectedOptionValue);
-            tpkg.pref_vehi_type = selectedVehicleType.name;
-        } catch (error) {
-            console.warn("Invalid vehicle type JSON value");
-            tpkg.pref_vehi_type = "";
-        }
-    });
-});
- */
 
 
 

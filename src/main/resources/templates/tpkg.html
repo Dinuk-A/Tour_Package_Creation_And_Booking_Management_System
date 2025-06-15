@@ -207,8 +207,10 @@
                                                             Counter:</label>
                                                     </div>
                                                     <div class="col-2">
-                                                        <input type="number" value="0" class="text-center text-primary form-control"
-                                                            id="showTotalDaysCount" disabled oninput="updateTourEndDate();">
+                                                        <input type="number" placeholder="0"
+                                                            class="text-center text-primary form-control"
+                                                            id="showTotalDaysCount" disabled
+                                                            >
                                                     </div>
                                                 </div>
 
@@ -439,7 +441,8 @@
                                                                 <label for="tpkgTotalTravellers"
                                                                     class="form-label mb-0 fw-bold">Total
                                                                     Travellers</label>
-                                                                <input type="number" value="0" class="text-center form-control"
+                                                                <input type="number" value="0"
+                                                                    class="text-center form-control"
                                                                     id="tpkgTotalTravellers" disabled>
                                                             </div>
                                                         </div>
@@ -459,8 +462,7 @@
                                                             class="form-label mb-0 fw-bold">Preferred Transport
                                                             Type</label>
                                                         <select id="tpkgVehitype" class="form-select"
-                                                            onchange="dynamicSelectValidator(this, 'tpkg', 'pref_vehi_type'); ">
-                                                            <!-- checkCompanyVehiAvailability(); -->
+                                                            onchange="savePrefVehitype(this); ">
                                                         </select>
                                                     </div>
 
@@ -528,11 +530,11 @@
                                                         <!-- Vehicle Availability -->
                                                         <div class="row border rounded p-2 bg-light mb-2">
                                                             <div class="row align-items-center">
-                                                                <div class="col-4">
+                                                                <div class="col-5">
                                                                     <label class="form-label mb-0 fw-semibold">Vehicle
                                                                         Availability:</label>
                                                                 </div>
-                                                                <div class="col-8">
+                                                                <div class="col-7">
                                                                     <span class="fw-bold"
                                                                         id="showAvailableVehiCount"></span>
                                                                 </div>
@@ -542,11 +544,11 @@
                                                         <!-- Driver Availability -->
                                                         <div class="row border rounded p-2 bg-light mb-2">
                                                             <div class="row align-items-center">
-                                                                <div class="col-4">
+                                                                <div class="col-5">
                                                                     <label class="form-label mb-0 fw-semibold">Driver
                                                                         Availability:</label>
                                                                 </div>
-                                                                <div class="col-8">
+                                                                <div class="col-7">
                                                                     <span class="text-primary fw-bold"
                                                                         id="showAvailableDriverCount"></span>
                                                                 </div>
@@ -556,11 +558,11 @@
                                                         <!-- Guide Availability -->
                                                         <div class="row border rounded p-2 bg-light mb-2">
                                                             <div class="row align-items-center">
-                                                                <div class="col-4">
+                                                                <div class="col-5">
                                                                     <label class="form-label mb-0 fw-semibold">Guide
                                                                         Availability:</label>
                                                                 </div>
-                                                                <div class="col-8">
+                                                                <div class="col-7">
                                                                     <span class="text-primary fw-bold"
                                                                         id="showAvailableGuideCount"></span>
                                                                 </div>
