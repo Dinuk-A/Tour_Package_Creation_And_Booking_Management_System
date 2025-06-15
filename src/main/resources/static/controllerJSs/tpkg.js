@@ -1778,58 +1778,40 @@ const clearImg = (imgProperty, previewId) => {
 // show the tour start date 
 const showTourStartDate = () => {
 
+    //actual date input
+    const estimatedStartDateInput = document.getElementById('tpStartDateInput');
+
+    //to display the start date
     const startDateDisplay = document.getElementById('tourStartDateDisplay');
-    //const firstDaySelectInput = document.getElementById('tpkgFirstDaySelect');
-
-    //if (!firstDaySelectInput.value && tpkg.sd_dayplan_id?.id == null) {
-    //    startDateDisplay.textContent = 'Start Date Not Selected';
-    //    return;
-    //}
-
-    startDateDisplay.textContent = this.value;
+    startDateDisplay.textContent = estimatedStartDateInput.value;
 
 }
 
 //calc tour end date and display it
 const updateTourEndDate = () => {
-
     const startDateInputValue = document.getElementById('tpStartDateInput').value;
+    const totalDaysCounterDisplay = document.getElementById('showTotalDaysCount').value;
     const endDateDisplay = document.getElementById('tourEndDateDisplay');
 
-    const firstDaySelectInput = document.getElementById('tpkgFirstDaySelect');
-
-    if (!startDateInputValue) {
-        endDateDisplay.textContent = 'End Date Not Selected';
-        return;
-    }
-
-    if (!firstDaySelectInput.value || tpkg.sd_dayplan_id?.id == null) {
-        endDateDisplay.textContent = 'End Date Not Selected';
+    //check if bothnecessary values are present
+    if (!startDateInputValue || !totalDaysCounterDisplay) {
+        endDateDisplay.innerText = "Please enter a start date and total days.";
         return;
     }
 
     const startDate = new Date(startDateInputValue);
-    let dayCount = 1; // minimum 1 day tour
+    const totalDays = parseInt(totalDaysCounterDisplay);
 
-    // Add number of mid day plans
-    if (Array.isArray(tpkg.dayplans) && tpkg.dayplans.length > 0) {
-        dayCount += tpkg.dayplans.length;
-    }
-
-    // Add 1 more if end day is selected
-    const hasEndDateSelected = tpkg.ed_dayplan_id.id && document.getElementById('tpkgFinalDaySelect')?.value;
-    if (hasEndDateSelected) {
-        dayCount += 1;
-    }
-
-    // Calculate end date
     const endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + dayCount - 1);
+    endDate.setDate(startDate.getDate() + totalDays - 1);
 
-    // Format as yyyy-mm-dd
-    const formattedEndDate = endDate.toISOString().split('T')[0];
-    endDateDisplay.textContent = formattedEndDate;
-}
+    endDateDisplay.innerText = endDate.toISOString().split('T')[0];
+
+        // format and display the end date
+    //const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    //endDateDisplay.innerText = endDate.toLocaleDateString(undefined, options);
+};
+
 
 
 
