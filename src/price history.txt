@@ -1,0 +1,51 @@
+PRICE HISTORY
+
+@Entity
+@Table(name = "price_modifier_history")
+public class PriceModifierHistory {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "modifier_type")
+    private String modifierType;
+
+    @Column(name = "old_value")
+    private BigDecimal oldValue;
+
+    @Column(name = "new_value")
+    private BigDecimal newValue;
+
+    @Column(name = "updated_by")
+    private Integer updatedBy;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "description")
+    private String description;
+
+    // getters and setters
+}
+
+
+public void updatePriceModifier(PriceModifier newModifier, Integer userId) {
+    PriceModifier existing = priceModifierRepo.findLatest(); // however you get the latest one
+
+    // Save changes to history for each modified field
+    if (existing.getExtDriverSurcharge().compareTo(newModifier.getExtDriverSurcharge()) != 0) {
+        PriceModifierHistory history = new PriceModifierHistory();
+        history.setModifierType("ext_driver_surcharge");
+        history.setOldValue(existing.getExtDriverSurcharge());
+        history.setNewValue(newModifier.getExtDriverSurcharge());
+        history.setUpdatedBy(userId);
+        history.setUpdatedAt(LocalDateTime.now());
+        history.setDescription("Updated via Admin Panel");
+
+        historyRepo.save(history);
+    }
+
+    // Save updated modifier
+    priceModifierRepo.save(newModifier);
+}

@@ -1,11 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRICE MODS</title>
+    <!-- link tpkg js -->
+    <script src="controllerJSs/pricemods.js"></script>
 </head>
+
 <body>
-    
+
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+    <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
+
+    <main id="mainAreaID" class="main">
+        <!-- Tabs navigation panel -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- for table side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tablePriceModsHolderDiv"
+                    role="tab" aria-controls="tablePriceModsHolderDiv" aria-selected="true">Table</a>
+            </li>
+            <!-- for form side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formPriceModsHolderDiv" role="tab"
+                    aria-controls="formPriceModsHolderDiv" aria-selected="false">Form</a>
+            </li>
+        </ul>
+
+        <!-- Tabs content -->
+        <div class="tab-content mt-1" id="myTabContent">
+
+            <!-- Table tab  -->
+            <div id="tablePriceModsHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3"
+                role="tabpanel" aria-labelledby="table-tab">
+            </div>
+
+            <!-- Form tab -->
+            <div class="tab-pane fade" id="formPriceModsHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+                <div class="card mx-auto" style="max-width: 700px;">
+                    <div class="card-header bg-primary text-white text-center py-2">
+                        <h5 class="mb-0">Price Configs Form</h5>
+                    </div>
+                    <div class="card-body" style="background-color: ivory;">
+                        <form id="formPriceMods" onsubmit="return false">
+                
+                            <!-- Company Profit Margin -->
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label for="companyProfitMargin" class="form-label fw-bold mb-0">Tour Package Profit Margin (%)<span class="text-danger"> * </span> :</label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="number" step="0.01" class="form-control" id="companyProfitMargin" name="company_profit_margin" required>
+                                </div>
+                                <div class="col-3"></div>
+                                <div class="col-2">
+                                    <button class="btn btn-outline-secondary w-100" disabled><i class="bi bi-pencil-square"></i></button>
+                                </div>
+                            </div>
+                
+                            <!-- External Driver Surcharge -->
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label for="extDriverSurcharge" class="form-label fw-bold mb-0">External Driver Surcharge (%)<span class="text-danger"> * </span> :</label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="number" step="0.01" class="form-control" id="extDriverSurcharge" name="ext_driver_surcharge" required>
+                                </div>
+                                <div class="col-3"></div>
+                                <div class="col-2">
+                                    <button class="btn btn-outline-secondary w-100" disabled><i class="bi bi-pencil-square"></i></button>
+                                </div>
+                            </div>
+                
+                            <!-- External Vehicle Surcharge -->
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label for="extVehicleSurcharge" class="form-label fw-bold mb-0">External Vehicle Surcharge (%)<span class="text-danger"> * </span> :</label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="number" step="0.01" class="form-control" id="extVehicleSurcharge" name="ext_vehicle_surcharge" required>
+                                </div>
+                                <div class="col-3"></div>
+                                <div class="col-2">
+                                    <button class="btn btn-outline-secondary w-100" disabled><i class="bi bi-pencil-square"></i></button>
+                                </div>
+                            </div>
+                
+                            <!-- External Guide Surcharge -->
+                            <div class="row mb-2">
+                                <div class="col-5">
+                                    <label for="extGuideSurcharge" class="form-label fw-bold mb-0">External Guide Surcharge (%)<span class="text-danger"> * </span> :</label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="number" step="0.01" class="form-control" id="extGuideSurcharge" name="ext_guide_surcharge" required>
+                                </div>
+                                <div class="col-3"></div>
+                                <div class="col-2">
+                                    <button class="btn btn-outline-primary w-100" disabled><i class="bi bi-pencil-square"></i></button>
+                                </div>
+                            </div>
+                
+                            <!-- External Fee Status -->
+                            <div class="row mb-2">
+                                <div class="col-12">
+                                    <label for="extFeeStatus" class="form-label fw-bold mb-0">External Fee Status<span class="text-danger"> * </span> :</label>
+                                    <select class="form-select" id="extFeeStatus" name="ext_fee_status" required>
+                                        <option selected disabled value="">Select status</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                
+                            <!-- Description -->
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label for="description" class="form-label fw-bold mb-0">Description (Optional):</label>
+                                    <textarea class="form-control" id="description" name="description" rows="2"></textarea>
+                                </div>
+                            </div>
+                
+                            <!-- Form Buttons -->
+                            <div class="row mt-4 mb-2">
+                                <div class="col-4">
+                                    <button type="reset" class="btn-clear fw-bold w-100" onclick="refreshPriceModsForm()">Reset Form</button>
+                                </div>
+                                <div class="col-8 text-end">
+                                    <button type="submit" id="pricemodsUpdateBtn" class="btn-update fw-bold me-2" onclick="updatePriceMods()">Update Entry</button>
+                                    <button type="submit" id="pricemodsAddBtn" class="btn-add fw-bold" onclick="addNewPriceMods()">Add Entry</button>
+                                </div>
+                            </div>
+                
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </main>
+
+
 </body>
+
 </html>

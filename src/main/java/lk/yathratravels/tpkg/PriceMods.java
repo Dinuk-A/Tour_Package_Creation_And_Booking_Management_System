@@ -40,14 +40,14 @@ public class PriceMods {
     @Column(name = "company_profit_margin")
     private BigDecimal company_profit_margin;
 
-    @Column(name = "ext_driver_surcharge")
-    private BigDecimal ext_driver_surcharge;
+    @Column(name = "ext_driver_percentage")
+    private BigDecimal ext_driver_percentage;
 
-    @Column(name = "ext_vehicle_surcharge")
-    private BigDecimal ext_vehicle_surcharge;
+    @Column(name = "ext_vehicle_percentage")
+    private BigDecimal ext_vehicle_percentage;
 
-    @Column(name = "ext_guide_surcharge")
-    private BigDecimal ext_guide_surcharge;
+    @Column(name = "ext_guide_percentage")
+    private BigDecimal ext_guide_percentage;
 
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
