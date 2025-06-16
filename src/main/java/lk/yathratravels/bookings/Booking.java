@@ -14,6 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import lk.yathratravels.employee.Employee;
 import lk.yathratravels.vehicle.Vehicle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,8 +48,16 @@ public class Booking {
     private String booking_status;
 
     @ManyToMany
-    @JoinTable(name = "booking_has_vehicle", joinColumns = @JoinColumn(name = "booking_id"), inverseJoinColumns = @JoinColumn(name = "vehicle_id"))
+    @JoinTable(name = "booking_has_int_vehicles", joinColumns = @JoinColumn(name = "booking_id"), inverseJoinColumns = @JoinColumn(name = "vehicle_id"))
     private Set<Vehicle> vehicles;
+
+    @ManyToMany
+    @JoinTable(name = "booking_has_int_drivers", joinColumns = @JoinColumn(name = "booking_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    private Set<Employee> int_drivers;
+
+    @ManyToMany
+    @JoinTable(name = "booking_has_int_guides", joinColumns = @JoinColumn(name = "booking_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    private Set<Employee> int_guides;
 
     // common 6
     @Column(name = "addeddatetime")

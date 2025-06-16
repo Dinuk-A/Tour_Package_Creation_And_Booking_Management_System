@@ -1,5 +1,6 @@
 package lk.yathratravels.employee;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -90,7 +92,7 @@ public class EmployeeController {
         return employeeDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
-    //get only non deleted emps set
+    // get only non deleted emps set
     @GetMapping(value = "/emp/active", produces = "application/json")
     public List<Employee> getActiveEmployees() {
 
@@ -124,6 +126,22 @@ public class EmployeeController {
     @GetMapping(value = "/emp/listwithoutuseracc", produces = "application/json")
     public List<Employee> showEmpsWOUserAccs() {
         return employeeDao.getEmpsWithoutAccountAndNotDeleted();
+    }
+
+    // get all drivers who are available within the given date range
+    @GetMapping(value = "emp/availabledrivers/{startDate}/{endDate}", produces = "application/JSON")
+    public List<Employee> getAvailableDrivers(@PathVariable("startDate") String startDate,
+            @PathVariable("endDate") String endDate) {
+
+        return employeeDao.getAvailableDriversList(LocalDate.parse(startDate), LocalDate.parse(endDate));
+    }
+
+    // get all guides who are available within the given date range
+    @GetMapping(value = "emp/availableguides/{startDate}/{endDate}", produces = "application/JSON")
+    public List<Employee> getAvailableGuides(@PathVariable("startDate") String startDate,
+            @PathVariable("endDate") String endDate) {
+
+        return employeeDao.getAvailableGuidesList(LocalDate.parse(startDate), LocalDate.parse(endDate));
     }
 
     // save employee record on DB

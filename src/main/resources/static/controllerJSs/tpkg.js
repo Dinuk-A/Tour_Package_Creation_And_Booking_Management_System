@@ -142,8 +142,8 @@ const refreshTpkgForm = async () => {
         'rentalVehiCB',
         'yathraDriverCB',
         'rentalDriverCB',
-        'guideYesCB',
-        'guideNoCB',
+        'guideYes',
+        'guideNo',
         'yathraGuideCB',
         'rentalGuideCB'
     ];
@@ -158,6 +158,15 @@ const refreshTpkgForm = async () => {
 
     document.getElementById('yathraGuideCB').disabled = true;
     document.getElementById('rentalGuideCB').disabled = true;
+
+    document.getElementById('tpkgLocalAdultCount').value = 0;
+    document.getElementById('tpkgLocalChildCount').value = 0;
+    document.getElementById('tpkgForeignAdultCount').value = 0;
+    document.getElementById('tpkgForeignChildCount').value = 0;
+
+    document.getElementById('showAvailableVehiCount').innerText = '';
+    document.getElementById('showAvailableDriverCount').innerText = '';
+    document.getElementById('showAvailableGuideCount').innerText = '';
 
 }
 
@@ -247,6 +256,19 @@ const changesTpkgCustomOrTemp = () => {
         tpkg.localchildcount = null;
         tpkg.foreignadultcount = null;
         tpkg.foreignchildcount = null;
+        tpkg.totaldays = null;
+        tpkg.totaltktcost = null;
+        tpkg.totallunchcost = null;
+        tpkg.totalvehiparkingcost = null;
+        tpkg.totalvehicost = null;
+        tpkg.totalstaycost = null;
+        tpkg.pkgcostsum = null;
+        tpkg.pkgfinalprice = null;
+        tpkg.is_guide_needed = null;
+        tpkg.is_company_guide = null;
+        tpkg.is_company_vehicle = null;
+        tpkg.is_company_driver = null;
+        tpkg.pref_vehi_type = null;
 
         // Array of input field IDs to reset
         const inputTagsIds = [
@@ -258,6 +280,7 @@ const changesTpkgCustomOrTemp = () => {
             'tpkgForeignAdultCount',
             'tpkgForeignChildCount',
             'tpkgVehitype',
+            'tpkgTotalTravellers',
             'tpSelectStatus'
 
         ];
@@ -270,11 +293,34 @@ const changesTpkgCustomOrTemp = () => {
                 field.value = '';
             }
         });
+        
+        const radioIdsToReset = [           
+            'yathraVehiCB',
+            'rentalVehiCB',
+            'yathraDriverCB',
+            'rentalDriverCB',
+            'guideYes',
+            'guideNo',
+            'yathraGuideCB',
+            'rentalGuideCB'
+        ];
+    
+        radioIdsToReset.forEach(id => {
+            const radio = document.getElementById(id);
+            if (radio) {
+                radio.checked = false;
+                radio.disabled = false;
+            }
+        });
 
         document.getElementById('tpkgLocalAdultCount').value = 0;
         document.getElementById('tpkgLocalChildCount').value = 0;
         document.getElementById('tpkgForeignAdultCount').value = 0;
         document.getElementById('tpkgForeignChildCount').value = 0;
+
+        document.getElementById('showAvailableVehiCount').innerText = '';
+        document.getElementById('showAvailableDriverCount').innerText = '';
+        document.getElementById('showAvailableGuideCount').innerText = '';
 
     }
 }

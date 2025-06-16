@@ -26,7 +26,7 @@ public interface VehicleDao extends JpaRepository<Vehicle, Integer> {
       AND vehi.vehicletype_id = ?3 
       AND vehi.id NOT IN (
           SELECT bhv.vehicle_id 
-          FROM booking_has_vehicle bhv
+          FROM booking_has_int_vehicles bhv
           JOIN booking b ON bhv.booking_id = b.id
           WHERE (
               (b.startdate BETWEEN ?1 AND ?2) 
