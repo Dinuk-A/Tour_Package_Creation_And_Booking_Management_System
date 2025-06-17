@@ -209,8 +209,7 @@
                                                     <div class="col-2">
                                                         <input type="number" placeholder="0"
                                                             class="text-center text-primary form-control"
-                                                            id="showTotalDaysCount" disabled
-                                                            >
+                                                            id="showTotalDaysCount" disabled>
                                                     </div>
                                                 </div>
 
@@ -549,8 +548,12 @@
                                                                         Availability:</label>
                                                                 </div>
                                                                 <div class="col-7">
+                                                                    <button id="btnCheckDriverAvailability"
+                                                                            class="btn btn-sm btn-outline-primary" onclick="getAvailableIntrDriversCount();">Check
+                                                                            Availability</button>
                                                                     <span class="text-primary fw-bold"
-                                                                        id="showAvailableDriverCount"></span>
+                                                                        id="showAvailableDriverCount">
+                                                                        </span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -563,11 +566,16 @@
                                                                         Availability:</label>
                                                                 </div>
                                                                 <div class="col-7">
+                                                                    <button id="btnCheckGuideAvailability"
+                                                                        class="btn btn-sm btn-outline-primary" onclick="getAvailableIntrGuidesCount();">Check
+                                                                        Availability</button>
                                                                     <span class="text-primary fw-bold"
                                                                         id="showAvailableGuideCount"></span>
+
                                                                 </div>
                                                             </div>
                                                         </div>
+
                                                     </div>
                                                 </div>
                                             </div>

@@ -129,7 +129,7 @@ public class EmployeeController {
     }
 
     // get all drivers who are available within the given date range
-    @GetMapping(value = "emp/availabledrivers/{startDate}/{endDate}", produces = "application/JSON")
+    @GetMapping(value = "emp/availabledriversbydates/{startDate}/{endDate}", produces = "application/JSON")
     public List<Employee> getAvailableDrivers(@PathVariable("startDate") String startDate,
             @PathVariable("endDate") String endDate) {
 
@@ -137,7 +137,7 @@ public class EmployeeController {
     }
 
     // get all guides who are available within the given date range
-    @GetMapping(value = "emp/availableguides/{startDate}/{endDate}", produces = "application/JSON")
+    @GetMapping(value = "emp/availableguidesbydates/{startDate}/{endDate}", produces = "application/JSON")
     public List<Employee> getAvailableGuides(@PathVariable("startDate") String startDate,
             @PathVariable("endDate") String endDate) {
 

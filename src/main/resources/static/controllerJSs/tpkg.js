@@ -293,8 +293,8 @@ const changesTpkgCustomOrTemp = () => {
                 field.value = '';
             }
         });
-        
-        const radioIdsToReset = [           
+
+        const radioIdsToReset = [
             'yathraVehiCB',
             'rentalVehiCB',
             'yathraDriverCB',
@@ -304,7 +304,7 @@ const changesTpkgCustomOrTemp = () => {
             'yathraGuideCB',
             'rentalGuideCB'
         ];
-    
+
         radioIdsToReset.forEach(id => {
             const radio = document.getElementById(id);
             if (radio) {
@@ -392,7 +392,7 @@ const getVehicleTypesByMinSeats = async () => {
             const msgElement = document.getElementById('showAvailableVehiCount');
             msgElement.classList.add('text-danger');
             msgElement.innerText = "No Company Vehicles Available";
-            
+
         } else {
 
             fillDataIntoDynamicSelects(
@@ -408,9 +408,9 @@ const getVehicleTypesByMinSeats = async () => {
     }
 };
 
-
 // debounced version to limit query calls
 const debouncedGetVehicleTypesByMinSeats = debounce(getVehicleTypesByMinSeats, 300);
+
 
 // to calculate total travellers
 const updateTotalTravellers = () => {
@@ -483,63 +483,6 @@ const handleGuideSourceChange = () => {
     } else if (rentalGuideCB.checked) {
         tpkg.is_company_guide = false;
     }
-}
-
-
-//not used 💥
-const filterDayPlanTemplatesByDistrict = () => {
-    const rawValue = document.getElementById('dpTemplateStartDistrict ').value;
-    const selectedDistrict = JSON.parse(rawValue);
-
-    const filteredTemplates = allItineraryTemplates.filter(dp =>
-        dp.start_district_id && dp.start_district_id.id === selectedDistrict.id
-    );
-
-    displayFilteredTemplates(filteredTemplates);
-}
-
-//not used 💥
-const displayFilteredTemplates = (templates) => {
-    const container = document.getElementById('availableDayTemplatesContainer');
-    container.innerHTML = ''; // Clear previous results
-
-    if (templates.length === 0) {
-        container.innerHTML = '<p class="text-muted">No templates found for this district.</p>';
-        return;
-    }
-
-    templates.forEach(dp => {
-        const div = document.createElement('div');
-        div.className = 'border p-2 mb-2 rounded bg-light';
-
-        // Title row
-        const titleDiv = document.createElement('div');
-        titleDiv.className = 'fw-bold';
-        titleDiv.textContent = dp.title || 'Untitled';
-
-        // Bottom row with code and button
-        const bottomRow = document.createElement('div');
-        bottomRow.className = 'd-flex justify-content-between align-items-center';
-
-        const codeText = document.createElement('small');
-        codeText.className = 'text-muted';
-        codeText.textContent = dp.dayplancode;
-
-        const viewBtn = document.createElement('button');
-        viewBtn.className = 'btn btn-sm btn-outline-primary';
-        viewBtn.textContent = 'View';
-        viewBtn.onclick = () => openDayPlanModal(dp.dayplancode, dp.title || 'Untitled');
-
-        bottomRow.appendChild(codeText);
-        bottomRow.appendChild(viewBtn);
-
-        // Append to main card
-        div.appendChild(titleDiv);
-        div.appendChild(bottomRow);
-
-        container.appendChild(div);
-    });
-
 }
 
 // to reset data in dynamic selects
@@ -925,13 +868,41 @@ const savePrefVehitype = (selectElement) => {
         const selectedVehicleTypeName = JSON.parse(selectedOption).name;
         tpkg.pref_vehi_type = selectedVehicleTypeName;
         selectElement.style.border = "2px solid lime";
-        getAvailableVehiCount(); 
+        getAvailableVehiCount();
     } else {
         tpkg.pref_vehi_type = null;
         selectElement.style.border = "1px solid #ced4da";
     }
 
 }
+
+// Function to hide both buttons
+const hideAvailabilityButtons = () => {
+
+    document.getElementById("btnCheckGuideAvailability").classList.add("d-none");
+    document.getElementById("btnCheckDriverAvailability").classList.add("d-none");
+
+    document.getElementById("showAvailableGuideCount").classList.remove("d-none");
+    document.getElementById("showAvailableDriverCount").classList.remove("d-none");
+}
+
+// function to show both buttons again
+const showAvailabilityButtons = () => {
+
+    document.getElementById("btnCheckGuideAvailability").classList.remove("d-none");
+    document.getElementById("btnCheckDriverAvailability").classList.remove("d-none");
+
+    // hide + clear spans
+    const guideSpan = document.getElementById("showAvailableGuideCount");
+    const driverSpan = document.getElementById("showAvailableDriverCount");
+
+    guideSpan.classList.add("d-none");
+    driverSpan.classList.add("d-none");
+
+    guideSpan.textContent = "";
+    driverSpan.textContent = "";
+}
+
 
 //get available vehi count based on date range and vehi type
 const getAvailableVehiCount = async () => {
@@ -959,6 +930,65 @@ const getAvailableVehiCount = async () => {
 
 }
 
+//get available drivers count based on date range 
+const getAvailableIntrDriversCount = async () => {
+
+    const startDate = document.getElementById('tpStartDateInput').value || tpkg.tourstartdate;
+    const endDate = tpkg.tourenddate;
+
+    if (!startDate || !endDate) {
+        alert("Please select both start date and day plans.");
+        return;
+    }
+
+    const driverResultSection = document.getElementById('showAvailableDriverCount');
+
+    try {
+        const availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + startDate + "/" + endDate);
+        const availableCount = availabledriversByDates.length;
+        driverResultSection.classList.remove('text-danger');
+        driverResultSection.classList.add('text-success');
+        driverResultSection.innerText = ` ${availableCount} Drivers Available `;
+
+        hideAvailabilityButtons();
+    } catch (error) {
+        console.error("Error fetching available drivers:", error);
+        driverResultSection.classList.remove('text-success');
+        driverResultSection.classList.add('text-danger');
+        driverResultSection.innerText = "Error fetching available drivers";
+    }
+
+}
+
+//get available drivers count based on date range 
+const getAvailableIntrGuidesCount = async () => {
+
+    const startDate = document.getElementById('tpStartDateInput').value || tpkg.tourstartdate;
+    const endDate = tpkg.tourenddate;
+
+    if (!startDate || !endDate) {
+        alert("Please select both start date and day plans.");
+        return;
+    }
+
+    const guideResultSection = document.getElementById('showAvailableGuideCount');
+
+    try {
+        const availableguidesByDates = await ajaxGetReq("emp/availableguidesbydates/" + startDate + "/" + endDate);
+        const availableCount = availableguidesByDates.length;
+        guideResultSection.classList.remove('text-danger');
+        guideResultSection.classList.add('text-success');
+        guideResultSection.innerText = ` ${availableCount} Guides Available `;
+
+        hideAvailabilityButtons();
+    } catch (error) {
+        console.error("Error fetching available guides:", error);
+        guideResultSection.classList.remove('text-success');
+        guideResultSection.classList.add('text-danger');
+        guideResultSection.innerText = "Error fetching available guides";
+    }
+
+}
 
 //++++++++++++++++++++++ DayPlan form related codes ++++++++++++++++++++++
 
@@ -2152,7 +2182,61 @@ const updateTotalAdditionalCost = () => {
 };
 
 
+//not used 💥
+const filterDayPlanTemplatesByDistrict = () => {
+    const rawValue = document.getElementById('dpTemplateStartDistrict ').value;
+    const selectedDistrict = JSON.parse(rawValue);
 
+    const filteredTemplates = allItineraryTemplates.filter(dp =>
+        dp.start_district_id && dp.start_district_id.id === selectedDistrict.id
+    );
+
+    displayFilteredTemplates(filteredTemplates);
+}
+
+//not used 💥
+const displayFilteredTemplates = (templates) => {
+    const container = document.getElementById('availableDayTemplatesContainer');
+    container.innerHTML = ''; // Clear previous results
+
+    if (templates.length === 0) {
+        container.innerHTML = '<p class="text-muted">No templates found for this district.</p>';
+        return;
+    }
+
+    templates.forEach(dp => {
+        const div = document.createElement('div');
+        div.className = 'border p-2 mb-2 rounded bg-light';
+
+        // Title row
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'fw-bold';
+        titleDiv.textContent = dp.title || 'Untitled';
+
+        // Bottom row with code and button
+        const bottomRow = document.createElement('div');
+        bottomRow.className = 'd-flex justify-content-between align-items-center';
+
+        const codeText = document.createElement('small');
+        codeText.className = 'text-muted';
+        codeText.textContent = dp.dayplancode;
+
+        const viewBtn = document.createElement('button');
+        viewBtn.className = 'btn btn-sm btn-outline-primary';
+        viewBtn.textContent = 'View';
+        viewBtn.onclick = () => openDayPlanModal(dp.dayplancode, dp.title || 'Untitled');
+
+        bottomRow.appendChild(codeText);
+        bottomRow.appendChild(viewBtn);
+
+        // Append to main card
+        div.appendChild(titleDiv);
+        div.appendChild(bottomRow);
+
+        container.appendChild(div);
+    });
+
+}
 
 
 
