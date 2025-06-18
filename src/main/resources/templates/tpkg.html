@@ -162,7 +162,7 @@
                                                 <label for="tpStartDateInput" class="form-label mb-0 fw-bold">Tour Start
                                                     Date(Estimated):</label>
                                                 <input type="date" class="form-control" id="tpStartDateInput"
-                                                    onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate'); showAvailabilityButtons();"
+                                                    onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate'); showDnGAvailabilityButtons();  showVehiAvailabilityButtons();"
                                                     oninput="showTourStartDate(); updateTourEndDate();"
                                                     onkeydown="return false">
                                             </div>
@@ -214,8 +214,6 @@
                                                 </div>
 
                                                 <div class="row mt-2">
-                                                    <!--<div id="pkgDaysContainerId" class="col-12 mt-0"></div>-->
-
                                                     <!-- First day box -->
                                                     <div class="col-12 mt-0">
                                                         <div
@@ -223,6 +221,7 @@
 
                                                             <!-- Day selector and buttons -->
                                                             <div class="col-12 d-flex align-items-center">
+
                                                                 <div class="col-2">
                                                                     <label for="tpkgFirstDaySelect"
                                                                         class="form-label my-auto">First Day :</label>
@@ -232,6 +231,10 @@
                                                                     <select disabled id="tpkgFirstDaySelect"
                                                                         class="form-control form-select"
                                                                         onchange="handleFirstDayChange(this);"></select>
+
+                                                                    <div class="text-danger d-none" id="firstDayMsg">
+                                                                        This is a template day plan. Customize this to
+                                                                        suit the tour</div>
                                                                 </div>
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
@@ -247,90 +250,90 @@
                                                             <div class="col-12 mt-3" id="firstDayActionBtnsRow">
                                                                 <div
                                                                     class="d-flex justify-content-center flex-wrap gap-2">
-                                                                    <!--<button class="btn btn-outline-success btn-sm">
-                                                                        <i class="bi bi-plus-circle me-1"></i> Create
-                                                                        New
-                                                                    </button>-->
+
                                                                     <button class="btn btn-outline-primary btn-sm"
                                                                         onclick="loadTemplates(tpkgFirstDaySelect)">
-                                                                        <i class="bi bi-pencil-square me-1"></i> Use
+                                                                        <i class="bi bi-pencil-square me-1"></i>
+                                                                        Use
                                                                         Template
                                                                     </button>
                                                                     <button class="btn btn-outline-secondary btn-sm"
                                                                         onclick="loadExistingFDs(tpkgFirstDaySelect)">
-                                                                        <i class="bi bi-archive me-1"></i> Use Existing
+                                                                        <i class="bi bi-archive me-1"></i> Use
+                                                                        Existing
                                                                     </button>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
 
-                                                    <!-- Middle days section -->
-                                                    <div class="col-12 my-2" id="tpkgMidDaysSelectSection">
-                                                        <!-- dynamically generated content goes here -->
-                                                    </div>
+                                                <!-- Middle days section -->
+                                                <div class="col-12 my-2" id="tpkgMidDaysSelectSection">
+                                                    <!-- dynamically generated content goes here -->
+                                                </div>
 
-                                                    <!-- Add More Days button -->
-                                                    <div class="col-12 d-flex justify-content-center my-2">
-                                                        <button disabled type="button" id="addNewDaysBtn"
-                                                            class="btn btn-warning"
-                                                            onclick="generateNormalDayPlanSelectSections()">
-                                                            Add More Days
-                                                        </button>
-                                                    </div>
+                                                <!-- Add More Days button -->
+                                                <div class="col-12 d-flex justify-content-center my-2">
+                                                    <button disabled type="button" id="addNewDaysBtn"
+                                                        class="btn btn-warning"
+                                                        onclick="generateNormalDayPlanSelectSections()">
+                                                        Add More Days
+                                                    </button>
+                                                </div>
 
-                                                    <!-- Final day box -->
-                                                    <div class="col-12 mt-1">
-                                                        <div
-                                                            class="row border border-secondary rounded p-3 mb-3 bg-white shadow-sm">
-                                                            <!-- Day selector and buttons -->
-                                                            <div class="col-12 d-flex align-items-center">
-                                                                <div class="col-2">
-                                                                    <label for="tpkgFinalDaySelect"
-                                                                        class="form-label  my-auto">Final Day :</label>
-                                                                </div>
-
-                                                                <div class="col-7">
-                                                                    <select disabled id="tpkgFinalDaySelect"
-                                                                        class="form-control form-select"
-                                                                        onchange="handleFinalDayChange(this);"></select>
-                                                                </div>
-
-                                                                <div class="col-3 d-flex justify-content-end gap-2">
-                                                                    <button type="button" disabled id="showFinalDayBtn"
-                                                                        class="btn btn-all"
-                                                                        onclick="showDayPlanDetails('tpkgFinalDaySelect')">
-                                                                        View
-                                                                    </button>
-                                                                    <button type="button" disabled
-                                                                        id="removeFinalDayBtn" class="btn btn-all"
-                                                                        onclick="removeFinalDay();">
-                                                                        Remove
-                                                                    </button>
-
-                                                                </div>
+                                                <!-- Final day box -->
+                                                <div class="col-12 mt-1">
+                                                    <div
+                                                        class="row border border-secondary rounded p-3 mb-3 bg-white shadow-sm">
+                                                        <!-- Day selector and buttons -->
+                                                        <div class="col-12 d-flex align-items-center">
+                                                            <div class="col-2">
+                                                                <label for="tpkgFinalDaySelect"
+                                                                    class="form-label  my-auto">Final Day
+                                                                    :</label>
                                                             </div>
 
-                                                            <!-- Action buttons -->
-                                                            <div class="col-12 mt-3" id="finalDayActionBtnsRow">
-                                                                <div
-                                                                    class="d-flex justify-content-center flex-wrap gap-2">
-                                                                    <!--<button class="btn btn-outline-success btn-sm">
+                                                            <div class="col-7">
+                                                                <select disabled id="tpkgFinalDaySelect"
+                                                                    class="form-control form-select"
+                                                                    onchange="handleFinalDayChange(this);"></select>
+                                                            </div>
+
+                                                            <div class="col-3 d-flex justify-content-end gap-2">
+                                                                <button type="button" disabled id="showFinalDayBtn"
+                                                                    class="btn btn-all"
+                                                                    onclick="showDayPlanDetails('tpkgFinalDaySelect')">
+                                                                    View
+                                                                </button>
+                                                                <button type="button" disabled id="removeFinalDayBtn"
+                                                                    class="btn btn-all" onclick="removeFinalDay();">
+                                                                    Remove
+                                                                </button>
+
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Action buttons -->
+                                                        <div class="col-12 mt-3" id="finalDayActionBtnsRow">
+                                                            <div class="d-flex justify-content-center flex-wrap gap-2">
+                                                                <!--<button class="btn btn-outline-success btn-sm">
                                                                         <i class="bi bi-plus-circle me-1"></i> Create
                                                                         New
                                                                     </button>-->
-                                                                    <button id="finalDaySelectUseTempsBtn" disabled
-                                                                        class="btn btn-outline-primary btn-sm"
-                                                                        onclick="loadTemplates(tpkgFinalDaySelect)">
-                                                                        <i class="bi bi-pencil-square me-1"></i> Use
-                                                                        Templates
-                                                                    </button>
-                                                                    <button id="finalDaySelectUseExistingBtn" disabled
-                                                                        class="btn btn-outline-secondary btn-sm"
-                                                                        onclick="loadExistingLDs(tpkgFinalDaySelect)">
-                                                                        <i class="bi bi-archive me-1"></i> Use Existing
-                                                                    </button>
-                                                                </div>
+                                                                <button id="finalDaySelectUseTempsBtn" disabled
+                                                                    class="btn btn-outline-primary btn-sm"
+                                                                    onclick="loadTemplates(tpkgFinalDaySelect)">
+                                                                    <i class="bi bi-pencil-square me-1"></i>
+                                                                    Use
+                                                                    Templates
+                                                                </button>
+                                                                <button id="finalDaySelectUseExistingBtn" disabled
+                                                                    class="btn btn-outline-secondary btn-sm"
+                                                                    onclick="loadExistingLDs(tpkgFinalDaySelect)">
+                                                                    <i class="bi bi-archive me-1"></i> Use
+                                                                    Existing
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -366,7 +369,7 @@
                                                 <div class="d-flex justify-content-end mt-2">
                                                     <button type="button" id="dayPlanInfoEditBtn"
                                                         class="btn btn-outline-primary btn-sm" disabled
-                                                        onclick="refillSelectedDayPlan()">Edit</button>
+                                                        onclick="refillSelectedDayPlan()">Customize</button>
                                                 </div>
                                             </fieldset>
                                         </div>
@@ -458,10 +461,11 @@
                                                     <!-- vehicle Type -->
                                                     <div class="mb-1">
                                                         <label for="tpkgVehitype"
-                                                            class="form-label mb-0 fw-bold">Preferred Transport
+                                                            class="form-label mb-0 fw-bold">Preferred
+                                                            Transport
                                                             Type</label>
                                                         <select id="tpkgVehitype" class="form-select"
-                                                            onchange="savePrefVehitype(this); ">
+                                                            onchange="savePrefVehitype(this); showVehiAvailabilityButtons(); ">
                                                         </select>
                                                     </div>
 
@@ -534,6 +538,10 @@
                                                                         Availability:</label>
                                                                 </div>
                                                                 <div class="col-7">
+                                                                    <button id="btnCheckVehiAvailability"
+                                                                        class="btn btn-sm btn-outline-primary"
+                                                                        onclick="getAvailableVehiCount();">Check
+                                                                        Availability</button>
                                                                     <span class="fw-bold"
                                                                         id="showAvailableVehiCount"></span>
                                                                 </div>
@@ -549,11 +557,12 @@
                                                                 </div>
                                                                 <div class="col-7">
                                                                     <button id="btnCheckDriverAvailability"
-                                                                            class="btn btn-sm btn-outline-primary" onclick="getAvailableIntrDriversCount();">Check
-                                                                            Availability</button>
+                                                                        class="btn btn-sm btn-outline-primary"
+                                                                        onclick="getAvailableIntrDriversCount();">Check
+                                                                        Availability</button>
                                                                     <span class="text-primary fw-bold"
                                                                         id="showAvailableDriverCount">
-                                                                        </span>
+                                                                    </span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -567,7 +576,8 @@
                                                                 </div>
                                                                 <div class="col-7">
                                                                     <button id="btnCheckGuideAvailability"
-                                                                        class="btn btn-sm btn-outline-primary" onclick="getAvailableIntrGuidesCount();">Check
+                                                                        class="btn btn-sm btn-outline-primary"
+                                                                        onclick="getAvailableIntrGuidesCount();">Check
                                                                         Availability</button>
                                                                     <span class="text-primary fw-bold"
                                                                         id="showAvailableGuideCount"></span>

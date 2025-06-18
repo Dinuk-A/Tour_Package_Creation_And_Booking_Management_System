@@ -501,6 +501,8 @@ const loadTemplates = async (selectElementId) => {
     if (selectElementId.id == "tpkgFirstDaySelect") {
         console.log(' if (selectElementId == "tpkgFirstDaySelect") called');
         tpkg.sd_dayplan_id = null;
+        document.getElementById('addNewDaysBtn').disabled = true;
+        document.getElementById('firstDayMsg').classList.add('d-none'); 
     }
 
     if (selectElementId.id == "tpkgFinalDaySelect") {
@@ -535,6 +537,8 @@ const loadTemplates = async (selectElementId) => {
 // to load existing first days
 const loadExistingFDs = async (selectElementId) => {
 
+    document.getElementById('addNewDaysBtn').disabled = true;
+
     tpkg.sd_dayplan_id = null;
 
     selectElementId.style.border = "1px solid #ced4da";
@@ -550,6 +554,7 @@ const loadExistingFDs = async (selectElementId) => {
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyFirstDays, "daytitle");
         const editBtn = document.getElementById('dayPlanInfoEditBtn');
         editBtn.disabled = true;
+        document.getElementById('firstDayMsg').classList.add('d-none'); 
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
@@ -607,14 +612,24 @@ const loadExistingLDs = async (selectElementId) => {
 
 // to handle first day changes
 const handleFirstDayChange = (selectElement) => {
+
     dynamicSelectValidator(selectElement, 'tpkg', 'sd_dayplan_id');
     showFirstDayBtn.disabled = false;
-    addNewDaysBtn.disabled = false;
-    //updateTourEndDate();
-    finalDaySelectUseTempsBtn.disabled = false;
-    finalDaySelectUseExistingBtn.disabled = false;
-    updateTotalDaysCount();
+    const fdMsg = document.getElementById('firstDayMsg');
 
+    if (tpkg.sd_dayplan_id.is_template) {
+        selectElement.style.border = "2px solid orange";
+        fdMsg.classList.remove('d-none');
+        tpkg.sd_dayplan_id = null;
+        addNewDaysBtn.disabled = true;
+    } else {
+        selectElement.style.border = "2px solid lime";
+        fdMsg.classList.add('d-none');
+        addNewDaysBtn.disabled = false;
+        finalDaySelectUseTempsBtn.disabled = false;
+        finalDaySelectUseExistingBtn.disabled = false;
+        updateTotalDaysCount();
+    }
     //💥💥💥
     //refreshMainCostCard();
 
@@ -622,14 +637,15 @@ const handleFirstDayChange = (selectElement) => {
 
 // to handle last day changes
 const handleFinalDayChange = (selectElement) => {
+
     dynamicSelectValidator(selectElement, 'tpkg', 'ed_dayplan_id');
     showFinalDayBtn.disabled = false;
     removeFinalDayBtn.disabled = false;
-    //updateTourEndDate();
     updateTotalDaysCount();
 
     //💥💥💥
     //refreshMainCostCard();
+
 }
 
 // fn to calculate the total days count of the tour package
@@ -656,7 +672,8 @@ const updateTotalDaysCount = () => {
     tpkg.totaldays = total;
 
     updateTourEndDate();
-    showAvailabilityButtons();
+    showDnGAvailabilityButtons();
+    showVehiAvailabilityButtons();
 };
 
 //for every change in selected days,number of travellers,dates the main cost card must be refreshed
@@ -877,8 +894,17 @@ const savePrefVehitype = (selectElement) => {
 
 }
 
+const showVehiAvailabilityButtons = () => {
+    // show the vehi availability button
+    document.getElementById("btnCheckVehiAvailability").classList.remove("d-none");
+
+    // hide + clear spans
+    const vehicleSpan = document.getElementById("showAvailableVehiCount");
+    vehicleSpan.textContent = "";
+}
+
 // function to show both buttons again
-const showAvailabilityButtons = () => {
+const showDnGAvailabilityButtons = () => {
 
     document.getElementById("btnCheckGuideAvailability").classList.remove("d-none");
     document.getElementById("btnCheckDriverAvailability").classList.remove("d-none");
@@ -895,11 +921,18 @@ const showAvailabilityButtons = () => {
 //get available vehi count based on date range and vehi type
 const getAvailableVehiCount = async () => {
 
-    const startDate = tpkg.tourstartdate;
+    const startDate = document.getElementById('tpStartDateInput').value || tpkg.tourstartdate;
     const endDate = tpkg.tourenddate;
-
     const selectedVehitype = document.getElementById('tpkgVehitype').value;
+
+    if (!startDate || !endDate || !selectedVehitype) {
+        alert("Please select start date, day plans and vehicle type.");
+        return;
+    }
+
     const selectedVehitypeObjid = JSON.parse(selectedVehitype).id;
+    const btnCheckVehiAvailability = document.getElementById("btnCheckVehiAvailability");
+
 
     const vehicleResultSection = document.getElementById('showAvailableVehiCount');
 
@@ -909,11 +942,15 @@ const getAvailableVehiCount = async () => {
         vehicleResultSection.classList.remove('text-danger');
         vehicleResultSection.classList.add('text-success');
         vehicleResultSection.innerText = ` ${availableCount} Vehicles Available `;
+
+        btnCheckVehiAvailability.classList.add("d-none");
     } catch (error) {
         console.error("Error fetching available vehicles:", error);
         vehicleResultSection.classList.remove('text-success');
         vehicleResultSection.classList.add('text-danger');
         vehicleResultSection.innerText = "Error fetching available vehicles";
+
+        btnCheckVehiAvailability.classList.remove("d-none");
     }
 
 }
@@ -974,7 +1011,7 @@ const getAvailableIntrGuidesCount = async () => {
 
         guideResultSection.classList.remove('text-danger');
         guideResultSection.classList.add('text-success');
-        guideResultSection.innerText = ` ${availableCount} Guides Available `;      
+        guideResultSection.innerText = ` ${availableCount} Guides Available `;
         guideResultSection.classList.remove("d-none");
 
     } catch (error) {
@@ -1500,7 +1537,7 @@ const feedAndSelectNewlyAddedDp = async () => {
 
     if (editingDPsSelectElementIdVal === "tpkgFirstDaySelect") {
 
-        resetSelectElements(tpkgFirstDaySelect, "Please Select Default");
+        resetSelectElements(tpkgFirstDaySelect, "Please Select First Day");
 
         try {
             tpkg.sd_dayplan_id = null;
@@ -1512,6 +1549,7 @@ const feedAndSelectNewlyAddedDp = async () => {
 
             if (selectedVal) {
                 tpkg.sd_dayplan_id = JSON.parse(selectedVal);
+                handleFirstDayChange(tpkgFirstDaySelect);
             } else {
                 console.warn("No value selected in tpkgFirstDaySelect");
             }
@@ -1521,7 +1559,7 @@ const feedAndSelectNewlyAddedDp = async () => {
 
     } else if (editingDPsSelectElementIdVal === "tpkgFinalDaySelect") {
 
-        resetSelectElements(tpkgFinalDaySelect, "Please Select Default");
+        resetSelectElements(tpkgFinalDaySelect, "Please Select Final Day");
 
         try {
             tpkg.ed_dayplan_id = null;
@@ -1540,14 +1578,12 @@ const feedAndSelectNewlyAddedDp = async () => {
             console.error("final day fetch failed " + error)
         }
 
-
-
     } else {
 
         //for mid days
         const midDaySelect = document.getElementById(editingDPsSelectElementIdVal);
         if (midDaySelect) {
-            resetSelectElements(midDaySelect, "Please Select Default catttt");
+            resetSelectElements(midDaySelect, "Please Select The Itinerary");
 
             try {
                 const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
@@ -1825,7 +1861,8 @@ const removeFinalDay = () => {
 
     //updateTourEndDate();
     updateTotalDaysCount();
-    showAvailabilityButtons();
+    showDnGAvailabilityButtons();
+    showVehiAvailabilityButtons();
 }
 
 //check errors before adding
