@@ -789,9 +789,9 @@ const calcTotalLunchCost = () => {
 
 // check if first tabs inputs are all filled
 const checkFirstTab = () => {
-    const pkgTitle = document.getElementById('inputPkgTitle').value.trim();
-    const startDate = document.getElementById('tpStartDateInput').value;
-    const description = document.getElementById('tpDescription').value.trim();
+    const pkgTitle = tpkg.pkgtitle;
+    const startDate = tpkg.tourstartdate;
+    const description = tpkg.web_description;
 
     if (tpkg.is_custompkg == null) {
         alert("Please select whether this is a custom package or a template package.");
