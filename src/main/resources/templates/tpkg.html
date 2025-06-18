@@ -162,7 +162,7 @@
                                                 <label for="tpStartDateInput" class="form-label mb-0 fw-bold">Tour Start
                                                     Date(Estimated):</label>
                                                 <input type="date" class="form-control" id="tpStartDateInput"
-                                                    onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate');"
+                                                    onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate'); showAvailabilityButtons();"
                                                     oninput="showTourStartDate(); updateTourEndDate();"
                                                     onkeydown="return false">
                                             </div>

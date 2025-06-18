@@ -656,6 +656,7 @@ const updateTotalDaysCount = () => {
     tpkg.totaldays = total;
 
     updateTourEndDate();
+    showAvailabilityButtons();
 };
 
 //for every change in selected days,number of travellers,dates the main cost card must be refreshed
@@ -876,16 +877,6 @@ const savePrefVehitype = (selectElement) => {
 
 }
 
-// Function to hide both buttons
-const hideAvailabilityButtons = () => {
-
-    document.getElementById("btnCheckGuideAvailability").classList.add("d-none");
-    document.getElementById("btnCheckDriverAvailability").classList.add("d-none");
-
-    document.getElementById("showAvailableGuideCount").classList.remove("d-none");
-    document.getElementById("showAvailableDriverCount").classList.remove("d-none");
-}
-
 // function to show both buttons again
 const showAvailabilityButtons = () => {
 
@@ -895,9 +886,6 @@ const showAvailabilityButtons = () => {
     // hide + clear spans
     const guideSpan = document.getElementById("showAvailableGuideCount");
     const driverSpan = document.getElementById("showAvailableDriverCount");
-
-    guideSpan.classList.add("d-none");
-    driverSpan.classList.add("d-none");
 
     guideSpan.textContent = "";
     driverSpan.textContent = "";
@@ -942,6 +930,7 @@ const getAvailableIntrDriversCount = async () => {
     }
 
     const driverResultSection = document.getElementById('showAvailableDriverCount');
+    const btnCheckDriverAvailability = document.getElementById("btnCheckDriverAvailability");
 
     try {
         const availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + startDate + "/" + endDate);
@@ -950,12 +939,15 @@ const getAvailableIntrDriversCount = async () => {
         driverResultSection.classList.add('text-success');
         driverResultSection.innerText = ` ${availableCount} Drivers Available `;
 
-        hideAvailabilityButtons();
+        btnCheckDriverAvailability.classList.add("d-none");
+
     } catch (error) {
         console.error("Error fetching available drivers:", error);
         driverResultSection.classList.remove('text-success');
         driverResultSection.classList.add('text-danger');
         driverResultSection.innerText = "Error fetching available drivers";
+
+        btnCheckDriverAvailability.classList.remove("d-none");
     }
 
 }
@@ -972,20 +964,26 @@ const getAvailableIntrGuidesCount = async () => {
     }
 
     const guideResultSection = document.getElementById('showAvailableGuideCount');
+    const btnCheckGuideAvailability = document.getElementById("btnCheckGuideAvailability");
 
     try {
         const availableguidesByDates = await ajaxGetReq("emp/availableguidesbydates/" + startDate + "/" + endDate);
         const availableCount = availableguidesByDates.length;
+
+        btnCheckGuideAvailability.classList.add("d-none");
+
         guideResultSection.classList.remove('text-danger');
         guideResultSection.classList.add('text-success');
-        guideResultSection.innerText = ` ${availableCount} Guides Available `;
+        guideResultSection.innerText = ` ${availableCount} Guides Available `;      
+        guideResultSection.classList.remove("d-none");
 
-        hideAvailabilityButtons();
     } catch (error) {
         console.error("Error fetching available guides:", error);
         guideResultSection.classList.remove('text-success');
         guideResultSection.classList.add('text-danger');
         guideResultSection.innerText = "Error fetching available guides";
+
+        btnCheckGuideAvailability.classList.remove("d-none");
     }
 
 }
@@ -1827,6 +1825,7 @@ const removeFinalDay = () => {
 
     //updateTourEndDate();
     updateTotalDaysCount();
+    showAvailabilityButtons();
 }
 
 //check errors before adding
