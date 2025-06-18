@@ -941,7 +941,8 @@ const takePackedLunchNo = () => {
 
 }
 
-//auto populate lunch restaurants and end stays, based on last element of vplaces array (NOT USED)
+//(NOT USED 💥💥💥)
+//auto populate lunch restaurants and end stays, based on last element of vplaces array 
 const getLunchAndHotelAuto = async () => {
 
     if (dayplan.vplaces.length != 0 && dayplan.is_template == "false") {

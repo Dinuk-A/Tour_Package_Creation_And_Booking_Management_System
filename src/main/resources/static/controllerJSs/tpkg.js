@@ -502,7 +502,7 @@ const loadTemplates = async (selectElementId) => {
         console.log(' if (selectElementId == "tpkgFirstDaySelect") called');
         tpkg.sd_dayplan_id = null;
         document.getElementById('addNewDaysBtn').disabled = true;
-        document.getElementById('firstDayMsg').classList.add('d-none'); 
+        document.getElementById('firstDayMsg').classList.add('d-none');
     }
 
     if (selectElementId.id == "tpkgFinalDaySelect") {
@@ -554,7 +554,7 @@ const loadExistingFDs = async (selectElementId) => {
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyFirstDays, "daytitle");
         const editBtn = document.getElementById('dayPlanInfoEditBtn');
         editBtn.disabled = true;
-        document.getElementById('firstDayMsg').classList.add('d-none'); 
+        document.getElementById('firstDayMsg').classList.add('d-none');
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
@@ -786,6 +786,43 @@ const calcTotalLunchCost = () => {
     tpkg.totallunchcost = parseFloat(totalLunchCost.toFixed(2));
 
 }
+
+// check if first tabs inputs are all filled
+const checkFirstTab = () => {
+    const pkgTitle = document.getElementById('inputPkgTitle').value.trim();
+    const startDate = document.getElementById('tpStartDateInput').value;
+    const description = document.getElementById('tpDescription').value.trim();
+
+    if (tpkg.is_custompkg == null) {
+        alert("Please select whether this is a custom package or a template package.");
+        return null;
+    }
+
+    if (!pkgTitle) {
+        alert("Please enter the tour package title.");
+        return null;
+    }
+
+    if (tpkg.is_custompkg === true) {
+        if (!startDate) {
+            alert("For a custom package, please fill the start date.");
+            return null;
+        }
+    }
+
+    if (tpkg.is_custompkg === false) {
+        if (!description) {
+            alert("For a template package, please fill the web description.");
+            return null;
+        }
+    }
+
+    tabelement = document.getElementById('tpkgStep2-tab');
+    tabelement.classList.remove("disabled");
+    tabelement.click();
+
+};
+
 
 //to calculate the total stay cost of the tour package
 //add incremental cost for KIDS 💥💥💥
