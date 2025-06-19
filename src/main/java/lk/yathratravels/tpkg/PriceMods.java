@@ -49,14 +49,14 @@ public class PriceMods {
     @Column(name = "ext_guide_percentage")
     private BigDecimal ext_guide_percentage;
 
-    @Column(name = "addeddatetime")
-    private LocalDateTime addeddatetime;
+    //@Column(name = "addeddatetime")
+    //private LocalDateTime addeddatetime;
 
     @Column(name = "lastmodifieddatetime")
     private LocalDateTime lastmodifieddatetime;
 
-    @Column(name = "addeduserid")
-    private Integer addeduserid;
+    //@Column(name = "addeduserid")
+    //private Integer addeduserid;
 
     @Column(name = "lastmodifieduserid")
     private Integer lastmodifieduserid;

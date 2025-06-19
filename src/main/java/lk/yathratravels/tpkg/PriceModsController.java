@@ -117,16 +117,33 @@ public class PriceModsController {
 
             PriceMods existingPMRow = priceModsDao.findLatestEntry();
 
-            if (existingPMRow != null) {
-                priceModNew.setId(existingPMRow.getId());
+            // if (existingPMRow != null) {
+            // priceModNew.setId(existingPMRow.getId());
+            // }
+
+            if (existingPMRow == null) {
+                return "Update Not Completed: No existing price modifier entry found.";
             }
 
+            priceModNew.setId(existingPMRow.getId());
             priceModNew.setLastmodifieddatetime(LocalDateTime.now());
             priceModNew.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             PriceMods savedPM = priceModsDao.save(priceModNew);
 
-            
+            PriceModHistory history = new PriceModHistory();
+            history.setOld_cpm(existingPMRow.getCompany_profit_margin());
+            history.setOld_edp(existingPMRow.getExt_driver_percentage());
+            history.setOld_evp(existingPMRow.getExt_vehicle_percentage());
+            history.setOld_egp(existingPMRow.getExt_guide_percentage());
+            history.setOri_addeduserid(existingPMRow.getLastmodifieduserid());
+            history.setOri_addeddatetime(existingPMRow.getLastmodifieddatetime());
+            history.setNote("Price Modifier Updated, recording history");
+
+            history.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
+            history.setLastmodifieddatetime(LocalDateTime.now());
+
+            priceModHistoryDao.save(history);
 
             return "OK";
 

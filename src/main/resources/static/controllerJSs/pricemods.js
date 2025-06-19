@@ -1,7 +1,11 @@
 window.addEventListener('load', () => {
     refreshPriceConfigForm();
     refillForminputs();
+    buildPMHistoryTable();
 });
+
+//global var to store id of the table
+let sharedTableId = "mainTablePModHistory";
 
 // globally accessible
 let oldPriceModObj = null;
@@ -18,11 +22,12 @@ const refillForminputs = async () => {
         //oldPriceModObj = pricemods;
 
         console.log("Old Price Modifications Object:", oldPriceModObj);
-       
+
         document.getElementById('companyProfitMargin').value = parseFloat(pricemods.company_profit_margin).toFixed(2);
         document.getElementById('extDriverSurcharge').value = parseFloat(pricemods.ext_driver_percentage).toFixed(2);
         document.getElementById('extVehicleSurcharge').value = parseFloat(pricemods.ext_vehicle_percentage).toFixed(2);
         document.getElementById('extGuideSurcharge').value = parseFloat(pricemods.ext_guide_percentage).toFixed(2);
+        document.getElementById('lastModifiedDateInput').value = pricemods.lastmodifieddatetime.split('T')[0];
 
     } catch (error) {
         console.error("Failed to build table:", error);
@@ -44,6 +49,142 @@ const refillForminputs = async () => {
 // refresh the main form
 const refreshPriceConfigForm = () => {
     pricemod = new Object();
+
+    const updateBtn = document.getElementById('pricemodsUpdateBtn');
+    updateBtn.disabled = true;
+    updateBtn.style.cursor = "not-allowed";
+}
+
+//a custom table creation function because in this table we dont need a model since all info are visible in one window(full table)
+const createPriceModsTableCustomFn = (dataContainer) => {
+
+    // Clear out any previous data
+    tablePriceModHistoryHolderDiv.innerHTML = '';
+
+    // Create main table tag
+    const tableTag = document.createElement('table');
+    tableTag.setAttribute('class', 'table table-bordered table-striped border-primary mt-2 mb-2');
+    tableTag.setAttribute('id', sharedTableId);
+
+    // Create thead
+    const tableHead = document.createElement('thead');
+
+    // Create a row for the head
+    const tableHeadRow = document.createElement('tr');
+
+    // Add the index column first
+    const indexTH = document.createElement('th');
+    indexTH.innerText = '#';
+    tableHeadRow.appendChild(indexTH);
+
+    //Array containing info related to table build
+    const tableColumnInfoArray = [
+        { displayType: 'function', displayingPropertyOrFn: showActiveDateRange, colHeadName: 'Active Date Range' },
+        { displayType: 'function', displayingPropertyOrFn: showAllOldValues, colHeadName: 'Previous Values' },
+        { displayType: 'function', displayingPropertyOrFn: showAddedUnT, colHeadName: 'Added' },
+        { displayType: 'function', displayingPropertyOrFn: showUpdatedUnT, colHeadName: 'Updated' }
+    ]
+
+    // Add other column headers
+    tableColumnInfoArray.forEach(columnObj => {
+        const columnHead = document.createElement('th');
+        columnHead.innerText = columnObj.colHeadName;
+        columnHead.setAttribute('class', ('text-center justify-content-center col-head col-' + columnObj.colHeadName));
+        tableHeadRow.appendChild(columnHead);
+    });
+
+    // Append the row to the thead
+    tableHead.appendChild(tableHeadRow);
+
+    // Create tbody
+    const tableBody = document.createElement('tbody');
+
+    // Populate tbody with data
+    dataContainer.forEach((record, index) => {
+        const row = document.createElement('tr');
+
+        // Index column
+        const indexCell = document.createElement('td');
+        indexCell.innerText = index + 1;
+        indexCell.setAttribute('class', 'text-center justify-content-center');
+        row.appendChild(indexCell);
+
+        // Data columns
+        tableColumnInfoArray.forEach(columnObj => {
+            const cell = document.createElement('td');
+            cell.setAttribute('class', 'text-center justify-content-center');
+
+            //different scenarios for different display types
+            switch (columnObj.displayType) {
+                case "text":
+                    //ex: employee[0][fullname]
+                    cell.innerText = record[columnObj.displayingPropertyOrFn];
+                    break;
+
+                case "function":
+                    //ex: getDesignation(employee[0])
+                    cell.innerHTML = columnObj.displayingPropertyOrFn(record)
+                    break;
+
+                default:
+                    showAlertModal('err', "error creating table");
+                    break;
+            }
+            row.appendChild(cell);
+        });
+
+        tableBody.appendChild(row);
+    });
+
+    // Append thead and tbody to the table
+    tableTag.appendChild(tableHead);
+    tableTag.appendChild(tableBody);
+
+    // Append the table to the holder div
+    tablePriceModHistoryHolderDiv.appendChild(tableTag);
+}
+
+// fill table with active date range of previous price modifications
+const showActiveDateRange = (objPMHistory) => {
+    return `<span class="text-center justify-content-center">${objPMHistory.ori_addeddatetime} - ${objPMHistory.lastmodifieddatetime}</span>`;
+}
+
+// fill table with all old values of previous price modifications
+const showAllOldValues = (objPMHistory) => {
+    return 'cat'
+}
+
+// fill table with added params of previous price modifications
+const showAddedUnT = (objPMHistory) => {
+    return 'cat'
+}
+
+// fill table with updated params of previous price modifications
+const showUpdatedUnT = (objPMHistory) => {
+    return 'cat'
+}
+
+
+//define fn for refresh privilege table
+const buildPMHistoryTable = async () => {
+
+    try {
+
+        const pmHistory = await ajaxGetReq("/pricemodhistory/all");
+        console.log("Price Mod History Data:", pmHistory);
+
+        createPriceModsTableCustomFn(pmHistory);
+
+        $(`#${sharedTableId}`).dataTable();
+
+    } catch (error) {
+        console.error("Failed to build price mod history table:", error);
+        console.log("*****************");
+        console.error("jqXHR:", error.jqXHR);
+        console.error("Status:", error.textStatus);
+        console.error("Error Thrown:", error.errorThrown);
+    }
+
 }
 
 // to enable input fields for editing
@@ -58,39 +199,11 @@ const enableInput = (inputId) => {
     }
 }
 
-// to save the modified values(update the database)
-const updatePriceMods2 = async () => {
-
-    const companyProfitMargin = parseFloat(document.getElementById('companyProfitMargin').value);
-    const extDriverSurcharge = parseFloat(document.getElementById('extDriverSurcharge').value);
-    const extVehicleSurcharge = parseFloat(document.getElementById('extVehicleSurcharge').value);
-    const extGuideSurcharge = parseFloat(document.getElementById('extGuideSurcharge').value);
-
-    if (isNaN(companyProfitMargin) || isNaN(extDriverSurcharge) || isNaN(extVehicleSurcharge) || isNaN(extGuideSurcharge)) {
-        alert("Please enter valid numeric values.");
-        return;
-    }
-
-    try {
-        await ajaxPostReq("/pricemods/update", {
-            company_profit_margin: companyProfitMargin,
-            ext_driver_percentage: extDriverSurcharge,
-            ext_vehicle_percentage: extVehicleSurcharge,
-            ext_guide_percentage: extGuideSurcharge
-        });
-
-        alert("Price modifications saved successfully.");
-        refillForminputs(); // Refresh the form inputs after saving
-
-    } catch (error) {
-        console.error("Failed to save price modifications:", error);
-        alert("Failed to save price modifications. Please try again.");
-    }
-}
-
 // enable form update button when any input value changes
 const enableFormUpdateBtn = () => {
-    document.getElementById('pricemodsUpdateBtn').disabled = false;
+    const updateBtn = document.getElementById('pricemodsUpdateBtn');
+    updateBtn.disabled = false;
+    updateBtn.style.cursor = "pointer";
 };
 
 // fn to hold the price modification current values
@@ -102,7 +215,6 @@ const collectPriceModFormValues = () => {
 
     console.log("Collected Price Modifications:", pricemod);
 };
-
 
 // check errors before submitting the PriceMods form
 const checkPriceModsFormErrors = () => {
@@ -137,19 +249,19 @@ const showPriceModValueChanges = () => {
     let updates = "";
 
     if (parseFloat(pricemod.company_profit_margin) !== parseFloat(oldPriceModObj.company_profit_margin)) {
-        updates += `Company Profit Margin will be changed from "${oldPriceModObj.company_profit_margin}" to "${pricemod.company_profit_margin}"\n`;
+        updates += `Company Profit Margin will be changed to "${pricemod.company_profit_margin}"\n`;
     }
 
     if (parseFloat(pricemod.ext_driver_percentage) !== parseFloat(oldPriceModObj.ext_driver_percentage)) {
-        updates += `External Driver Surcharge will be changed from "${oldPriceModObj.ext_driver_percentage}" to "${pricemod.ext_driver_percentage}"\n`;
+        updates += `External Driver Surcharge will be changed "${pricemod.ext_driver_percentage}"\n`;
     }
 
     if (parseFloat(pricemod.ext_vehicle_percentage) !== parseFloat(oldPriceModObj.ext_vehicle_percentage)) {
-        updates += `External Vehicle Surcharge will be changed from "${oldPriceModObj.ext_vehicle_percentage}" to "${pricemod.ext_vehicle_percentage}"\n`;
+        updates += `External Vehicle Surcharge will be changed "${pricemod.ext_vehicle_percentage}"\n`;
     }
 
     if (parseFloat(pricemod.ext_guide_percentage) !== parseFloat(oldPriceModObj.ext_guide_percentage)) {
-        updates += `External Guide Surcharge will be changed from "${oldPriceModObj.ext_guide_percentage}" to "${pricemod.ext_guide_percentage}"\n`;
+        updates += `External Guide Surcharge will be changed  "${pricemod.ext_guide_percentage}"\n`;
     }
 
     return updates;

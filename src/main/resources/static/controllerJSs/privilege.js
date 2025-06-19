@@ -156,7 +156,7 @@ const buildPriviTable = async () => {
         $(`#${sharedTableId}`).dataTable();
 
     } catch (error) {
-        console.error("Failed to build employee table:", error);
+        console.error("Failed to build privi table:", error);
         console.log("*****************");
         console.error("jqXHR:", error.jqXHR);
         console.error("Status:", error.textStatus);

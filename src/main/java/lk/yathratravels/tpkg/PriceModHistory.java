@@ -24,14 +24,17 @@ public class PriceModHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "modifier_type")
-    private String modifierType;
+    @Column(name = "old_cpm" )
+    private BigDecimal old_cpm;
 
-    @Column(name = "old_value")
-    private BigDecimal old_value;
+    @Column(name = "old_edp" )
+    private BigDecimal old_edp;
 
-    @Column(name = "updated_value")
-    private BigDecimal updated_value;
+    @Column(name = "old_evp" )
+    private BigDecimal old_evp;
+
+    @Column(name = "old_egp" )
+    private BigDecimal old_egp;
 
     @Column(name = "lastmodifieduserid")
     private Integer lastmodifieduserid;
@@ -42,7 +45,30 @@ public class PriceModHistory {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "ori_addeduserid")
+    private Integer ori_addeduserid;
+
+    @Column(name = "ori_addeddatetime")
+    private LocalDateTime ori_addeddatetime;
+
 }
 
-
-
+/*
+ * @Column(name = "modifier_type")
+ * private String modifierType;
+ * 
+ * @Column(name = "old_value")
+ * private BigDecimal old_value;
+ * 
+ * @Column(name = "updated_value")
+ * private BigDecimal updated_value;
+ * 
+ * @Column(name = "lastmodifieduserid")
+ * private Integer lastmodifieduserid;
+ * 
+ * @Column(name = "lastmodifieddatetime")
+ * private LocalDateTime lastmodifieddatetime;
+ * 
+ * @Column(name = "note")
+ * private String note;
+ */
