@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import jakarta.transaction.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -27,6 +29,9 @@ public class PriceModsController {
 
     @Autowired
     private PriceModsDao priceModsDao;
+
+    @Autowired
+    private PriceModHistoryDao priceModHistoryDao;
 
     // Display Price Modifiers UI
     @RequestMapping(value = "/pricemods", method = RequestMethod.GET)
@@ -53,8 +58,22 @@ public class PriceModsController {
         }
     }
 
-    // Get all price modifiers
+    // Get latest price modifier ✅✅✅
     @GetMapping(value = "/pricemods/all", produces = "application/json")
+    public PriceMods getLatestPriceModifier() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return null;
+        }
+
+        return priceModsDao.findLatestEntry();
+    }
+
+    // Get all price modifiers 💥💥💥not used
+    @GetMapping(value = "/pricemods/all/original", produces = "application/json")
     public List<PriceMods> getAllPriceModifiers() {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -64,62 +83,53 @@ public class PriceModsController {
             return new ArrayList<>();
         }
 
-        return priceModsDao.findAll(Sort.by(Direction.DESC, "id"));
+        return priceModsDao.findAll();
     }
 
     // Get latest active price modifier
-    @GetMapping(value = "/pricemods/active", produces = "application/json")
-    public Optional<PriceMods> getActivePriceModifier() {
+    // @GetMapping(value = "/pricemods/active", produces = "application/json")
+    // public Optional<PriceMods> getActivePriceModifier() {
+    //
+    // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    // Privilege privilegeLevelForLoggedUser =
+    // privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
+    //
+    // if (!privilegeLevelForLoggedUser.getPrvselect()) {
+    // return Optional.empty();
+    // }
+    //
+    // return priceModsDao.getLatestActiveModifiers();
+    // }
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
-
-        if (!privilegeLevelForLoggedUser.getPrvselect()) {
-            return Optional.empty();
-        }
-
-        return priceModsDao.getLatestActiveModifiers();
-    }
-
-    @PostMapping(value = "/pricemods")
-    public String savePriceModifier(@RequestBody PriceMods priceMod) {
-
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
-
-        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
-            return "You do not have permission to add a new price modifier.";
-        }
-
-        try {
-            priceMod.setAddeddatetime(LocalDateTime.now());
-            priceMod.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
-
-            priceModsDao.save(priceMod);
-            return "OK";
-
-        } catch (Exception e) {
-            return "Save Price Modifier Failed. " + e.getMessage();
-        }
-
-    }
-
+    // Update Price Modifier
     @PutMapping(value = "/pricemods")
-    public String updatePriceModifier(@RequestBody PriceMods priceMod) {
+    @Transactional
+    public String updatePriceModifier(@RequestBody PriceMods priceModNew) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
 
         if (!privilegeLevelForLoggedUser.getPrvupdate()) {
-            return "You do not have permission to edit a price modifier.";
+            return "You do not have permission to update a price modifier.";
         }
 
         try {
-            priceMod.setLastmodifieddatetime(LocalDateTime.now());
-            priceMod.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
 
-            priceModsDao.save(priceMod);
+            PriceMods existingPMRow = priceModsDao.findLatestEntry();
+
+            if (existingPMRow != null) {
+                priceModNew.setId(existingPMRow.getId());
+            }
+
+            priceModNew.setLastmodifieddatetime(LocalDateTime.now());
+            priceModNew.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+            PriceMods savedPM = priceModsDao.save(priceModNew);
+
+            
+
             return "OK";
+
         } catch (Exception e) {
             return "Update Not Completed Because: " + e.getMessage();
         }

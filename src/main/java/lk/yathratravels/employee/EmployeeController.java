@@ -252,6 +252,18 @@ public class EmployeeController {
             return "Update Not Completed : Employee Does Not Exists";
         }
 
+        /*
+         * Optional<Employee> optionalEmployee =
+         * employeeDao.findById(idOfUpdatingEmployee);
+         * 
+         * if (optionalEmployee.isEmpty()) {
+         * return "Update Not Completed : Employee Does Not Exist";
+         * }
+         * 
+         * Employee existingEmployee = optionalEmployee.get();
+         * 
+         */
+
         // check duplications with entered nic
         Employee anEmployeeByThisNIC = employeeDao.getEmployeeByNIC(employee.getNic());
         if (anEmployeeByThisNIC != null) {

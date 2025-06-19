@@ -59,11 +59,14 @@
                                 </div>
                                 <div class="col-2">
                                     <input disabled type="number" step="0.01" class="form-control"
-                                        id="companyProfitMargin" name="company_profit_margin" required>
+                                        id="companyProfitMargin" name="company_profit_margin"
+                                        onkeyup="inputValidatorText(this, '', 'pricemod' , 'company_profit_margin'); enableFormUpdateBtn();"
+                                        required>
                                 </div>
                                 <div class="col-2"></div>
                                 <div class="col-3">
-                                    <button class="btn btn-outline-secondary w-100" id="tpkgProfitPercBtn">Edit <i
+                                    <button class="btn btn-outline-primary w-100" id="tpkgProfitPercBtn"
+                                        onclick="enableInput('companyProfitMargin')">Edit <i
                                             class="bi bi-pencil-square"></i></button>
                                 </div>
                             </div>
@@ -76,11 +79,13 @@
                                 </div>
                                 <div class="col-2">
                                     <input disabled type="number" step="0.01" class="form-control"
-                                        id="extDriverSurcharge" name="ext_driver_surcharge" required>
+                                        id="extDriverSurcharge" name="ext_driver_surcharge" required
+                                        onkeyup="inputValidatorText(this, '', 'pricemod' , 'ext_driver_percentage'); enableFormUpdateBtn();">
                                 </div>
                                 <div class="col-2"></div>
                                 <div class="col-3">
-                                    <button class="btn btn-outline-secondary w-100" id="extDriverPercBtn">Edit <i
+                                    <button onclick="enableInput('extDriverSurcharge')"
+                                        class="btn btn-outline-primary w-100" id="extDriverPercBtn">Edit <i
                                             class="bi bi-pencil-square"></i></button>
                                 </div>
                             </div>
@@ -93,11 +98,13 @@
                                 </div>
                                 <div class="col-2">
                                     <input disabled type="number" step="0.01" class="form-control"
-                                        id="extVehicleSurcharge" name="ext_vehicle_surcharge" required>
+                                        id="extVehicleSurcharge" name="ext_vehicle_surcharge" required
+                                        onkeyup="inputValidatorText(this, '', 'pricemod' , 'ext_vehicle_percentage'); enableFormUpdateBtn();">
                                 </div>
                                 <div class="col-2"></div>
                                 <div class="col-3">
-                                    <button class="btn btn-outline-secondary w-100" id="extVehiPercBtn">Edit <i
+                                    <button onclick="enableInput('extVehicleSurcharge')"
+                                        class="btn btn-outline-primary w-100" id="extVehiPercBtn">Edit <i
                                             class="bi bi-pencil-square"></i></button>
                                 </div>
                             </div>
@@ -110,11 +117,14 @@
                                 </div>
                                 <div class="col-2">
                                     <input disabled type="number" step="0.01" class="form-control"
-                                        id="extGuideSurcharge" name="ext_guide_surcharge" required>
+                                        id="extGuideSurcharge" name="ext_guide_surcharge"
+                                        onkeyup="inputValidatorText(this, '', 'pricemod' , 'ext_guide_percentage'); enableFormUpdateBtn();"
+                                        required>
                                 </div>
                                 <div class="col-2"></div>
                                 <div class="col-3">
-                                    <button class="btn btn-outline-primary w-100" id="extGuidePercBtn">Edit <i
+                                    <button onclick="enableInput('extGuideSurcharge')"
+                                        class="btn btn-outline-primary w-100" id="extGuidePercBtn">Edit <i
                                             class="bi bi-pencil-square"></i></button>
                                 </div>
                             </div>
@@ -139,6 +149,8 @@
                                 </div>
                             </div>-->
 
+                            <!-- 💥💥💥 last updated time and user inputs -->
+
                             <!-- Form Buttons -->
                             <div class="row mt-4 mb-2">
                                 <!--<div class="col-4">-->
@@ -147,7 +159,7 @@
                                 <div class="col-12 text-end">
                                     <button type="submit" id="pricemodsUpdateBtn" class="btn-update fw-bold me-2"
                                         onclick="updatePriceMods()" disabled>Update Entry</button>
-                                    <button type="submit" id="pricemodsAddBtn" class="btn-add fw-bold"
+                                    <button type="submit" id="pricemodsAddBtn" class="d-none btn-add fw-bold"
                                         onclick="addNewPriceMods()" disabled>Add Entry</button>
                                 </div>
                             </div>

@@ -61,8 +61,8 @@ public class PriceMods {
     @Column(name = "lastmodifieduserid")
     private Integer lastmodifieduserid;
 
-    @Column(name = "ext_fee_status")
-    private String ext_fee_status;
+    @Column(name = "pm_status")
+    private String pm_status;
 
     @Column(name = "description")
     private String description;
