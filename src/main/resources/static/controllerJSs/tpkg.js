@@ -751,7 +751,7 @@ const calcTotalLunchCost = () => {
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
 
     //lunch cost for first day , for 1 person
-    let lunchCostFirstDay;
+    let lunchCostFirstDay= 0.00;
     if (!tpkg.sd_dayplan_id.is_takepackedlunch || tpkg.sd_dayplan_id.is_takepackedlunch == null) {
         lunchCostFirstDay = tpkg.sd_dayplan_id.lunchplace_id?.costperhead || 0.00;
     }
@@ -767,11 +767,8 @@ const calcTotalLunchCost = () => {
         });
     }
 
-    //let midDaysLCost = day.lunchplace_id.costperhead;
-    //lunchCostMidDays += midDaysLCost;
-
     //lunch cost for last day , for 1 person
-    let lunchCostLastDay;
+    let lunchCostLastDay = 0.00;
     if (tpkg.ed_dayplan_id == null) {
         lunchCostLastDay = 0.00;
     } else {
@@ -779,6 +776,11 @@ const calcTotalLunchCost = () => {
             lunchCostLastDay = tpkg.ed_dayplan_id.lunchplace_id?.costperhead || 0.00;
         }
     }
+
+    console.log("lunchCostFirstDay: " + lunchCostFirstDay);
+    console.log("lunchCostMidDays: " + lunchCostMidDays);
+    console.log("lunchCostLastDay: " + lunchCostLastDay);
+    console.log("Total Travellers: " + totalTravellers);
 
     //final lunch cost for all
     const totalLunchCost = (lunchCostFirstDay + lunchCostMidDays + lunchCostLastDay) * totalTravellers;
