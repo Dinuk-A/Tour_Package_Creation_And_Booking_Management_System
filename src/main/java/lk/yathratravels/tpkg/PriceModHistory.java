@@ -36,24 +36,27 @@ public class PriceModHistory {
     @Column(name = "old_egp" )
     private BigDecimal old_egp;
 
-    @Column(name = "lastmodifieduserid")
-    private Integer lastmodifieduserid;
-
-    @Column(name = "lastmodifieddatetime")
-    private LocalDateTime lastmodifieddatetime;
-
-    @Column(name = "note")
-    private String note;
-
     @Column(name = "ori_addeduserid")
     private Integer ori_addeduserid;
 
     @Column(name = "ori_addeddatetime")
     private LocalDateTime ori_addeddatetime;
 
+    @Column(name = "ori_updateduserid")
+    private Integer ori_updateduserid;
+
+    @Column(name = "ori_updateddatetime")
+    private LocalDateTime ori_updateddatetime;
+
+    @Column(name = "note")
+    private String note;
+
 }
 
 /*
+ori_updateduserid int 
+ori_updateddatetime datetime
+
  * @Column(name = "modifier_type")
  * private String modifierType;
  * 

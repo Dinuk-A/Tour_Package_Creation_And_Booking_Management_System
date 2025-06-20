@@ -19,15 +19,13 @@ const refillForminputs = async () => {
         console.log('initial pricemods:', pricemods);
 
         oldPriceModObj = JSON.parse(JSON.stringify(pricemods));
-        //oldPriceModObj = pricemods;
-
         console.log("Old Price Modifications Object:", oldPriceModObj);
 
         document.getElementById('companyProfitMargin').value = parseFloat(pricemods.company_profit_margin).toFixed(2);
         document.getElementById('extDriverSurcharge').value = parseFloat(pricemods.ext_driver_percentage).toFixed(2);
         document.getElementById('extVehicleSurcharge').value = parseFloat(pricemods.ext_vehicle_percentage).toFixed(2);
         document.getElementById('extGuideSurcharge').value = parseFloat(pricemods.ext_guide_percentage).toFixed(2);
-        document.getElementById('lastModifiedDateInput').value = pricemods.lastmodifieddatetime.split('T')[0];
+        document.getElementById('lastModifiedDateInput').value = pricemods.updateddatetime.split('T')[0];
 
     } catch (error) {
         console.error("Failed to build table:", error);
@@ -79,9 +77,9 @@ const createPriceModsTableCustomFn = (dataContainer) => {
 
     //Array containing info related to table build
     const tableColumnInfoArray = [
-        { displayType: 'function', displayingPropertyOrFn: showActiveDateRange, colHeadName: 'Active Date Range' },
+        { displayType: 'function', displayingPropertyOrFn: showActiveDateRange, colHeadName: 'Usage Period' },
         { displayType: 'function', displayingPropertyOrFn: showAllOldValues, colHeadName: 'Previous Values' },
-        { displayType: 'function', displayingPropertyOrFn: showAddedUnT, colHeadName: 'Added' },
+        //{ displayType: 'function', displayingPropertyOrFn: showAddedUnT, colHeadName: 'Added' },
         { displayType: 'function', displayingPropertyOrFn: showUpdatedUnT, colHeadName: 'Updated' }
     ]
 
@@ -146,23 +144,40 @@ const createPriceModsTableCustomFn = (dataContainer) => {
 
 // fill table with active date range of previous price modifications
 const showActiveDateRange = (objPMHistory) => {
-    return `<span class="text-center justify-content-center">${objPMHistory.ori_addeddatetime} - ${objPMHistory.lastmodifieddatetime}</span>`;
-}
+    return `
+        <div class="text-start px-3 justify-content-center">
+            From: ${objPMHistory.ori_addeddatetime.slice(0, 10)}<br>
+            Till: ${objPMHistory.ori_updateddatetime.slice(0, 10)}
+        </div>
+    `;
+};
 
 // fill table with all old values of previous price modifications
 const showAllOldValues = (objPMHistory) => {
-    return 'cat'
-}
-
-// fill table with added params of previous price modifications
-const showAddedUnT = (objPMHistory) => {
-    return 'cat'
-}
+    return `
+        <div>
+            <div class='text-start px-3'>Company Profit Margin:   ${objPMHistory.old_cpm}%</div>
+            <div class='text-start px-3'>Driver Surcharge:   ${objPMHistory.old_edp}%</div>
+            <div class='text-start px-3'>Vehicle Surcharge:   ${objPMHistory.old_evp}%</div>
+            <div class='text-start px-3'>Guide Surcharge:   ${objPMHistory.old_egp}%</div>
+        </div>
+    `;
+};
 
 // fill table with updated params of previous price modifications
 const showUpdatedUnT = (objPMHistory) => {
-    return 'cat'
-}
+    const dt = new Date(objPMHistory.ori_updateddatetime);
+    const formattedDate = dt.toLocaleDateString('en-GB'); // DD/MM/YYYY
+    const formattedTime = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+    return `
+        <div class= "text-start px-5">
+            Updated at:   ${formattedDate} ${formattedTime}<br>
+            By User:   ${objPMHistory.ori_updateduserid}
+        </div>
+    `;
+};
+
 
 
 //define fn for refresh privilege table
@@ -282,6 +297,13 @@ const updatePriceMods = async () => {
 
             if (userConfirm) {
                 try {
+
+                    console.log("Preparing to update Price Modifications before update:", pricemod);
+                    console.log("Old Price Modifications Object before update:", oldPriceModObj);
+                    pricemod.addeddatetime = oldPriceModObj.addeddatetime;
+                    pricemod.addeduserid = oldPriceModObj.addeduserid;
+                    console.log("Sending updated Price Modifications before update FINALLLLL:", pricemod);
+
                     let putServiceResponse = await ajaxPPDRequest("/pricemods", "PUT", pricemod);
 
                     if (putServiceResponse === "OK") {
@@ -289,6 +311,7 @@ const updatePriceMods = async () => {
                         document.getElementById('formPriceMods').reset();
                         refreshPriceConfigForm();
                         refillForminputs();
+                        buildPMHistoryTable();
                     } else {
                         showAlertModal('err', "Update Failed\n" + putServiceResponse);
                     }

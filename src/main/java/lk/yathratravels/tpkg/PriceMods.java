@@ -1,6 +1,5 @@
 package lk.yathratravels.tpkg;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,7 +30,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PriceMods {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -49,20 +48,17 @@ public class PriceMods {
     @Column(name = "ext_guide_percentage")
     private BigDecimal ext_guide_percentage;
 
-    //@Column(name = "addeddatetime")
-    //private LocalDateTime addeddatetime;
+    @Column(name = "addeddatetime")
+    private LocalDateTime addeddatetime;
 
-    @Column(name = "lastmodifieddatetime")
-    private LocalDateTime lastmodifieddatetime;
+    @Column(name = "addeduserid")
+    private Integer addeduserid;
 
-    //@Column(name = "addeduserid")
-    //private Integer addeduserid;
+    @Column(name = "updateddatetime")
+    private LocalDateTime updateddatetime;
 
-    @Column(name = "lastmodifieduserid")
-    private Integer lastmodifieduserid;
-
-    @Column(name = "pm_status")
-    private String pm_status;
+    @Column(name = "updateduserid")
+    private Integer updateduserid;
 
     @Column(name = "description")
     private String description;
