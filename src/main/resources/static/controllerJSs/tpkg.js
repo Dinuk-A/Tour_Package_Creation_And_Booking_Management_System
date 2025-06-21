@@ -689,7 +689,7 @@ const calculateMainCosts = () => {
     calcTotalTktCosts();
     calcTotalLunchCost();
     calcTotalStayCost();
-    //calcVehicleCosts();
+    calcVehicleCosts();
 
 }
 
@@ -722,6 +722,7 @@ const showTotalKmCount = () => {
 //to calculate the total vehicle's fee of the tour package ✅
 const calcVehicleCosts = () => {
 
+    const kmCountForPkg = document.getElementById('showTotalKMCount').value || 0;
     const yathraVehi = document.getElementById('yathraVehiCB');
     const rentedVehi = document.getElementById('rentalVehiCB');
     const preferedVehitype = JSON.parse(document.getElementById('tpkgVehitype').value);
@@ -730,21 +731,29 @@ const calcVehicleCosts = () => {
 
         const vehiCharge = preferedVehitype.int_avg_cpkm || 0;
 
-        //calculate the total vehicle cost
-        const totalVehicost = vehitypeObj.costperday * tpkg.totaldays;
-        document.getElementById('totalVehicleCostInput').value = totalVehicost.toFixed(2);
+        const totalVehicost = vehiCharge * kmCountForPkg;
+        document.getElementById('totalVehiCostInput').value = totalVehicost.toFixed(2);
         tpkg.totalvehicost = parseFloat(totalVehicost.toFixed(2));
+
+        console.log("Yathra vehicle selected, total vehicle cost calculated: " + tpkg.totalvehicost);
 
     } else if (rentedVehi.checked && tpkg.is_company_vehicle === false) {
 
         const vehiCharge = preferedVehitype.ext_avg_cpkm || 0;
 
-        //calculate the total vehicle cost
-        const totalVehicost = vehitypeObj.costperday * tpkg.totaldays;
-        document.getElementById('totalVehicleCostInput').value = totalVehicost.toFixed(2);
+        const totalVehicost = vehiCharge * kmCountForPkg;
+        document.getElementById('totalVehiCostInput').value = totalVehicost.toFixed(2);
         tpkg.totalvehicost = parseFloat(totalVehicost.toFixed(2));
 
+        console.log("Rented vehicle selected, total vehicle cost calculated: " + tpkg.totalvehicost);
+
     }
+
+    const totalVehiCostMsg = document.getElementById("totalVehicleCostMsg");
+    const vehiCostGroup = document.getElementById("totalVehiCostGroup");
+
+    vehiCostGroup.classList.remove("d-none");
+    totalVehiCostMsg.classList.add("d-none");
 
 }
 
