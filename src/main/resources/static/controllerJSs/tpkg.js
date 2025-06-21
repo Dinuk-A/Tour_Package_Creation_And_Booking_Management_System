@@ -692,22 +692,48 @@ const calculateMainCosts = () => {
     //    return;
     //}
 
-    //calcTotalTktCosts();
-    //calcTotalLunchCost();
-    //calcTotalStayCost();
+    calcTotalTktCosts();
+    calcTotalLunchCost();
+    calcTotalStayCost();
 }
 
 //to calculate the total costs of the tour package  ✅
 const calcTotalTktCosts = () => {
-    let totalLocalAdultCost = 0;
-    let totalLocalChildCost = 0;
-    let totalForeignAdultCost = 0;
-    let totalForeignChildCost = 0;
 
     const localAdultCount = parseInt(document.getElementById('tpkgLocalAdultCount').value);
     const localChildCount = parseInt(document.getElementById('tpkgLocalChildCount').value);
     const foreignAdultCount = parseInt(document.getElementById('tpkgForeignAdultCount').value);
     const foreignChildCount = parseInt(document.getElementById('tpkgForeignChildCount').value);
+
+    const totalTravellers = localAdultCount + localChildCount + foreignAdultCount + foreignChildCount;
+
+    const tktGroup = document.getElementById("totalTktCostGroup");
+    const tktInput = document.getElementById("totalTktCostInput");
+    const tktMsg = document.getElementById("totalTktCostMsg");
+
+    const hasAtLeastOneDay =
+        (tpkg.sd_dayplan_id != null) ||
+        (tpkg.dayplans.length > 0) ||
+        (tpkg.ed_dayplan_id != null);
+
+    //if reqs are not present
+    if (totalTravellers === 0 || !hasAtLeastOneDay) {
+
+        tktMsg.classList.remove("d-none");
+        tktGroup.classList.add("d-none");
+        tktInput.value = "";
+        tpkg.totaltktcost = null;
+        return;
+    }
+
+    //if all reqs are present, execute below all
+    tktMsg.classList.add("d-none");
+    tktGroup.classList.remove("d-none");
+
+    let totalLocalAdultCost = 0;
+    let totalLocalChildCost = 0;
+    let totalForeignAdultCost = 0;
+    let totalForeignChildCost = 0;
 
     if (document.getElementById('tpkgFirstDaySelect').value !== "" &&
         tpkg.sd_dayplan_id != null) {
@@ -738,7 +764,7 @@ const calcTotalTktCosts = () => {
 
     //set the total costs to the input fields
     let totalTktCost = (totalLocalAdultCost + totalLocalChildCost + totalForeignAdultCost + totalForeignChildCost).toFixed(2);
-    document.getElementById('totalTktCostInput').value = totalTktCost;
+    tktInput.value = totalTktCost;
     tpkg.totaltktcost = parseFloat(totalTktCost);
 
 }
@@ -746,8 +772,26 @@ const calcTotalTktCosts = () => {
 //calc total lunch cost ✅
 const calcTotalLunchCost = () => {
 
-    //updateTotalTravellers();
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
+
+    const lunchInput = document.getElementById("totalLunchCostForAll");
+    const lunchGroup = document.getElementById("totalLunchCostGroup");
+    const lunchMsg = document.getElementById("totalLunchCostMsg");
+
+    const hasItineraries =
+        (tpkg.sd_dayplan_id != null) ||
+        (tpkg.dayplans.length > 0) ||
+        (tpkg.ed_dayplan_id != null)
+
+    if (totalTravellers === 0 || !hasItineraries) {
+        lunchMsg.classList.remove("d-none");
+        lunchGroup.classList.add("d-none");
+               tpkg.totallunchcost = null;
+        return;
+    }
+
+    lunchMsg.classList.add("d-none");
+    lunchGroup.classList.remove("d-none");
 
     //lunch cost for first day , for 1 person
     let lunchCostFirstDay = 0.00;
@@ -776,14 +820,10 @@ const calcTotalLunchCost = () => {
         }
     }
 
-    console.log("lunchCostFirstDay: " + lunchCostFirstDay);
-    console.log("lunchCostMidDays: " + lunchCostMidDays);
-    console.log("lunchCostLastDay: " + lunchCostLastDay);
-    console.log("Total Travellers: " + totalTravellers);
-
     //final lunch cost for all
     const totalLunchCost = (lunchCostFirstDay + lunchCostMidDays + lunchCostLastDay) * totalTravellers;
-    document.getElementById('totalLunchCostForAll').value = totalLunchCost.toFixed(2);
+
+    lunchInput.value = totalLunchCost.toFixed(2);
     tpkg.totallunchcost = parseFloat(totalLunchCost.toFixed(2));
 
 }
@@ -832,6 +872,27 @@ const calcTotalStayCost = () => {
     //updateTotalTravellers();
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
 
+    const stayInput = document.getElementById("totalStayCostInput");
+    const stayGroup = document.getElementById("totalStayCostGroup");
+    const stayMsg = document.getElementById("totalStayCostMsg");
+
+    // check if there are any itineraries selected
+    const hasItineraries =
+        (tpkg.sd_dayplan_id != null) ||
+        (Array.isArray(tpkg.dayplans) && tpkg.dayplans.length > 0) ||
+        (tpkg.ed_dayplan_id != null);
+
+       if (totalTravellers === 0 || !hasItineraries) {
+        stayMsg.classList.remove("d-none");
+        stayGroup.classList.add("d-none");
+              tpkg.totalstaycost = null;
+        return;
+    }
+
+    //if all reqs are present, execute below all
+    stayMsg.classList.add("d-none");
+    stayGroup.classList.remove("d-none");
+
     // First day
     let firstDayBasePrice = 0;
     let firstDayIncrementalCost = 0;
@@ -848,11 +909,12 @@ const calcTotalStayCost = () => {
     // Last day
     let lastDayBasePrice = 0;
     let lastDayIncrementalCost = 0;
-    if (tpkg.ed_dayplan_id.drop_stay_id != null && tpkg.ed_dayplan_id.droppoint == null) {
+    
+    if (tpkg.ed_dayplan_id?.drop_stay_id != null && tpkg.ed_dayplan_id.droppoint == null) {
         lastDayBasePrice = tpkg.ed_dayplan_id.drop_stay_id.base_price;
         lastDayIncrementalCost = tpkg.ed_dayplan_id.drop_stay_id.incremental_cost;
 
-    } else if (tpkg.ed_dayplan_id.drop_stay_id == null && tpkg.ed_dayplan_id.droppoint != null) {
+    } else if (tpkg.ed_dayplan_id?.drop_stay_id == null && tpkg.ed_dayplan_id?.droppoint != null) {
         lastDayBasePrice = 0;
         lastDayIncrementalCost = 0;
     }
@@ -879,7 +941,7 @@ const calcTotalStayCost = () => {
 
     const totalStayCostValue = firstDayCost + lastDayCost + midDaysCost;
 
-    document.getElementById('totalStayCostInput').value = totalStayCostValue.toFixed(2);
+    stayInput.value = totalStayCostValue.toFixed(2);
     tpkg.totalstaycost = parseFloat(totalStayCostValue.toFixed(2));
 
 };
@@ -894,7 +956,7 @@ const calcTotalVehiParkingfeeTpkg = () => {
 
     const hasItineraries =
         (tpkg.sd_dayplan_id && tpkg.sd_dayplan_id.totalvehiparkcost != null) ||
-        (Array.isArray(tpkg.dayplans) && tpkg.dayplans.length > 0) ||
+        (tpkg.dayplans.length > 0) ||
         (tpkg.ed_dayplan_id && tpkg.ed_dayplan_id.totalvehiparkcost != null);
 
     if (!hasItineraries) {
@@ -907,14 +969,14 @@ const calcTotalVehiParkingfeeTpkg = () => {
         groupDiv.classList.remove("d-none");
 
         // parking cost for 1st day
-        let parkingCostFirstDay = tpkg.sd_dayplan_id.totalvehiparkcost|| 0.00;
+        let parkingCostFirstDay = tpkg.sd_dayplan_id.totalvehiparkcost || 0.00;
 
         // parking cost for last day
         let parkingCostLastDay = 0.00;
         if (tpkg.ed_dayplan_id == null) {
             parkingCostLastDay = 0.00;
         } else {
-            parkingCostLastDay = tpkg.ed_dayplan_id.totalvehiparkcost|| 0.00;
+            parkingCostLastDay = tpkg.ed_dayplan_id.totalvehiparkcost || 0.00;
         }
 
         // parking cost for mid days
@@ -931,10 +993,6 @@ const calcTotalVehiParkingfeeTpkg = () => {
         costInput.value = totalParkingCost.toFixed(2);
         tpkg.totalvehiparkingcost = parseFloat(totalParkingCost.toFixed(2));
     }
-
-
-
-
 
 }
 
