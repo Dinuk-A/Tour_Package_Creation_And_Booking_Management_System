@@ -685,16 +685,40 @@ const refreshMainCostCard = () => {
 const calculateMainCosts = () => {
 
     calcTotalVehiParkingfeeTpkg();
-
-    //const totalTravellersCount = parseInt(document.getElementById('tpkgTotalTravellers').value);
-    //if (totalTravellersCount === 0) {
-    //    alert("Total traveller count is 0. Please enter at least one traveler.");
-    //    return;
-    //}
-
     calcTotalTktCosts();
     calcTotalLunchCost();
     calcTotalStayCost();
+    calcVehicleCosts();
+
+}
+
+//to calculate the total vehicle's fee of the tour package ✅
+const calcVehicleCosts = () => {
+
+    const yathraVehi = document.getElementById('yathraVehiCB');
+    const rentedVehi = document.getElementById('rentalVehiCB');
+    const preferedVehitype = JSON.parse(document.getElementById('tpkgVehitype').value);
+
+    if (yathraVehi.checked && tpkg.is_company_vehicle === true) {
+
+        const vehiCharge = preferedVehitype.int_avg_cpkm || 0;
+             
+        //calculate the total vehicle cost
+        const totalVehicost = vehitypeObj.costperday * tpkg.totaldays;
+        document.getElementById('totalVehicleCostInput').value = totalVehicost.toFixed(2);
+        tpkg.totalvehicost = parseFloat(totalVehicost.toFixed(2));
+
+    } else if (rentedVehi.checked && tpkg.is_company_vehicle === false) {
+    
+        const vehiCharge = preferedVehitype.ext_avg_cpkm || 0;
+        
+        //calculate the total vehicle cost
+        const totalVehicost = vehitypeObj.costperday * tpkg.totaldays;
+        document.getElementById('totalVehicleCostInput').value = totalVehicost.toFixed(2);
+        tpkg.totalvehicost = parseFloat(totalVehicost.toFixed(2));
+
+    }
+
 }
 
 //to calculate the total costs of the tour package  ✅
@@ -786,7 +810,7 @@ const calcTotalLunchCost = () => {
     if (totalTravellers === 0 || !hasItineraries) {
         lunchMsg.classList.remove("d-none");
         lunchGroup.classList.add("d-none");
-               tpkg.totallunchcost = null;
+        tpkg.totallunchcost = null;
         return;
     }
 
@@ -882,10 +906,10 @@ const calcTotalStayCost = () => {
         (Array.isArray(tpkg.dayplans) && tpkg.dayplans.length > 0) ||
         (tpkg.ed_dayplan_id != null);
 
-       if (totalTravellers === 0 || !hasItineraries) {
+    if (totalTravellers === 0 || !hasItineraries) {
         stayMsg.classList.remove("d-none");
         stayGroup.classList.add("d-none");
-              tpkg.totalstaycost = null;
+        tpkg.totalstaycost = null;
         return;
     }
 
@@ -909,7 +933,7 @@ const calcTotalStayCost = () => {
     // Last day
     let lastDayBasePrice = 0;
     let lastDayIncrementalCost = 0;
-    
+
     if (tpkg.ed_dayplan_id?.drop_stay_id != null && tpkg.ed_dayplan_id.droppoint == null) {
         lastDayBasePrice = tpkg.ed_dayplan_id.drop_stay_id.base_price;
         lastDayIncrementalCost = tpkg.ed_dayplan_id.drop_stay_id.incremental_cost;

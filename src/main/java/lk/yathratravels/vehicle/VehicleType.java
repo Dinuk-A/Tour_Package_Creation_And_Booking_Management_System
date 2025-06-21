@@ -1,5 +1,7 @@
 package lk.yathratravels.vehicle;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,5 +27,13 @@ public class VehicleType {
 
     @Column(name = "name")
     private String name;
+
+    //int_avg_cpkm
+    @Column(name = "int_avg_cpkm")
+    private BigDecimal int_avg_cpkm;
+
+    //ext_avg_cpkm
+    @Column(name = "ext_avg_cpkm")
+    private BigDecimal ext_avg_cpkm;
 
 }
