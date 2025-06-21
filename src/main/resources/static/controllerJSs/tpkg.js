@@ -713,7 +713,7 @@ const showTotalKmCount = () => {
         })
     }
 
-    const sumKM = kmCountFD + kmCountLD + kmCountMD ;
+    const sumKM = kmCountFD + kmCountLD + kmCountMD;
     const inputTotalKm = document.getElementById('showTotalKMCount');
     inputTotalKm.value = sumKM;
 
@@ -721,41 +721,50 @@ const showTotalKmCount = () => {
 
 //to calculate the total vehicle's fee of the tour package ✅
 const calcVehicleCosts = () => {
-
-    const kmCountForPkg = document.getElementById('showTotalKMCount').value || 0;
+    const kmCountForPkg = parseFloat(document.getElementById('showTotalKMCount').value) || 0;
     const yathraVehi = document.getElementById('yathraVehiCB');
     const rentedVehi = document.getElementById('rentalVehiCB');
-    const preferedVehitype = JSON.parse(document.getElementById('tpkgVehitype').value);
+    const preferedVehitypeRawValue = document.getElementById('tpkgVehitype').value;
 
-    if (yathraVehi.checked && tpkg.is_company_vehicle === true) {
+    const costInput = document.getElementById('totalVehiCostInput');
+    const vehiCostLabel = document.querySelector('label[for="totalVehiCostInput"]');
+    const vehiCostGroup = document.getElementById('totalVehiCostGroup');
+    const totalVehiCostMsg = document.getElementById('totalVehicleCostMsg');
 
-        const vehiCharge = preferedVehitype.int_avg_cpkm || 0;
+    vehiCostGroup.classList.add("d-none");
+    totalVehiCostMsg.classList.remove("d-none");
+    costInput.value = "";
+    tpkg.totalvehicost = null;
 
-        const totalVehicost = vehiCharge * kmCountForPkg;
-        document.getElementById('totalVehiCostInput').value = totalVehicost.toFixed(2);
-        tpkg.totalvehicost = parseFloat(totalVehicost.toFixed(2));
+    const isVehicleSourceSelected = yathraVehi.checked || rentedVehi.checked;
+    const isVehitypeSelected = preferedVehitypeRawValue !== "" && preferedVehitypeRawValue !== "null";
 
-        console.log("Yathra vehicle selected, total vehicle cost calculated: " + tpkg.totalvehicost);
-
-    } else if (rentedVehi.checked && tpkg.is_company_vehicle === false) {
-
-        const vehiCharge = preferedVehitype.ext_avg_cpkm || 0;
-
-        const totalVehicost = vehiCharge * kmCountForPkg;
-        document.getElementById('totalVehiCostInput').value = totalVehicost.toFixed(2);
-        tpkg.totalvehicost = parseFloat(totalVehicost.toFixed(2));
-
-        console.log("Rented vehicle selected, total vehicle cost calculated: " + tpkg.totalvehicost);
-
+    if (!isVehicleSourceSelected || !isVehitypeSelected || kmCountForPkg <= 0) {
+        totalVehiCostMsg.classList.remove("d-none");
+        return;
     }
 
-    const totalVehiCostMsg = document.getElementById("totalVehicleCostMsg");
-    const vehiCostGroup = document.getElementById("totalVehiCostGroup");
+    const preferedVehitype = JSON.parse(preferedVehitypeRawValue);
+    let vehiCharge = 0;
+
+    if (yathraVehi.checked && tpkg.is_company_vehicle === true) {
+        vehiCharge = preferedVehitype.int_avg_cpkm || 0;
+        vehiCostLabel.innerText = "For Vehicle(Company Vehicle):";
+    } else if (rentedVehi.checked && tpkg.is_company_vehicle === false) {
+        vehiCharge = preferedVehitype.ext_avg_cpkm || 0;
+        vehiCostLabel.innerText = "For Vehicle(Rented Vehicle):";
+    }
+
+    const totalVehicost = vehiCharge * kmCountForPkg;
+    costInput.value = totalVehicost.toFixed(2);
+    tpkg.totalvehicost = parseFloat(totalVehicost.toFixed(2));
 
     vehiCostGroup.classList.remove("d-none");
     totalVehiCostMsg.classList.add("d-none");
 
-}
+    console.log("Total vehicle cost calculated: " + tpkg.totalvehicost);
+};
+
 
 //to calculate the total costs of the tour package  ✅
 const calcTotalTktCosts = () => {

@@ -209,7 +209,8 @@
                                                 <div class="row mx-auto mb-3s justify-content-end align-items-center">
                                                     <div class="col-3">
                                                         <label for="showTotalKMCount"
-                                                            class="form-label fw-semibold mb-0">Total Kilometers:</label>
+                                                            class="form-label fw-semibold mb-0">Total
+                                                            Kilometers:</label>
                                                     </div>
                                                     <div class="col-2">
                                                         <input type="number" placeholder="0"
@@ -790,7 +791,7 @@
 
                                                 <!-- additional costs inner table row -->
                                                 <div class="card mx-auto mb-3 shadow-sm">
-                                                    <div class="card-header bg-light fw-bold">
+                                                    <div class="card-header fw-bold">
                                                         Additional Cost List
                                                     </div>
                                                     <div class="card-body px-1 py-3">
@@ -913,7 +914,8 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled type="number" id="totalVehiCostInput"
+                                                                    <input disabled type="number"
+                                                                        id="totalVehiCostInput"
                                                                         class="form-control form-input my-auto text-center p-1"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalvehiclecost');">
                                                                 </div>
@@ -947,8 +949,58 @@
                                                             </div>
                                                         </div>
 
-                                                        <!-- Additional Costs  -->
+                                                        <!-- External Driver Cost -->
+                                                        <div class="row mb-2 align-items-center" id="ExtDriverSection">
+                                                            <div class="col-4">
+                                                                <label for="totalExtDriverCostInput"
+                                                                    class="form-label fw-bold mb-0">For External
+                                                                    Driver:</label>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="input-group d-none"
+                                                                    id="totalExtDriverCostGroup">
+                                                                    <span class="input-group-text p-1">
+                                                                        <h6 class="my-auto">LKR</h6>
+                                                                    </span>
+                                                                    <input disabled type="number"
+                                                                        id="totalExtDriverCostInput"
+                                                                        class="form-control form-input text-center p-1 my-auto"
+                                                                        onchange="inputValidatorText(this,'','tpkg','totalextdrivercost');">
+                                                                </div>
+                                                                <div class="text-warning d-none"
+                                                                    id="totalExtDriverCostMsg">
+                                                                    Please select itineraries and driver preference
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
+                                                        <!-- External Guide Cost -->
+                                                        <div class="row mb-2 align-items-center" id="ExtGuideSection">
+                                                            <div class="col-4">
+                                                                <label for="totalExtGuideCostInput"
+                                                                    class="form-label fw-bold mb-0">For External
+                                                                    Guide:</label>
+                                                            </div>
+                                                            <div class="col-8">
+                                                                <div class="input-group d-none"
+                                                                    id="totalExtGuideCostGroup">
+                                                                    <span class="input-group-text p-1">
+                                                                        <h6 class="my-auto">LKR</h6>
+                                                                    </span>
+                                                                    <input disabled type="number"
+                                                                        id="totalExtGuideCostInput"
+                                                                        class="form-control form-input text-center p-1 my-auto"
+                                                                        onchange="inputValidatorText(this,'','tpkg','totalextguidecost');">
+                                                                </div>
+                                                                <div class="text-warning d-none"
+                                                                    id="totalExtGuideCostMsg">
+                                                                    Please select itineraries and guide preference
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <!-- Additional Costs  -->
                                                         <div class="row mb-2 align-items-center">
                                                             <div class="col-4">
                                                                 <label for="totalAdditionalCosts"
