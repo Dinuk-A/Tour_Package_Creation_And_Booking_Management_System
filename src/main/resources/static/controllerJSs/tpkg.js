@@ -686,16 +686,15 @@ const calculateMainCosts = () => {
 
     calcTotalVehiParkingfeeTpkg();
 
-    //updateTotalTravellers();
-    const totalTravellersCount = parseInt(document.getElementById('tpkgTotalTravellers').value);
-    if (totalTravellersCount === 0) {
-        alert("Total traveller count is 0. Please enter at least one traveler.");
-        return;
-    }
+    //const totalTravellersCount = parseInt(document.getElementById('tpkgTotalTravellers').value);
+    //if (totalTravellersCount === 0) {
+    //    alert("Total traveller count is 0. Please enter at least one traveler.");
+    //    return;
+    //}
 
-    calcTotalTktCosts();
-    calcTotalLunchCost();
-    calcTotalStayCost();
+    //calcTotalTktCosts();
+    //calcTotalLunchCost();
+    //calcTotalStayCost();
 }
 
 //to calculate the total costs of the tour package  ✅
@@ -751,7 +750,7 @@ const calcTotalLunchCost = () => {
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
 
     //lunch cost for first day , for 1 person
-    let lunchCostFirstDay= 0.00;
+    let lunchCostFirstDay = 0.00;
     if (!tpkg.sd_dayplan_id.is_takepackedlunch || tpkg.sd_dayplan_id.is_takepackedlunch == null) {
         lunchCostFirstDay = tpkg.sd_dayplan_id.lunchplace_id?.costperhead || 0.00;
     }
@@ -889,30 +888,53 @@ const calcTotalStayCost = () => {
 //calc total vehicle fee ✅
 const calcTotalVehiParkingfeeTpkg = () => {
 
-    // parking cost for 1st day
-    let parkingCostFirstDay = tpkg.sd_dayplan_id.totalvehiparkcost;
+    const costInput = document.getElementById("totalVehicleParkingCost");
+    const groupDiv = document.getElementById("totalVehiParkCostGroup");
+    const msgDiv = document.getElementById("totalVehicleParkingCostMsg");
 
-    // parking cost for last day
-    let parkingCostLastDay = 0.00;
-    if (tpkg.ed_dayplan_id == null) {
-        parkingCostLastDay = 0.00;
+    const hasItineraries =
+        (tpkg.sd_dayplan_id && tpkg.sd_dayplan_id.totalvehiparkcost != null) ||
+        (Array.isArray(tpkg.dayplans) && tpkg.dayplans.length > 0) ||
+        (tpkg.ed_dayplan_id && tpkg.ed_dayplan_id.totalvehiparkcost != null);
+
+    if (!hasItineraries) {
+        tpkg.totalvehiparkingcost = null
+        msgDiv.classList.remove("d-none");
+        groupDiv.classList.add("d-none");
+        return;
     } else {
-        parkingCostLastDay = tpkg.ed_dayplan_id.totalvehiparkcost;
+        msgDiv.classList.add("d-none");
+        groupDiv.classList.remove("d-none");
+
+        // parking cost for 1st day
+        let parkingCostFirstDay = tpkg.sd_dayplan_id.totalvehiparkcost|| 0.00;
+
+        // parking cost for last day
+        let parkingCostLastDay = 0.00;
+        if (tpkg.ed_dayplan_id == null) {
+            parkingCostLastDay = 0.00;
+        } else {
+            parkingCostLastDay = tpkg.ed_dayplan_id.totalvehiparkcost|| 0.00;
+        }
+
+        // parking cost for mid days
+        let parkingCostMidDays = 0.00;
+        if (tpkg.dayplans.length > 0) {
+            tpkg.dayplans.forEach(day => {
+                let midDaysParkingCost = day.totalvehiparkcost;
+                parkingCostMidDays += midDaysParkingCost || 0.00;
+            });
+        }
+
+        totalParkingCost = parkingCostFirstDay + parkingCostMidDays + parkingCostLastDay;
+
+        costInput.value = totalParkingCost.toFixed(2);
+        tpkg.totalvehiparkingcost = parseFloat(totalParkingCost.toFixed(2));
     }
 
-    // parking cost for mid days
-    let parkingCostMidDays = 0.00;
-    if (tpkg.dayplans.length > 0) {
-        tpkg.dayplans.forEach(day => {
-            let midDaysParkingCost = day.totalvehiparkcost;
-            parkingCostMidDays += midDaysParkingCost;
-        });
-    }
 
-    totalParkingCost = parkingCostFirstDay + parkingCostMidDays + parkingCostLastDay;
 
-    totalVehicleParkingCost.value = totalParkingCost.toFixed(2);
-    tpkg.totalvehiparkingcost = parseFloat(totalParkingCost.toFixed(2));
+
 
 }
 
@@ -2246,14 +2268,15 @@ const updateAddCost = () => {
 
 // using
 const updateTotalAdditionalCost = () => {
-    let total = 0;
+    let total = 0.00;
 
     addiCostList.forEach(cost => {
-        total += parseFloat(cost.amount);
+        total += parseFloat(cost.amount) || 0.00;
     });
 
-    const totalAmountField = document.getElementById("additionalCostTotalAmount");
-    totalAmountField.innerText = `LKR ${total.toFixed(2)}`;
+    const totalAmountField = document.getElementById("totalAdditionalCosts");
+    totalAmountField.value = total.toFixed(2);
+    tpkg.totaladditionalcosts = Number(total.toFixed(2));
 };
 
 
