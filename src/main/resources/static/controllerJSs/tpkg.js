@@ -616,6 +616,7 @@ const handleFirstDayChange = (selectElement) => {
     dynamicSelectValidator(selectElement, 'tpkg', 'sd_dayplan_id');
     showFirstDayBtn.disabled = false;
     const fdMsg = document.getElementById('firstDayMsg');
+    showTotalKmCount();
 
     if (tpkg.sd_dayplan_id.is_template) {
         selectElement.style.border = "2px solid orange";
@@ -642,7 +643,7 @@ const handleFinalDayChange = (selectElement) => {
     showFinalDayBtn.disabled = false;
     removeFinalDayBtn.disabled = false;
     updateTotalDaysCount();
-
+    showTotalKmCount();
     //💥💥💥
     //refreshMainCostCard();
 
@@ -688,7 +689,33 @@ const calculateMainCosts = () => {
     calcTotalTktCosts();
     calcTotalLunchCost();
     calcTotalStayCost();
-    calcVehicleCosts();
+    //calcVehicleCosts();
+
+}
+
+// update total km count of the tour package
+const showTotalKmCount = () => {
+
+    //first day
+    const kmCountFD = tpkg.sd_dayplan_id.totalkmcount || 0;
+
+    //last day
+    let kmCountLD = 0;
+    if (tpkg.ed_dayplan_id) {
+        kmCountLD = tpkg.ed_dayplan_id.totalkmcount || 0;
+    }
+
+    //mid days
+    let kmCountMD = 0;
+    if (tpkg.dayplans > 0) {
+        tpkg.dayplans.forEach((day) => {
+            kmCountMD = kmCountMD + (day.totalkmcount || 0);
+        })
+    }
+
+    const sumKM = kmCountFD + kmCountLD + kmCountMD ;
+    const inputTotalKm = document.getElementById('showTotalKMCount');
+    inputTotalKm.value = sumKM;
 
 }
 
@@ -702,16 +729,16 @@ const calcVehicleCosts = () => {
     if (yathraVehi.checked && tpkg.is_company_vehicle === true) {
 
         const vehiCharge = preferedVehitype.int_avg_cpkm || 0;
-             
+
         //calculate the total vehicle cost
         const totalVehicost = vehitypeObj.costperday * tpkg.totaldays;
         document.getElementById('totalVehicleCostInput').value = totalVehicost.toFixed(2);
         tpkg.totalvehicost = parseFloat(totalVehicost.toFixed(2));
 
     } else if (rentedVehi.checked && tpkg.is_company_vehicle === false) {
-    
+
         const vehiCharge = preferedVehitype.ext_avg_cpkm || 0;
-        
+
         //calculate the total vehicle cost
         const totalVehicost = vehitypeObj.costperday * tpkg.totaldays;
         document.getElementById('totalVehicleCostInput').value = totalVehicost.toFixed(2);
@@ -1864,8 +1891,8 @@ const generateNormalDayPlanSelectSections = () => {
             tpkg.dayplans[index] = selectedValue;
             console.log("Updated tpkg.dayplans:", tpkg.dayplans);
 
-            //updateTourEndDate();
             updateTotalDaysCount();
+            showTotalKmCount();
 
             document.getElementById(btnId).disabled = false;
             document.getElementById(`midDayDeleteBtn${currentIndex}`).disabled = false;

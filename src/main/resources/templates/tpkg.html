@@ -208,9 +208,18 @@
                                                 <!-- display total days selected -->
                                                 <div class="row mx-auto mb-3s justify-content-end align-items-center">
                                                     <div class="col-3">
+                                                        <label for="showTotalKMCount"
+                                                            class="form-label fw-semibold mb-0">Total Kilometers:</label>
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <input type="number" placeholder="0"
+                                                            class="text-center text-primary form-control"
+                                                            id="showTotalKMCount" disabled>
+                                                    </div>
+                                                    <div class="col-2"></div>
+                                                    <div class="col-3">
                                                         <label for="showTotalDaysCount"
-                                                            class="form-label fw-semibold mb-0">Total Days
-                                                            Counter:</label>
+                                                            class="form-label fw-semibold mb-0">Total Days:</label>
                                                     </div>
                                                     <div class="col-2">
                                                         <input type="number" placeholder="0"
@@ -838,7 +847,9 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaltktcostforall');">
                                                                 </div>
-                                                                <div class="text-warning" id="totalTktCostMsg">Please enter number of travellers and select itineraries</div>
+                                                                <div class="text-warning" id="totalTktCostMsg">Please
+                                                                    enter number of travellers and select itineraries
+                                                                </div>
                                                             </div>
                                                         </div>
 
@@ -861,7 +872,8 @@
                                                                         onchange="inputValidatorText(this,'','tpkg','totalvehiparkingcost');">
                                                                 </div>
                                                                 <div class="text-warning"
-                                                                    id="totalVehicleParkingCostMsg">Please select itineraries</div>
+                                                                    id="totalVehicleParkingCostMsg">Please select
+                                                                    itineraries</div>
                                                             </div>
                                                         </div>
 
@@ -883,7 +895,9 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totallunchcost');">
                                                                 </div>
-                                                                <div class="text-warning" id="totalLunchCostMsg">Please enter number of travellers and select itineraries</div>
+                                                                <div class="text-warning" id="totalLunchCostMsg">Please
+                                                                    enter number of travellers and select itineraries
+                                                                </div>
                                                             </div>
                                                         </div>
 
@@ -903,7 +917,8 @@
                                                                         class="form-control form-input my-auto text-center p-1"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalvehiclecost');">
                                                                 </div>
-                                                                <div class="text-warning" id="totalVehicleCostMsg">Please choose vehicle type and select itineraries
+                                                                <div class="text-warning" id="totalVehicleCostMsg">
+                                                                    Please choose vehicle type and select itineraries
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -926,7 +941,9 @@
                                                                         class="form-control form-input p-1 text-center"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalstaycost');">
                                                                 </div>
-                                                                <div class="text-warning" id="totalStayCostMsg">Please enter number of travellers and select itineraries</div>
+                                                                <div class="text-warning" id="totalStayCostMsg">Please
+                                                                    enter number of travellers and select itineraries
+                                                                </div>
                                                             </div>
                                                         </div>
 
@@ -943,13 +960,13 @@
                                                                     <span class="input-group-text p-1 pb-0">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled type="number"
-                                                                    placeholder="0.00"
+                                                                    <input disabled type="number" placeholder="0.00"
                                                                         id="totalAdditionalCosts"
                                                                         class="text-center form-control form-input p-1"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaladditionalcosts');">
                                                                 </div>
-                                                                <div class="d-none text-warning" id="totalAddiCostMsg"></div>
+                                                                <div class="d-none text-warning" id="totalAddiCostMsg">
+                                                                </div>
                                                             </div>
                                                         </div>
 
