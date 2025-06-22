@@ -742,7 +742,7 @@ const calcTotalDriverCost = () => {
         console.warn("Price modifiers not loaded.");
         return;
     }
-    
+
     const yathraDriver = document.getElementById('yathraDriverCB');
     const rentedDriver = document.getElementById('rentalDriverCB');
     const totalDaysInput = document.getElementById('showTotalDaysCount');
@@ -767,13 +767,11 @@ const calcTotalDriverCost = () => {
 
     let driverDailyCharge = 0;
 
-    // Assuming you have a global or accessible object for vehicle types, or fetch similarly as in vehicle function
-    // For now let's assume tpkg has fields for internal and external driver daily charges
-    if (yathraDriver.checked && tpkg.is_company_driver === true) {
-        driverDailyCharge = tpkg.int_driver_daily_cost || 0;
+    if (yathraDriver.checked) {
+        driverDailyCharge = parseFloat(globalPriceMods.int_driver_daily_cost) || 0;
         driverCostLabel.innerText = "For Driver (Company Driver):";
-    } else if (rentedDriver.checked && tpkg.is_company_driver === false) {
-        driverDailyCharge = tpkg.ext_driver_daily_charge || 0;
+    } else if (rentedDriver.checked) {
+        driverDailyCharge = parseFloat(globalPriceMods.ext_driver_daily_charge) || 0;
         driverCostLabel.innerText = "For Driver (Rented Driver):";
     }
 
