@@ -121,24 +121,15 @@ public class PriceModsController {
                 return "Update Not Completed: No existing price modifier entry found.";
             }
 
-            // preserve the same previous values
-            //priceModNew.setAddeddatetime(existingPMRow.getAddeddatetime());
-            //priceModNew.setAddeduserid(existingPMRow.getAddeduserid());
-
-            // for price mods
-            priceModNew.setId(existingPMRow.getId());
-            priceModNew.setUpdateddatetime(LocalDateTime.now());
-            priceModNew.setUpdateduserid(userDao.getUserByUsername(auth.getName()).getId());
-
-            priceModsDao.save(priceModNew);
-
             // for price mod history
             PriceModHistory history = new PriceModHistory();
 
             history.setOld_cpm(existingPMRow.getCompany_profit_margin());
-            history.setOld_edp(existingPMRow.getExt_driver_percentage());
-            history.setOld_evp(existingPMRow.getExt_vehicle_percentage());
-            history.setOld_egp(existingPMRow.getExt_guide_percentage());
+            history.setOld_ed_dc(existingPMRow.getExt_driver_daily_charge());
+            history.setOld_eg_dc(existingPMRow.getExt_guide_daily_charge());
+            history.setOld_id_dc(existingPMRow.getInt_driver_daily_cost());
+            history.setOld_ig_dc(existingPMRow.getInt_guide_daily_cost());
+            // history.setOld_evp(existingPMRow.getExt_vehicle_percentage());
 
             history.setOri_addeduserid(existingPMRow.getAddeduserid());
             history.setOri_addeddatetime(existingPMRow.getAddeddatetime());
@@ -149,6 +140,19 @@ public class PriceModsController {
             history.setNote("Price Modifier Updated, recording history");
 
             priceModHistoryDao.save(history);
+
+            // preserve the same previous values
+             priceModNew.setAddeddatetime(existingPMRow.getAddeddatetime());
+             priceModNew.setAddeduserid(existingPMRow.getAddeduserid());
+
+            // for price mods
+            priceModNew.setId(existingPMRow.getId());
+            priceModNew.setUpdateddatetime(LocalDateTime.now());
+            priceModNew.setUpdateduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+            priceModsDao.save(priceModNew);
+
+            
 
             return "OK";
 

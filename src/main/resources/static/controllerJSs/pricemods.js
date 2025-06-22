@@ -22,9 +22,10 @@ const refillForminputs = async () => {
         console.log("Old Price Modifications Object:", oldPriceModObj);
 
         document.getElementById('companyProfitMargin').value = parseFloat(pricemods.company_profit_margin).toFixed(2);
-        document.getElementById('extDriverSurcharge').value = parseFloat(pricemods.ext_driver_percentage).toFixed(2);
-        document.getElementById('extVehicleSurcharge').value = parseFloat(pricemods.ext_vehicle_percentage).toFixed(2);
-        document.getElementById('extGuideSurcharge').value = parseFloat(pricemods.ext_guide_percentage).toFixed(2);
+        document.getElementById('extDriverDailyCharge').value = parseFloat(pricemods.ext_driver_daily_charge).toFixed(2);
+        document.getElementById('extGuideDailyCharge').value = parseFloat(pricemods.ext_guide_daily_charge).toFixed(2);
+        document.getElementById('intDriverDailyCost').value = parseFloat(pricemods.int_driver_daily_cost).toFixed(2);
+        document.getElementById('intGuideDailyCost').value = parseFloat(pricemods.int_guide_daily_cost).toFixed(2);
         document.getElementById('lastModifiedDateInput').value = pricemods.updateddatetime.split('T')[0];
 
     } catch (error) {
@@ -32,7 +33,7 @@ const refillForminputs = async () => {
         return
     }
 
-    const inputIds = ['companyProfitMargin', 'extDriverSurcharge', 'extVehicleSurcharge', 'extGuideSurcharge'];
+    const inputIds = ['companyProfitMargin', 'extDriverDailyCharge', 'extGuideDailyCharge', 'intDriverDailyCost', 'intGuideDailyCost'];
 
     inputIds.forEach(id => {
         const inputElement = document.getElementById(id);
@@ -156,18 +157,20 @@ const showActiveDateRange = (objPMHistory) => {
 const showAllOldValues = (objPMHistory) => {
     return `
         <div>
-            <div class='text-start px-3'>Company Profit Margin:   ${objPMHistory.old_cpm}%</div>
-            <div class='text-start px-3'>Driver Surcharge:   ${objPMHistory.old_edp}%</div>
-            <div class='text-start px-3'>Vehicle Surcharge:   ${objPMHistory.old_evp}%</div>
-            <div class='text-start px-3'>Guide Surcharge:   ${objPMHistory.old_egp}%</div>
+            <div class='text-start px-3'>Company Profit Margin: ${objPMHistory.old_cpm}%</div>
+            <div class='text-start px-3'>External Driver Daily Charge: ${objPMHistory.old_ed_dc} LKR</div>
+            <div class='text-start px-3'>External Guide Daily Charge: ${objPMHistory.old_eg_dc} LKR</div>
+            <div class='text-start px-3'>Internal Driver Daily Cost: ${objPMHistory.old_id_dc} LKR</div>
+            <div class='text-start px-3'>Internal Guide Daily Cost: ${objPMHistory.old_ig_dc} LKR</div>
         </div>
     `;
 };
 
+
 // fill table with updated params of previous price modifications
 const showUpdatedUnT = (objPMHistory) => {
     const dt = new Date(objPMHistory.ori_updateddatetime);
-    const formattedDate = dt.toLocaleDateString('en-GB'); // DD/MM/YYYY
+    const formattedDate = dt.toLocaleDateString('en-GB');
     const formattedTime = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
     return `
@@ -177,8 +180,6 @@ const showUpdatedUnT = (objPMHistory) => {
         </div>
     `;
 };
-
-
 
 //define fn for refresh privilege table
 const buildPMHistoryTable = async () => {
@@ -224,9 +225,10 @@ const enableFormUpdateBtn = () => {
 // fn to hold the price modification current values
 const collectPriceModFormValues = () => {
     pricemod.company_profit_margin = document.getElementById('companyProfitMargin').value.trim();
-    pricemod.ext_driver_percentage = document.getElementById('extDriverSurcharge').value.trim();
-    pricemod.ext_vehicle_percentage = document.getElementById('extVehicleSurcharge').value.trim();
-    pricemod.ext_guide_percentage = document.getElementById('extGuideSurcharge').value.trim();
+    pricemod.ext_driver_daily_charge = document.getElementById('extDriverDailyCharge').value.trim();
+    pricemod.ext_guide_daily_charge = document.getElementById('extGuideDailyCharge').value.trim();
+    pricemod.int_driver_daily_cost = document.getElementById('intDriverDailyCost').value.trim();
+    pricemod.int_guide_daily_cost = document.getElementById('intGuideDailyCost').value.trim();
 
     console.log("Collected Price Modifications:", pricemod);
 };
@@ -239,20 +241,25 @@ const checkPriceModsFormErrors = () => {
         errors += "Company Profit Margin cannot be empty\n";
     }
 
-    if (pricemod.ext_driver_percentage == null || pricemod.ext_driver_percentage === "") {
-        errors += "External Driver Surcharge cannot be empty\n";
+    if (pricemod.ext_driver_daily_charge == null || pricemod.ext_driver_daily_charge === "") {
+        errors += "External Driver Daily Charge cannot be empty\n";
     }
 
-    if (pricemod.ext_vehicle_percentage == null || pricemod.ext_vehicle_percentage === "") {
-        errors += "External Vehicle Surcharge cannot be empty\n";
+    if (pricemod.ext_guide_daily_charge == null || pricemod.ext_guide_daily_charge === "") {
+        errors += "External Guide Daily Charge cannot be empty\n";
     }
 
-    if (pricemod.ext_guide_percentage == null || pricemod.ext_guide_percentage === "") {
-        errors += "External Guide Surcharge cannot be empty\n";
+    if (pricemod.int_driver_daily_cost == null || pricemod.int_driver_daily_cost === "") {
+        errors += "Internal Driver Daily Cost cannot be empty\n";
+    }
+
+    if (pricemod.int_guide_daily_cost == null || pricemod.int_guide_daily_cost === "") {
+        errors += "Internal Guide Daily Cost cannot be empty\n";
     }
 
     return errors;
 };
+
 
 // to show the changes made in the PriceMods form
 const showPriceModValueChanges = () => {
@@ -267,20 +274,25 @@ const showPriceModValueChanges = () => {
         updates += `Company Profit Margin will be changed to "${pricemod.company_profit_margin}"\n`;
     }
 
-    if (parseFloat(pricemod.ext_driver_percentage) !== parseFloat(oldPriceModObj.ext_driver_percentage)) {
-        updates += `External Driver Surcharge will be changed "${pricemod.ext_driver_percentage}"\n`;
+    if (parseFloat(pricemod.ext_driver_daily_charge) !== parseFloat(oldPriceModObj.ext_driver_daily_charge)) {
+        updates += `External Driver Daily Charge will be changed to "${pricemod.ext_driver_daily_charge}" LKR\n`;
     }
 
-    if (parseFloat(pricemod.ext_vehicle_percentage) !== parseFloat(oldPriceModObj.ext_vehicle_percentage)) {
-        updates += `External Vehicle Surcharge will be changed "${pricemod.ext_vehicle_percentage}"\n`;
+    if (parseFloat(pricemod.ext_guide_daily_charge) !== parseFloat(oldPriceModObj.ext_guide_daily_charge)) {
+        updates += `External Guide Daily Charge will be changed to "${pricemod.ext_guide_daily_charge}" LKR\n`;
     }
 
-    if (parseFloat(pricemod.ext_guide_percentage) !== parseFloat(oldPriceModObj.ext_guide_percentage)) {
-        updates += `External Guide Surcharge will be changed  "${pricemod.ext_guide_percentage}"\n`;
+    if (parseFloat(pricemod.int_driver_daily_cost) !== parseFloat(oldPriceModObj.int_driver_daily_cost)) {
+        updates += `Internal Driver Daily Cost will be changed to "${pricemod.int_driver_daily_cost}" LKR\n`;
+    }
+
+    if (parseFloat(pricemod.int_guide_daily_cost) !== parseFloat(oldPriceModObj.int_guide_daily_cost)) {
+        updates += `Internal Guide Daily Cost will be changed to "${pricemod.int_guide_daily_cost}" LKR\n`;
     }
 
     return updates;
 };
+
 
 // Function for updating PriceMods record
 const updatePriceMods = async () => {

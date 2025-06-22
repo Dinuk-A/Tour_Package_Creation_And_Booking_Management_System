@@ -1,25 +1,13 @@
 package lk.yathratravels.tpkg;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import lk.yathratravels.dayplan.DayPlan;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,14 +27,26 @@ public class PriceMods {
     @Column(name = "company_profit_margin")
     private BigDecimal company_profit_margin;
 
-    @Column(name = "ext_driver_percentage")
-    private BigDecimal ext_driver_percentage;
+    // @Column(name = "ext_driver_percentage")
+    // private BigDecimal ext_driver_percentage;
+    //
+    // @Column(name = "ext_vehicle_percentage")
+    // private BigDecimal ext_vehicle_percentage;
+    //
+    // @Column(name = "ext_guide_percentage")
+    // private BigDecimal ext_guide_percentage;
 
-    @Column(name = "ext_vehicle_percentage")
-    private BigDecimal ext_vehicle_percentage;
+    @Column(name = "ext_driver_daily_charge")
+    private BigDecimal ext_driver_daily_charge;
 
-    @Column(name = "ext_guide_percentage")
-    private BigDecimal ext_guide_percentage;
+    @Column(name = "ext_guide_daily_charge")
+    private BigDecimal ext_guide_daily_charge;
+
+    @Column(name = "int_driver_daily_cost")
+    private BigDecimal int_driver_daily_cost;
+
+    @Column(name = "int_guide_daily_cost")
+    private BigDecimal int_guide_daily_cost;
 
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;

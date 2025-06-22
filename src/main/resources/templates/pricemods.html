@@ -58,8 +58,8 @@
                                         Margin (%) </label>
                                 </div>
                                 <div class="col-2">
-                                    <input disabled type="number" step="0.01" class="form-control"
-                                        id="companyProfitMargin" name="company_profit_margin"
+                                    <input disabled type="number" class="form-control" id="companyProfitMargin"
+                                        name="company_profit_margin"
                                         onkeyup="inputValidatorText(this, '', 'pricemod' , 'company_profit_margin'); enableFormUpdateBtn();"
                                         required>
                                 </div>
@@ -71,60 +71,78 @@
                                 </div>
                             </div>
 
-                            <!-- External Driver Surcharge -->
+                            <!-- External Driver Daily Charge -->
                             <div class="row mb-2">
                                 <div class="col-5 my-auto">
-                                    <label for="extDriverSurcharge" class="form-label fw-bold mb-0">External Driver
-                                        Surcharge (%) </label>
+                                    <label for="extDriverDailyCharge" class="form-label fw-bold mb-0">External Driver
+                                        Daily Charge (LKR)</label>
                                 </div>
                                 <div class="col-2">
-                                    <input disabled type="number" step="0.01" class="form-control"
-                                        id="extDriverSurcharge" name="ext_driver_surcharge" required
-                                        onkeyup="inputValidatorText(this, '', 'pricemod' , 'ext_driver_percentage'); enableFormUpdateBtn();">
+                                    <input disabled type="number" class="form-control" id="extDriverDailyCharge"
+                                        name="ext_driver_daily_charge" required
+                                        onkeyup="inputValidatorText(this, '', 'pricemod', 'ext_driver_daily_charge'); enableFormUpdateBtn();">
                                 </div>
                                 <div class="col-2"></div>
                                 <div class="col-3">
-                                    <button onclick="enableInput('extDriverSurcharge')"
-                                        class="btn btn-outline-primary w-100" id="extDriverPercBtn">Edit <i
+                                    <button onclick="enableInput('extDriverDailyCharge')"
+                                        class="btn btn-outline-primary w-100" id="extDriverChargeBtn">Edit <i
                                             class="bi bi-pencil-square"></i></button>
                                 </div>
                             </div>
 
-                            <!-- External Vehicle Surcharge -->
+                            <!-- External Guide Daily Charge -->
                             <div class="row mb-2">
                                 <div class="col-5 my-auto">
-                                    <label for="extVehicleSurcharge" class="form-label fw-bold mb-0">External Vehicle
-                                        Surcharge (%) </label>
+                                    <label for="extGuideDailyCharge" class="form-label fw-bold mb-0">External Guide
+                                        Daily Charge (LKR)</label>
                                 </div>
                                 <div class="col-2">
-                                    <input disabled type="number" step="0.01" class="form-control"
-                                        id="extVehicleSurcharge" name="ext_vehicle_surcharge" required
-                                        onkeyup="inputValidatorText(this, '', 'pricemod' , 'ext_vehicle_percentage'); enableFormUpdateBtn();">
+                                    <input disabled type="number" class="form-control" id="extGuideDailyCharge"
+                                        name="ext_guide_daily_charge" required
+                                        onkeyup="inputValidatorText(this, '', 'pricemod', 'ext_guide_daily_charge'); enableFormUpdateBtn();">
                                 </div>
                                 <div class="col-2"></div>
                                 <div class="col-3">
-                                    <button onclick="enableInput('extVehicleSurcharge')"
-                                        class="btn btn-outline-primary w-100" id="extVehiPercBtn">Edit <i
+                                    <button onclick="enableInput('extGuideDailyCharge')"
+                                        class="btn btn-outline-primary w-100" id="extGuideChargeBtn">Edit <i
                                             class="bi bi-pencil-square"></i></button>
                                 </div>
                             </div>
 
-                            <!-- External Guide Surcharge -->
+                            <!-- Internal Driver Daily Cost -->
                             <div class="row mb-2">
                                 <div class="col-5 my-auto">
-                                    <label for="extGuideSurcharge" class="form-label fw-bold mb-0">External Guide
-                                        Surcharge (%) </label>
+                                    <label for="intDriverDailyCost" class="form-label fw-bold mb-0">Internal Driver
+                                        Daily Cost (LKR)</label>
                                 </div>
                                 <div class="col-2">
-                                    <input disabled type="number" step="0.01" class="form-control"
-                                        id="extGuideSurcharge" name="ext_guide_surcharge"
-                                        onkeyup="inputValidatorText(this, '', 'pricemod' , 'ext_guide_percentage'); enableFormUpdateBtn();"
-                                        required>
+                                    <input disabled type="number" class="form-control" id="intDriverDailyCost"
+                                        name="int_driver_daily_cost" required
+                                        onkeyup="inputValidatorText(this, '', 'pricemod', 'int_driver_daily_cost'); enableFormUpdateBtn();">
                                 </div>
                                 <div class="col-2"></div>
                                 <div class="col-3">
-                                    <button onclick="enableInput('extGuideSurcharge')"
-                                        class="btn btn-outline-primary w-100" id="extGuidePercBtn">Edit <i
+                                    <button onclick="enableInput('intDriverDailyCost')"
+                                        class="btn btn-outline-primary w-100" id="intDriverCostBtn">Edit <i
+                                            class="bi bi-pencil-square"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Internal Guide Daily Cost -->
+                            <div class="row mb-2">
+                                <div class="col-5 my-auto">
+                                    <label for="intGuideDailyCost" class="form-label fw-bold mb-0">Internal Guide Daily
+                                        Cost (LKR)</label>
+                                </div>
+                                <div class="col-2">
+                                    <input disabled type="number" class="form-control" id="intGuideDailyCost"
+                                        name="int_guide_daily_cost" required
+                                        onkeyup="inputValidatorText(this, '', 'pricemod', 'int_guide_daily_cost'); enableFormUpdateBtn();">
+                                </div>
+                                <div class="col-2"></div>
+                                <div class="col-3">
+                                    <button onclick="enableInput('intGuideDailyCost')"
+                                        class="btn btn-outline-primary w-100" id="intGuideCostBtn">Edit <i
                                             class="bi bi-pencil-square"></i></button>
                                 </div>
                             </div>
@@ -132,15 +150,16 @@
                             <!-- last modified date -->
                             <div class="row mb-2">
                                 <div class="col-5">
-                                    <label for="lastModifiedDateInput" class="form-label fw-bold mb-0">Last Modified Date</label>
+                                    <label for="lastModifiedDateInput" class="form-label fw-bold mb-0">Last Modified
+                                        Date</label>
                                 </div>
                                 <div class="col-7">
                                     <input type="text" class="form-control" id="lastModifiedDateInput"
                                         name="last_modified_date" readonly>
-                            </div>
+                                </div>
 
-                            <!-- External Fee Status -->
-                            <!--<div class="row mb-2">
+                                <!-- External Fee Status -->
+                                <!--<div class="row mb-2">
                                 <div class="col-12">
                                     <label for="extFeeStatus" class="form-label fw-bold mb-0">External Fee Status </label>
                                     <select class="form-select" id="extFeeStatus" name="ext_fee_status" required>
@@ -151,28 +170,28 @@
                                 </div>
                             </div>-->
 
-                            <!-- Description -->
-                            <!--<div class="row mb-3">
+                                <!-- Description -->
+                                <!--<div class="row mb-3">
                                 <div class="col-12">
                                     <label for="description" class="form-label fw-bold mb-0">Description (Optional):</label>
                                     <textarea class="form-control" id="description" name="description" rows="2"></textarea>
                                 </div>
                             </div>-->
 
-                            <!-- 💥💥💥 last updated time and user inputs -->
+                                <!-- 💥💥💥 last updated time and user inputs -->
 
-                            <!-- Form Buttons -->
-                            <div class="row mt-4 mb-2">
-                                <!--<div class="col-4">-->
-                                <!--<button type="reset" class="btn-clear fw-bold w-100" onclick="refreshPriceModsForm()">Reset Form</button>-->
-                                <!--</div>-->
-                                <div class="col-12 text-end">
-                                    <button type="submit" id="pricemodsUpdateBtn" class="btn-update fw-bold me-2"
-                                        onclick="updatePriceMods()" >Update Entry</button>
-                                    <button type="submit" id="pricemodsAddBtn" class="d-none btn-add fw-bold"
-                                        onclick="addNewPriceMods()" disabled>Add Entry</button>
+                                <!-- Form Buttons -->
+                                <div class="row mt-4 mb-2">
+                                    <!--<div class="col-4">-->
+                                    <!--<button type="reset" class="btn-clear fw-bold w-100" onclick="refreshPriceModsForm()">Reset Form</button>-->
+                                    <!--</div>-->
+                                    <div class="col-12 text-end">
+                                        <button type="submit" id="pricemodsUpdateBtn" class="btn-update fw-bold me-2"
+                                            onclick="updatePriceMods()">Update Entry</button>
+                                        <button type="submit" id="pricemodsAddBtn" class="d-none btn-add fw-bold"
+                                            onclick="addNewPriceMods()" disabled>Add Entry</button>
+                                    </div>
                                 </div>
-                            </div>
 
                         </form>
                     </div>
