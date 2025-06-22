@@ -14,6 +14,14 @@ let dropoffPointGCoords = '';
 
 //clear out the form everytime a user switches to table tab
 document.addEventListener("DOMContentLoaded", () => {
+
+    //this is added because we use the dayplan.js inside the tpkg.html too
+    const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
+    if (!tableDayPlanHolderDivElement) {
+        return;
+    }
+
+    
     document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
         if (event.target.id === 'table-tab') {
             console.log("Switching to table tab - clearing form");
@@ -1483,6 +1491,12 @@ const addNewDayPlan = async () => {
 
 //to reset the modal that show all the info
 const resetModal = () => {
+
+    //this is added because we use the dayplan.js inside the tpkg.html too
+    const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
+    if (!tableDayPlanHolderDivElement) {
+        return;
+    }
 
     // Hide the deleted record message    
     document.getElementById('modalDPIfDeleted').innerText = '';

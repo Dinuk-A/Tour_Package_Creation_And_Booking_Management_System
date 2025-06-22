@@ -15,7 +15,7 @@ let allItineraryTemplates = [];
 
 //clear out the form everytime a user switches to table tab
 document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+    document.getElementById('myTabTpkg').addEventListener('shown.bs.tab', function (event) {
         if (event.target.id === 'table-tab') {
             console.log("Switching to table tab - clearing form");
             refreshTpkgForm();
@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+const resetModalTpkg =() => {
+    console.log("Resetting modal form");
+}
 
 //to create and refresh content in main table
 const buildTpkgTable = async () => {
@@ -91,6 +94,7 @@ const refreshTpkgForm = async () => {
 
     tpkg = new Object();
     tpkg.dayplans = new Array();
+    tpkg.addiCostList = new Array();
     document.getElementById('formTpkg').reset();
 
     //set the min start date to 7 days future
@@ -2224,7 +2228,7 @@ const checkTpkgFormErrors = () => {
 
     let errors = "";
 
-    if (tpkg.daytitle == null) {
+    if (tpkg.pkgtitle == null) {
         errors += "Title cannot be empty \n";
     }
 
@@ -2283,7 +2287,8 @@ const addNewTpkg = async () => {
             try {
 
                 //bind addiCost array with the tpkg obj 💥💥💥
-
+                //console.log("submitting tpkg:" + tpkg);
+                console.log("tpkg.addiCostList:", tpkg.addiCostList);
                 const postServerResponse = await ajaxPPDRequest("/tpkg", "POST", tpkg);
                 if (postServerResponse === 'OK') {
                     showAlertModal('suc', 'Saved Successfully');
@@ -2372,13 +2377,17 @@ const updateTourEndDate = () => {
     //endDateDisplay.innerText = endDate.toLocaleDateString(undefined, options);
 };
 
-
+//💥💥💥
+//add , delete, update
+//check errors, check updates 
+//refill 
+//print
 
 
 
 
 //################ additional costs related codes ###################
-addiCostList = new Array();
+//tpkg.addiCostList = new Array();
 
 const refreshAddiCostForm = () => {
 
@@ -2429,7 +2438,7 @@ const createAddiCostTable = () => {
     const tbody = document.getElementById('additionalCostTableBody');
     tbody.innerHTML = '';
 
-    addiCostList.forEach((cost, index) => {
+    tpkg.addiCostList.forEach((cost, index) => {
         const row = document.createElement('tr');
         row.classList.add('no-hover');
 
@@ -2467,7 +2476,7 @@ const createAddiCostTable = () => {
         deleteBtn.className = 'btn btn-outline-danger';
         deleteBtn.innerText = 'Delete';
         deleteBtn.onclick = () => {
-            addiCostList.splice(index, 1);
+            tpkg.addiCostList.splice(index, 1);
             createAddiCostTable();
             updateTotalAdditionalCost();
             refreshAddiCostForm();
@@ -2489,7 +2498,7 @@ const addAddiCostToTable = () => {
     if (errors == '') {
         const userConfirm = confirm("Are you sure you sure to add this additional cost?");
         if (userConfirm) {
-            addiCostList.push(addiCost);
+            tpkg.addiCostList.push(addiCost);
             createAddiCostTable();
             updateTotalAdditionalCost();
             console.log("addAddiCostToTable success");
@@ -2563,7 +2572,7 @@ const updateAddCost = () => {
 const updateTotalAdditionalCost = () => {
     let total = 0.00;
 
-    addiCostList.forEach(cost => {
+    tpkg.addiCostList.forEach(cost => {
         total += parseFloat(cost.amount) || 0.00;
     });
 

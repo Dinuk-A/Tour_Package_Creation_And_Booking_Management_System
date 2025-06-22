@@ -3,6 +3,7 @@ package lk.yathratravels.tpkg;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lk.yathratravels.dayplan.DayPlan;
 import lombok.AllArgsConstructor;
@@ -49,7 +51,7 @@ public class TourPkg {
     private LocalDate tourstartdate;
 
     @Column(name = "totaldays")
-    private LocalDate totaldays;
+    private Integer totaldays;
 
     @Column(name = "tourenddate")
     private LocalDate tourenddate;
@@ -66,8 +68,8 @@ public class TourPkg {
 
     @Column(name = "foreignchildcount")
     private Integer foreignchildcount;
-    // ####TRAVELLERS COUNT ENDS####  
-        
+    // ####TRAVELLERS COUNT ENDS####
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "sd_dayplan_id", referencedColumnName = "id")
     private DayPlan sd_dayplan_id;
@@ -80,11 +82,11 @@ public class TourPkg {
     @JoinTable(name = "tpkg_has_dayplan", joinColumns = @JoinColumn(name = "tpkg_id"), inverseJoinColumns = @JoinColumn(name = "dayplan_id"))
     private Set<DayPlan> dayplans;
 
-    //additional costs one to many 1 add karana 1 optional
+    // additional costs one to many 1 add karana 1 optional
 
     // TO CALC VEHICLE COST
-    //@Column(name = "totalkmcountofpkg")
-    //private BigDecimal totalkmcountofpkg;
+    // @Column(name = "totalkmcountofpkg")
+    // private BigDecimal totalkmcountofpkg;
 
     // #### SUM OF COSTS STARTS#####
     @Column(name = "totaltktcost")
@@ -152,6 +154,12 @@ public class TourPkg {
 
     @Column(name = "pref_vehi_type")
     private String pref_vehi_type;
+
+    @OneToMany(mappedBy = "tourPkg", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AdditionalCost> addiCostList;
+
+    // @Transient
+    // private List<AdditionalCost> addiCostList;
 
     // common 6
     @Column(name = "addeddatetime")

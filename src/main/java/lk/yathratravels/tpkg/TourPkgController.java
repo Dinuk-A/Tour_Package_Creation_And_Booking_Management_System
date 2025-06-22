@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import jakarta.transaction.Transactional;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
 import lk.yathratravels.user.User;
@@ -34,6 +35,9 @@ public class TourPkgController {
 
     @Autowired
     private TourPkgDao daoTPkg;
+
+    @Autowired
+    private AdditionalCostDao additionalCostDao;
 
     // display tpkg UI
     @RequestMapping(value = "/tourpackage", method = RequestMethod.GET)
@@ -79,6 +83,7 @@ public class TourPkgController {
     }
 
     @PostMapping(value = "/tpkg")
+    @Transactional
     public String saveTourPkg(@RequestBody TourPkg tpkg) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -100,12 +105,33 @@ public class TourPkgController {
 
             tpkg.setAddeddatetime(LocalDateTime.now());
             tpkg.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
-            daoTPkg.save(tpkg);
+
+            TourPkg savedTpkg = daoTPkg.save(tpkg);
+
+            System.out.println("additional cost list : " + tpkg.getAddiCostList().toString());
+
+//            if (tpkg.getAddiCostList() != null && !tpkg.getAddiCostList().isEmpty()) {
+//
+//                for (AdditionalCost ac : tpkg.getAddiCostList()) {
+//                    AdditionalCost additionalCost = new AdditionalCost();
+//
+//                    System.out.println("additional cost : " + ac.toString());
+//
+//                    additionalCost.setTourPkg(savedTpkg);
+//                    additionalCost.setCostname(ac.getCostname());
+//                    additionalCost.setAmount(ac.getAmount());
+//                    additionalCost.setAddeddatetime(LocalDateTime.now());
+//                    additionalCost.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+//                    additionalCostDao.save(additionalCost);
+//                }
+//
+//            }
+
             return "OK";
         } catch (Exception e) {
             return "save Tour Package Failed. " + e.getMessage();
         }
-              
+
     }
 
     @PutMapping(value = "/tpkg")
@@ -125,10 +151,9 @@ public class TourPkgController {
         } catch (Exception e) {
             return "Update Not Completed Because :" + e.getMessage();
         }
-        
+
     }
 
-    //think a logic for delete tour package 💥💥💥
-
+    // think a logic for delete tour package 💥💥💥
 
 }

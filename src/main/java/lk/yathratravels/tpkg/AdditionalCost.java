@@ -55,14 +55,13 @@ public class AdditionalCost {
     @Column(name = "deleteduserid")
     private Integer deleteduserid;
 
-    //@Column(name = "adc_status")
-    //private String adc_status;
-
-    //@Column(name = "deleted_adc")
-    //private Boolean deleted_adc;
-
     @ManyToOne
     @JoinColumn(name = "tpkg_id")
     private TourPkg tourPkg;
 }
 
+// @Column(name = "adc_status")
+// private String adc_status;
+
+// @Column(name = "deleted_adc")
+// private Boolean deleted_adc;
