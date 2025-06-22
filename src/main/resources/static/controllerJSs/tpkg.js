@@ -604,6 +604,7 @@ const loadExistingLDs = async (selectElementId) => {
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyLastDays, "daytitle");
         const editBtn = document.getElementById('dayPlanInfoEditBtn');
         editBtn.disabled = true;
+        document.getElementById('finalDayMsg').classList.add('d-none');
     } catch (error) {
         console.error("Error loading existing days:", error);
     }
@@ -643,12 +644,26 @@ const handleFinalDayChange = (selectElement) => {
     dynamicSelectValidator(selectElement, 'tpkg', 'ed_dayplan_id');
     showFinalDayBtn.disabled = false;
     removeFinalDayBtn.disabled = false;
-    updateTotalDaysCount();
     showTotalKmCount();
-    //💥💥💥
-    //refreshMainCostCard();
 
-}
+    const finalDMsg = document.getElementById('finalDayMsg');
+
+    if (tpkg.ed_dayplan_id.is_template) {
+        selectElement.style.border = "2px solid orange";
+        finalDMsg.classList.remove('d-none');
+        tpkg.ed_dayplan_id = null;
+    } else {
+        selectElement.style.border = "2px solid lime";
+        finalDMsg.classList.add('d-none');
+        finalDaySelectUseTempsBtn.disabled = false;
+        finalDaySelectUseExistingBtn.disabled = false;
+        updateTotalDaysCount();
+    }
+
+    // 💥💥💥
+    // refreshMainCostCard();
+};
+
 
 // fn to calculate the total days count of the tour package
 const updateTotalDaysCount = () => {
@@ -708,7 +723,7 @@ const calculateMainCosts = () => {
     }
 
     calcTotalCostSum();
-    
+
 }
 
 //calc sum of all costs
@@ -752,7 +767,7 @@ const calcFinalPrice = () => {
 const showTotalKmCount = () => {
 
     //first day
-    const kmCountFD = tpkg.sd_dayplan_id.totalkmcount || 0;
+    const kmCountFD = tpkg.sd_dayplan_id?.totalkmcount || 0;
 
     //last day
     let kmCountLD = 0;
