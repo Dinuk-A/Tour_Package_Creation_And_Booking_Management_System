@@ -99,11 +99,17 @@ public class TourPkg {
     @Column(name = "totalvehicost")
     private BigDecimal totalvehicost;
 
+    @Column(name = "totaldrivercost")
+    private BigDecimal totaldrivercost;
+
+    @Column(name = "totalguidecost")
+    private BigDecimal totalguidecost;
+
     @Column(name = "totalstaycost")
     private BigDecimal totalstaycost;
 
-    //@Column(name = "totaladditionalcosts")
-    //private BigDecimal totaladditionalcosts;
+    @Column(name = "totaladditionalcosts")
+    private BigDecimal totaladditionalcosts;
 
     @Column(name = "pkgcostsum")
     private BigDecimal pkgcostsum;

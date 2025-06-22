@@ -2,7 +2,8 @@ window.addEventListener('load', () => {
 
     buildTpkgTable();
     refreshTpkgForm();
-    refreshAddiCostForm()
+    refreshAddiCostForm();
+    fetchPriceMods();
 
 });
 
@@ -690,8 +691,22 @@ const calculateMainCosts = () => {
     calcTotalLunchCost();
     calcTotalStayCost();
     calcVehicleCosts();
-
+    calcTotalDriverCost();
+    if (tpkg.is_guide_needed && guideYes.checked) {
+        //calcTotalGuideCost();
+    }
 }
+
+// to fetch all price modifiers and store them globally
+let globalPriceMods = null;
+const fetchPriceMods = async () => {
+    try {
+        const pricemods = await ajaxGetReq("/pricemods/all");
+        globalPriceMods = pricemods;
+    } catch (error) {
+        console.error("Failed to load price modifiers:", error);
+    }
+};
 
 // update total km count of the tour package
 const showTotalKmCount = () => {
@@ -715,8 +730,61 @@ const showTotalKmCount = () => {
 
     const sumKM = kmCountFD + kmCountLD + kmCountMD;
     const inputTotalKm = document.getElementById('showTotalKMCount');
+    tpkg.totalkmcountofpkg = sumKM;
     inputTotalKm.value = sumKM;
 
+}
+
+// calc total cost for driver
+const calcTotalDriverCost = () => {
+
+    if (!globalPriceMods) {
+        console.warn("Price modifiers not loaded.");
+        return;
+    }
+    
+    const yathraDriver = document.getElementById('yathraDriverCB');
+    const rentedDriver = document.getElementById('rentalDriverCB');
+    const totalDaysInput = document.getElementById('showTotalDaysCount');
+    const totalDays = parseInt(totalDaysInput.value) || 0;
+
+    const costInput = document.getElementById('totalDriverCostInput');
+    const driverCostLabel = document.querySelector('label[for="totalDriverCostInput"]');
+    const driverCostGroup = document.getElementById('totalDriverCostGroup');
+    const totalDriverCostMsg = document.getElementById('totalDriverCostMsg');
+
+    // Hide cost input group and show message initially
+    driverCostGroup.classList.add("d-none");
+    totalDriverCostMsg.classList.remove("d-none");
+    costInput.value = "";
+    tpkg.totaldrivercost = null;
+
+    // Check if a driver source is selected and total days is valid
+    if ((!yathraDriver.checked && !rentedDriver.checked) || totalDays <= 0) {
+        totalDriverCostMsg.classList.remove("d-none");
+        return;
+    }
+
+    let driverDailyCharge = 0;
+
+    // Assuming you have a global or accessible object for vehicle types, or fetch similarly as in vehicle function
+    // For now let's assume tpkg has fields for internal and external driver daily charges
+    if (yathraDriver.checked && tpkg.is_company_driver === true) {
+        driverDailyCharge = tpkg.int_driver_daily_cost || 0;
+        driverCostLabel.innerText = "For Driver (Company Driver):";
+    } else if (rentedDriver.checked && tpkg.is_company_driver === false) {
+        driverDailyCharge = tpkg.ext_driver_daily_charge || 0;
+        driverCostLabel.innerText = "For Driver (Rented Driver):";
+    }
+
+    const totalDriverCost = driverDailyCharge * totalDays;
+    costInput.value = totalDriverCost.toFixed(2);
+    tpkg.totaldrivercost = parseFloat(totalDriverCost.toFixed(2));
+
+    driverCostGroup.classList.remove("d-none");
+    totalDriverCostMsg.classList.add("d-none");
+
+    console.log("Total driver cost calculated: " + tpkg.totaldrivercost);
 }
 
 //to calculate the total vehicle's fee of the tour package ✅
@@ -897,42 +965,6 @@ const calcTotalLunchCost = () => {
 
 }
 
-// check if first tabs inputs are all filled
-const checkFirstTab = () => {
-    const pkgTitle = tpkg.pkgtitle;
-    const startDate = tpkg.tourstartdate;
-    const description = tpkg.web_description;
-
-    if (tpkg.is_custompkg == null) {
-        alert("Please select whether this is a custom package or a template package.");
-        return null;
-    }
-
-    if (!pkgTitle) {
-        alert("Please enter the tour package title.");
-        return null;
-    }
-
-    if (tpkg.is_custompkg === true) {
-        if (!startDate) {
-            alert("For a custom package, please fill the start date.");
-            return null;
-        }
-    }
-
-    if (tpkg.is_custompkg === false) {
-        if (!description) {
-            alert("For a template package, please fill the web description.");
-            return null;
-        }
-    }
-
-    tabelement = document.getElementById('tpkgStep2-tab');
-    tabelement.classList.remove("disabled");
-    tabelement.click();
-
-};
-
 
 //to calculate the total stay cost of the tour package
 //add incremental cost for KIDS 💥💥💥
@@ -1064,6 +1096,42 @@ const calcTotalVehiParkingfeeTpkg = () => {
     }
 
 }
+
+// check if first tabs inputs are all filled
+const checkFirstTab = () => {
+    const pkgTitle = tpkg.pkgtitle;
+    const startDate = tpkg.tourstartdate;
+    const description = tpkg.web_description;
+
+    if (tpkg.is_custompkg == null) {
+        alert("Please select whether this is a custom package or a template package.");
+        return null;
+    }
+
+    if (!pkgTitle) {
+        alert("Please enter the tour package title.");
+        return null;
+    }
+
+    if (tpkg.is_custompkg === true) {
+        if (!startDate) {
+            alert("For a custom package, please fill the start date.");
+            return null;
+        }
+    }
+
+    if (tpkg.is_custompkg === false) {
+        if (!description) {
+            alert("For a template package, please fill the web description.");
+            return null;
+        }
+    }
+
+    tabelement = document.getElementById('tpkgStep2-tab');
+    tabelement.classList.remove("disabled");
+    tabelement.click();
+
+};
 
 // save the preferred vehi types name only., as a string
 const savePrefVehitype = (selectElement) => {
