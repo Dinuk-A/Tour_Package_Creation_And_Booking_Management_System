@@ -695,6 +695,22 @@ const calculateMainCosts = () => {
     if (tpkg.is_guide_needed && guideYes.checked) {
         calcTotalGuideCost();
     }
+
+    const total =
+        (tpkg.totalvehiparkingcost || 0) +
+        (tpkg.totaltktcost || 0) +
+        (tpkg.totallunchcost || 0) +
+        (tpkg.totalstaycost || 0) +
+        (tpkg.totalvehicost || 0) +
+        (tpkg.totaldrivercost || 0) +
+        (tpkg.totalguidecost || 0) +
+        (tpkg.totaladditionalcosts || 0);
+
+    tpkg.pkgcostsum = parseFloat(total.toFixed(2));
+    document.getElementById('finalTotalCost').value = tpkg.pkgcostsum;
+
+    calcFinalPrice();
+
 }
 
 // to fetch all price modifiers and store them globally
@@ -707,6 +723,20 @@ const fetchPriceMods = async () => {
         console.error("Failed to load price modifiers:", error);
     }
 };
+
+// calc final price of the tour package (profit margin added)
+const calcFinalPrice = () => {
+    const profitMargin = parseFloat(globalPriceMods.company_profit_margin) || 0;
+
+    const cost = parseFloat(tpkg.pkgcostsum);
+    const profit = cost * (profitMargin / 100);
+    const finalPrice = cost + profit;
+
+    tpkg.pkgfinalprice = parseFloat(finalPrice.toFixed(2));
+    document.getElementById('finalPriceInput').value = tpkg.pkgfinalprice;
+
+    console.log("Final price calculated: " + tpkg.pkgfinalprice);
+}
 
 // update total km count of the tour package
 const showTotalKmCount = () => {
@@ -833,7 +863,6 @@ const calcTotalGuideCost = () => {
     console.log("Total guide cost calculated: " + tpkg.totalguidecost);
 };
 
-
 //to calculate the total vehicle's fee of the tour package ✅
 const calcVehicleCosts = () => {
     const kmCountForPkg = parseFloat(document.getElementById('showTotalKMCount').value) || 0;
@@ -879,7 +908,6 @@ const calcVehicleCosts = () => {
 
     console.log("Total vehicle cost calculated: " + tpkg.totalvehicost);
 };
-
 
 //to calculate the total costs of the tour package  ✅
 const calcTotalTktCosts = () => {
@@ -1012,7 +1040,6 @@ const calcTotalLunchCost = () => {
 
 }
 
-
 //to calculate the total stay cost of the tour package
 //add incremental cost for KIDS 💥💥💥
 const calcTotalStayCost = () => {
@@ -1093,7 +1120,6 @@ const calcTotalStayCost = () => {
     tpkg.totalstaycost = parseFloat(totalStayCostValue.toFixed(2));
 
 };
-
 
 //calc total vehicle fee ✅
 const calcTotalVehiParkingfeeTpkg = () => {
