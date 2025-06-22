@@ -693,7 +693,7 @@ const calculateMainCosts = () => {
     calcVehicleCosts();
     calcTotalDriverCost();
     if (tpkg.is_guide_needed && guideYes.checked) {
-        //calcTotalGuideCost();
+        calcTotalGuideCost();
     }
 }
 
@@ -784,6 +784,55 @@ const calcTotalDriverCost = () => {
 
     console.log("Total driver cost calculated: " + tpkg.totaldrivercost);
 }
+
+// calc total guide cost
+const calcTotalGuideCost = () => {
+
+    if (!globalPriceMods) {
+        console.warn("Price modifiers not loaded.");
+        return;
+    }
+
+    const yathraGuide = document.getElementById('yathraGuideCB');
+    const rentedGuide = document.getElementById('rentalGuideCB');
+    const totalDaysInput = document.getElementById('showTotalDaysCount');
+    const totalDays = parseInt(totalDaysInput.value) || 0;
+
+    const costInput = document.getElementById('totalGuideCostInput');
+    const guideCostLabel = document.querySelector('label[for="totalGuideCostInput"]');
+    const guideCostGroup = document.getElementById('totalGuideCostGroup');
+    const totalGuideCostMsg = document.getElementById('totalGuideCostMsg');
+
+    guideCostGroup.classList.add("d-none");
+    totalGuideCostMsg.classList.remove("d-none");
+    costInput.value = "";
+    tpkg.totalguidecost = null;
+
+    if ((!yathraGuide.checked && !rentedGuide.checked) || totalDays <= 0) {
+        totalGuideCostMsg.classList.remove("d-none");
+        return;
+    }
+
+    let guideDailyCharge = 0;
+
+    if (yathraGuide.checked) {
+        guideDailyCharge = parseFloat(globalPriceMods.int_guide_daily_cost) || 0;
+        guideCostLabel.innerText = "For Guide (Company Guide):";
+    } else if (rentedGuide.checked) {
+        guideDailyCharge = parseFloat(globalPriceMods.ext_guide_daily_charge) || 0;
+        guideCostLabel.innerText = "For Guide (Rented Guide):";
+    }
+
+    const totalGuideCost = guideDailyCharge * totalDays;
+    costInput.value = totalGuideCost.toFixed(2);
+    tpkg.totalguidecost = parseFloat(totalGuideCost.toFixed(2));
+
+    guideCostGroup.classList.remove("d-none");
+    totalGuideCostMsg.classList.add("d-none");
+
+    console.log("Total guide cost calculated: " + tpkg.totalguidecost);
+};
+
 
 //to calculate the total vehicle's fee of the tour package ✅
 const calcVehicleCosts = () => {
