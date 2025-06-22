@@ -683,6 +683,17 @@ const refreshMainCostCard = () => {
     //and also show a hidden msg
 }
 
+// to fetch all price modifiers and store them globally
+let globalPriceMods = null;
+const fetchPriceMods = async () => {
+    try {
+        const pricemods = await ajaxGetReq("/pricemods/all");
+        globalPriceMods = pricemods;
+    } catch (error) {
+        console.error("Failed to load price modifiers:", error);
+    }
+};
+
 //to calculate the total costs of the tour package 💥💥💥
 const calculateMainCosts = () => {
 
@@ -696,6 +707,12 @@ const calculateMainCosts = () => {
         calcTotalGuideCost();
     }
 
+    calcTotalCostSum();
+    
+}
+
+//calc sum of all costs
+const calcTotalCostSum = () => {
     const total =
         (tpkg.totalvehiparkingcost || 0) +
         (tpkg.totaltktcost || 0) +
@@ -707,22 +724,10 @@ const calculateMainCosts = () => {
         (tpkg.totaladditionalcosts || 0);
 
     tpkg.pkgcostsum = parseFloat(total.toFixed(2));
-    document.getElementById('finalTotalCost').value = tpkg.pkgcostsum;
+    document.getElementById('finalTotalCost').value = total.toFixed(2);
 
     calcFinalPrice();
-
 }
-
-// to fetch all price modifiers and store them globally
-let globalPriceMods = null;
-const fetchPriceMods = async () => {
-    try {
-        const pricemods = await ajaxGetReq("/pricemods/all");
-        globalPriceMods = pricemods;
-    } catch (error) {
-        console.error("Failed to load price modifiers:", error);
-    }
-};
 
 // calc final price of the tour package (profit margin added)
 const calcFinalPrice = () => {
@@ -730,13 +735,18 @@ const calcFinalPrice = () => {
 
     const cost = parseFloat(tpkg.pkgcostsum);
     const profit = cost * (profitMargin / 100);
-    const finalPrice = cost + profit;
+    const rawFinalPrice = cost + profit;
 
-    tpkg.pkgfinalprice = parseFloat(finalPrice.toFixed(2));
-    document.getElementById('finalPriceInput').value = tpkg.pkgfinalprice;
+    const finalPrice = Math.ceil(rawFinalPrice / 100) * 100;
+    const finalPriceRounded = parseFloat(finalPrice.toFixed(2));
 
-    console.log("Final price calculated: " + tpkg.pkgfinalprice);
-}
+    tpkg.pkgfinalprice = finalPriceRounded;
+    const finalPriceInput = document.getElementById('finalPriceInput');
+    finalPriceInput.value = finalPriceRounded.toFixed(2);
+    finalPriceInput.style.border = "2px solid lime";
+
+    console.log("Final price calculated: " + finalPriceRounded);
+};
 
 // update total km count of the tour package
 const showTotalKmCount = () => {
@@ -2545,6 +2555,9 @@ const updateTotalAdditionalCost = () => {
     const totalAmountField = document.getElementById("totalAdditionalCosts");
     totalAmountField.value = total.toFixed(2);
     tpkg.totaladditionalcosts = Number(total.toFixed(2));
+
+    //update the total cost sum and final price too
+    calcTotalCostSum();
 };
 
 
