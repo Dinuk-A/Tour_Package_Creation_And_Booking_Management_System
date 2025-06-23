@@ -257,7 +257,7 @@
 
                                                                 <div class="col-3 d-flex justify-content-end gap-2">
                                                                     <button type="button" disabled id="showFirstDayBtn"
-                                                                        class="btn btn-all"
+                                                                        class="btn btn-outline-primary"
                                                                         onclick="showDayPlanDetails('tpkgFirstDaySelect')">
                                                                         View
                                                                     </button>
@@ -294,7 +294,7 @@
                                                 <!-- Add More Days button -->
                                                 <div class="col-12 d-flex justify-content-center my-2">
                                                     <button disabled type="button" id="addNewDaysBtn"
-                                                        class="btn btn-warning"
+                                                        class="btn btn-outline-success"
                                                         onclick="generateNormalDayPlanSelectSections()">
                                                         Add More Days
                                                     </button>
@@ -546,8 +546,7 @@
                                                                     <span id="tourStartDateDisplay">Start Date Not
                                                                         Selected</span>
                                                                     <span class="mx-2">→</span>
-                                                                    <span id="tourEndDateDisplay">End Date Not
-                                                                        Selected</span>
+                                                                    <span id="tourEndDateDisplay">Please Add Day Plans</span>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -852,7 +851,7 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled type="text" id="totalTktCostInput"
+                                                                    <input disabled placeholder="0.00"  type="text" id="totalTktCostInput"
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaltktcost');">
                                                                 </div>
@@ -876,7 +875,7 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled type="number"
+                                                                    <input disabled placeholder="0.00"  type="number"
                                                                         id="totalVehicleParkingCost"
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalvehiparkingcost');">
@@ -900,7 +899,7 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled type="number"
+                                                                    <input disabled placeholder="0.00"  type="number"
                                                                         id="totalLunchCostForAll"
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totallunchcost');">
@@ -924,7 +923,7 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled type="number"
+                                                                    <input disabled placeholder="0.00"  type="number"
                                                                         id="totalVehiCostInput"
                                                                         class="form-control form-input my-auto text-center p-1"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalvehicost');">
@@ -949,7 +948,7 @@
                                                                     <span class="input-group-text p-1 pb-0">
                                                                         <h6 class="mb-0">LKR</h6>
                                                                     </span>
-                                                                    <input disabled type="number"
+                                                                    <input disabled  placeholder="0.00" type="number"
                                                                         id="totalStayCostInput"
                                                                         class="form-control form-input p-1 text-center"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalstaycost');">
@@ -973,7 +972,7 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled type="number"
+                                                                    <input disabled placeholder="0.00"  type="number"
                                                                         id="totalDriverCostInput"
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaldrivercost');">
@@ -997,7 +996,7 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled type="number" placeholder="0.00"
+                                                                    <input disabled placeholder="0.00"  type="number" placeholder="0.00"
                                                                         id="totalGuideCostInput"
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalguidecost');">

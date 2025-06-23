@@ -13,7 +13,7 @@ let sharedTableIdForTpkg = "mainTableTpkg";
 //declared globally because needed for filterings
 let allItineraryTemplates = [];
 
-//clear out the form everytime a user switches to table tab
+//clear out the form everytime a user switches to table tab   
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('myTabTpkg').addEventListener('shown.bs.tab', function (event) {
         if (event.target.id === 'table-tab') {
@@ -23,11 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// 💥💥💥
 const resetModalTpkg = () => {
     console.log("Resetting modal form");
 }
 
-//to create and refresh content in main table
+//to create and refresh content in main table   
 const buildTpkgTable = async () => {
     try {
         const tpkgs = await ajaxGetReq("/tpkg/all");
@@ -48,16 +49,25 @@ const buildTpkgTable = async () => {
     }
 }
 
-//to support fill main table
+//to support fill main table   
 const showTpkgType = (tpkgObj) => {
     if (!tpkgObj.is_custompkg) {
-        return "Template"
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #007bff; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Template Package
+            </p>`;
     } else {
-        return "For Website"
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #17a2b8; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Custom Package
+            </p>`;
     }
 }
 
-//to support fill main table
+
+//to support fill main table  
 const showTpkgStatus = (tpkgObj) => {
 
     if (tpkgObj.deleted_tpkg == null || tpkgObj.deleted_tpkg === false) {
@@ -95,7 +105,7 @@ const showTpkgStatus = (tpkgObj) => {
     }
 }
 
-//to ready the main form 
+//to ready the main form   
 const refreshTpkgForm = async () => {
 
     tpkg = new Object();
@@ -120,14 +130,27 @@ const refreshTpkgForm = async () => {
     // Array of input field IDs to reset
     const inputTagsIds = [
         'inputPkgTitle',
-        'inputPkgCode',
+        //'inputPkgCode',
         'tpStartDateInput',
         'tpDescription',
+        'showTotalKMCount',
+        'showTotalDaysCount',
+        'tpkgFirstDaySelect',
+        'tpkgFinalDaySelect',
         'tpkgLocalAdultCount',
         'tpkgLocalChildCount',
         'tpkgForeignAdultCount',
         'tpkgForeignChildCount',
+        'tpkgTotalTravellers',
         'tpkgVehitype',
+        'totalTktCostInput',
+        'totalVehicleParkingCost',
+        'totalLunchCostForAll',
+        'totalVehiCostInput',
+        'totalStayCostInput',
+        'totalDriverCostInput',
+        'totalGuideCostInput',
+        'totalAdditionalCosts',
         'tpNote',
         'tpSelectStatus'
     ];
@@ -140,6 +163,10 @@ const refreshTpkgForm = async () => {
             field.value = '';
         }
     });
+
+    document.getElementById('tpkgMidDaysSelectSection').innerHTML = '';
+    document.getElementById('tourStartDateDisplay').innerText = 'Start Date Not Selected';
+    document.getElementById('tourEndDateDisplay').innerText = 'Please Add Day Plans';
 
     document.getElementById('tpkgLocalAdultCount').value = 0;
     document.getElementById('tpkgLocalChildCount').value = 0;
@@ -175,13 +202,18 @@ const refreshTpkgForm = async () => {
     document.getElementById('tpkgForeignAdultCount').value = 0;
     document.getElementById('tpkgForeignChildCount').value = 0;
 
-    document.getElementById('showAvailableVehiCount').innerText = '';
-    document.getElementById('showAvailableDriverCount').innerText = '';
-    document.getElementById('showAvailableGuideCount').innerText = '';
+    document.getElementById('finalTotalCost').value = '';
+    document.getElementById('finalPriceInput').value = '';
+    document.getElementById('finalPriceInput').style.border = "1px solid #ced4da";
 
+    document.getElementById("additionalCostTableBody").innerHTML = "";
+
+    showVehiAvailabilityButtons();
+    showDnGAvailabilityButtons();
 }
 
 //set status auto
+//think new values 💥💥💥
 const setTpkgStatus = () => {
     const tpkgStatusSelectElement = document.getElementById('tpSelectStatus');
     tpkg.tpkg_status = "Draft";
@@ -193,7 +225,7 @@ const setTpkgStatus = () => {
     //tpkgStatusSelectElement.children[5].classList.add('d-none');
 }
 
-//set the start date to 7 days future
+//set the start date to 7 days future   
 const setTpkgStartDateToFuture = () => {
 
     const dateInput = document.getElementById('tpStartDateInput');
@@ -205,8 +237,9 @@ const setTpkgStartDateToFuture = () => {
 
 }
 
-//for first 2 radio buttons
+//for first 2 radio buttons to choose package type   
 const changesTpkgCustomOrTemp = () => {
+
     //if a custom package
     if (customTP.checked) {
 
@@ -336,7 +369,7 @@ const changesTpkgCustomOrTemp = () => {
     }
 }
 
-//adults counts must be >0 in order to fill the child counts
+//adults counts must be >0 in order to fill the child counts  
 const enableChildCountInputs = () => {
     if (parseInt(tpkgLocalAdultCount.value) > 0 || parseInt(tpkgForeignAdultCount.value) > 0) {
         tpkgLocalChildCount.disabled = false;
@@ -354,7 +387,7 @@ const enableChildCountInputs = () => {
     }
 }
 
-// to delay the execution of a function
+// common debounce to delay the execution of a function    
 function debounce(func, delay) {
     let timeout;
     return function (...args) {
@@ -363,15 +396,7 @@ function debounce(func, delay) {
     };
 }
 
-//clear availaabiliry results (NOT USED 💥💥💥)
-const clearAvailableCounts = () => {
-
-    document.getElementById('showAvailableDriverCount').innerText = "";
-    document.getElementById('showAvailableGuideCount').innerText = "";
-
-}
-
-// to get vehicle types by minimum seats based on total travellers
+// to get vehicle types by minimum seats based on total travellers  
 const getVehicleTypesByMinSeats = async () => {
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value) || 0;
     const vehitypeSelect = document.getElementById('tpkgVehitype');
@@ -419,11 +444,10 @@ const getVehicleTypesByMinSeats = async () => {
     }
 };
 
-// debounced version to limit query calls
+// debounced version to limit query calls  
 const debouncedGetVehicleTypesByMinSeats = debounce(getVehicleTypesByMinSeats, 300);
 
-
-// to calculate total travellers
+// to calculate total travellers  
 const updateTotalTravellers = () => {
     const localAdult = parseInt(document.getElementById('tpkgLocalAdultCount').value) || 0;
     const localChild = parseInt(document.getElementById('tpkgLocalChildCount').value) || 0;
@@ -439,7 +463,7 @@ const updateTotalTravellers = () => {
 
 }
 
-//function to save guide need or not
+// to save guide need or not  
 const handleNeedGuideCB = () => {
 
     if (guideYes.checked) {
@@ -465,7 +489,7 @@ const handleNeedGuideCB = () => {
     }
 }
 
-//function to save vehicle source
+//function to save vehicle source  
 const handleVehicleSourceChange = () => {
 
     if (yathraVehiCB.checked) {
@@ -476,7 +500,7 @@ const handleVehicleSourceChange = () => {
 
 }
 
-//function to flag which driver source is selected
+//function to flag which driver source is selected  
 const handleDriverSourceChange = () => {
 
     if (yathraDriverCB.checked) {
@@ -487,7 +511,7 @@ const handleDriverSourceChange = () => {
 
 }
 
-// function to flag which guide source is selected
+// function to flag which guide source is selected  
 const handleGuideSourceChange = () => {
     if (yathraGuideCB.checked) {
         tpkg.is_company_guide = true;
@@ -496,7 +520,7 @@ const handleGuideSourceChange = () => {
     }
 }
 
-// to reset data in dynamic selects
+// to reset data in dynamic selects  
 const resetSelectElements = (selectElement, defaultText = "Please Select") => {
     selectElement.disabled = false;
     selectElement.innerHTML = '';
@@ -506,7 +530,7 @@ const resetSelectElements = (selectElement, defaultText = "Please Select") => {
     selectElement.add(defaultOption);
 }
 
-// to load templates 
+// to load templates   
 const loadTemplates = async (selectElementId) => {
 
     if (selectElementId.id == "tpkgFirstDaySelect") {
@@ -545,7 +569,7 @@ const loadTemplates = async (selectElementId) => {
     updateTotalDaysCount();
 };
 
-// to load existing first days
+// to load existing first days  
 const loadExistingFDs = async (selectElementId) => {
 
     document.getElementById('addNewDaysBtn').disabled = true;
@@ -573,7 +597,7 @@ const loadExistingFDs = async (selectElementId) => {
     updateTotalDaysCount();
 };
 
-// to load existing mid days
+// to load existing mid days  
 const loadExistingMDs = async (selectElementId) => {
 
     selectElementId.style.border = "1px solid #ced4da";
@@ -596,7 +620,7 @@ const loadExistingMDs = async (selectElementId) => {
     updateTotalDaysCount();
 };
 
-// to load existing last days
+// to load existing last days  
 const loadExistingLDs = async (selectElementId) => {
 
     tpkg.ed_dayplan_id = null;
@@ -622,7 +646,7 @@ const loadExistingLDs = async (selectElementId) => {
     updateTotalDaysCount();
 };
 
-// to handle first day changes
+// to handle first day changes  
 const handleFirstDayChange = (selectElement) => {
 
     dynamicSelectValidator(selectElement, 'tpkg', 'sd_dayplan_id');
@@ -648,7 +672,7 @@ const handleFirstDayChange = (selectElement) => {
 
 }
 
-// to handle last day changes
+// to handle last day changes  
 const handleFinalDayChange = (selectElement) => {
 
     dynamicSelectValidator(selectElement, 'tpkg', 'ed_dayplan_id');
@@ -674,8 +698,7 @@ const handleFinalDayChange = (selectElement) => {
     // refreshMainCostCard();
 };
 
-
-// fn to calculate the total days count of the tour package
+// fn to calculate the total days count of the tour package 
 const updateTotalDaysCount = () => {
 
     let total = 0;
@@ -703,12 +726,13 @@ const updateTotalDaysCount = () => {
     showVehiAvailabilityButtons();
 };
 
+//💥💥💥
 //for every change in selected days,number of travellers,dates the main cost card must be refreshed
 const refreshMainCostCard = () => {
     //and also show a hidden msg
 }
 
-// to fetch all price modifiers and store them globally
+// to fetch all price modifiers and store them globally 
 let globalPriceMods = null;
 const fetchPriceMods = async () => {
     try {
@@ -719,7 +743,7 @@ const fetchPriceMods = async () => {
     }
 };
 
-//to calculate the total costs of the tour package 💥💥💥
+//to calculate the total costs of the tour package 
 const calculateMainCosts = () => {
 
     calcTotalVehiParkingfeeTpkg();
@@ -898,7 +922,7 @@ const calcTotalGuideCost = () => {
     console.log("Total guide cost calculated: " + tpkg.totalguidecost);
 };
 
-//to calculate the total vehicle's fee of the tour package ✅
+//to calculate the total vehicle cost
 const calcVehicleCosts = () => {
     const kmCountForPkg = parseFloat(document.getElementById('showTotalKMCount').value) || 0;
     const yathraVehi = document.getElementById('yathraVehiCB');
@@ -944,7 +968,7 @@ const calcVehicleCosts = () => {
     console.log("Total vehicle cost calculated: " + tpkg.totalvehicost);
 };
 
-//to calculate the total costs of the tour package  ✅
+//to calculate the total costs of the tickets/entrance 
 const calcTotalTktCosts = () => {
 
     const localAdultCount = parseInt(document.getElementById('tpkgLocalAdultCount').value);
@@ -1016,7 +1040,7 @@ const calcTotalTktCosts = () => {
 
 }
 
-//calc total lunch cost ✅
+//calc total lunch cost  
 const calcTotalLunchCost = () => {
 
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
@@ -1156,7 +1180,7 @@ const calcTotalStayCost = () => {
 
 };
 
-//calc total vehicle fee ✅
+//calc total vehicle fee  
 const calcTotalVehiParkingfeeTpkg = () => {
 
     const costInput = document.getElementById("totalVehicleParkingCost");
@@ -1205,7 +1229,7 @@ const calcTotalVehiParkingfeeTpkg = () => {
 
 }
 
-// check if first tabs inputs are all filled
+// check if first tabs inputs are all filled 💥💥💥
 const checkFirstTab = () => {
     const pkgTitle = tpkg.pkgtitle;
     const startDate = tpkg.tourstartdate;
@@ -1280,7 +1304,6 @@ const showDnGAvailabilityButtons = () => {
     guideSpan.textContent = "";
     driverSpan.textContent = "";
 }
-
 
 //get available vehi count based on date range and vehi type
 const getAvailableVehiCount = async () => {
@@ -1487,7 +1510,8 @@ const getDayTypeFromLabel = (selectId) => {
     return null;
 }
 
-// to get the day number from the label of the select element 💥💥💥 new
+//💥💥💥 new
+// to get the day number from the label of the select element 
 const getDayNumberFromLabel = (selectId) => {
     const label = document.querySelector(`label[for="${selectId}"]`);
     if (label) {
@@ -1498,7 +1522,7 @@ const getDayNumberFromLabel = (selectId) => {
     return null;
 };
 
-
+//💥💥💥
 // to refresh the day plan form in the tpkg module 💥
 const refreshDpFormInTpkg = async () => {
 
@@ -2008,7 +2032,11 @@ const addNewDayPlanInTpkg = async () => {
     }
 }
 
+//💥💥💥💥
+//check errors for DP in TPKG
+
 // save newly edited day plan
+//💥💥💥💥
 const saveAndSelectEditedDp = () => {
 
     //check errors here, create a brand new fn 💥💥💥💥
@@ -2021,6 +2049,7 @@ const saveAndSelectEditedDp = () => {
 //this will be needed for create dyamic IDs in mid days
 let midDayCounter = 1;
 
+//gen mid day select sections
 const generateNormalDayPlanSelectSections = () => {
 
     const container = document.getElementById('tpkgMidDaysSelectSection');
@@ -2169,7 +2198,7 @@ const generateNormalDayPlanSelectSections = () => {
     midDayCounter++;
 }
 
-// Function to delete a new mid-day select section
+//  to delete a new midday select section
 const deleteMidDay = (index) => {
 
     const select = document.getElementById(`tpkgMidDaySelect${index}`);
@@ -2229,7 +2258,7 @@ const removeFinalDay = () => {
     showVehiAvailabilityButtons();
 }
 
-//check errors before adding
+//check errors before adding 💥💥💥💥💥
 const checkTpkgFormErrors = () => {
 
     let errors = "";
@@ -2293,9 +2322,8 @@ const addNewTpkg = async () => {
             try {
 
                 //bind addiCost array with the tpkg obj 💥💥💥
-                //console.log("submitting tpkg:" + tpkg);
                 console.log("tpkg.addiCostList:", tpkg.addiCostList);
-                console.log("day plans:", tpkg.dayplans);
+
                 const postServerResponse = await ajaxPPDRequest("/tpkg", "POST", tpkg);
                 if (postServerResponse === 'OK') {
                     showAlertModal('suc', 'Saved Successfully');
@@ -2384,7 +2412,7 @@ const updateTourEndDate = () => {
     //endDateDisplay.innerText = endDate.toLocaleDateString(undefined, options);
 };
 
-//💥💥💥
+//💥💥💥💥💥💥💥💥💥💥💥
 //add , delete, update
 //check errors, check updates 
 //refill 
@@ -2394,8 +2422,10 @@ const updateTourEndDate = () => {
 
 
 //################ additional costs related codes ###################
+
 //tpkg.addiCostList = new Array();
 
+//refresh the additional cost form
 const refreshAddiCostForm = () => {
 
     addiCost = new Object();
@@ -2419,7 +2449,7 @@ const refreshAddiCostForm = () => {
 
 }
 
-//check errors in additional costs form
+//check errors in additional costs form 💥💥
 const checkAddiCostFormErrors = () => {
 
     let errors = "";
@@ -2439,7 +2469,7 @@ const checkAddiCostFormErrors = () => {
 let addCostIdCounter = 1;
 let editingRowData = null;
 
-//create table(using)
+//create addi cost table
 const createAddiCostTable = () => {
 
     const tbody = document.getElementById('additionalCostTableBody');
@@ -2497,7 +2527,7 @@ const createAddiCostTable = () => {
     })
 }
 
-//new (using)
+// add additional cost to the table
 const addAddiCostToTable = () => {
 
     const errors = checkAddiCostFormErrors();
@@ -2517,12 +2547,13 @@ const addAddiCostToTable = () => {
 
 }
 
-// using
+// show all the info in an alert in once
+//use custom alert 💥💥💥
 const showNote = (addiCostObj) => {
     alert(addiCostObj.costname + "\n" + addiCostObj.amount);
 }
 
-//using
+//refill the same form with the data of the selected row
 const refillAdditionalCostFormNew = (addiCostObj) => {
 
     refreshAddiCostForm();
@@ -2542,7 +2573,7 @@ const refillAdditionalCostFormNew = (addiCostObj) => {
 
 }
 
-//USING 
+//update a cost in the table 
 const updateAddCost = () => {
 
     const costName = document.getElementById('additionalCostName').value.trim();
@@ -2575,7 +2606,7 @@ const updateAddCost = () => {
     }
 };
 
-// using
+// calculate the total additional cost and update the field
 const updateTotalAdditionalCost = () => {
     let total = 0.00;
 
@@ -2591,6 +2622,8 @@ const updateTotalAdditionalCost = () => {
     calcTotalCostSum();
 };
 
+
+//######################################################
 
 //not used 💥
 const filterDayPlanTemplatesByDistrict = () => {
