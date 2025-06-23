@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class NationalityController {
-    @Autowired
     
+    @Autowired    
     private NationalityDao nationalityDao;
     
     @GetMapping(value = "/nationality/all", produces = "application/json")

@@ -1,16 +1,17 @@
 window.addEventListener('load', () => {
 
     refreshYathraWebSite(openReusableModalForCardsReadMore);
-    //refreshGeneralInqForm();
     refreshPkgRelInqForm();
 
-})
+});
+
+let nationalityList;
 
 //refresh whole website
 const refreshYathraWebSite = async (openReusableModalForCardsReadMore) => {
 
     try {
-        nationalityList = await ajaxGetReq('/nationality/all');
+        nationalityList = await ajaxGetReq('/nationalityforweb/all');
     } catch (error) {
         console.error("Error fetching nationality for Yathra website:", error);
     }
@@ -116,12 +117,6 @@ const refreshPkgRelInqForm = async () => {
 }
 
 //set country code auto
-// const passCountryCodeInqForm = (selectElementID, cntctNumInputId) => {
-
-//     const selectedCountry = JSON.parse(selectElementID.value).countrycode;
-//     cntctNumInputId.value = selectedCountry;
-// }
-
 const passCountryCodeInqForm = (inputElement, cntctNumInput) => {
     const selectedCountryName = inputElement.value;
     const countryCode = countryData[selectedCountryName];
@@ -134,7 +129,7 @@ const passCountryCodeInqForm = (inputElement, cntctNumInput) => {
 }
 
 // global object to store country data
-let countryData = {}; 
+let countryData = {};
 
 const fillDataIntoDataListYathra = (fieldId, dataList, propertyName) => {
     fieldId.innerHTML = '';
@@ -159,12 +154,18 @@ const openReusableModalForCardsReadMore = (package) => {
 
     // Clear previous content
     ForDPlansAccordions.innerHTML = "";
-    pkgname.innerText = package.packagename;
-    pkgDescription.innerText = package.description;
+    pkgname.innerText = package.pkgtitle;
+    pkgDescription.innerText = package.web_description;
 
     //for images
-
     //img1 will be the cover photo...populated in js
+
+    //img1
+    if (package.img1 != null) {
+        image1.src = atob(package.img1);
+    } else {
+        image1.src = 'images/sigiriya.jpg';
+    }
 
     //img 2
     if (package.img2 != null) {
@@ -179,62 +180,61 @@ const openReusableModalForCardsReadMore = (package) => {
     } else {
         image3.src = 'images/sigiriya.jpg';
     }
- 
+
     // For start dates
     accorsForStartDayPlans.appendChild(makeAccordionsForSDnED(package.sd_dayplan_id, 'Start Day ', "SD"));
 
     // Create accordions for middle day plans
     package.dayplans.forEach((tpDayPlan, index) => {
 
-        //"accordion-item" div
+        // "accordion-item" div
         let accItemDiv = document.createElement('div');
-        accItemDiv.className = "accordion-item";
+        accItemDiv.className = "accordion-item border rounded shadow-sm";
 
-        //acc header div , inside "accordion-item"
+        // acc header div , inside "accordion-item"
         let acHdrDiv = document.createElement('div');
         acHdrDiv.className = "accordion-header mb-2";
 
-        //button inside header 
+        // button inside header 
         let accBtn = document.createElement('button');
-        accBtn.className = "p-0 accordion-button collapsed fw-bold mt-2";
+        accBtn.className = "accordion-button collapsed fw-bold bg-white text-dark shadow-sm";
         accBtn.setAttribute('type', 'button');
         accBtn.setAttribute('data-bs-toggle', 'collapse');
         accBtn.setAttribute('data-bs-target', '#flushCollapseOne' + index.toString());
         accBtn.setAttribute('aria-expanded', 'false');
         accBtn.setAttribute('aria-controls', 'flushCollapseOne' + index.toString());
 
-        //h inside button
+        // h inside button
         let hTag = document.createElement('h5');
-        hTag.className = "text-info";
+        hTag.className = "text-primary mb-0";
         hTag.innerText = ("Day #" + (parseInt(index) + 2));
 
-        //flushCollapseOne inside "accordion-item"
+        // flushCollapseOne inside "accordion-item"
         let clpsDiv = document.createElement('div');
-        clpsDiv.className = "accordion-collapse collapse ps-4 my-1";
+        clpsDiv.className = "accordion-collapse collapse my-1";
         clpsDiv.setAttribute('id', 'flushCollapseOne' + index.toString());
         clpsDiv.setAttribute('data-bs-parent', 'ForDPlansAccordions');
 
-        //inside flushCollapseOne 
+        // inside flushCollapseOne 
         let accBody = document.createElement('div');
-        accBody.className = "accordion-body bg-light ";
-        let accBodyHTML = "";
+        accBody.className = "accordion-body bg-light border-top pt-3";
 
-        //a list of points for each attraction of the day
+        let accBodyHTML = "";
         tpDayPlan.vplaces.forEach((place, index) => {
-            accBodyHTML = accBodyHTML + "<p class='mb-0'>" + (parseInt(index) + 1) + " ⏩ " + place.name + "</p>";
+            accBodyHTML += `<p class='mb-1 ps-2'><span class="text-secondary">${index + 1} ⏩</span> ${place.name}</p>`;
         });
         accBody.innerHTML = accBodyHTML;
 
-        //append accordion-body to flushCollapseOne
+        // append accordion-body to flushCollapseOne
         clpsDiv.appendChild(accBody);
 
-        //append hTag to button
+        // append hTag to button
         accBtn.appendChild(hTag);
 
-        //append button to accHeader 
+        // append button to accHeader 
         acHdrDiv.appendChild(accBtn);
 
-        //append header and flushcollapseone to item
+        // append header and flushCollapseOne to item
         accItemDiv.appendChild(acHdrDiv);
         accItemDiv.appendChild(clpsDiv);
         ForDPlansAccordions.appendChild(accItemDiv);
@@ -258,7 +258,7 @@ const openReusableModalForCardsReadMore = (package) => {
 
 
 //common fn for create accordions for start day and end day
-const makeAccordionsForSDnED = (dayPlan, dayType, SDorED) => {
+const makeAccordionsForSDnEDoRI = (dayPlan, dayType, SDorED) => {
 
     console.log("SD or ED Day plan");
     console.log(dayPlan);
@@ -298,12 +298,33 @@ const makeAccordionsForSDnED = (dayPlan, dayType, SDorED) => {
     let accBody = document.createElement('div');
     accBody.className = "accordion-body bg-light ";
 
-    accBodyHTML = "";
+    if (SDorED === 'SD') {
+        let pickupText = document.createElement('p');
+        pickupText.className = "text-muted mb-2 fst-italic";
+        pickupText.innerText = "We’ll pick you up from the airport or any location you prefer.";
+        accBody.appendChild(pickupText);
+    }
+
+    //accBodyHTML = "";
+
+    //dayPlan.vplaces.forEach((place, index) => {
+    //    accBodyHTML = accBodyHTML + "<p class='mb-0'>" + (parseInt(index) + 1) + " ⏩ " + place.name + "</p>";
+    //})
+    //accBody.innerHTML = accBodyHTML;
 
     dayPlan.vplaces.forEach((place, index) => {
-        accBodyHTML = accBodyHTML + "<p class='mb-0'>" + (parseInt(index) + 1) + " ⏩ " + place.name + "</p>";
-    })
-    accBody.innerHTML = accBodyHTML;
+        let p = document.createElement('p');
+        p.className = "mb-0";
+        p.innerText = `${index + 1} ⏩ ${place.name}`;
+        accBody.appendChild(p);
+    });
+
+    if (SDorED === 'ED') {
+        let dropText = document.createElement('p');
+        dropText.className = "text-muted mt-2 fst-italic";
+        dropText.innerText = "We’ll drop you off at the airport or any location of your choice.";
+        accBody.appendChild(dropText);
+    }
 
     //append accordion-body to flushCollapseOneSDorED
     clpsDiv.appendChild(accBody);
@@ -321,6 +342,84 @@ const makeAccordionsForSDnED = (dayPlan, dayType, SDorED) => {
     return accItemDiv;
 
 }
+
+const makeAccordionsForSDnED = (dayPlan, dayType, SDorED) => {
+
+    console.log("SD or ED Day plan");
+    console.log(dayPlan);
+
+    // "accordion-item" div
+    let accItemDiv = document.createElement('div');
+    accItemDiv.className = "accordion-item border rounded shadow-sm";
+
+    // acc header div , inside "accordion-item"
+    let acHdrDiv = document.createElement('div');
+    acHdrDiv.className = "accordion-header mb-2";
+
+    // button inside header 
+    let accBtn = document.createElement('button');
+    accBtn.className = "accordion-button collapsed fw-bold bg-white text-dark shadow-sm";
+    accBtn.setAttribute('type', 'button');
+    accBtn.setAttribute('data-bs-toggle', 'collapse');
+    accBtn.setAttribute('data-bs-target', `#${SDorED}`);
+    accBtn.setAttribute('aria-expanded', 'false');
+    accBtn.setAttribute('aria-controls', SDorED);
+
+    // h inside button
+    let hTag = document.createElement('h5');
+    hTag.className = "text-primary mb-0";
+    hTag.innerText = dayType;
+
+    // flushCollapseOneSDorED inside "accordion-item"
+    let clpsDiv = document.createElement('div');
+    clpsDiv.className = "accordion-collapse collapse";
+    clpsDiv.setAttribute('id', SDorED);
+    clpsDiv.setAttribute('data-bs-parent', 'ForDPlansAccordions');
+
+    // inside flushCollapseOneSDorED 
+    let accBody = document.createElement('div');
+    accBody.className = "accordion-body bg-light border-top pt-3";
+
+    // START day message
+    if (SDorED === 'SD') {
+        let pickupText = document.createElement('div');
+        pickupText.className = "alert alert-info py-2 px-3 mb-3 fst-italic small";
+        pickupText.innerText = "🛬 We'll pick you up from the airport or any location you prefer.";
+        accBody.appendChild(pickupText);
+    }
+
+    // Attraction places
+    dayPlan.vplaces.forEach((place, index) => {
+        let p = document.createElement('p');
+        p.className = "mb-1 ps-2";
+        p.innerHTML = `<span class="text-secondary">${index + 1} ⏩</span> ${place.name}`;
+        accBody.appendChild(p);
+    });
+
+    // END day message
+    if (SDorED === 'ED') {
+        let dropText = document.createElement('div');
+        dropText.className = "alert alert-info py-2 px-3 mt-3 fst-italic small";
+        dropText.innerText = "✈️ We'll drop you off at the airport or any location of your choice.";
+        accBody.appendChild(dropText);
+    }
+
+    // append accordion-body to flushCollapseOneSDorED
+    clpsDiv.appendChild(accBody);
+
+    // append hTag to button
+    accBtn.appendChild(hTag);
+
+    // append button to accHeader 
+    acHdrDiv.appendChild(accBtn);
+
+    // append header and flushcollapseoneSDorED to item
+    accItemDiv.appendChild(acHdrDiv);
+    accItemDiv.appendChild(clpsDiv);
+
+    return accItemDiv;
+};
+
 
 //after clicking send inquiry btn
 const openModalForPkgInqs = () => {

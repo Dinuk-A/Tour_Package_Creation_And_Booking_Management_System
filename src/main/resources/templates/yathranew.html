@@ -28,7 +28,7 @@
     <script src="commonscripts/formFns.js"></script>
 
     <!-- link common fn -->
-    <script src="commonscripts/commonFn.js"></script>
+    <script src="commonscripts/commonFns.js"></script>
 
     <!-- link jquery  -->
     <script src="libs/jQuery.js"></script>
@@ -462,7 +462,6 @@
         <ul class="nav-links">
             <li class="active"><a href="#home">Home</a></li>
             <li><a href="#destinations">Tour Packages</a></li>
-            <li><a href="#generalInquiries">Inquiries</a></li>
             <li><a href="#about">About</a></li>
             <li class="ctn"><a href="#contact">Contact</a></li>
         </ul>
@@ -489,7 +488,7 @@
             <div class="row">
                 <div class="col-md-6 mb-4">
                     <div class="card bg-dark text-white border-0 h-100">
-                        <img src="resources/images/sunset-beach.jpg" class="card-img" alt="Sunset Beach">
+                        <img src="images/sunset-beach.jpg" class="card-img" alt="Sunset Beach">
                         <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
                             <h4 class="card-title">Sunset Beach Party</h4>
                             <p class="card-text">Experience the magic of Sri Lankan beaches at our exclusive sunset
@@ -502,7 +501,7 @@
 
                 <div class="col-md-6 mb-4">
                     <div class="card bg-dark text-white border-0 h-100">
-                        <img src="resources/images/ella-bridge.jpg" class="card-img" alt="Ella Bridge">
+                        <img src="images/ella-bridge.jpg" class="card-img" alt="Ella Bridge">
                         <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
                             <h4 class="card-title">Ella Bridge Trek</h4>
                             <p class="card-text">Join us for an unforgettable hiking adventure to the iconic Nine Arch
@@ -544,7 +543,29 @@
                     </div>
 
                     <!-- Modal body -->
-                    <div class="modal-body">
+                    <div class="modal-body">                        
+
+                        <div class="row mb-4">
+                            <!-- Images container -->
+                            <div class="col-12 d-flex justify-content-between">
+                                <!-- Image 1 -->
+                                <div class="img-container" style="width: 32%; height: auto;">
+                                    <img id="image1" src="" alt="Image 3" class="img-fluid rounded"
+                                        style="width: 100%; height: 200px; object-fit: cover;">
+                                </div>
+                                <!-- Image 2 -->
+                                <div class="img-container" style="width: 32%; height: auto; margin-right: 1%;">
+                                    <img id="image2" src="" alt="Image 1" class="img-fluid rounded"
+                                        style="width: 100%; height: 200px; object-fit: cover;">
+                                </div>
+                                <!-- Image 3 -->
+                                <div class="img-container" style="width: 32%; height: auto; margin-right: 1%;">
+                                    <img id="image3" src="" alt="Image 2" class="img-fluid rounded"
+                                        style="width: 100%; height: 200px; object-fit: cover;">
+                                </div>
+                                
+                            </div>
+                        </div>
 
                         <!-- Package description -->
                         <div class="row mb-3">
@@ -553,24 +574,12 @@
                             </div>
                         </div>
 
-                        <div class="row mb-4">
-                            <!-- Images container -->
-                            <div class="col-12 d-flex justify-content-between">
-                                <!-- Image 1 -->
-                                <div class="img-container" style="width: 32%; height: auto; margin-right: 1%;">
-                                    <img id="image2" src="" alt="Image 1" class="img-fluid rounded"
-                                        style="width: 100%; height: 200px; object-fit: cover;">
-                                </div>
-                                <!-- Image 2 -->
-                                <div class="img-container" style="width: 32%; height: auto; margin-right: 1%;">
-                                    <img id="image3" src="" alt="Image 2" class="img-fluid rounded"
-                                        style="width: 100%; height: 200px; object-fit: cover;">
-                                </div>
-                                <!-- Image 3 -->
-                                <div class="img-container" style="width: 32%; height: auto;">
-                                    <img id="image4" src="" alt="Image 3" class="img-fluid rounded"
-                                        style="width: 100%; height: 200px; object-fit: cover;">
-                                </div>
+                          <!-- Day plans -->
+                          <div class="row">
+                            <div class="col-12">
+                                <div id="accorsForStartDayPlans" class="accordion mb-3"></div>
+                                <div id="ForDPlansAccordions" class="accordion mb-3"></div>
+                                <div id="accorsForEndDayPlans" class="accordion mb-3"></div>
                             </div>
                         </div>
 
@@ -602,9 +611,9 @@
                                     <div class="card-body">
                                         <h5 class="text-danger mb-3">Not Included:</h5>
                                         <ul id="pkgExcludeList" class="list-group list-group-flush">
-                                            <li class="list-group-item bg-light px-0"><strong>Lunch & Dinner:</strong>
+                                            <!--<li class="list-group-item bg-light px-0"><strong>Lunch & Dinner:</strong>
                                                 Meals outside of breakfast are not covered;
-                                                explore local dining options at your leisure.</li>
+                                                explore local dining options at your leisure.</li>-->
                                             <li class="list-group-item bg-light px-0"><strong>Personal
                                                     Expenses:</strong> Costs for personal items, souvenirs, or
                                                 optional activities are not included in the package.</li>
@@ -617,16 +626,7 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Day plans -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div id="accorsForStartDayPlans" class="accordion mb-3"></div>
-                                <div id="ForDPlansAccordions" class="accordion mb-3"></div>
-                                <div id="accorsForEndDayPlans" class="accordion mb-3"></div>
-                            </div>
-                        </div>
-
+                     
                         <!-- Action button -->
                         <div class="text-end mt-4">
                             <button type="button" id="btnPrint" class="btn btn-primary"
@@ -646,7 +646,7 @@
                     <div class="modal-header bg-primary text-white">
                         <h2 class="modal-title">Submit Your Inquiry Here</h2>
                         <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
-                            onclick="inquiry.inqtype = null; window.location.reload();"></button>
+                            onclick="window.location.reload();"></button>
                     </div>
 
                     <div class="modal-body">
@@ -656,7 +656,7 @@
                                 <p class="mb-0 fw-bold">Interested Package:</p>
                             </div>
                             <div class="col-8">
-                                <p class="mb-0 fs-4 fw-semibold text-primary" id="selectedPkgName"></p>
+                                <p class="mb-0 fs-5 fw-semibold text-primary" id="selectedPkgName"></p>
                             </div>
                         </div>
 
@@ -664,18 +664,17 @@
                         <form onsubmit="return false" id="formPkgRelateInqForm" class="mt-3">
 
                             <div class="row mb-3">
-                                <input type="hidden" id="inqTypeDummy" name="inqType" value="Package-Related">
+                                <!--<input type="hidden" id="inqTypeDummy" name="inqType" value="Package-Related">-->
 
                                 <div class="col-3">
                                     <label for="inqClientTitlePkgrelated" class="form-label fw-bold mb-2">Title</label>
                                     <select class="form-select" id="inqClientTitlePkgrelated"
-                                        onchange="selectStaticVal(this, '', 'inquiry', 'clienttitle')">
+                                        onchange="staticSelectValidator(this, 'inquiry', 'clienttitle')">
                                         <option selected disabled>Select Title</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         <option value="Mrs">Mrs</option>
                                         <option value="Dr">Dr</option>
-                                        <option value="Prof">Prof</option>
                                     </select>
                                 </div>
 
@@ -684,7 +683,7 @@
                                     <label class="fw-bold form-label mb-2" for="inqClientNamePkgRelForm">Name:</label>
                                     <input type="text" class="form-control form-input rounded"
                                         id="inqClientNamePkgRelForm" placeholder="John Doe"
-                                        onkeyup="inputFieldValidator(this, '^([A-Z][a-z]{2,30}[\\s])+([A-Z][a-z]{2,30})$' ,'inquiry' ,'clientname' )">
+                                        onkeyup="inputValidatorText(this, '^([A-Z][a-z]{2,30}[\\s])+([A-Z][a-z]{2,30})$' ,'inquiry' ,'clientname' )">
                                 </div>
                             </div>
 
@@ -704,7 +703,7 @@
                                     <label class="fw-bold form-label mb-2" for="inqClientEmailPkgRelForm">Email:</label>
                                     <input type="text" class="form-control form-input rounded"
                                         id="inqClientEmailPkgRelForm" placeholder="johndoe@example.com"
-                                        onkeyup="inputFieldValidator(this, '^[A-Za-z0-9\\-\\_]{3,20}[@][a-z]{3,20}[.][a-z]{2,3}$' ,'inquiry' ,'email' )">
+                                        onkeyup="inputValidatorText(this, '^[A-Za-z0-9\\-\\_]{3,20}[@][a-z]{3,20}[.][a-z]{2,3}$' ,'inquiry' ,'email' )">
                                 </div>
                             </div>
 
@@ -715,7 +714,7 @@
                                         Number:</label>
                                     <input type="text" class="form-control form-input rounded"
                                         id="inqClientMobileOnePkgRelForm" placeholder="Please Enter Contact Number"
-                                        onkeyup="inputFieldValidator(this, '^[+][0-9]{7,15}$' ,'inquiry' ,'contactnum' )">
+                                        onkeyup="inputValidatorText(this, '^[+][0-9]{7,15}$' ,'inquiry' ,'contactnum' )">
                                 </div>
 
                                 <!-- prefered contact method -->
@@ -723,11 +722,11 @@
                                     <label for="prefContMethodPkgRelForm" class="fw-bold form-label mb-2">Preferred
                                         Contact Method:</label>
                                     <select class="form-select rounded" aria-label="Default select example"
-                                        onchange="selectStaticVal(this, '' , 'inquiry' , 'prefcontactmethod')"
+                                        onchange="staticSelectValidator(this, 'inquiry' , 'prefcontactmethod')"
                                         id="prefContMethodPkgRelForm">
                                         <option selected disabled>Preferred contact method</option>
-                                        <option value="Phone Call">Phone call</option>
-                                        <option value="Phone Text">Phone SMS</option>
+                                        <option value="Call">Phone call</option>
+                                        <option value="Whatsapp">Whatsapp Message</option>
                                         <option value="Email">Email</option>
                                     </select>
                                 </div>
@@ -735,14 +734,14 @@
 
                             <div class="row mb-4">
                                 <!-- main enquiry -->
-                                <div class="col-10 mx-auto">
+                                <div class="col-12 mx-auto">
                                     <div class="mb-3">
                                         <label for="inqClientEnquiriesPkgRelForm"
                                             class="form-label fw-bold mb-2">Enquiries:</label>
                                         <textarea class="form-control" id="inqClientEnquiriesPkgRelForm"
                                             style="height: 140px;"
                                             placeholder="What can we help you with? Type your question or request here"
-                                            onkeyup="inputFieldValidator(this, '', 'inquiry', 'enquiry')"></textarea>
+                                            onkeyup="inputValidatorText(this, '', 'inquiry', 'enquiry')"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -750,7 +749,7 @@
                             <div class="row mb-2">
                                 <div class="col-3">
                                     <button type="reset" id="btnClear" class="btn btn-outline-secondary fw-bold"
-                                        onclick="">
+                                        onclick="refreshPkgRelInqForm();">
                                         Clear </button>
                                 </div>
 
@@ -778,7 +777,7 @@
         </div>
     </div>
 
-       <!-- FOOTER SECTION -->
+    <!-- FOOTER SECTION -->
     <div class="footer-section" id="contact">
         <div class="container">
             <h2>Ready for Your Next Adventure?</h2>

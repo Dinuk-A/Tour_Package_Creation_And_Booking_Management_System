@@ -43,7 +43,7 @@ public class YathraWebController {
     @RequestMapping(value = "/yathra", method = RequestMethod.GET)
     public ModelAndView yathraUI() {
         ModelAndView yathraView = new ModelAndView();
-        yathraView.setViewName("yathra.html");
+        yathraView.setViewName("yathranew.html");
         return yathraView;
     }
 
@@ -65,7 +65,7 @@ public class YathraWebController {
         return tPkgDao.getPkgsToShowWebsite();
     }
 
-    @GetMapping(value = "/nationalityforweb/alldata", produces = "application/json")
+    @GetMapping(value = "/nationalityforweb/all", produces = "application/json")
     public List<Nationality> getNationalityAllData() {
         return natDao.findAll();
     }

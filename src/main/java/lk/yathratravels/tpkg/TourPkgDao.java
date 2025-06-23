@@ -12,7 +12,7 @@ public interface TourPkgDao extends JpaRepository<TourPkg, Integer> {
     public String getNextTPCode();
 
     // Get all template packages
-    @Query(value = "SELECT * FROM yathra.tourpackage tpkg WHERE tpkg.is_custompkg = 0 AND tpkg.tpkg_status = 'Published' AND (tpkg.deleted_tpkg IS NULL OR tpkg.deleted_tpkg = false);", nativeQuery = true)
+    @Query(value = "SELECT * FROM newyathra.tpkg tpkg WHERE tpkg.is_custompkg = 0 AND tpkg.tpkg_status = 'Published' AND (tpkg.deleted_tpkg IS NULL OR tpkg.deleted_tpkg = false);", nativeQuery = true)
     public List<TourPkg> getPkgsToShowWebsite();
    
 

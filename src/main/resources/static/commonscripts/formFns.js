@@ -192,4 +192,29 @@ const staticSelectValidator = (selectTagId, object, property) => {
 
 }
 
-//datalist validation @ validationFns.js
+//datalist validation
+const dataListValidator = (fieldId, dataListName, object, property, displayProperty) => {
+
+    const fieldValue = fieldId.value;
+
+    if (fieldValue !== "") {
+        let dataList = window[dataListName];
+        let existIndex = -1;
+        for (const index in dataList) {
+            if (fieldValue == dataList[index][displayProperty]) {
+                existIndex = index
+                break;
+            }
+        }
+        if (existIndex != -1) {
+            window[object][property] = dataList[existIndex];
+            fieldId.style.border = '2px solid lime';
+        } else {
+            fieldId.style.border = '2px solid red';
+            window[object][property] = null
+        }
+    } else {
+        fieldId.style.border = '2px solid red';
+        window[object][property] = null
+    }
+}

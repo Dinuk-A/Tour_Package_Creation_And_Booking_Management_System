@@ -31,6 +31,12 @@ public class WebConfigs {
 
                     .requestMatchers("/edituserinfo").permitAll()
 
+                    .requestMatchers("/nationalityforweb/**").permitAll()
+                    .requestMatchers("/attractionforweb/**").permitAll()
+                    .requestMatchers("/dayplanforweb/**").permitAll()
+                    .requestMatchers("/tourpackageforweb/**").permitAll()
+                    .requestMatchers("/yathra").permitAll()
+
                     .anyRequest().authenticated();
 
         })
