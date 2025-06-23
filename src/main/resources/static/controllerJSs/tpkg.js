@@ -190,7 +190,7 @@ const setTpkgStatus = () => {
     tpkgStatusSelectElement.children[2].classList.add('d-none');
     tpkgStatusSelectElement.children[3].classList.add('d-none');
     tpkgStatusSelectElement.children[4].classList.add('d-none');
-    tpkgStatusSelectElement.children[5].classList.add('d-none');
+    //tpkgStatusSelectElement.children[5].classList.add('d-none');
 }
 
 //set the start date to 7 days future

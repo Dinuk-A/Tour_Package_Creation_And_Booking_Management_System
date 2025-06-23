@@ -184,12 +184,14 @@ const openReusableModalForCardsReadMore = (package) => {
     // For start dates
     accorsForStartDayPlans.appendChild(makeAccordionsForSDnED(package.sd_dayplan_id, 'Start Day ', "SD"));
 
+    console.log("Package Day Plans: ", package.dayplans);
+
     // Create accordions for middle day plans
     package.dayplans.forEach((tpDayPlan, index) => {
 
         // "accordion-item" div
         let accItemDiv = document.createElement('div');
-        accItemDiv.className = "accordion-item border rounded shadow-sm";
+        accItemDiv.className = "accordion-item border rounded shadow-sm mb-3";
 
         // acc header div , inside "accordion-item"
         let acHdrDiv = document.createElement('div');
@@ -207,7 +209,8 @@ const openReusableModalForCardsReadMore = (package) => {
         // h inside button
         let hTag = document.createElement('h5');
         hTag.className = "text-primary mb-0";
-        hTag.innerText = ("Day #" + (parseInt(index) + 2));
+        //hTag.innerText = ("Day #" + (parseInt(index) + 2)); ✅✅✅
+        hTag.innerHTML = tpDayPlan.daytitle;
 
         // flushCollapseOne inside "accordion-item"
         let clpsDiv = document.createElement('div');
@@ -219,11 +222,46 @@ const openReusableModalForCardsReadMore = (package) => {
         let accBody = document.createElement('div');
         accBody.className = "accordion-body bg-light border-top pt-3";
 
-        let accBodyHTML = "";
+        // Attraction list
         tpDayPlan.vplaces.forEach((place, index) => {
-            accBodyHTML += `<p class='mb-1 ps-2'><span class="text-secondary">${index + 1} ⏩</span> ${place.name}</p>`;
+            let p = document.createElement('p');
+            p.className = "mb-1 ps-2";
+            p.innerHTML = `<span class="text-secondary">${index + 1} ⏩</span> ${place.name}`;
+            accBody.appendChild(p);
         });
-        accBody.innerHTML = accBodyHTML;
+
+        // Accommodation section (if available)
+        if (tpDayPlan.drop_stay_id) {
+            let staySection = document.createElement('div');
+            staySection.className = "mt-4";
+
+            let mainStay = document.createElement('div');
+            mainStay.className = "alert alert-success py-2 px-3 mb-2 small";
+            mainStay.innerHTML = `🏨 <strong>Main Accommodation:</strong> ${tpDayPlan.drop_stay_id.name}`;
+            staySection.appendChild(mainStay);
+
+            if (tpDayPlan.alt_stay_1_id || tpDayPlan.alt_stay_2_id) {
+                if (tpDayPlan.alt_stay_1_id) {
+                    let alt1 = document.createElement('div');
+                    alt1.className = "alert alert-warning py-2 px-3 mb-2 small";
+                    alt1.innerHTML = `🔁 <strong>Alternate Option 1:</strong> ${tpDayPlan.alt_stay_1_id.name}`;
+                    staySection.appendChild(alt1);
+                }
+                if (tpDayPlan.alt_stay_2_id) {
+                    let alt2 = document.createElement('div');
+                    alt2.className = "alert alert-warning py-2 px-3 mb-2 small";
+                    alt2.innerHTML = `🔁 <strong>Alternate Option 2:</strong> ${tpDayPlan.alt_stay_2_id.name}`;
+                    staySection.appendChild(alt2);
+                }
+
+                let altNote = document.createElement('div');
+                altNote.className = "text-muted fst-italic small ps-2";
+                altNote.innerText = "Note: If the selected accommodation is unavailable, a similar-rated stay will be provided.";
+                staySection.appendChild(altNote);
+            }
+
+            accBody.appendChild(staySection);
+        }
 
         // append accordion-body to flushCollapseOne
         clpsDiv.appendChild(accBody);
@@ -239,6 +277,7 @@ const openReusableModalForCardsReadMore = (package) => {
         accItemDiv.appendChild(clpsDiv);
         ForDPlansAccordions.appendChild(accItemDiv);
     });
+
 
     // For end dates
     //first check its existence(no end day in 1 day tours)
@@ -395,6 +434,39 @@ const makeAccordionsForSDnED = (dayPlan, dayType, SDorED) => {
         p.innerHTML = `<span class="text-secondary">${index + 1} ⏩</span> ${place.name}`;
         accBody.appendChild(p);
     });
+
+    // Accommodation (Only for Start Day)
+    if (SDorED === 'SD' && dayPlan.drop_stay_id) {
+        let staySection = document.createElement('div');
+        staySection.className = "mt-4";
+
+        let mainStay = document.createElement('div');
+        mainStay.className = "alert alert-success py-2 px-3 mb-2 small";
+        mainStay.innerHTML = `🏨 <strong>Main Accommodation:</strong> ${dayPlan.drop_stay_id.name}`;
+        staySection.appendChild(mainStay);
+
+        if (dayPlan.alt_stay_1_id || dayPlan.alt_stay_2_id) {
+            if (dayPlan.alt_stay_1_id) {
+                let alt1 = document.createElement('div');
+                alt1.className = "alert alert-warning py-2 px-3 mb-2 small";
+                alt1.innerHTML = `🔁 <strong>Alternate Option 1:</strong> ${dayPlan.alt_stay_1_id.name}`;
+                staySection.appendChild(alt1);
+            }
+            if (dayPlan.alt_stay_2_id) {
+                let alt2 = document.createElement('div');
+                alt2.className = "alert alert-warning py-2 px-3 mb-2 small";
+                alt2.innerHTML = `🔁 <strong>Alternate Option 2:</strong> ${dayPlan.alt_stay_2_id.name}`;
+                staySection.appendChild(alt2);
+            }
+
+            let altNote = document.createElement('div');
+            altNote.className = "text-muted fst-italic small ps-2";
+            altNote.innerText = "Note: If the selected accommodation is unavailable, a similar-rated stay will be provided.";
+            staySection.appendChild(altNote);
+        }
+
+        accBody.appendChild(staySection);
+    }
 
     // END day message
     if (SDorED === 'ED') {

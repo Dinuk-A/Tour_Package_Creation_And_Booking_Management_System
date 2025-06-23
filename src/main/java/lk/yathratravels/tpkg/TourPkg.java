@@ -82,9 +82,9 @@ public class TourPkg {
     @JoinTable(name = "tpkg_has_dayplan", joinColumns = @JoinColumn(name = "tpkg_id"), inverseJoinColumns = @JoinColumn(name = "dayplan_id"))
     private Set<DayPlan> dayplans;
 
-    // additional costs one to many 1 add karana 1 optional
+    // additional costs one to many 1 add karana 1 optional 💥💥
 
-    // TO CALC VEHICLE COST
+    // TO CALC VEHICLE COST 💥💥
     // @Column(name = "totalkmcountofpkg")
     // private BigDecimal totalkmcountofpkg;
 
