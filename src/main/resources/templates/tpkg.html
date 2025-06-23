@@ -316,9 +316,9 @@
                                                                 <select disabled id="tpkgFinalDaySelect"
                                                                     class="form-control form-select"
                                                                     onchange="handleFinalDayChange(this);"></select>
-                                                                    <div class="text-danger d-none" id="finalDayMsg">
-                                                                        This is a template day plan. Customize this to
-                                                                        suit the tour</div>
+                                                                <div class="text-danger d-none" id="finalDayMsg">
+                                                                    This is a template day plan. Customize this to
+                                                                    suit the tour</div>
                                                             </div>
 
                                                             <div class="col-3 d-flex justify-content-end gap-2">
@@ -403,7 +403,8 @@
                                     aria-labelledby="tpkgStep3-tab">
 
                                     <!-- Tour group and resources -->
-                                    <fieldset class="border border-dark p-4 mb-4 bg-light mt-3" id="preferencesFieldset">
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light mt-3"
+                                        id="preferencesFieldset">
 
                                         <legend class="float-none w-auto px-2 text-primary">Tour Group Preferences
                                         </legend>
@@ -718,7 +719,8 @@
                                     </fieldset>
 
                                     <!-- Image Upload Section -->
-                                    <fieldset class="border border-dark p-4 mt-4 bg-light d-none mt-3" id="imagesFieldset">
+                                    <fieldset class="border border-dark p-4 mt-4 bg-light d-none mt-3"
+                                        id="imagesFieldset">
                                         <legend class="float-none w-auto px-2 text-primary">Upload Package Images
                                         </legend>
 
@@ -854,7 +856,8 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaltktcost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark" id="totalTktCostMsg">Please
+                                                                <div class="text-warning bg-dark" id="totalTktCostMsg">
+                                                                    Please
                                                                     enter number of travellers and select itineraries
                                                                 </div>
                                                             </div>
@@ -902,7 +905,8 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totallunchcost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark" id="totalLunchCostMsg">Please
+                                                                <div class="text-warning bg-dark"
+                                                                    id="totalLunchCostMsg">Please
                                                                     enter number of travellers and select itineraries
                                                                 </div>
                                                             </div>
@@ -925,7 +929,8 @@
                                                                         class="form-control form-input my-auto text-center p-1"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalvehicost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark" id="totalVehicleCostMsg">
+                                                                <div class="text-warning bg-dark"
+                                                                    id="totalVehicleCostMsg">
                                                                     Please choose vehicle type and select itineraries
                                                                 </div>
                                                             </div>
@@ -949,7 +954,8 @@
                                                                         class="form-control form-input p-1 text-center"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalstaycost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark" id="totalStayCostMsg">Please
+                                                                <div class="text-warning bg-dark" id="totalStayCostMsg">
+                                                                    Please
                                                                     enter number of travellers and select itineraries
                                                                 </div>
                                                             </div>
@@ -972,7 +978,8 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaldrivercost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark" id="totalDriverCostMsg">
+                                                                <div class="text-warning bg-dark"
+                                                                    id="totalDriverCostMsg">
                                                                     Please select itineraries and driver preference
                                                                 </div>
                                                             </div>
@@ -995,7 +1002,8 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalguidecost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark" id="totalGuideCostMsg">
+                                                                <div class="text-warning bg-dark"
+                                                                    id="totalGuideCostMsg">
                                                                     Please select itineraries and guide preference
                                                                 </div>
                                                             </div>
@@ -1018,7 +1026,8 @@
                                                                         class="text-center form-control form-input p-1"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaladditionalcosts');">
                                                                 </div>
-                                                                <div class="d-none text-warning  bg-dark" id="totalAddiCostMsg">
+                                                                <div class="d-none text-warning  bg-dark"
+                                                                    id="totalAddiCostMsg">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1182,10 +1191,8 @@
                                                     onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status')">
                                                     <option value="" selected disabled> Select Status </option>
                                                     <option value="Draft"> Draft </option>
-                                                    <option value="Pending"> Pending </option>
-                                                    <option value="In_progress"> In Progress </option>
-                                                    <option value="Confirmed"> Confirmed </option>
-                                                    <option value="Completed"> Completed </option>
+                                                    <option value="Published"> Published </option>
+                                                    <option value="Inactive"> Inactive </option>
                                                     <option value="ifDeleted" class="d-none"> Deleted </option>
                                                 </select>
                                             </div>

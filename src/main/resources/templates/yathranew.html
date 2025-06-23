@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yathra Travels</title>
+
+    <!-- link bootstrp css -->
+    <link rel="stylesheet" href="libs/bootstrap-5.2.3/css/bootstrap.min.css">
+
+    <!-- link bootsrtap js file -->
+    <script src="libs/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+
+    <!-- link bootstrp icons css -->
+    <link rel="stylesheet" href="libs/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
+
+    <!-- button css -->
+    <link rel="stylesheet" href="css/buttons.css">
+
+    <!-- custom alert css -->
+    <link rel="stylesheet" href="css/customAlert.css">
+
+    <!-- main CSS -->
+    <!--<link rel="stylesheet" href="css/yathranew.css">-->
+
+    <!-- link valiidation file  -->
+    <script src="commonscripts/formFns.js"></script>
+
+    <!-- link common fn -->
+    <script src="commonscripts/commonFn.js"></script>
+
+    <!-- link jquery  -->
+    <script src="libs/jQuery.js"></script>
+
+    <!-- link main js -->
+    <script src="controllerJSs/yathranew.js"></script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0d6efd;
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links li a:hover {
+            color: #0d6efd;
+        }
+
+        .nav-links li.active a {
+            color: #0d6efd;
+            font-weight: 600;
+        }
+
+        .nav-links li.ctn {
+            background-color: #0d6efd;
+            border-radius: 30px;
+            padding: 8px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links li.ctn:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-3px);
+        }
+
+        .nav-links li.ctn a {
+            color: white;
+        }
+
+        .header {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('resources/images/header-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .header-content {
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .header-content h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+
+        .header-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-top: 15px;
+        }
+
+        .line {
+            width: 80px;
+            height: 4px;
+            background-color: #0d6efd;
+            margin: 15px auto;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 25px;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .card-text {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-3px);
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            padding: 20px 25px;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .accordion {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .accordion-button {
+            font-weight: 500;
+            padding: 15px 20px;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: #e7f1ff;
+            color: #0d6efd;
+        }
+
+        .accordion-body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid #ced4da;
+            margin-bottom: 15px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            border-color: #86b7fe;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #0d6efd, #0043a9);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        .hero-section .btn {
+            background-color: white;
+            color: #0d6efd;
+            border: none;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .hero-section .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        #generalInquiries {
+            background-color: #f8f9fa;
+        }
+
+        .footer-section {
+            background-color: #343a40;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-section h2 {
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-section .btn {
+            background-color: #0d6efd;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 500;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section .btn:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-3px);
+        }
+
+        .footer-section a {
+            color: #0d6efd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #0b5ed7;
+            text-decoration: underline;
+        }
+
+        /* Events section styling */
+        .events {
+            position: relative;
+        }
+
+        .events::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .events .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .events .card {
+            border: none;
+            overflow: hidden;
+        }
+
+        .events .card-img {
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .events .card:hover .card-img {
+            transform: scale(1.05);
+        }
+
+        .events .card-img-overlay {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            transition: background 0.3s;
+        }
+
+        .events .card:hover .card-img-overlay {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.5));
+        }
+
+        /* Inquiry forms styling */
+        .inquiry-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Media queries for responsive design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links li {
+                margin: 5px 10px;
+            }
+
+            .header {
+                height: 60vh;
+            }
+
+            .header-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .header-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .events .card-img {
+                height: 200px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- top nav bar -->
+    <div class="navbar">
+        <h1 class="logo">
+            <!-- <img src="resources/images/ylogo.png" alt="Yathra Travels"> -->
+            Yathra Travels
+        </h1>
+        <ul class="nav-links">
+            <li class="active"><a href="#home">Home</a></li>
+            <li><a href="#destinations">Tour Packages</a></li>
+            <li><a href="#generalInquiries">Inquiries</a></li>
+            <li><a href="#about">About</a></li>
+            <li class="ctn"><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- HEADER IMG/CONTENT -->
+    <div class="header" id="home">
+        <div class="header-content">
+            <h2>Explore The Beauty of Sri Lanka</h2>
+            <div class="line"></div>
+            <h1>Discover Amazing Tours</h1>
+        </div>
+    </div>
+
+    <!-- EVENTS -->
+    <section class="events py-5"
+        style="background-image: url('resources/images/background-cover.jpg'); background-size: cover; background-position: center;">
+        <div class="container">
+            <div class="title text-center mb-4">
+                <h1 class="display-4 font-weight-bold text-white">Upcoming Events</h1>
+                <div class="line mx-auto"></div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-dark text-white border-0 h-100">
+                        <img src="resources/images/sunset-beach.jpg" class="card-img" alt="Sunset Beach">
+                        <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
+                            <h4 class="card-title">Sunset Beach Party</h4>
+                            <p class="card-text">Experience the magic of Sri Lankan beaches at our exclusive sunset
+                                party. Enjoy local cuisine, music, and breathtaking views as the sun dips below the
+                                horizon.</p>
+                            <a href="#" class="btn btn-primary mt-3">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-dark text-white border-0 h-100">
+                        <img src="resources/images/ella-bridge.jpg" class="card-img" alt="Ella Bridge">
+                        <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
+                            <h4 class="card-title">Ella Bridge Trek</h4>
+                            <p class="card-text">Join us for an unforgettable hiking adventure to the iconic Nine Arch
+                                Bridge in Ella. Discover lush tea plantations, stunning mountain views, and the
+                                engineering marvel of this colonial-era bridge.</p>
+                            <a href="#" class="btn btn-primary mt-3">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--popular Packages cards -->
+    <section id="destinations" class="popular-destinations py-5 bg-light">
+        <div class="container">
+            <div class="title">
+                <h1>Popular Packages</h1>
+                <div class="line"></div>
+                <p class="text-muted mb-5">Choose from our selection of carefully curated travel experiences</p>
+            </div>
+
+            <!-- cards list -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="packageCardsList">
+                <!-- cards will be auto generated by js -->
+            </div>
+        </div>
+
+        <!-- Reusable modal for displaying package details -->
+        <div class="modal fade" id="reusableModalForCards" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!-- Modal header -->
+                    <div class="modal-header">
+                        <h2 id="pkgname" class="modal-title"></h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            onclick="window.location.reload()"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+
+                        <!-- Package description -->
+                        <div class="row mb-3">
+                            <div class="col-md-12 mx-auto">
+                                <p id="pkgDescription" class="text-muted">Test description</p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <!-- Images container -->
+                            <div class="col-12 d-flex justify-content-between">
+                                <!-- Image 1 -->
+                                <div class="img-container" style="width: 32%; height: auto; margin-right: 1%;">
+                                    <img id="image2" src="" alt="Image 1" class="img-fluid rounded"
+                                        style="width: 100%; height: 200px; object-fit: cover;">
+                                </div>
+                                <!-- Image 2 -->
+                                <div class="img-container" style="width: 32%; height: auto; margin-right: 1%;">
+                                    <img id="image3" src="" alt="Image 2" class="img-fluid rounded"
+                                        style="width: 100%; height: 200px; object-fit: cover;">
+                                </div>
+                                <!-- Image 3 -->
+                                <div class="img-container" style="width: 32%; height: auto;">
+                                    <img id="image4" src="" alt="Image 3" class="img-fluid rounded"
+                                        style="width: 100%; height: 200px; object-fit: cover;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Include/Exclude sections -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0 h-100">
+                                    <div class="card-body">
+                                        <h5 class="text-success mb-3">Included in Your Package:</h5>
+                                        <ul id="pkgIncludeList" class="list-group list-group-flush">
+                                            <li class="list-group-item bg-light px-0"><strong>Transportation:</strong>
+                                                Comfortable and convenient transport to all
+                                                major attractions and between destinations.</li>
+                                            <li class="list-group-item bg-light px-0"><strong>Accommodation:</strong>
+                                                Stay in top-rated hotels or resorts, providing
+                                                comfort and quality service.</li>
+                                            <li class="list-group-item bg-light px-0"><strong>Breakfast:</strong> Enjoy
+                                                a delicious breakfast each morning to start
+                                                your day right.</li>
+                                            <li class="list-group-item bg-light px-0"><strong>Guided Tours:</strong>
+                                                Explore local landmarks and attractions with
+                                                knowledgeable guides who provide insights and history.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card bg-light border-0 h-100">
+                                    <div class="card-body">
+                                        <h5 class="text-danger mb-3">Not Included:</h5>
+                                        <ul id="pkgExcludeList" class="list-group list-group-flush">
+                                            <li class="list-group-item bg-light px-0"><strong>Lunch & Dinner:</strong>
+                                                Meals outside of breakfast are not covered;
+                                                explore local dining options at your leisure.</li>
+                                            <li class="list-group-item bg-light px-0"><strong>Personal
+                                                    Expenses:</strong> Costs for personal items, souvenirs, or
+                                                optional activities are not included in the package.</li>
+                                            <li class="list-group-item bg-light px-0"><strong>Travel Insurance:</strong>
+                                                Insurance for travel-related issues or
+                                                emergencies is not included; we recommend purchasing your own coverage.
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Day plans -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div id="accorsForStartDayPlans" class="accordion mb-3"></div>
+                                <div id="ForDPlansAccordions" class="accordion mb-3"></div>
+                                <div id="accorsForEndDayPlans" class="accordion mb-3"></div>
+                            </div>
+                        </div>
+
+                        <!-- Action button -->
+                        <div class="text-end mt-4">
+                            <button type="button" id="btnPrint" class="btn btn-primary"
+                                onclick="openModalForPkgInqs()">Request Package Information</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- modal for pkg related inqs -->
+        <div class="modal fade" id="modalForPkgRelatedInqs" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg" style="width: 850px;">
+                <div class="modal-content">
+                    <!-- modal header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h2 class="modal-title">Submit Your Inquiry Here</h2>
+                        <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
+                            onclick="inquiry.inqtype = null; window.location.reload();"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- display selected package -->
+                        <div class="row mb-4 align-items-center">
+                            <div class="col-4">
+                                <p class="mb-0 fw-bold">Interested Package:</p>
+                            </div>
+                            <div class="col-8">
+                                <p class="mb-0 fs-4 fw-semibold text-primary" id="selectedPkgName"></p>
+                            </div>
+                        </div>
+
+                        <!--PKG RLTD form starts -->
+                        <form onsubmit="return false" id="formPkgRelateInqForm" class="mt-3">
+
+                            <div class="row mb-3">
+                                <input type="hidden" id="inqTypeDummy" name="inqType" value="Package-Related">
+
+                                <div class="col-3">
+                                    <label for="inqClientTitlePkgrelated" class="form-label fw-bold mb-2">Title</label>
+                                    <select class="form-select" id="inqClientTitlePkgrelated"
+                                        onchange="selectStaticVal(this, '', 'inquiry', 'clienttitle')">
+                                        <option selected disabled>Select Title</option>
+                                        <option value="Mr">Mr</option>
+                                        <option value="Ms">Ms</option>
+                                        <option value="Mrs">Mrs</option>
+                                        <option value="Dr">Dr</option>
+                                        <option value="Prof">Prof</option>
+                                    </select>
+                                </div>
+
+                                <!-- client name -->
+                                <div class="col-9">
+                                    <label class="fw-bold form-label mb-2" for="inqClientNamePkgRelForm">Name:</label>
+                                    <input type="text" class="form-control form-input rounded"
+                                        id="inqClientNamePkgRelForm" placeholder="John Doe"
+                                        onkeyup="inputFieldValidator(this, '^([A-Z][a-z]{2,30}[\\s])+([A-Z][a-z]{2,30})$' ,'inquiry' ,'clientname' )">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <!-- nationality -->
+                                <div class="col-6">
+                                    <label class="fw-bold form-label mb-2"
+                                        for="pkgRelInqNationalitySelect">Nationality:</label>
+                                    <input type="text" id="pkgRelInqNationalitySelect" placeholder="Enter Your Country"
+                                        class="form-control" list="dataListNationality"
+                                        onchange="passCountryCodeInqForm(this, inqClientMobileOnePkgRelForm); dataListValidator(this, 'nationalityList' , 'inquiry' , 'nationality' , 'countryname')">
+                                    <datalist id="dataListNationality"></datalist>
+                                </div>
+
+                                <!-- email -->
+                                <div class="col-6">
+                                    <label class="fw-bold form-label mb-2" for="inqClientEmailPkgRelForm">Email:</label>
+                                    <input type="text" class="form-control form-input rounded"
+                                        id="inqClientEmailPkgRelForm" placeholder="johndoe@example.com"
+                                        onkeyup="inputFieldValidator(this, '^[A-Za-z0-9\\-\\_]{3,20}[@][a-z]{3,20}[.][a-z]{2,3}$' ,'inquiry' ,'email' )">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <!-- contact #1 -->
+                                <div class="col-6">
+                                    <label class="fw-bold form-label mb-2" for="inqClientMobileOnePkgRelForm">Contact
+                                        Number:</label>
+                                    <input type="text" class="form-control form-input rounded"
+                                        id="inqClientMobileOnePkgRelForm" placeholder="Please Enter Contact Number"
+                                        onkeyup="inputFieldValidator(this, '^[+][0-9]{7,15}$' ,'inquiry' ,'contactnum' )">
+                                </div>
+
+                                <!-- prefered contact method -->
+                                <div class="col-6">
+                                    <label for="prefContMethodPkgRelForm" class="fw-bold form-label mb-2">Preferred
+                                        Contact Method:</label>
+                                    <select class="form-select rounded" aria-label="Default select example"
+                                        onchange="selectStaticVal(this, '' , 'inquiry' , 'prefcontactmethod')"
+                                        id="prefContMethodPkgRelForm">
+                                        <option selected disabled>Preferred contact method</option>
+                                        <option value="Phone Call">Phone call</option>
+                                        <option value="Phone Text">Phone SMS</option>
+                                        <option value="Email">Email</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <!-- main enquiry -->
+                                <div class="col-10 mx-auto">
+                                    <div class="mb-3">
+                                        <label for="inqClientEnquiriesPkgRelForm"
+                                            class="form-label fw-bold mb-2">Enquiries:</label>
+                                        <textarea class="form-control" id="inqClientEnquiriesPkgRelForm"
+                                            style="height: 140px;"
+                                            placeholder="What can we help you with? Type your question or request here"
+                                            onkeyup="inputFieldValidator(this, '', 'inquiry', 'enquiry')"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col-3">
+                                    <button type="reset" id="btnClear" class="btn btn-outline-secondary fw-bold"
+                                        onclick="">
+                                        Clear </button>
+                                </div>
+
+                                <div class="col-9 text-end">
+                                    <button id="submitPkgRelatedInqs" type="submit" class="btn btn-primary fw-bold"
+                                        onclick="pkgRelInqAddBtn()" style="pointer-events: all;">
+                                        Submit </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- EXPLORE SECTION -->
+    <div class="hero-section">
+        <div class="container">
+            <h1>Explore the World with Yathra Travels</h1>
+            <p>Discover the best destinations and make unforgettable memories with our expertly crafted travel
+                experiences.</p>
+            <button class="btn">Learn More</button>
+        </div>
+    </div>
+
+       <!-- FOOTER SECTION -->
+    <div class="footer-section" id="contact">
+        <div class="container">
+            <h2>Ready for Your Next Adventure?</h2>
+            <p class="mb-4">Contact us today to plan your dream vacation with Yathra Travels.</p>
+            <button class="btn btn-primary mb-4">Contact Us</button>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card bg-dark text-white border-0">
+                        <div class="card-body">
+                            <p class="mb-2"><strong>Email:</strong> <a href="mailto:info@example.com"
+                                    class="text-white">info@example.com</a></p>
+                            <p class="mb-2"><strong>Phone:</strong> <a href="tel:+1234567890" class="text-white">+1
+                                    (234) 567-890</a></p>
+                            <p class="mb-0"><strong>Alternate Phone:</strong> <a href="tel:+0987654321"
+                                    class="text-white">+0 (987) 654-321</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

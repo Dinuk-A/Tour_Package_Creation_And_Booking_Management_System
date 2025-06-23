@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-const resetModalTpkg =() => {
+const resetModalTpkg = () => {
     console.log("Resetting modal form");
 }
 
@@ -60,27 +60,33 @@ const showTpkgType = (tpkgObj) => {
 //to support fill main table
 const showTpkgStatus = (tpkgObj) => {
 
-    if (tpkgObj.deleted_tpkg == null || tpkgObj.deleted_tpkg == false) {
-        if (tpkgObj.tpkg_status == "Draft") {
+    if (tpkgObj.deleted_tpkg == null || tpkgObj.deleted_tpkg === false) {
+
+        if (tpkgObj.tpkg_status === "Draft") {
             return `
                 <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
                    style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                    Draft
                 </p>`;
-        } else if (tpkgObj.tpkg_status == "Confirmed") {
+        }
+
+        else if (tpkgObj.tpkg_status === "Published") {
+            return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+            style="background-color: #28a745; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            Published
+         </p>`;
+        }
+
+        else if (tpkgObj.tpkg_status === "Inactive") {
             return `
                 <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-                   style="background-color: #3498db; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                   Confirmed
-                </p>`;
-        } else if (tpkgObj.tpkg_status == "Completed") {
-            return `
-                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-                   style="background-color: #27ae60; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                   Completed
+                   style="background-color: #6c757d; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Inactive
                 </p>`;
         }
-    } else if (tpkgObj.deleted_tpkg != null && tpkgObj.deleted_tpkg == true) {
+
+    } else if (tpkgObj.deleted_tpkg != null && tpkgObj.deleted_tpkg === true) {
         return `
             <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
                style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">

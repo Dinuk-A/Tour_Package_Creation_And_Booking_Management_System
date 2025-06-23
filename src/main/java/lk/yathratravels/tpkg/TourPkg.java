@@ -158,9 +158,6 @@ public class TourPkg {
     @OneToMany(mappedBy = "tourPkg", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AdditionalCost> addiCostList;
 
-    // @Transient
-    // private List<AdditionalCost> addiCostList;
-
     // common 6
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
