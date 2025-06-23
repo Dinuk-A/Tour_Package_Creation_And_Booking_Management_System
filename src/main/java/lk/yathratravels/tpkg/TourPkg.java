@@ -18,6 +18,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
@@ -80,7 +81,8 @@ public class TourPkg {
 
     @ManyToMany
     @JoinTable(name = "tpkg_has_dayplan", joinColumns = @JoinColumn(name = "tpkg_id"), inverseJoinColumns = @JoinColumn(name = "dayplan_id"))
-    private Set<DayPlan> dayplans;
+    @OrderColumn(name = "day_order") 
+    private List<DayPlan> dayplans;
 
     // additional costs one to many 1 add karana 1 optional 💥💥
 

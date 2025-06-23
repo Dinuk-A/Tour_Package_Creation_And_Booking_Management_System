@@ -2295,6 +2295,7 @@ const addNewTpkg = async () => {
                 //bind addiCost array with the tpkg obj 💥💥💥
                 //console.log("submitting tpkg:" + tpkg);
                 console.log("tpkg.addiCostList:", tpkg.addiCostList);
+                console.log("day plans:", tpkg.dayplans);
                 const postServerResponse = await ajaxPPDRequest("/tpkg", "POST", tpkg);
                 if (postServerResponse === 'OK') {
                     showAlertModal('suc', 'Saved Successfully');
