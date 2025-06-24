@@ -3,6 +3,7 @@ package lk.yathratravels.tpkg;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -18,10 +19,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.transaction.Transactional;
 import lk.yathratravels.dayplan.DayPlan;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
@@ -42,7 +47,7 @@ public class TourPkgController {
 
     // display tpkg UI
     @RequestMapping(value = "/tourpackage", method = RequestMethod.GET)
-    public ModelAndView showTpkgUI() {
+    public ModelAndView showTpkgUI() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -64,7 +69,13 @@ public class TourPkgController {
             User loggedUser = userDao.getUserByUsername(auth.getName());
             tpkgView.addObject("loggeduserdesignation", loggedUser.getEmployee_id().getDesignation_id().getName());
             tpkgView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
-            tpkgView.addObject("loggeduserroles", loggedUser.getRoles());
+            List<String> roleNames = loggedUser.getRoles()
+                    .stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+            //tpkgView.addObject("loggeduserroles", roleNames);
+            tpkgView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
+
             return tpkgView;
         }
     }

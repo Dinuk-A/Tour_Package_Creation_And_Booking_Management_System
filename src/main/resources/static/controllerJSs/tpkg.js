@@ -210,7 +210,20 @@ const refreshTpkgForm = async () => {
 
     showVehiAvailabilityButtons();
     showDnGAvailabilityButtons();
-  
+
+
+    const rolesRaw = document.getElementById('userRolesArraySection').innerText;
+    console.log("Raw roles text:", rolesRaw);
+
+
+    //let rolesRaw = document.getElementById("userRolesArraySection").innerText;
+    //const rolesArray = rolesRaw.replace(/[\[\]\s]/g, '').split(',');
+    //if (!rolesArray.includes("System_Admin")) {
+    //    document.getElementById("forWebSite").disabled = true;
+    //    document.getElementById("inputPkgTitle").value = "admin is here";
+    //}
+
+
 }
 
 //set status auto
