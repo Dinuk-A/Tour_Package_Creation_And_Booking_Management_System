@@ -75,9 +75,20 @@
         <h2 th:text="${moduleName}" class="ms-5 my-auto text-info"></h2>
 
         <!-- User role (hidden, for later use in tourpackage module) -->
-        <div class="d-flex align-items-center ms-5" style="visibility: hidden;">
-            <span th:text="${loggeduserrole}">role</span>
+        <div class="d-flex align-items-center ms-5" >
+            <span th:text="${loggeduserrole}">roles</span>
+            <!-- style="visibility: hidden;" -->
         </div>
+        <div class="d-flex align-items-center ms-5" >
+            <span th:text="${loggeduserroles}">roles</span>
+            <!-- style="visibility: hidden;" -->
+        </div>
+
+        <!-- hidden, only need when designation specific elements are there -->
+        <div class=" d-md-block ps-2 " id="loggedUserDesignationSectionId" th:text="${loggeduserdesignation}"
+           ></div>
+           <!--  style="display: none !important;" -->
+
 
         <!-- Avatar with Dropdown -->
         <div class="dropdown me-3">
@@ -349,7 +360,7 @@
 </div>
 
 <!-- modal for use as a custom alert -->
-<div th:fragment="customAlertFragment" class="alert-modal" id="customAlertModal" >
+<div th:fragment="customAlertFragment" class="alert-modal" id="customAlertModal">
     <p id="alertTitle">Alert</p>
     <img id="alertIcon" src="images/warning.png" alt="Alert Icon">
     <p id="alertMsg">This is a custom alert!</p>

@@ -80,7 +80,6 @@ const createPriceModsTableCustomFn = (dataContainer) => {
     const tableColumnInfoArray = [
         { displayType: 'function', displayingPropertyOrFn: showActiveDateRange, colHeadName: 'Usage Period' },
         { displayType: 'function', displayingPropertyOrFn: showAllOldValues, colHeadName: 'Previous Values' },
-        //{ displayType: 'function', displayingPropertyOrFn: showAddedUnT, colHeadName: 'Added' },
         { displayType: 'function', displayingPropertyOrFn: showUpdatedUnT, colHeadName: 'Updated' }
     ]
 
@@ -167,36 +166,43 @@ const showAllOldValues = (objPMHistory) => {
 };
 
 //fn to get emp info by user id
-const getEmpInfo = async (userId) => {
-    try {
-        const empInfo = await ajaxGetReq("empinfo/byuserid?userid=" + userId);
-        console.log("Employee Info:", empInfo);
-        return empInfo;
-    } catch (error) {
-        console.error("Failed to fetch empinfo:", error);
-        return null;
-    }
-}
+//let empInfo;
+//const getEmpInfo = async (userId) => {
+//    try {
+//        empInfo = await ajaxGetReq("empinfo/byuserid?userid=" + userId);
+//        console.log("Employee Info in common Fn:", empInfo);
+//       
+//    } catch (error) {
+//        console.error("Failed to fetch empinfo:", error);
+//    }
+//}
 
 // fill table with updated params of previous price modifications
-const showUpdatedUnT =  async(objPMHistory) => {
+const showUpdatedUnT = async (objPMHistory) => {
 
     const dt = new Date(objPMHistory.ori_updateddatetime);
     const formattedDate = dt.toLocaleDateString('en-GB');
     const formattedTime = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
-    //let empInfo = null;
-    empInfo = await getEmpInfo(objPMHistory.ori_updateduserid);
+    try {
+        empInfo = await ajaxGetReq("empinfo/byuserid?userid=" + objPMHistory.ori_updateduserid);
+        console.log("Employee Info in showUpdatedUnT Fn TRY CATCH:", empInfo);
+    } catch (error) {
+        console.error("Failed to fetch empinfo:", error);
+    }
+
+    console.log("empInfo in showUpdatedUnT ", empInfo);
 
     return `
         <div class= "text-start px-5">
             Updated at:   ${formattedDate} ${formattedTime}<br>
-            Updtated by:   ${empInfo.fullname }  (${empInfo.emp_code})<br>
+            Updtated by:   ${empInfo.fullname}  (${empInfo.emp_code})<br>
         </div>
     `;
-
-    //  By User:   ${objPMHistory.ori_updateduserid}
 };
+
+//  By User:   ${objPMHistory.ori_updateduserid}
+//empInfo = await getEmpInfo(objPMHistory.ori_updateduserid);
 
 //define fn for refresh privilege table
 const buildPMHistoryTable = async () => {

@@ -37,6 +37,12 @@ public class WebConfigs {
                     .requestMatchers("/tourpackageforweb/**").permitAll()
                     .requestMatchers("/yathra").permitAll()
 
+                    .requestMatchers("/emp/**").hasAnyAuthority("System_Admin", "Manager")
+
+                    .requestMatchers("/user/**").hasAnyAuthority("System_Admin", "Manager")
+
+                    .requestMatchers("/privilege/**").hasAnyAuthority("System_Admin", "Manager", "Assistant Manager")
+
                     .anyRequest().authenticated();
 
         })

@@ -72,20 +72,19 @@ public class CommonMethods {
     public ModelAndView dashboardUI() {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
+
         ModelAndView dbView = new ModelAndView();
         dbView.setViewName("dashboard.html");
         dbView.addObject("loggedUserUN", auth.getName());
-      
-
-        // roles godak thiyana nisa list eke palawni eka witharay enne
-        // dbView.addObject("loggeduserrole",
-        // loggedUser.getRoles().iterator().next().getName());
-
-        // dbView.addObject("loggeduserphoto", loggedUser.getUser_photo());
-        dbView.addObject("title", "Yathra Dashboard");
 
         User loggedUser = userDao.getUserByUsername(auth.getName());
+
+        // roles godak thiyana nisa list eke palawni eka witharay enne
+        dbView.addObject("loggeduserrole", loggedUser.getRoles().iterator().next().getName());
+        dbView.addObject("loggeduserroles", loggedUser.getRoles());
+        // dbView.addObject("loggeduserphoto", loggedUser.getUser_photo());
+        dbView.addObject("title", "Yathra Dashboard");
+        dbView.addObject("loggeduserdesignation", loggedUser.getEmployee_id().getDesignation_id().getName());
         dbView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
 
         return dbView;
@@ -107,9 +106,9 @@ public class CommonMethods {
         return lostView;
     }
 
-    //UI for testing frontend features
+    // UI for testing frontend features
     @GetMapping(value = "/test")
-    public ModelAndView testUI(){
+    public ModelAndView testUI() {
         ModelAndView testView = new ModelAndView();
         testView.setViewName("test.html");
         return testView;

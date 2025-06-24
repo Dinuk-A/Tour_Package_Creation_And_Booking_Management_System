@@ -61,10 +61,10 @@ public class TourPkgController {
             tpkgView.addObject("loggedUserUN", auth.getName());
             tpkgView.addObject("title", "Yathra Tour Package");
             tpkgView.addObject("moduleName", "Tour Package Builder");
-
             User loggedUser = userDao.getUserByUsername(auth.getName());
+            tpkgView.addObject("loggeduserdesignation", loggedUser.getEmployee_id().getDesignation_id().getName());
             tpkgView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
-
+            tpkgView.addObject("loggeduserroles", loggedUser.getRoles());
             return tpkgView;
         }
     }
@@ -83,7 +83,7 @@ public class TourPkgController {
         return daoTPkg.findAll(Sort.by(Direction.DESC, "id"));
     }
 
-    //save a tout pkg + addi costs
+    // save a tout pkg + addi costs
     @PostMapping(value = "/tpkg")
     @Transactional
     public String saveTourPkg(@RequestBody TourPkg tpkg) {
@@ -120,24 +120,28 @@ public class TourPkgController {
             }
             TourPkg savedTpkg = daoTPkg.save(tpkg);
 
-        /*    System.out.println("additional cost list : " + tpkg.getAddiCostList().toString());
-
-            if (tpkg.getAddiCostList() != null && !tpkg.getAddiCostList().isEmpty()) {
-
-                for (AdditionalCost ac : tpkg.getAddiCostList()) {
-                    AdditionalCost additionalCost = new AdditionalCost();
-
-                    System.out.println("additional cost : " + ac.toString());
-
-                    additionalCost.setTourPkg(savedTpkg);
-                    additionalCost.setCostname(ac.getCostname());
-                    additionalCost.setAmount(ac.getAmount());
-                    additionalCost.setAddeddatetime(LocalDateTime.now());
-                    additionalCost.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
-                    additionalCostDao.save(additionalCost);
-                }
-
-            }*/
+            /*
+             * System.out.println("additional cost list : " +
+             * tpkg.getAddiCostList().toString());
+             * 
+             * if (tpkg.getAddiCostList() != null && !tpkg.getAddiCostList().isEmpty()) {
+             * 
+             * for (AdditionalCost ac : tpkg.getAddiCostList()) {
+             * AdditionalCost additionalCost = new AdditionalCost();
+             * 
+             * System.out.println("additional cost : " + ac.toString());
+             * 
+             * additionalCost.setTourPkg(savedTpkg);
+             * additionalCost.setCostname(ac.getCostname());
+             * additionalCost.setAmount(ac.getAmount());
+             * additionalCost.setAddeddatetime(LocalDateTime.now());
+             * additionalCost.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId
+             * ());
+             * additionalCostDao.save(additionalCost);
+             * }
+             * 
+             * }
+             */
 
             return "OK";
         } catch (Exception e) {
