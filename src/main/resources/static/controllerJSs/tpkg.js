@@ -210,13 +210,7 @@ const refreshTpkgForm = async () => {
 
     showVehiAvailabilityButtons();
     showDnGAvailabilityButtons();
-
-    const userDesigValue = document.getElementById('loggedUserDesignationSectionId').innerText
-    let userroles = /*[[${loggeduserroles}]]*/ 'loggeduserroles';
-    console.log(userroles);
-    if (userDesigValue !== "Admin" ||userDesigValue !== "Manager" ) {
-        document.getElementById('inputPkgTitle').value = "TESTINGGGGG   ";
-    }
+  
 }
 
 //set status auto
