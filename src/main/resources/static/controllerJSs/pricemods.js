@@ -166,19 +166,36 @@ const showAllOldValues = (objPMHistory) => {
     `;
 };
 
+//fn to get emp info by user id
+const getEmpInfo = async (userId) => {
+    try {
+        const empInfo = await ajaxGetReq("empinfo/byuserid?userid=" + userId);
+        console.log("Employee Info:", empInfo);
+        return empInfo;
+    } catch (error) {
+        console.error("Failed to fetch empinfo:", error);
+        return null;
+    }
+}
 
 // fill table with updated params of previous price modifications
-const showUpdatedUnT = (objPMHistory) => {
+const showUpdatedUnT =  async(objPMHistory) => {
+
     const dt = new Date(objPMHistory.ori_updateddatetime);
     const formattedDate = dt.toLocaleDateString('en-GB');
     const formattedTime = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
+    //let empInfo = null;
+    empInfo = await getEmpInfo(objPMHistory.ori_updateduserid);
+
     return `
         <div class= "text-start px-5">
             Updated at:   ${formattedDate} ${formattedTime}<br>
-            By User:   ${objPMHistory.ori_updateduserid}
+            Updtated by:   ${empInfo.fullname }  (${empInfo.emp_code})<br>
         </div>
     `;
+
+    //  By User:   ${objPMHistory.ori_updateduserid}
 };
 
 //define fn for refresh privilege table

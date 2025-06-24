@@ -99,6 +99,14 @@ public class Employee {
     @Column(name = "deleteduserid")
     private Integer deleteduserid;
 
+   //custom constructor for creating Employee with emp_code and fullname
+    public Employee(@NotNull String emp_code, @NotNull String fullname) {
+        this.emp_code = emp_code;
+        this.fullname = fullname;
+    }
+
+    
+
 }
 
 /*

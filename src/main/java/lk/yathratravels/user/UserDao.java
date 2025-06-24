@@ -41,4 +41,8 @@ public interface UserDao extends JpaRepository<User, Integer> {
     @Query("SELECT u FROM User u WHERE u.employee_id.designation_id.name <> 'Admin' AND u.username <> :currentUsername")
     List<User> getAllUserAccsExceptAdminAndLoggedUser(@Param("currentUsername") String currentUsername);
 
+    //get the user name, employee name , user id
+    //@Query("SELECT u FROM User u WHERE u.id = :userId")
+    //public User getUserNameAndEmployeeNameByUserId(@Param("userId") Integer userId);
+
 }

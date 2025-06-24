@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.security.core.Authentication;
@@ -126,6 +127,12 @@ public class EmployeeController {
     @GetMapping(value = "/emp/listwithoutuseracc", produces = "application/json")
     public List<Employee> showEmpsWOUserAccs() {
         return employeeDao.getEmpsWithoutAccountAndNotDeleted();
+    }
+
+    // get emp code and fullname of the employee by his user ID
+    @GetMapping(value = "/empinfo/byuserid", params = {"userid"}, produces = "application/json")
+    public Employee getEmployeeByUser(@RequestParam("userid") Integer userId) {
+        return employeeDao.getEmployeeInfoByUserId(userId);
     }
 
     // get all drivers who are available within the given date range

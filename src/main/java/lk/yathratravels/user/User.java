@@ -55,7 +55,7 @@ public class User {
     private Boolean acc_status;
 
     @Column(name = "deleted_user")
-     private Boolean deleted_user;
+    private Boolean deleted_user;
 
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
@@ -72,30 +72,36 @@ public class User {
     @Column(name = "lastmodifieddatetime")
     private LocalDateTime lastmodifieddatetime;
 
-    // user kenek delete karnna denna onemada 💥💥💥 ???
     @Column(name = "deleteddatetime")
     private LocalDateTime deleteddatetime;
-
-    // @Column(name = "addeduserid")
-    // private Integer addeduserid;
-
-    // @Column(name = "lastmodifieduserid")
-    // private Integer lastmodifieduserid;
-
-    // @Column(name = "deleteduserid")
-    // private Integer deleteduserid;
 
     // custom constructor
     // to get only the username for print
     public User(String username) {
         this.username = username;
     }
-    // to get only the username for print
-    //public User(String work_email) {
-    //    this.work_email = work_email;
-    //}
 
 }
+
+// to get only the username for print
+// public User(String work_email) {
+// this.work_email = work_email;
+// }
+
+// to get only the username and employee name for print
+// public User(String username, String work_email) {
+// this.username = username;
+// this.work_email = work_email;
+// }
+
+// @Column(name = "addeduserid")
+// private Integer addeduserid;
+
+// @Column(name = "lastmodifieduserid")
+// private Integer lastmodifieduserid;
+
+// @Column(name = "deleteduserid")
+// private Integer deleteduserid;
 
 /*
  * id int AI PK

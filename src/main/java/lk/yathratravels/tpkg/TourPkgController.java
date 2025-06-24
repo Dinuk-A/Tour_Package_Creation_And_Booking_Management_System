@@ -83,6 +83,7 @@ public class TourPkgController {
         return daoTPkg.findAll(Sort.by(Direction.DESC, "id"));
     }
 
+    //save a tout pkg + addi costs
     @PostMapping(value = "/tpkg")
     @Transactional
     public String saveTourPkg(@RequestBody TourPkg tpkg) {
