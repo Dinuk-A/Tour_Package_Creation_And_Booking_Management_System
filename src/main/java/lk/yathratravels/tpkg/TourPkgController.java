@@ -108,31 +108,35 @@ public class TourPkgController {
             for (DayPlan dp : tpkg.getDayplans()) {
                 System.out.println(" - ID: " + dp.getId() + ", Title: " + dp.getDaytitle());
             }
-           
 
             tpkg.setAddeddatetime(LocalDateTime.now());
             tpkg.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
+            for (AdditionalCost ac : tpkg.getAddiCostList()) {
+                ac.setAddeddatetime(LocalDateTime.now());
+                ac.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+                ac.setTourPkg(tpkg);
+            }
             TourPkg savedTpkg = daoTPkg.save(tpkg);
 
-            System.out.println("additional cost list : " + tpkg.getAddiCostList().toString());
+        /*    System.out.println("additional cost list : " + tpkg.getAddiCostList().toString());
 
-            // if (tpkg.getAddiCostList() != null && !tpkg.getAddiCostList().isEmpty()) {
-            //
-            // for (AdditionalCost ac : tpkg.getAddiCostList()) {
-            // AdditionalCost additionalCost = new AdditionalCost();
-            //
-            // System.out.println("additional cost : " + ac.toString());
-            //
-            // additionalCost.setTourPkg(savedTpkg);
-            // additionalCost.setCostname(ac.getCostname());
-            // additionalCost.setAmount(ac.getAmount());
-            // additionalCost.setAddeddatetime(LocalDateTime.now());
-            // additionalCost.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
-            // additionalCostDao.save(additionalCost);
-            // }
-            //
-            // }
+            if (tpkg.getAddiCostList() != null && !tpkg.getAddiCostList().isEmpty()) {
+
+                for (AdditionalCost ac : tpkg.getAddiCostList()) {
+                    AdditionalCost additionalCost = new AdditionalCost();
+
+                    System.out.println("additional cost : " + ac.toString());
+
+                    additionalCost.setTourPkg(savedTpkg);
+                    additionalCost.setCostname(ac.getCostname());
+                    additionalCost.setAmount(ac.getAmount());
+                    additionalCost.setAddeddatetime(LocalDateTime.now());
+                    additionalCost.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+                    additionalCostDao.save(additionalCost);
+                }
+
+            }*/
 
             return "OK";
         } catch (Exception e) {

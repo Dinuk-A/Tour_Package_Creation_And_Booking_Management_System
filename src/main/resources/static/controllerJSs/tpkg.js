@@ -2495,22 +2495,22 @@ const createAddiCostTable = () => {
         actionCell.className = 'text-center';
 
         const btnGroup = document.createElement('div');
-        btnGroup.className = 'btn-group btn-group-sm';
+        btnGroup.className = '';
 
         const viewBtn = document.createElement('button');
-        viewBtn.className = 'btn btn-outline-primary';
+        viewBtn.className = 'btn btn-sm btn-outline-primary me-1';
         viewBtn.innerText = 'View';
         viewBtn.onclick = () => showNote(cost);
         btnGroup.appendChild(viewBtn);
 
         const editBtn = document.createElement('button');
-        editBtn.className = 'btn btn-outline-secondary';
+        editBtn.className = 'btn btn-sm btn-outline-secondary me-1';
         editBtn.innerText = 'Edit';
         editBtn.onclick = () => refillAdditionalCostFormNew(cost);
         btnGroup.appendChild(editBtn);
 
         const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'btn btn-outline-danger';
+        deleteBtn.className = 'btn btn-sm btn-outline-danger';
         deleteBtn.innerText = 'Delete';
         deleteBtn.onclick = () => {
             tpkg.addiCostList.splice(index, 1);
