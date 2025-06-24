@@ -98,41 +98,51 @@ const createPriceModsTableCustomFn = (dataContainer) => {
     const tableBody = document.createElement('tbody');
 
     // Populate tbody with data
-    dataContainer.forEach((record, index) => {
+    dataContainer.forEach(async (record, index) => {
         const row = document.createElement('tr');
-
+    
         // Index column
         const indexCell = document.createElement('td');
         indexCell.innerText = index + 1;
         indexCell.setAttribute('class', 'text-center justify-content-center');
         row.appendChild(indexCell);
-
+    
         // Data columns
-        tableColumnInfoArray.forEach(columnObj => {
+        for (const columnObj of tableColumnInfoArray) {
             const cell = document.createElement('td');
             cell.setAttribute('class', 'text-center justify-content-center');
-
-            //different scenarios for different display types
+    
             switch (columnObj.displayType) {
                 case "text":
-                    //ex: employee[0][fullname]
                     cell.innerText = record[columnObj.displayingPropertyOrFn];
                     break;
-
+    
                 case "function":
-                    //ex: getDesignation(employee[0])
-                    cell.innerHTML = columnObj.displayingPropertyOrFn(record)
+                    const result = columnObj.displayingPropertyOrFn(record);
+    
+                    if (result instanceof Promise) {
+                        result.then(resolvedHtml => {
+                            cell.innerHTML = resolvedHtml;
+                        }).catch(err => {
+                            cell.innerHTML = `<span class="text-danger">Error loading</span>`;
+                            console.error("Error resolving async cell:", err);
+                        });
+                    } else {
+                        cell.innerHTML = result;
+                    }
                     break;
-
+    
                 default:
-                    showAlertModal('err', "error creating table");
+                    showAlertModal('err', "Error creating table");
                     break;
             }
+    
             row.appendChild(cell);
-        });
-
+        }
+    
         tableBody.appendChild(row);
     });
+    
 
     // Append thead and tbody to the table
     tableTag.appendChild(tableHead);
