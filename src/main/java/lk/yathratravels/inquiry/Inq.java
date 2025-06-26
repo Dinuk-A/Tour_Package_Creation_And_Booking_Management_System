@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "inquiry")
@@ -72,12 +73,18 @@ public class Inq {
     @Column(name = "inqsrc")
     private String inqsrc;
 
-    @Column(name = "recieveddatetime")
-    private LocalDateTime recieveddatetime;
+    @Column(name = "recieveddate")
+    private LocalDate recieveddate;
+
+    @Column(name = "recievedtime")
+    private LocalTime recievedtime;
 
     // in system form ✅
     @Column(name = "recievedcontactoremail")
     private String recievedcontactoremail;
+
+    @Column(name = "contactnumtwo")
+    private String contactnumtwo;
 
     @Column(name = "passportnumornic")
     private String passportnumornic;

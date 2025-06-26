@@ -115,7 +115,8 @@ public class InqController {
             inq.setInq_status("New");
 
             // set recieved date and time within this for inqs sent by clients via website
-            inq.setRecieveddatetime(LocalDateTime.now());
+            inq.setRecieveddate(LocalDate.now());
+            inq.setRecievedtime(LocalTime.now());
 
             inqDao.save(inq);
 
@@ -132,5 +133,47 @@ public class InqController {
     // if an employee manually added this which recieved from email or call
     // inq.setAddeddatetime(LocalDateTime.now());
     // inq.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+        // inqs from manual system
+        @PostMapping(value = "/inq")
+    public String saveInq(@RequestBody Inq inq) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "INQUIRY");
+
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "Save Not Completed You Dont Have Permission";
+        }
+
+        try {
+
+            System.out.println("New Inquiry Received from System : " + inq.toString());
+
+            // gen a code
+            String inqCode = inqDao.getNextInquiryCode();
+            if (inqCode == null || inqCode.equals("")) {
+                inq.setInqcode("INQ00001");
+            } else {
+                inq.setInqcode(inqCode);
+            }
+
+           
+            inq.setInq_status("New");
+
+            // set recieved date and time within this for inqs sent by clients via website
+            inq.setAddeddatetime(LocalDateTime.now());
+            inq.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+            inqDao.save(inq);
+
+            System.out.println("New Inquiry Saved : " + inq.getInqcode());
+            System.out.println("full new inquiry : " + inq.toString());
+
+            return "OK";
+
+        } catch (Exception e) {
+            return "save not completed : " + e.getMessage();
+        }
+    }
 
 }

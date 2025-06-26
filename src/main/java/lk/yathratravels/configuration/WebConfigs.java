@@ -36,8 +36,11 @@ public class WebConfigs {
                     .requestMatchers("/dayplanforweb/**").permitAll()
                     .requestMatchers("/tourpackageforweb/**").permitAll()
                     .requestMatchers("/yathra").permitAll()
-                    
+
                     .requestMatchers("/inquiryfromweb").permitAll()
+
+                    //.requestMatchers("/inquiryfromweb/**").permitAll()
+                    //.requestMatchers(HttpMethod.POST, "/inquiryfromweb").permitAll()
 
                     .requestMatchers("/emp/**").hasAnyAuthority("System_Admin", "Manager")
 
