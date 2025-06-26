@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "inq")
+@Table(name = "inquiry")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -115,11 +115,11 @@ public class Inq {
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
 
-    @Column(name = "deleteddatetime")
-    private LocalDateTime deleteddatetime;
-
     @Column(name = "addeduserid")
     private Integer addeduserid;
+
+    @Column(name = "deleteddatetime")
+    private LocalDateTime deleteddatetime;   
 
     @Column(name = "deleteduserid")
     private Integer deleteduserid;

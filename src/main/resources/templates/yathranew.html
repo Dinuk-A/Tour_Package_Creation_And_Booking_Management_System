@@ -15,11 +15,17 @@
     <!-- link bootstrp icons css -->
     <link rel="stylesheet" href="libs/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
 
+    <!-- custom alert css -->
+    <link rel="stylesheet" href="css/customAlert.css">
+
     <!-- button css -->
     <link rel="stylesheet" href="css/buttons.css">
 
     <!-- custom alert css -->
     <link rel="stylesheet" href="css/customAlert.css">
+
+        <!-- for custom alert js -->
+        <script src="commonscripts/customAlert.js"></script>
 
     <!-- main CSS -->
     <!--<link rel="stylesheet" href="css/yathranew.css">-->
@@ -453,6 +459,8 @@
 
 <body>
 
+    <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
+
     <!-- top nav bar -->
     <div class="navbar">
         <h1 class="logo">
@@ -670,8 +678,8 @@
                                 <div class="col-2">
                                     <label for="inqClientTitlePkgrelated" class="form-label fw-bold mb-0">Title</label>
                                     <select class="form-select" id="inqClientTitlePkgrelated"
-                                        onchange="staticSelectValidator(this, 'inquiry', 'clienttitle')">
-                                        <option selected disabled>-Select-</option>
+                                        onchange="staticSelectValidatorWeb(this, 'inquiry', 'clienttitle')">
+                                        <option value="" selected disabled>-Select-</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         <option value="Mrs">Mrs</option>
@@ -684,8 +692,8 @@
                                     <label class="fw-bold form-label mb-0" for="inqClientNamePkgRelForm">Name:</label>
                                     <input type="text" class="form-control form-input rounded"
                                         id="inqClientNamePkgRelForm" placeholder="John Doe"
-                                        onkeyup="handleCustName();">
-                                       <!--  onkeyup="inputValidatorText(this, '^([A-Z][a-z]{2,30}[\\s])+([A-Z][a-z]{2,30})$' ,'inquiry' ,'clientname' )" -->
+                                        onblur="handleCustName(this);">
+                                    <!--  onkeyup="inputValidatorTextWeb(this, '^([A-Z][a-z]{3,30}[\\s])+([A-Z][a-z]{3,30})$' ,'inquiry' ,'clientname' )" -->
                                 </div>
 
                                 <!-- Nationality -->
@@ -694,7 +702,7 @@
                                         for="pkgRelInqNationalitySelect">Nationality:</label>
                                     <input type="text" id="pkgRelInqNationalitySelect" placeholder="Enter Your Country"
                                         class="form-control" list="dataListNationality"
-                                        onchange="passCountryCodeInqForm(this, inqClientMobileOnePkgRelForm); dataListValidator(this, 'nationalityList' , 'inquiry' , 'nationality_id' , 'countryname')">
+                                        onkeyup="passCountryCodeInqForm(this, inqClientMobileOnePkgRelForm); dataListValidator(this, 'nationalityList' , 'inquiry' , 'nationality_id' , 'countryname')">
                                     <datalist id="dataListNationality"></datalist>
                                 </div>
                             </div>
@@ -705,7 +713,7 @@
                                     <label class="fw-bold form-label mb-0" for="inqClientEmailPkgRelForm">Email:</label>
                                     <input type="text" class="form-control form-input rounded"
                                         id="inqClientEmailPkgRelForm" placeholder="johndoe@example.com"
-                                        onkeyup="inputValidatorText(this, '^[A-Za-z0-9\\-\\_]{3,20}[@][a-z]{3,20}[.][a-z]{2,3}$' ,'inquiry' ,'email' )">
+                                        onkeyup="inputValidatorTextWeb(this, '^[A-Za-z0-9\\-\\_]{3,20}[@][a-z]{3,20}[.][a-z]{2,3}$' ,'inquiry' ,'email' )">
                                 </div>
 
                                 <!-- Contact Number -->
@@ -714,7 +722,7 @@
                                         Number:</label>
                                     <input type="text" class="form-control form-input rounded"
                                         id="inqClientMobileOnePkgRelForm" placeholder="Please Enter Contact Number"
-                                        onkeyup="inputValidatorText(this, '^[+][0-9]{7,15}$' ,'inquiry' ,'contactnum' )">
+                                        onkeyup="inputValidatorTextWeb(this, '^[+][0-9]{7,15}$' ,'inquiry' ,'contactnum' )">
                                 </div>
 
                                 <!-- Preferred Contact Method -->
@@ -722,9 +730,9 @@
                                     <label for="prefContMethodPkgRelForm" class="fw-bold form-label mb-0">Preferred
                                         Contact Method:</label>
                                     <select class="form-select rounded" aria-label="Default select example"
-                                        onchange="staticSelectValidator(this, 'inquiry' , 'prefcontactmethod')"
+                                        onchange="staticSelectValidatorWeb(this, 'inquiry' , 'prefcontactmethod')"
                                         id="prefContMethodPkgRelForm">
-                                        <option selected disabled>Please Select</option>
+                                        <option value="" selected disabled>Please Select</option>
                                         <option value="Call">Phone call</option>
                                         <option value="Whatsapp">Whatsapp Message</option>
                                         <option value="Email">Email</option>
@@ -742,7 +750,7 @@
                                         <textarea class="form-control" id="inqClientEnquiriesPkgRelForm"
                                             style="height: 140px;"
                                             placeholder="What can we help you with? Type your question or request here"
-                                            onkeyup="inputValidatorText(this, '', 'inquiry', 'main_inq_msg')"></textarea>
+                                            onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'main_inq_msg')"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -774,7 +782,7 @@
                                     </div>
 
                                     <input type="date" class="form-control mt-2" id="inqStartDate" style="display:none;"
-                                        onchange="dateValidator(this, 'inquiry', 'inq_apprx_start_date')">
+                                        onchange="inputValidatorTextWeb(this, '', 'inquiry', 'inq_apprx_start_date')">
                                 </div>
 
                                 <!-- traveller group -->
@@ -786,13 +794,13 @@
                                             <label for="adultsCount" class="form-label fw-bold mb-0">Adults
                                                 Count:</label>
                                             <input type="number" id="adultsCount" class="form-control" min="1"
-                                                onkeyup="inputValidatorText(this, '', 'inquiry', 'inq_adults')">
+                                                onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_adults')">
                                             <div class="form-text">Adults are travelers aged 13 and above</div>
                                         </div>
                                         <div>
                                             <label for="kidsCount" class="form-label fw-bold mb-0">Kids Count:</label>
                                             <input type="number" id="kidsCount" class="form-control" min="0"
-                                                onkeyup="inputValidatorText(this, '', 'inquiry', 'inq_kids')">
+                                                onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_kids')">
                                             <div class="form-text">Kids are travelers aged 0-12</div>
                                         </div>
                                     </div>
@@ -805,7 +813,7 @@
                                         Preferences:</label>
                                     <textarea class="form-control" id="inqAccommodationNote" rows="3"
                                         placeholder="Let us know your preferences: e.g., type of hotel, bed type, floor level, view, etc."
-                                        onkeyup="inputValidatorText(this, '', 'inquiry', 'inq_accos')"></textarea>
+                                        onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_accos')"></textarea>
                                 </div>
 
                                 <div class="col-6 mb-2">
@@ -813,7 +821,7 @@
                                         Preferences:</label>
                                     <textarea class="form-control" id="inqPlacesPreferences" rows="4"
                                         placeholder="List places you want to visit and places you'd prefer to avoid. For example: Must-visit: Sigiriya, Ella, Yala. Avoid: crowded cities."
-                                        onkeyup="inputValidatorText(this, '', 'inquiry', 'inq_vplaces')"></textarea>
+                                        onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_vplaces')"></textarea>
                                 </div>
 
                                 <!-- Preferred Transport -->
@@ -822,7 +830,7 @@
                                         Preferences:</label>
                                     <textarea class="form-control" id="inqTransportNote" rows="3"
                                         placeholder="Preferred transport type, air-conditioning, private/van/bus, driving distance comfort, etc."
-                                        onkeyup="inputValidatorText(this, '', 'inquiry', 'inq_vehi')"></textarea>
+                                        onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_vehi')"></textarea>
                                 </div>
 
 
@@ -831,13 +839,13 @@
 
                             <div class="row mb-2">
                                 <div class="col-3">
-                                    <button type="reset" id="btnClear" class="btn btn-outline-secondary fw-bold"
+                                    <button type="reset" id="btnClear" class="btn-clear fw-bold"
                                         onclick="refreshPkgRelInqForm();">
                                         Reset Form </button>
                                 </div>
 
                                 <div class="col-9 text-end">
-                                    <button id="submitPkgRelatedInqs" type="submit" class="btn btn-primary fw-bold"
+                                    <button id="submitPkgRelatedInqs" type="submit" class="btn-add fw-bold"
                                         onclick="pkgRelInqAddBtn()" style="pointer-events: all;">
                                         Submit Inquiry</button>
                                 </div>

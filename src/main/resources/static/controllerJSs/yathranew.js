@@ -84,23 +84,6 @@ const refreshYathraWebSite = async (openReusableModalForCardsReadMore) => {
 
 }
 
-//GENERAL INQ FORM
-//const refreshGeneralInqForm = () => {
-//
-//    inquiry = new Object();
-//
-//    generalInqForm.reset();
-//
-//    inqClientName.style.border = "1px solid #ced4da";
-//    generalInqNationalitySelect.style.border = "1px solid #ced4da";
-//    inqClientEmail.style.border = "1px solid #ced4da";
-//    inqClientMobileOne.style.border = "1px solid #ced4da";
-//    prefContMethodGeneralForm.style.border = "1px solid #ced4da";
-//    inqClientEnquiries.style.border = "1px solid #ced4da";
-//    inqClientTitle.style.border = "1px solid #ced4da";
-//
-//}
-
 //PKG RELATED INQ FORM
 const refreshPkgRelInqForm = async () => {
 
@@ -147,10 +130,84 @@ const refreshPkgRelInqForm = async () => {
     // fillDataIntoDataList(pkgrelatednationalityDataList, nationalityList, 'countryname');
 }
 
+//handle customer name submission
+const handleCustName = (nameInputElement) => {
+    const originalNameVal = nameInputElement.value.trim();
+
+    const capitalized = originalNameVal
+        .split(" ")
+        .map(namePart => namePart.charAt(0).toUpperCase() + namePart.slice(1).toLowerCase())
+        .join(" ");
+
+    nameInputElement.value = capitalized;
+
+    const namePattern = /^([A-Z][a-z]{3,30}\s)+([A-Z][a-z]{3,30})$/;
+
+    if (namePattern.test(capitalized)) {
+        nameInputElement.style.borderBottom = "4px solid lime";
+        nameInputElement.style.borderRight = "4px solid lime";
+        inquiry.clientname = capitalized;
+    } else {
+        nameInputElement.style.borderBottom = "4px solid red";
+        nameInputElement.style.borderRight = "4px solid red";
+        inquiry.clientname = null;
+    }
+};
+
+
+//validate selected options 
+const staticSelectValidatorWeb = (selectTagId, object, property) => {
+
+    const selectedValue = selectTagId.value;
+
+    if (selectedValue != "") {
+        selectTagId.style.borderBottom = "4px solid lime";
+        selectTagId.style.borderRight = "4px solid lime";
+        window[object][property] = selectedValue;
+    } else {
+        selectTagId.style.borderBottom = "4px solid red";
+        selectTagId.style.borderRight = "4px solid red";
+        window[object][property] = null;
+    }
+
+}
+
+const inputValidatorTextWeb = (inputTagId, pattern, object, property) => {
+
+    const regXP = new RegExp(pattern);
+    const currentValue = inputTagId.value;
+
+    // run all this only if a value is entered
+    if (currentValue != "") {
+
+        if (regXP.test(currentValue)) {
+            inputTagId.style.borderBottom = "4px solid lime";
+            inputTagId.style.borderRight = "4px solid lime";
+            window[object][property] = currentValue;
+        } else {
+            inputTagId.style.borderBottom = "4px solid red";
+            inputTagId.style.borderRight = "4px solid red";
+            window[object][property] = null;
+        }
+
+    } else {
+        window[object][property] = null;
+
+        if (inputTagId.required) {
+            inputTagId.style.borderBottom = "4px solid red";
+            inputTagId.style.borderRight = "4px solid red";
+        } else {
+            inputTagId.style.borderBottom = "1px solid #ced4da";
+            inputTagId.style.borderRight = "1px solid #ced4da";
+        }
+    }
+};
+
+
 // global object to store country data
 let countryData = {};
 const fillDataIntoDataListYathra = (fieldId, dataList, propertyName) => {
-  
+
     fieldId.innerHTML = '';
 
     //countryData = {};
@@ -163,28 +220,31 @@ const fillDataIntoDataListYathra = (fieldId, dataList, propertyName) => {
         // Store the country code in the global object
         countryData[obj[propertyName]] = obj.countrycode;
 
-        console.log("in fillDataIntoDataListYathra" , countryData);
     }
 }
 
-//set country code auto
+//set country code auto 💥💥💥💥💥
 const passCountryCodeInqForm = (countryInputElement, contactNumInputElement) => {
 
-    contactNumInputElement.value = " ";
+    contactNumInputElement.value = "";
 
-    if (inquiry.nationality_id != null) {
+    console.log(countryData);
 
+    if (inquiry.nationality_id.id != null) {
         const selectedCountryName = countryInputElement.value;
-        //country data is global object
+        console.log("Selected Country Name: ", selectedCountryName);
         const countryCode = countryData[selectedCountryName];
+        console.log("Country Code: ", countryCode);
+        //country data is global object defined above
 
         if (countryCode) {
             contactNumInputElement.value = countryCode;
         } else {
-            contactNumInputElement.value = '';
+            contactNumInputElement.value = "";
         }
-
-    } else { contactNumInputElement.value = " "; }
+    } else {
+        contactNumInputElement.value = "";
+    }
 
 }
 
@@ -334,7 +394,6 @@ const openReusableModalForCardsReadMore = (package) => {
     $('#reusableModalForCards').modal('show');
 }
 
-
 //common fn for create accordions for start day and end day
 const makeAccordionsForSDnEDoRI = (dayPlan, dayType, SDorED) => {
 
@@ -421,6 +480,7 @@ const makeAccordionsForSDnEDoRI = (dayPlan, dayType, SDorED) => {
 
 }
 
+// for start and end date
 const makeAccordionsForSDnED = (dayPlan, dayType, SDorED) => {
 
     console.log("SD or ED Day plan");
@@ -531,7 +591,6 @@ const makeAccordionsForSDnED = (dayPlan, dayType, SDorED) => {
     return accItemDiv;
 };
 
-
 //after clicking send inquiry btn
 const openModalForPkgInqs = () => {
     $('#reusableModalForCards').modal('hide');
@@ -541,27 +600,57 @@ const openModalForPkgInqs = () => {
     // document.getElementById('selectedPkgId').value = selectedpkg.id;
 }
 
+const checkGenInqErrors = () => {
+    let genInqFormErrors = '';
+
+    if (inquiry.clientname == null) {
+        genInqFormErrors += "Please enter your name.\n";
+    }
+    //if (inquiry.nationality_id == null) {
+    //    genInqFormErrors += "Please select your country.\n";
+    //}
+    if (inquiry.email == null) {
+        genInqFormErrors += "Please provide your email address.\n";
+    }
+    //if (inquiry.contactnum == null) {
+    //    genInqFormErrors += "Please enter your contact number.\n";
+    //}
+    if (inquiry.prefcontactmethod == null) {
+        genInqFormErrors += "Please choose your preferred contact method.\n";
+    }
+    if (inquiry.main_inq_msg == null) {
+        genInqFormErrors += "Please enter the details of your enquiry.\n";
+    }
+
+    return genInqFormErrors;
+};
+
 //ADD BTN OF PKG RELATED INQ FORM
-const pkgRelInqAddBtn = () => {
+const pkgRelInqAddBtn = async () => {
 
     const errors = checkGenInqErrors();
 
     if (errors == '') {
-        //GPT
-        inquiry.inqtype = document.getElementById('inqTypeDummy').value;
+        try {
+            inquiry.inqsrc = 'Website';
+            let postServiceResponse = await ajaxPPDRequest("/inquiryfromweb", "POST", inquiry);
+            console.log("submitted inq: " , inquiry);
+            if (postServiceResponse === "OK") {
+                console.log("submitted inq: " , inquiry);
+                showAlertModal("suc", "Thank you! Your inquiry has been submitted and we will get back to you soon");
+                formPkgRelateInqForm.reset();
+                refreshPkgRelInqForm();
+                $("#modalForPkgRelatedInqs").modal("hide");
+            } else {
+                showAlertModal("err", "Sorry, we couldn't process your request at the moment. Please try again in a few minutes.");
+            }
 
-        let postServiceResponse = ajaxRequest("/inquiry", "POST", inquiry)
-        if (postServiceResponse == "OK") {
-            alert("Thank you! Your inquiry has been submitted and we’ll get back to you soon");
-            formPkgRelateInqForm.reset();
-            refreshPkgRelInqForm();
-            $("#modalForPkgRelatedInqs").modal("hide");
-        } else {
-            alert("Something went wrong while processing your request. Please try again later.");
-
+        } catch (error) {
+            showAlertModal("err", "Oops! Something went wrong on our end. Please refresh the page and try again.");
         }
+
     } else {
-        alert('Oops! There were some issues with your form submission:\n\n' + errors);
+        showAlertModal('war', 'Oops! There were some issues with your form submission:\n' + errors);
     }
 }
 
