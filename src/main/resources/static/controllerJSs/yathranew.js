@@ -3,9 +3,9 @@ window.addEventListener('load', () => {
     refreshYathraWebSite(openReusableModalForCardsReadMore);
     refreshPkgRelInqForm();
 
+    nationalityList = [];
 });
 
-let nationalityList;
 
 //refresh whole website
 const refreshYathraWebSite = async (openReusableModalForCardsReadMore) => {
@@ -104,38 +104,56 @@ const refreshYathraWebSite = async (openReusableModalForCardsReadMore) => {
 //PKG RELATED INQ FORM
 const refreshPkgRelInqForm = async () => {
 
+    inquiry = new Object();
+
+    document.getElementById('formPkgRelateInqForm').reset();
+
     try {
-        nationalityList = await ajaxGetReq('/nationalityforweb/alldata');
+        nationalityList = await ajaxGetReq('/nationalityforweb/all');
         fillDataIntoDynamicSelects(pkgRelInqNationalitySelect, 'Select Nationality', nationalityList, 'countryname');
+        fillDataIntoDataListYathra(dataListNationality, nationalityList, 'countryname');
     } catch (error) {
         console.error("Error refreshing package related inquiry form:", error);
 
     }
 
+    // Array of input field IDs to reset
+    const inputTagsIds = [
+        'inqClientTitlePkgrelated',
+        'inqClientNamePkgRelForm',
+        'pkgRelInqNationalitySelect',
+        'inqClientEmailPkgRelForm',
+        'inqClientMobileOnePkgRelForm',
+        'prefContMethodPkgRelForm',
+        'inqClientEnquiriesPkgRelForm',
+        'inqStartDate',
+        'adultsCount',
+        'kidsCount',
+        'inqAccommodationNote',
+        'inqPlacesPreferences',
+        'inqTransportNote'
+    ];
+
+    //clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
     //for data list
     // fillDataIntoDataList(pkgrelatednationalityDataList, nationalityList, 'countryname');
 }
 
-//set country code auto
-const passCountryCodeInqForm = (inputElement, cntctNumInput) => {
-    const selectedCountryName = inputElement.value;
-    const countryCode = countryData[selectedCountryName];
-
-    if (countryCode) {
-        cntctNumInput.value = countryCode;
-    } else {
-        cntctNumInput.value = '';
-    }
-}
-
 // global object to store country data
 let countryData = {};
-
 const fillDataIntoDataListYathra = (fieldId, dataList, propertyName) => {
+  
     fieldId.innerHTML = '';
 
-    // Update the global countryData object
-    countryData = {};
+    //countryData = {};
 
     for (const obj of dataList) {
         let option = document.createElement('option');
@@ -144,10 +162,31 @@ const fillDataIntoDataListYathra = (fieldId, dataList, propertyName) => {
 
         // Store the country code in the global object
         countryData[obj[propertyName]] = obj.countrycode;
+
+        console.log("in fillDataIntoDataListYathra" , countryData);
     }
 }
 
+//set country code auto
+const passCountryCodeInqForm = (countryInputElement, contactNumInputElement) => {
 
+    contactNumInputElement.value = " ";
+
+    if (inquiry.nationality_id != null) {
+
+        const selectedCountryName = countryInputElement.value;
+        //country data is global object
+        const countryCode = countryData[selectedCountryName];
+
+        if (countryCode) {
+            contactNumInputElement.value = countryCode;
+        } else {
+            contactNumInputElement.value = '';
+        }
+
+    } else { contactNumInputElement.value = " "; }
+
+}
 
 //after clicking READ MORE btn
 const openReusableModalForCardsReadMore = (package) => {

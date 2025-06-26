@@ -532,7 +532,7 @@
 
         <!-- Reusable modal for displaying package details -->
         <div class="modal fade" id="reusableModalForCards" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg " style="max-width: 850;">
                 <div class="modal-content">
 
                     <!-- Modal header -->
@@ -543,7 +543,7 @@
                     </div>
 
                     <!-- Modal body -->
-                    <div class="modal-body">                        
+                    <div class="modal-body">
 
                         <div class="row mb-4">
                             <!-- Images container -->
@@ -563,7 +563,7 @@
                                     <img id="image3" src="" alt="Image 2" class="img-fluid rounded"
                                         style="width: 100%; height: 200px; object-fit: cover;">
                                 </div>
-                                
+
                             </div>
                         </div>
 
@@ -574,8 +574,8 @@
                             </div>
                         </div>
 
-                          <!-- Day plans -->
-                          <div class="row">
+                        <!-- Day plans -->
+                        <div class="row">
                             <div class="col-12">
                                 <div id="accorsForStartDayPlans" class="accordion mb-3"></div>
                                 <div id="ForDPlansAccordions" class="accordion mb-3"></div>
@@ -626,7 +626,7 @@
                                 </div>
                             </div>
                         </div>
-                     
+
                         <!-- Action button -->
                         <div class="text-end mt-4">
                             <button type="button" id="btnPrint" class="btn btn-primary"
@@ -640,11 +640,11 @@
 
         <!-- modal for pkg related inqs -->
         <div class="modal fade" id="modalForPkgRelatedInqs" data-bs-backdrop="static" data-bs-keyboard="false">
-            <div class="modal-dialog modal-lg" style="width: 850px;">
+            <div class="modal-dialog" style="max-width: 1000px;">
                 <div class="modal-content">
                     <!-- modal header -->
                     <div class="modal-header bg-primary text-white">
-                        <h2 class="modal-title">Submit Your Inquiry Here</h2>
+                        <h2 class="modal-title">Inquiry Form</h2>
                         <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
                             onclick="window.location.reload();"></button>
                     </div>
@@ -663,14 +663,15 @@
                         <!--PKG RLTD form starts -->
                         <form onsubmit="return false" id="formPkgRelateInqForm" class="mt-3">
 
-                            <div class="row mb-3">
-                                <!--<input type="hidden" id="inqTypeDummy" name="inqType" value="Package-Related">-->
+                            <!--<input type="hidden" id="inqTypeDummy" name="inqType" value="Package-Related">-->
 
-                                <div class="col-3">
-                                    <label for="inqClientTitlePkgrelated" class="form-label fw-bold mb-2">Title</label>
+                            <div class="row mb-1 align-items-end">
+                                <!-- Title -->
+                                <div class="col-2">
+                                    <label for="inqClientTitlePkgrelated" class="form-label fw-bold mb-0">Title</label>
                                     <select class="form-select" id="inqClientTitlePkgrelated"
                                         onchange="staticSelectValidator(this, 'inquiry', 'clienttitle')">
-                                        <option selected disabled>Select Title</option>
+                                        <option selected disabled>-Select-</option>
                                         <option value="Mr">Mr</option>
                                         <option value="Ms">Ms</option>
                                         <option value="Mrs">Mrs</option>
@@ -678,53 +679,52 @@
                                     </select>
                                 </div>
 
-                                <!-- client name -->
-                                <div class="col-9">
-                                    <label class="fw-bold form-label mb-2" for="inqClientNamePkgRelForm">Name:</label>
+                                <!-- Name -->
+                                <div class="col-6">
+                                    <label class="fw-bold form-label mb-0" for="inqClientNamePkgRelForm">Name:</label>
                                     <input type="text" class="form-control form-input rounded"
                                         id="inqClientNamePkgRelForm" placeholder="John Doe"
-                                        onkeyup="inputValidatorText(this, '^([A-Z][a-z]{2,30}[\\s])+([A-Z][a-z]{2,30})$' ,'inquiry' ,'clientname' )">
+                                        onkeyup="handleCustName();">
+                                       <!--  onkeyup="inputValidatorText(this, '^([A-Z][a-z]{2,30}[\\s])+([A-Z][a-z]{2,30})$' ,'inquiry' ,'clientname' )" -->
                                 </div>
-                            </div>
 
-                            <div class="row mb-3">
-                                <!-- nationality -->
-                                <div class="col-6">
-                                    <label class="fw-bold form-label mb-2"
+                                <!-- Nationality -->
+                                <div class="col-4">
+                                    <label class="fw-bold form-label mb-0"
                                         for="pkgRelInqNationalitySelect">Nationality:</label>
                                     <input type="text" id="pkgRelInqNationalitySelect" placeholder="Enter Your Country"
                                         class="form-control" list="dataListNationality"
-                                        onchange="passCountryCodeInqForm(this, inqClientMobileOnePkgRelForm); dataListValidator(this, 'nationalityList' , 'inquiry' , 'nationality' , 'countryname')">
+                                        onchange="passCountryCodeInqForm(this, inqClientMobileOnePkgRelForm); dataListValidator(this, 'nationalityList' , 'inquiry' , 'nationality_id' , 'countryname')">
                                     <datalist id="dataListNationality"></datalist>
                                 </div>
+                            </div>
 
-                                <!-- email -->
-                                <div class="col-6">
-                                    <label class="fw-bold form-label mb-2" for="inqClientEmailPkgRelForm">Email:</label>
+                            <div class="row mb-1 align-items-end">
+                                <!-- Email -->
+                                <div class="col-5">
+                                    <label class="fw-bold form-label mb-0" for="inqClientEmailPkgRelForm">Email:</label>
                                     <input type="text" class="form-control form-input rounded"
                                         id="inqClientEmailPkgRelForm" placeholder="johndoe@example.com"
                                         onkeyup="inputValidatorText(this, '^[A-Za-z0-9\\-\\_]{3,20}[@][a-z]{3,20}[.][a-z]{2,3}$' ,'inquiry' ,'email' )">
                                 </div>
-                            </div>
 
-                            <div class="row mb-3">
-                                <!-- contact #1 -->
-                                <div class="col-6">
-                                    <label class="fw-bold form-label mb-2" for="inqClientMobileOnePkgRelForm">Contact
+                                <!-- Contact Number -->
+                                <div class="col-4">
+                                    <label class="fw-bold form-label mb-0" for="inqClientMobileOnePkgRelForm">Contact
                                         Number:</label>
                                     <input type="text" class="form-control form-input rounded"
                                         id="inqClientMobileOnePkgRelForm" placeholder="Please Enter Contact Number"
                                         onkeyup="inputValidatorText(this, '^[+][0-9]{7,15}$' ,'inquiry' ,'contactnum' )">
                                 </div>
 
-                                <!-- prefered contact method -->
-                                <div class="col-6">
-                                    <label for="prefContMethodPkgRelForm" class="fw-bold form-label mb-2">Preferred
+                                <!-- Preferred Contact Method -->
+                                <div class="col-3">
+                                    <label for="prefContMethodPkgRelForm" class="fw-bold form-label mb-0">Preferred
                                         Contact Method:</label>
                                     <select class="form-select rounded" aria-label="Default select example"
                                         onchange="staticSelectValidator(this, 'inquiry' , 'prefcontactmethod')"
                                         id="prefContMethodPkgRelForm">
-                                        <option selected disabled>Preferred contact method</option>
+                                        <option selected disabled>Please Select</option>
                                         <option value="Call">Phone call</option>
                                         <option value="Whatsapp">Whatsapp Message</option>
                                         <option value="Email">Email</option>
@@ -732,31 +732,114 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-4">
+
+                            <div class="row mb-2">
                                 <!-- main enquiry -->
                                 <div class="col-12 mx-auto">
                                     <div class="mb-3">
-                                        <label for="inqClientEnquiriesPkgRelForm"
-                                            class="form-label fw-bold mb-2">Enquiries:</label>
+                                        <label for="inqClientEnquiriesPkgRelForm" class="form-label fw-bold mb-0">Your
+                                            Inquiry / Request:</label>
                                         <textarea class="form-control" id="inqClientEnquiriesPkgRelForm"
                                             style="height: 140px;"
                                             placeholder="What can we help you with? Type your question or request here"
-                                            onkeyup="inputValidatorText(this, '', 'inquiry', 'enquiry')"></textarea>
+                                            onkeyup="inputValidatorText(this, '', 'inquiry', 'main_inq_msg')"></textarea>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row mb-2">
+                                <div class="col-12">
+                                    <p class="fw-bold bg-info text-white p-2 rounded">
+                                        Tour Preferences (to help us serve you better)
+                                    </p>
+                                </div>
+
+                                <!-- tour dates -->
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label fw-bold mb-1">Estimated Start Date:</label>
+
+                                    <div class="row g-0">
+                                        <div class="col-6">
+                                            <input type="radio" class="btn-check" name="startDateOption"
+                                                id="startDateNotSure" autocomplete="off" value="notSure">
+                                            <label class="btn btn-outline-primary w-100 rounded-start"
+                                                for="startDateNotSure">Not sure yet</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="radio" class="btn-check" name="startDateOption"
+                                                id="startDateApprox" autocomplete="off" value="approximate">
+                                            <label class="btn btn-outline-primary w-100 rounded-end"
+                                                for="startDateApprox">I have approximate dates</label>
+                                        </div>
+                                    </div>
+
+                                    <input type="date" class="form-control mt-2" id="inqStartDate" style="display:none;"
+                                        onchange="dateValidator(this, 'inquiry', 'inq_apprx_start_date')">
+                                </div>
+
+                                <!-- traveller group -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold mb-1">Travel Party:</label>
+
+                                    <div class="row g-0" id="groupFamilyInputs">
+                                        <div class="mb-2">
+                                            <label for="adultsCount" class="form-label fw-bold mb-0">Adults
+                                                Count:</label>
+                                            <input type="number" id="adultsCount" class="form-control" min="1"
+                                                onkeyup="inputValidatorText(this, '', 'inquiry', 'inq_adults')">
+                                            <div class="form-text">Adults are travelers aged 13 and above</div>
+                                        </div>
+                                        <div>
+                                            <label for="kidsCount" class="form-label fw-bold mb-0">Kids Count:</label>
+                                            <input type="number" id="kidsCount" class="form-control" min="0"
+                                                onkeyup="inputValidatorText(this, '', 'inquiry', 'inq_kids')">
+                                            <div class="form-text">Kids are travelers aged 0-12</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Preferred Accommodation -->
+                                <div class="col-6 mb-2">
+                                    <label class="form-label fw-bold mb-0" for="inqAccommodationNote">Accommodation
+                                        Preferences:</label>
+                                    <textarea class="form-control" id="inqAccommodationNote" rows="3"
+                                        placeholder="Let us know your preferences: e.g., type of hotel, bed type, floor level, view, etc."
+                                        onkeyup="inputValidatorText(this, '', 'inquiry', 'inq_accos')"></textarea>
+                                </div>
+
+                                <div class="col-6 mb-2">
+                                    <label class="form-label fw-bold mb-0" for="inqPlacesPreferences">Places
+                                        Preferences:</label>
+                                    <textarea class="form-control" id="inqPlacesPreferences" rows="4"
+                                        placeholder="List places you want to visit and places you'd prefer to avoid. For example: Must-visit: Sigiriya, Ella, Yala. Avoid: crowded cities."
+                                        onkeyup="inputValidatorText(this, '', 'inquiry', 'inq_vplaces')"></textarea>
+                                </div>
+
+                                <!-- Preferred Transport -->
+                                <div class="col-6 mb-2">
+                                    <label class="form-label fw-bold mb-0" for="inqTransportNote">Transport
+                                        Preferences:</label>
+                                    <textarea class="form-control" id="inqTransportNote" rows="3"
+                                        placeholder="Preferred transport type, air-conditioning, private/van/bus, driving distance comfort, etc."
+                                        onkeyup="inputValidatorText(this, '', 'inquiry', 'inq_vehi')"></textarea>
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="row mb-2">
                                 <div class="col-3">
                                     <button type="reset" id="btnClear" class="btn btn-outline-secondary fw-bold"
                                         onclick="refreshPkgRelInqForm();">
-                                        Clear </button>
+                                        Reset Form </button>
                                 </div>
 
                                 <div class="col-9 text-end">
                                     <button id="submitPkgRelatedInqs" type="submit" class="btn btn-primary fw-bold"
                                         onclick="pkgRelInqAddBtn()" style="pointer-events: all;">
-                                        Submit </button>
+                                        Submit Inquiry</button>
                                 </div>
                             </div>
                         </form>
