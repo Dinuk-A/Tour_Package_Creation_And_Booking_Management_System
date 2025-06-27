@@ -89,6 +89,9 @@ public class CommonMethods {
         // get designation (only one value)
         dbView.addObject("loggeduserdesignation", loggedUser.getEmployee_id().getDesignation_id().getName());
 
+        //get logged users'id to filter his own assigned inqs
+        dbView.addObject("loggedUserId", loggedUser.getId());
+
         // get all the roles as a custom array
         List<String> roleNames = loggedUser.getRoles()
                 .stream()

@@ -2,8 +2,29 @@ window.addEventListener('load', () => {
 
     refreshInquiryForm();
     refreshInqFollowupSection();
-    //buildAllInqTable();
-    buildPersonalInqTable();
+    handleTableCreation();
+    handleDateFields();
+    
+});
+
+//handle tables type
+const handleTableCreation = () => {
+    const rolesRaw = document.getElementById('userRolesArraySection').textContent;
+    console.log("Raw roles text:", rolesRaw);
+
+    const roles = JSON.parse(rolesRaw);
+    console.log("Parsed roles:", roles);
+
+    if (roles.includes("System_Admin") || roles.includes("Manager")) {
+        buildAllInqTable();
+    } else {
+        console.log("else running");
+        buildPersonalInqTable();
+    }
+}
+
+//handle min max of date fields
+const handleDateFields = () => {
 
     const todayRecievedDate = new Date().toISOString().split('T')[0];
     const recievedDateInput = document.getElementById('inqRecievedDate');
@@ -15,8 +36,8 @@ window.addEventListener('load', () => {
     const minDate = new Date(today.setDate(today.getDate() + 5));
     const formattedDate = minDate.toISOString().split('T')[0];
     approxStartDateInput.setAttribute('min', formattedDate);
-
-});
+    
+}
 
 //global var to store id of the table
 let sharedTableIdMainTbl = "mainTableInquiry";
@@ -44,11 +65,14 @@ const buildAllInqTable = async () => {
     }
 }
 
-//this table will show all the inquiries,all statuses, all assigned users
+//this table will show all the assigned inquiries of the user
 const buildPersonalInqTable = async () => {
 
+    const userId = document.getElementById('loggedUserIdSectionId').textContent;
+    console.log(userId);
+
     try {
-        const assignedInqs = await ajaxGetReq("/inq/personal");
+        const assignedInqs = await ajaxGetReq("/inq/personal?userid=" + userId);
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
@@ -67,8 +91,8 @@ const buildPersonalInqTable = async () => {
 }
 
 //show time stamp on table
-const showRecievedTimeStamp =(ob)=>{
-    return ob.recieveddate + "</br>" + ob.recievedtime
+const showRecievedTimeStamp = (ob) => {
+    return ob.recieveddate + "</br>" + (ob.recievedtime ? ob.recievedtime : "12:00")
 }
 
 //refresh the inquiry form and reset all fields

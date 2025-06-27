@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -23,11 +25,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.security.core.Authentication;
 import jakarta.transaction.Transactional;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
-
+import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
@@ -44,7 +50,7 @@ public class InqController {
     private UserDao userDao;
 
     @RequestMapping(value = "/inq", method = RequestMethod.GET)
-    public ModelAndView showInquiryUI() {
+    public ModelAndView showInquiryUI() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -64,6 +70,16 @@ public class InqController {
             User loggedUser = userDao.getUserByUsername(auth.getName());
             inqView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
 
+            List<String> roleNames = loggedUser.getRoles()
+                    .stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+            // tpkgView.addObject("loggeduserroles", roleNames);
+            inqView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
+
+            // get logged users'id to filter his own assigned inqs
+            inqView.addObject("loggedUserId", loggedUser.getId());
+
             return inqView;
         }
     }
@@ -82,18 +98,20 @@ public class InqController {
         return inqDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
-    @GetMapping(value = "/inq/personal", produces = "application/json")
-    public List<Inq> getPersonalAssignedInquiries() {
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "INQUIRY");
+    @GetMapping(value = "/inq/personal", params = {"userid"}, produces = "application/json")
+    public List<Inq> getPersonalAssignedInquiries(@RequestParam("userid") Integer userId) {
 
-        if (!privilegeLevelForLoggedUser.getPrvselect()) {
-            return new ArrayList<Inq>();
-        }
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        return inqDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        //Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "INQUIRY");
+
+        //if (!privilegeLevelForLoggedUser.getPrvselect()) {
+        //    return new ArrayList<Inq>();
+        //}
+
+        return inqDao.returnPersonalInqsByUserId(userId);
     }
 
     // inqs from website
