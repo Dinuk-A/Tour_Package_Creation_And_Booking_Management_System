@@ -28,8 +28,8 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <!-- for table side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableSystemInqHolderDiv"
-                    role="tab" aria-controls="tableSystemInqHolderDiv" aria-selected="true">Table</a>
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableHolderDiv"
+                    role="tab" aria-controls="tableHolderDiv" aria-selected="true">Table</a>
             </li>
             <!-- for form side -->
             <li class="nav-item" role="presentation">
@@ -42,7 +42,7 @@
         <!-- Tabs content -->
         <div class="tab-content mt-1" id="myTabContent">
             <!-- Table tab  -->
-            <div id="tableSystemInqHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3"
+            <div id="tableHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3"
                 role="tabpanel" aria-labelledby="table-tab">
                 <!-- a table will be dynamically generated in here -->
             </div>
@@ -259,7 +259,7 @@
                                                     class="fw-bold form-label mb-0">Preferred
                                                     Contact Method:</label>
                                                 <select class="form-select rounded" aria-label="Default select example"
-                                                    onchange="staticSelectValidatorWeb(this, 'inquiry' , 'prefcontactmethod')"
+                                                    onchange="staticSelectValidator(this, 'inquiry' , 'prefcontactmethod')"
                                                     id="prefContMethodPkgRelForm">
                                                     <option value="" selected disabled>Please Select</option>
                                                     <option value="Call">Phone call</option>

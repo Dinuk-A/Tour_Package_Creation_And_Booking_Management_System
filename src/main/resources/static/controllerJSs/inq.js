@@ -3,12 +3,12 @@ window.addEventListener('load', () => {
     refreshInquiryForm();
     refreshInqFollowupSection();
     //buildAllInqTable();
-    //buildPersonalInqTable();
+    buildPersonalInqTable();
 
     const todayRecievedDate = new Date().toISOString().split('T')[0];
     const recievedDateInput = document.getElementById('inqRecievedDate');
     recievedDateInput.setAttribute('max', todayRecievedDate);
-    recievedDateInput.value = todayRecievedDate;    
+    recievedDateInput.value = todayRecievedDate;
 
     const approxStartDateInput = document.getElementById('inqApproxStartDate');
     const today = new Date();
@@ -17,6 +17,59 @@ window.addEventListener('load', () => {
     approxStartDateInput.setAttribute('min', formattedDate);
 
 });
+
+//global var to store id of the table
+let sharedTableIdMainTbl = "mainTableInquiry";
+let sharedTableIdPersonalTbl = "personalTableInquiry";
+
+//this table will show all the inquiries,all statuses, all assigned users
+const buildAllInqTable = async () => {
+
+    try {
+        const allInqs = await ajaxGetReq("/inq/all");
+
+        const tableColumnInfo = [
+            { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
+            { displayType: 'text', displayingPropertyOrFn: 'inqsrc', colHeadName: 'Source' },
+            { displayType: 'function', displayingPropertyOrFn: showRecievedTimeStamp, colHeadName: 'Recieved Time' },
+            { displayType: 'text', displayingPropertyOrFn: 'inq_status', colHeadName: 'Status' }
+        ]
+
+        createTable(tableHolderDiv, sharedTableIdMainTbl, allInqs, tableColumnInfo);
+
+        $(`#${sharedTableIdMainTbl}`).dataTable();
+
+    } catch (error) {
+        console.error("Failed to build main inq table:", error);
+    }
+}
+
+//this table will show all the inquiries,all statuses, all assigned users
+const buildPersonalInqTable = async () => {
+
+    try {
+        const assignedInqs = await ajaxGetReq("/inq/personal");
+
+        const tableColumnInfo = [
+            { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
+            { displayType: 'text', displayingPropertyOrFn: 'inqsrc', colHeadName: 'Source' },
+            { displayType: 'function', displayingPropertyOrFn: showRecievedTimeStamp, colHeadName: 'Recieved Time' },
+            { displayType: 'text', displayingPropertyOrFn: 'inq_status', colHeadName: 'Status' }
+        ]
+
+        createTable(tableHolderDiv, sharedTableIdPersonalTbl, assignedInqs, tableColumnInfo);
+
+        $(`#${sharedTableIdPersonalTbl}`).dataTable();
+
+    } catch (error) {
+        console.error("Failed to build personal inq table:", error);
+    }
+}
+
+//show time stamp on table
+const showRecievedTimeStamp =(ob)=>{
+    return ob.recieveddate + "</br>" + ob.recievedtime
+}
 
 //refresh the inquiry form and reset all fields
 const refreshInquiryForm = async () => {
@@ -133,11 +186,7 @@ const sameContactError = () => {
 const checkManualInqErrors = () => {
     let errors = "";
 
-    if (inquiry.inqtype == null) {
-        errors = errors + " Please Select The Inquiry Type \n";
-    }
-
-    if (inquiry.recievedmethod == null) {
+    if (inquiry.inqsrc == null) {
         errors = errors + " Please Select The Source Of Inquiry \n";
     }
 

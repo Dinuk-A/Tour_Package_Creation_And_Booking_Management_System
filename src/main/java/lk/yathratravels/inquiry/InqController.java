@@ -82,6 +82,20 @@ public class InqController {
         return inqDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
+    @GetMapping(value = "/inq/personal", produces = "application/json")
+    public List<Inq> getPersonalAssignedInquiries() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "INQUIRY");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<Inq>();
+        }
+
+        return inqDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    }
+
     // inqs from website
     @PostMapping(value = "/inquiryfromweb")
     public String saveInqFromWeb(@RequestBody Inq inq) {
@@ -97,7 +111,7 @@ public class InqController {
 
         try {
 
-            System.out.println("New Inquiry Received from Website : " + inq.toString());
+            // System.out.println("New Inquiry Received from Website : " + inq.toString());
 
             // gen a code
             String inqCode = inqDao.getNextInquiryCode();
@@ -120,9 +134,6 @@ public class InqController {
 
             inqDao.save(inq);
 
-            System.out.println("New Inquiry Saved : " + inq.getInqcode());
-            System.out.println("full new inquiry : " + inq.toString());
-
             return "OK";
 
         } catch (Exception e) {
@@ -134,8 +145,8 @@ public class InqController {
     // inq.setAddeddatetime(LocalDateTime.now());
     // inq.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
-        // inqs from manual system
-        @PostMapping(value = "/inq")
+    // inqs from manual system
+    @PostMapping(value = "/inq")
     public String saveInq(@RequestBody Inq inq) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -147,8 +158,6 @@ public class InqController {
 
         try {
 
-            System.out.println("New Inquiry Received from System : " + inq.toString());
-
             // gen a code
             String inqCode = inqDao.getNextInquiryCode();
             if (inqCode == null || inqCode.equals("")) {
@@ -157,7 +166,6 @@ public class InqController {
                 inq.setInqcode(inqCode);
             }
 
-           
             inq.setInq_status("New");
 
             // set recieved date and time within this for inqs sent by clients via website
@@ -165,9 +173,6 @@ public class InqController {
             inq.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             inqDao.save(inq);
-
-            System.out.println("New Inquiry Saved : " + inq.getInqcode());
-            System.out.println("full new inquiry : " + inq.toString());
 
             return "OK";
 
