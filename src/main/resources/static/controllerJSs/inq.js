@@ -4,24 +4,8 @@ window.addEventListener('load', () => {
     refreshInqFollowupSection();
     handleTableCreation();
     handleDateFields();
-    
+
 });
-
-//handle tables type
-const handleTableCreation = () => {
-    const rolesRaw = document.getElementById('userRolesArraySection').textContent;
-    console.log("Raw roles text:", rolesRaw);
-
-    const roles = JSON.parse(rolesRaw);
-    console.log("Parsed roles:", roles);
-
-    if (roles.includes("System_Admin") || roles.includes("Manager")) {
-        buildAllInqTable();
-    } else {
-        console.log("else running");
-        buildPersonalInqTable();
-    }
-}
 
 //handle min max of date fields
 const handleDateFields = () => {
@@ -36,7 +20,23 @@ const handleDateFields = () => {
     const minDate = new Date(today.setDate(today.getDate() + 5));
     const formattedDate = minDate.toISOString().split('T')[0];
     approxStartDateInput.setAttribute('min', formattedDate);
-    
+
+}
+
+//handle tables type
+const handleTableCreation = () => {
+    const rolesRaw = document.getElementById('userRolesArraySection').textContent;
+    console.log("Raw roles text:", rolesRaw);
+
+    const roles = JSON.parse(rolesRaw);
+    console.log("Parsed roles:", roles);
+
+    if (roles.includes("System_Admin") || roles.includes("Manager") || roles.includes("Assistant Manager")) {
+        buildAllInqTable();
+    } else if (roles.includes("Executive")) {
+        console.log("else running");
+        buildPersonalInqTable();
+    }
 }
 
 //global var to store id of the table
@@ -68,11 +68,11 @@ const buildAllInqTable = async () => {
 //this table will show all the assigned inquiries of the user
 const buildPersonalInqTable = async () => {
 
-    const userId = document.getElementById('loggedUserIdSectionId').textContent;
-    console.log(userId);
+    const userEmpId = document.getElementById('loggedUserEmpIdSectionId').textContent;
+    console.log(userEmpId);
 
     try {
-        const assignedInqs = await ajaxGetReq("/inq/personal?userid=" + userId);
+        const assignedInqs = await ajaxGetReq("/inq/personal?userempid=" + userEmpId);
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
@@ -285,3 +285,92 @@ const addNewInquiry = async () => {
         showAlertModal('war', errors);
     }
 }
+
+//fn to view button, fill the data in form
+const openModal = (inqObj) => {
+
+    inquiry = JSON.parse(JSON.stringify(inqObj));
+    oldInquiry = JSON.parse(JSON.stringify(inqObj));
+
+    document.getElementById('manualInqUpdateBtn').disabled = false;
+    document.getElementById('manualInqUpdateBtn').style.cursor = "pointer";
+
+    document.getElementById('inqCodeInput').value = inqObj.inqcode || "";
+    document.getElementById('inqRecievedMethod').value = inqObj.inqsrc || "";
+    document.getElementById('inqRecievedDate').value = inqObj.recieveddate || "";
+    document.getElementById('inqRecievedTime').value = inqObj.recievedtime || "";
+    document.getElementById('inqCodeRecievedContact').value = inqObj.recievedcontactoremail || "";
+    document.getElementById('inqInterestedPkg').value = inqObj.intrstdpkgid || "";
+    document.getElementById('inqClientTitle').value = inqObj.clienttitle || "";
+    document.getElementById('inqClientName').value = inqObj.clientname || "";
+    document.getElementById('InqClientNationality').value = inqObj.nationality?.countryname || "";
+    document.getElementById('inqContactOne').value = inqObj.contactnum || "";
+    document.getElementById('inqAdditionalContact').value = inqObj.contactnumtwo || "";
+    document.getElementById('inqClientEmail').value = inqObj.email || "";
+    document.getElementById('inqClientPassportNumorNIC').value = inqObj.passportnumornic || "";
+    document.getElementById('inqMainEnquiry').value = inqObj.main_inq_msg || "";
+    document.getElementById('prefContMethodPkgRelForm').value = inqObj.prefcontactmethod || "";
+    document.getElementById('inqApproxStartDate').value = inqObj.inq_apprx_start_date || "";
+
+    document.getElementById('inqLocalAdultCount').value = inqObj.inq_local_adults || 0;
+    document.getElementById('inqLocalChildCount').value = inqObj.inq_local_kids || 0;
+    document.getElementById('inqForeignAdultCount').value = inqObj.inq_adults || 0;
+    document.getElementById('inqForeignChildCount').value = inqObj.inq_kids || 0;
+
+    document.getElementById('inqAccommodationNote').value = inqObj.inq_accos || "";
+    document.getElementById('inqPlacesPreferences').value = inqObj.inq_vplaces || "";
+    document.getElementById('inqTransportNote').value = inqObj.inq_vehi || "";
+    document.getElementById('estdPickupLocation').value = inqObj.inq_pick || "";
+    document.getElementById('estdDropOffLocation').value = inqObj.inq_drop || "";
+    document.getElementById('inputNoteInquiry').value = inqObj.note || "";
+    document.getElementById('inqStatus').value = inqObj.inq_status || "";
+
+    if (inqObj.inq_guideneed === true) {
+        document.getElementById('guideYes').checked = true;
+    } else if (inqObj.inq_guideneed === false) {
+        document.getElementById('guideNo').checked = true;
+    }
+
+    const inputTagsIds = [
+        'inqCodeInput',
+        'inqRecievedMethod',
+        'inqRecievedDate',
+        'inqRecievedTime',
+        'inqCodeRecievedContact',
+        'inqInterestedPkg',
+        'inqClientTitle',
+        'inqClientName',
+        'InqClientNationality',
+        'inqContactOne',
+        'inqAdditionalContact',
+        'inqClientEmail',
+        'inqClientPassportNumorNIC',
+        'inqMainEnquiry',
+        'prefContMethodPkgRelForm',
+        'inqApproxStartDate',
+        'inqLocalAdultCount',
+        'inqLocalChildCount',
+        'inqForeignAdultCount',
+        'inqForeignChildCount',
+        'inqAccommodationNote',
+        'inqPlacesPreferences',
+        'inqTransportNote',
+        'estdPickupLocation',
+        'estdDropOffLocation',
+        'inputNoteInquiry',
+        'inqStatus'
+    ];
+
+    // Disable all inputs in the list
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.disabled = true;
+        }
+    });
+
+    var myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myInqFormTab.show();
+
+};
+

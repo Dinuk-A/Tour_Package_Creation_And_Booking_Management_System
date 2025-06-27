@@ -82,8 +82,8 @@ public class InqController {
             // tpkgView.addObject("loggeduserroles", roleNames);
             inqView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
-            // get logged users'id to filter his own assigned inqs
-            inqView.addObject("loggedUserId", loggedUser.getId());
+            // get logged users' employee id to filter his own assigned inqs
+            inqView.addObject("loggedUserEmpId", loggedUser.getEmployee_id().getId());
 
             return inqView;
         }
@@ -100,11 +100,12 @@ public class InqController {
             return new ArrayList<Inq>();
         }
 
-        return inqDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        return inqDao.findAll();
+        //return inqDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
-    @GetMapping(value = "/inq/personal", params = { "userid" }, produces = "application/json")
-    public List<Inq> getPersonalAssignedInquiries(@RequestParam("userid") Integer userId) {
+    @GetMapping(value = "/inq/personal", params = { "userempid" }, produces = "application/json")
+    public List<Inq> getPersonalAssignedInquiries(@RequestParam("userempid") Integer userempid) {
 
         // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -115,21 +116,21 @@ public class InqController {
         // return new ArrayList<Inq>();
         // }
 
-        return inqDao.returnPersonalInqsByUserId(userId);
+        return inqDao.returnPersonalInqsByUserId(userempid);
     }
-
-    // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-    // Privilege privilegeLevelForLoggedUser =
-    // privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
-    //
-    // if (!privilegeLevelForLoggedUser.getPrvinsert()) {
-    // return "Save Not Completed You Dont Have Permission";
-    // }
 
     // inqs from website
     @PostMapping(value = "/inquiryfromweb")
     public String saveInqFromWeb(@RequestBody Inq inq) {
+
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // Privilege privilegeLevelForLoggedUser =
+        // privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
+        //
+        // if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+        // return "Save Not Completed You Dont Have Permission";
+        // }
 
         try {
 

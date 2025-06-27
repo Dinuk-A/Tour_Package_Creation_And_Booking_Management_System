@@ -85,7 +85,8 @@ public class Employee {
     private Designation designation_id;
 
     //💥💥💥
-    //recursion wadenawa 💥💥💥💥💥💥💥
+    //recursion loop ekak enawa 💥💥💥💥💥💥💥
+    //@JsonIgnore
     //@OneToMany(mappedBy = "assigned_userid")
     //private List<Inq> inquiries;
 
