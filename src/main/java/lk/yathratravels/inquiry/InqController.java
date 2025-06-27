@@ -31,6 +31,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.security.core.Authentication;
 import jakarta.transaction.Transactional;
+import lk.yathratravels.employee.Employee;
+import lk.yathratravels.employee.EmployeeDao;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
 import lk.yathratravels.user.Role;
@@ -48,6 +50,9 @@ public class InqController {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private EmployeeDao empDao;
 
     @RequestMapping(value = "/inq", method = RequestMethod.GET)
     public ModelAndView showInquiryUI() throws JsonProcessingException {
@@ -98,38 +103,35 @@ public class InqController {
         return inqDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
-
-
-    @GetMapping(value = "/inq/personal", params = {"userid"}, produces = "application/json")
+    @GetMapping(value = "/inq/personal", params = { "userid" }, produces = "application/json")
     public List<Inq> getPersonalAssignedInquiries(@RequestParam("userid") Integer userId) {
 
-        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        //Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "INQUIRY");
+        // Privilege privilegeLevelForLoggedUser =
+        // privilegeService.getPrivileges(auth.getName(), "INQUIRY");
 
-        //if (!privilegeLevelForLoggedUser.getPrvselect()) {
-        //    return new ArrayList<Inq>();
-        //}
+        // if (!privilegeLevelForLoggedUser.getPrvselect()) {
+        // return new ArrayList<Inq>();
+        // }
 
         return inqDao.returnPersonalInqsByUserId(userId);
     }
+
+    // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    // Privilege privilegeLevelForLoggedUser =
+    // privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
+    //
+    // if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+    // return "Save Not Completed You Dont Have Permission";
+    // }
 
     // inqs from website
     @PostMapping(value = "/inquiryfromweb")
     public String saveInqFromWeb(@RequestBody Inq inq) {
 
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        // Privilege privilegeLevelForLoggedUser =
-        // privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
-        //
-        // if (!privilegeLevelForLoggedUser.getPrvinsert()) {
-        // return "Save Not Completed You Dont Have Permission";
-        // }
-
         try {
-
-            // System.out.println("New Inquiry Received from Website : " + inq.toString());
 
             // gen a code
             String inqCode = inqDao.getNextInquiryCode();
@@ -149,6 +151,17 @@ public class InqController {
             // set recieved date and time within this for inqs sent by clients via website
             inq.setRecieveddate(LocalDate.now());
             inq.setRecievedtime(LocalTime.now());
+
+            Integer empId = empDao.getLeastBusyAgent();
+
+            if (empId != null) {
+                Employee emp = empDao.findById(empId).get();
+                inq.setAssigned_userid(emp);
+                inq.setInq_status("Assigned");
+            } else {
+                inq.setAssigned_userid(null);
+                inq.setInq_status("New");
+            }
 
             inqDao.save(inq);
 
@@ -189,6 +202,17 @@ public class InqController {
             // set recieved date and time within this for inqs sent by clients via website
             inq.setAddeddatetime(LocalDateTime.now());
             inq.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+            Integer empId = empDao.getLeastBusyAgent();
+
+            if (empId != null) {
+                Employee emp = empDao.findById(empId).get();
+                inq.setAssigned_userid(emp);
+                inq.setInq_status("Assigned");
+            } else {
+                inq.setAssigned_userid(null);
+                inq.setInq_status("New");
+            }
 
             inqDao.save(inq);
 

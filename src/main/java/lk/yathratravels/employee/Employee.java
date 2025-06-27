@@ -2,7 +2,10 @@ package lk.yathratravels.employee;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import jakarta.validation.constraints.NotNull;
+import lk.yathratravels.inquiry.Inq;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -80,6 +84,11 @@ public class Employee {
     @JoinColumn(name = "designation_id", referencedColumnName = "id")
     private Designation designation_id;
 
+    //💥💥💥
+    //recursion wadenawa 💥💥💥💥💥💥💥
+    //@OneToMany(mappedBy = "assigned_userid")
+    //private List<Inq> inquiries;
+
     // common 6
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
@@ -99,13 +108,11 @@ public class Employee {
     @Column(name = "deleteduserid")
     private Integer deleteduserid;
 
-   //custom constructor for creating Employee with emp_code and fullname
+    // custom constructor for creating Employee with emp_code and fullname
     public Employee(@NotNull String emp_code, @NotNull String fullname) {
         this.emp_code = emp_code;
         this.fullname = fullname;
     }
-
-    
 
 }
 

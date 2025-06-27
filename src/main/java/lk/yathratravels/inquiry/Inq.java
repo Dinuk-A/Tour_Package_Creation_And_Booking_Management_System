@@ -1,6 +1,7 @@
 package lk.yathratravels.inquiry;
 
 import jakarta.persistence.*;
+import lk.yathratravels.employee.Employee;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -80,6 +81,10 @@ public class Inq {
     private LocalTime recievedtime;
 
     // in system form ✅
+    @ManyToOne
+    @JoinColumn(name = "assigned_userid", referencedColumnName = "id") 
+    private Employee assigned_userid;
+
     @Column(name = "recievedcontactoremail")
     private String recievedcontactoremail;
 
@@ -95,7 +100,7 @@ public class Inq {
     @Column(name = "inq_local_kids")
     private Integer inq_local_kids;
 
-    //is_guideneed
+    // is_guideneed
     @Column(name = "inq_guideneed")
     private Boolean inq_guideneed;
 
@@ -113,8 +118,8 @@ public class Inq {
 
     // hidden in system form ✅
     // link with emp 💥
-    @Column(name = "assigned_userid")
-    private Integer assigned_userid;
+    //@Column(name = "assigned_userid")
+    //private Integer assigned_userid;
 
     @Column(name = "deleted_inq")
     private Boolean deleted_inq;
@@ -126,7 +131,7 @@ public class Inq {
     private Integer addeduserid;
 
     @Column(name = "deleteddatetime")
-    private LocalDateTime deleteddatetime;   
+    private LocalDateTime deleteddatetime;
 
     @Column(name = "deleteduserid")
     private Integer deleteduserid;

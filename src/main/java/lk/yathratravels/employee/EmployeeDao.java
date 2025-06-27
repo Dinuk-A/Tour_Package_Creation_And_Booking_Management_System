@@ -48,36 +48,51 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
 
     // get all drivers who are available within the given date range
     @Query(value = """
-        SELECT emp FROM Employee emp
-        WHERE emp.designation_id.id = 6
-        AND emp.emp_status = 'Working'
-        AND emp.id NOT IN (
-            SELECT driver.id FROM Booking b
-            JOIN b.int_drivers driver
-            WHERE 
-                (b.startdate BETWEEN ?1 AND ?2 OR b.enddate BETWEEN ?1 AND ?2)
-                AND b.booking_status NOT IN ('Deleted', 'Cancelled')
-        )
-    """)
+                SELECT emp FROM Employee emp
+                WHERE emp.designation_id.id = 6
+                AND emp.emp_status = 'Working'
+                AND emp.id NOT IN (
+                    SELECT driver.id FROM Booking b
+                    JOIN b.int_drivers driver
+                    WHERE
+                        (b.startdate BETWEEN ?1 AND ?2 OR b.enddate BETWEEN ?1 AND ?2)
+                        AND b.booking_status NOT IN ('Deleted', 'Cancelled')
+                )
+            """)
     List<Employee> getAvailableDriversList(LocalDate startDate, LocalDate endDate);
-    
+
     // get all guides who are available within the given date range
     @Query(value = """
-        SELECT emp FROM Employee emp
-        WHERE emp.designation_id.id = 7
-        AND emp.emp_status = 'Working'
-        AND emp.id NOT IN (
-            SELECT guide.id FROM Booking b
-            JOIN b.int_guides guide
-            WHERE 
-                (b.startdate BETWEEN ?1 AND ?2 OR b.enddate BETWEEN ?1 AND ?2)
-                AND b.booking_status NOT IN ('Deleted', 'Cancelled')
-        )
-    """)
+                SELECT emp FROM Employee emp
+                WHERE emp.designation_id.id = 7
+                AND emp.emp_status = 'Working'
+                AND emp.id NOT IN (
+                    SELECT guide.id FROM Booking b
+                    JOIN b.int_guides guide
+                    WHERE
+                        (b.startdate BETWEEN ?1 AND ?2 OR b.enddate BETWEEN ?1 AND ?2)
+                        AND b.booking_status NOT IN ('Deleted', 'Cancelled')
+                )
+            """)
     List<Employee> getAvailableGuidesList(LocalDate startDate, LocalDate endDate);
-    
 
+    // to display in UIs (print,tables, etc)
     @Query(value = "select new Employee(e.emp_code, e.fullname) from Employee e where e.id in (select u.employee_id.id from User u where u.id = ?1)")
     Employee getEmployeeInfoByUserId(Integer userId);
+
+    // to used in inquiry assigning
+    @Query(value = """
+            SELECT e.id
+            FROM newyathra.employee AS e
+            LEFT JOIN newyathra.inquiry AS i ON i.assigned_userid = e.id AND i.inq_status = 'Assigned'
+            WHERE e.designation_id = 5
+              AND e.emp_status = 'Working'
+              AND (e.deleted_emp IS NULL OR e.deleted_emp = FALSE)
+            GROUP BY e.id
+            HAVING COUNT(i.id) < 5
+            ORDER BY COUNT(i.id) ASC
+            LIMIT 1
+            """, nativeQuery = true)
+    Integer getLeastBusyAgent();
 
 }
