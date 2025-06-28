@@ -441,7 +441,7 @@ const updateSystemInq = async() => {
 
             console.log("Follow up object: ", followup);
             try {
-                let putServiceResponse = await ajaxPPDRequest("/followup", "POST", followup);
+                let putServiceResponse = await ajaxPPDRequest("/followupwithinq", "POST", followup);
                 if (putServiceResponse === "OK") {
                     showAlertModal('suc', "Successfully Updated");
                     //document.getElementById('formEmployee').reset();
@@ -461,10 +461,17 @@ const updateSystemInq = async() => {
         }
     }
 
-
-
-
 }
+
+//get the inq responses for this inq
+const getAllPrevResponsesByInq =(inqId)=>{
+    
+}
+
+//show all the responses
+const refillAllPrevResponses =()=>{
+
+} 
 
 
 
