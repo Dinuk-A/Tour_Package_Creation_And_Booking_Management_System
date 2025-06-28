@@ -421,7 +421,7 @@ const refreshInqFollowupSection = () => {
 }
 
 //update a manual inq(after a followup)
-const updateSystemInq = () => {
+const updateSystemInq = async() => {
 
     //💥💥💥errors balannath onee
 
@@ -437,17 +437,28 @@ const updateSystemInq = () => {
 
         if (userConfirm) {
             followup.content = changesHappened;
-            followup.inquiry_id = oldInquiry.id;
+            followup.inquiry_id = inquiry;
 
             console.log("Follow up object: ", followup);
             try {
+                let putServiceResponse = await ajaxPPDRequest("/followup", "POST", followup);
+                if (putServiceResponse === "OK") {
+                    showAlertModal('suc', "Successfully Updated");
+                    //document.getElementById('formEmployee').reset();
+                    //refreshEmployeeForm();
+                    //buildEmployeeTable();
+                    //var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    //myEmpTableTab.show();
+                } else {
+                    showAlertModal('err', "Update Failed \n" + putServiceResponse);
+                }
 
             } catch (error) {
                 showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
         } else {
-             showAlertModal('inf', "User cancelled the task"); 
-            }
+            showAlertModal('inf', "User cancelled the task");
+        }
     }
 
 

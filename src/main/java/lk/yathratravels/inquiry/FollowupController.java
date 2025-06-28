@@ -30,6 +30,9 @@ public class FollowupController {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private InqDao inqDao;
+
     // get all followups
     @GetMapping(value = "/followup/all", produces = "application/json")
     public List<Followup> getAllFollowups() {
@@ -63,14 +66,22 @@ public class FollowupController {
             flwup.setAddeddatetime(LocalDateTime.now());
             flwup.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
+            System.out.println("Saving Followup: " + flwup);
+
+            System.out.println("**********************************");
+
             Followup savedFollowupRecord = followupDao.save(flwup);
 
-            
+            System.out.println("Inq record came with followup: "+flwup.getInquiry_id().toString());
+
+            inqDao.save(flwup.getInquiry_id());
+
+            return "OK";
 
         } catch (Exception e) {
             return "Error Saving Followup Update: " + e.getMessage();
         }
 
-        return "OK";
+       
     }
 }
