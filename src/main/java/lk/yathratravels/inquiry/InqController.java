@@ -107,14 +107,8 @@ public class InqController {
     @GetMapping(value = "/inq/personal", params = { "userempid" }, produces = "application/json")
     public List<Inq> getPersonalAssignedInquiries(@RequestParam("userempid") Integer userempid) {
 
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        // Privilege privilegeLevelForLoggedUser =
-        // privilegeService.getPrivileges(auth.getName(), "INQUIRY");
-
-        // if (!privilegeLevelForLoggedUser.getPrvselect()) {
-        // return new ArrayList<Inq>();
-        // }
+       //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+       //user dao and auth eke logged userge USER obj samanada kiyala
 
         return inqDao.returnPersonalInqsByUserId(userempid);
     }
@@ -165,6 +159,9 @@ public class InqController {
             }
 
             inqDao.save(inq);
+
+            //Followup fup = new Followup;
+            
 
             return "OK";
 

@@ -82,7 +82,7 @@ public class Inq {
 
     // in system form ✅
     @ManyToOne
-    @JoinColumn(name = "assigned_userid", referencedColumnName = "id") 
+    @JoinColumn(name = "assigned_userid", referencedColumnName = "id")
     private Employee assigned_userid;
 
     @Column(name = "recievedcontactoremail")
@@ -117,9 +117,6 @@ public class Inq {
     private String inq_status;
 
     // hidden in system form ✅
-    // link with emp 💥
-    //@Column(name = "assigned_userid")
-    //private Integer assigned_userid;
 
     @Column(name = "deleted_inq")
     private Boolean deleted_inq;

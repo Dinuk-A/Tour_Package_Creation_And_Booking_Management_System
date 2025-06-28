@@ -5,6 +5,7 @@ window.addEventListener('load', () => {
     handleTableCreation();
     handleDateFields();
 
+
 });
 
 //handle min max of date fields
@@ -162,6 +163,8 @@ const refreshInquiryForm = async () => {
 
 //refresh the inquiry followup section and reset all fields
 const refreshInqFollowupSection = () => {
+
+    followup = new Object();
 
     //    const inqFollowupInputTagsIds = [
     //        'inqFollowupDate',
@@ -345,13 +348,13 @@ const openModal = (inqObj) => {
         'inqAdditionalContact',
         'inqClientEmail',
         'inqClientPassportNumorNIC',
-        'inqMainEnquiry',
+        //'inqMainEnquiry',
         'prefContMethodPkgRelForm',
-        'inqApproxStartDate',
-        'inqLocalAdultCount',
-        'inqLocalChildCount',
-        'inqForeignAdultCount',
-        'inqForeignChildCount',
+        //'inqApproxStartDate',
+        //'inqLocalAdultCount',
+        //'inqLocalChildCount',
+        //'inqForeignAdultCount',
+        //'inqForeignChildCount',
         'inqAccommodationNote',
         'inqPlacesPreferences',
         'inqTransportNote',
@@ -373,4 +376,58 @@ const openModal = (inqObj) => {
     myInqFormTab.show();
 
 };
+
+//get updates
+const showInqValueChanges = () => {
+
+    let updates = "";
+
+    if (inquiry.contactnumtwo != oldInquiry.contactnumtwo) {
+        updates = updates + "Contact #2 changed from " + oldInquiry.contactnumtwo.trim() + " to " + inquiry.contactnumtwo.trim() + "\n";
+    }
+
+    if (inquiry.main_inq_msg != oldInquiry.main_inq_msg) {
+        updates = updates + "Main Enquiry Message changed from " + oldInquiry.main_inq_msg.trim() + " to " + inquiry.main_inq_msg.trim() + "\n";
+    }
+
+    if (inquiry.inq_apprx_start_date != oldInquiry.inq_apprx_start_date) {
+        updates = updates + "Estimated Start Date changed from " + oldInquiry.inq_apprx_start_date + " to " + inquiry.inq_apprx_start_date + "\n";
+    }
+
+    if (inquiry.inq_adults != oldInquiry.inq_adults) {
+        updates = updates + "Traveller Group: Foreign Adult Count changed from " + oldInquiry.inq_adults + " to " + inquiry.inq_adults + "\n";
+    }
+
+    if (inquiry.inq_kids != oldInquiry.inq_kids) {
+        updates = updates + "Traveller Group: Foreign Child Count changed from " + oldInquiry.inq_kids + " to " + inquiry.inq_kids + "\n";
+    }
+
+    if (inquiry.inq_local_adults != oldInquiry.inq_local_adults) {
+        updates = updates + "Traveller Group: Local Adult Count changed from " + oldInquiry.inq_local_adults + " to " + inquiry.inq_local_adults + "\n";
+    }
+
+    if (inquiry.inq_local_kids != oldInquiry.inq_local_kids) {
+        updates = updates + "Traveller Group: Local Child Count changed from " + oldInquiry.inq_local_kids + " to " + inquiry.inq_local_kids + "\n";
+    }
+
+    return updates;
+
+}
+
+//update a manual inq(after a followup)
+const updateSystemInq = () => {
+    const changes = showInqValueChanges();
+    console.log(changes);
+
+    followup.content = changes;
+    console.log("followup : ",followup );
+
+    console.log("Inq before followup: ", inquiry);
+//
+//    inquiry.followup.content = changes;
+//
+//    console.log("Inq after followup: ", inquiry);
+
+    document.getElementById('inputNoteInquiry').value = changes;
+}
 

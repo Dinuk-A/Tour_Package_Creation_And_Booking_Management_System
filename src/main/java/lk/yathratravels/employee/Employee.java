@@ -84,7 +84,7 @@ public class Employee {
     @JoinColumn(name = "designation_id", referencedColumnName = "id")
     private Designation designation_id;
 
-    //💥💥💥
+    //MEKA ONE NAAAAA
     //recursion loop ekak enawa 💥💥💥💥💥💥💥
     //@JsonIgnore
     //@OneToMany(mappedBy = "assigned_userid")

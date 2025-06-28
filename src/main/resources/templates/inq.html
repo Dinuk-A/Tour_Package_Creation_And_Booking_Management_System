@@ -28,8 +28,8 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <!-- for table side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableHolderDiv"
-                    role="tab" aria-controls="tableHolderDiv" aria-selected="true">Table</a>
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableHolderDiv" role="tab"
+                    aria-controls="tableHolderDiv" aria-selected="true">Table</a>
             </li>
             <!-- for form side -->
             <li class="nav-item" role="presentation">
@@ -42,8 +42,8 @@
         <!-- Tabs content -->
         <div class="tab-content mt-1" id="myTabContent">
             <!-- Table tab  -->
-            <div id="tableHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3"
-                role="tabpanel" aria-labelledby="table-tab">
+            <div id="tableHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3" role="tabpanel"
+                aria-labelledby="table-tab">
                 <!-- a table will be dynamically generated in here -->
             </div>
 
@@ -248,7 +248,7 @@
                                                     Enquiry
                                                     :</label>
 
-                                                <textarea class="form-control" placeholder=" " id="inqMainEnquiry"
+                                                <textarea class="form-control" id="inqMainEnquiry"
                                                     style="height: 180px;"
                                                     onkeyup="inputValidatorText(this,'', 'inquiry' , 'main_inq_msg')"></textarea>
                                             </div>
@@ -378,7 +378,6 @@
                                                     for="inqAccommodationNote">Accommodation
                                                     Preferences:</label>
                                                 <textarea class="form-control" id="inqAccommodationNote" rows="3"
-                                                    placeholder="Let us know your preferences: e.g., type of hotel, bed type, floor level, view, etc."
                                                     onkeyup=" inputValidatorText(this, '', 'inquiry', 'inq_accos')"></textarea>
                                             </div>
 
@@ -386,7 +385,6 @@
                                                 <label class="form-label fw-bold mb-0" for="inqPlacesPreferences">Places
                                                     Preferences:</label>
                                                 <textarea class="form-control" id="inqPlacesPreferences" rows="4"
-                                                    placeholder="List places you want to visit and places you'd prefer to avoid. For example: Must-visit: Sigiriya, Ella, Yala. Avoid: crowded cities."
                                                     onkeyup=" inputValidatorText(this, '', 'inquiry', 'inq_vplaces')"></textarea>
                                             </div>
                                         </div>
@@ -397,7 +395,6 @@
                                                 <label class="form-label fw-bold mb-0" for="inqTransportNote">Transport
                                                     Preferences:</label>
                                                 <textarea class="form-control" id="inqTransportNote" rows="3"
-                                                    placeholder="Preferred transport type, air-conditioning, private/van/bus, driving distance comfort, etc."
                                                     onkeyup=" inputValidatorText(this, '', 'inquiry', 'inq_vehi')"></textarea>
                                             </div>
                                         </div>
@@ -410,9 +407,7 @@
                                                     Pickup
                                                     Location:</label>
                                                 <textarea class="form-control" id="estdPickupLocation" rows="3"
-                                                    placeholder="Preferred transport type, air-conditioning, private/van/bus, driving distance comfort, etc."
-                                                    onkey
-                                                    up=" inputValidatorText(this, '', 'inquiry', 'inq_pick')"></textarea>
+                                                    onkeyup=" inputValidatorText(this, '', 'inquiry', 'inq_pick')"></textarea>
                                             </div>
                                             <!-- Estd Dropoff Location -->
                                             <div class="col-6 mb-2">
@@ -420,7 +415,6 @@
                                                     for="estdDropOffLocation">Estimated
                                                     DropOff Location:</label>
                                                 <textarea class="form-control" id="estdDropOffLocation" rows="3"
-                                                    placeholder="Preferred transport type, air-conditioning, private/van/bus, driving distance comfort, etc."
                                                     onkeyup=" inputValidatorText(this, '', 'inquiry', 'inq_drop')"></textarea>
                                             </div>
                                         </div>
@@ -439,9 +433,7 @@
                                                     <span class="text-info">
                                                         *
                                                     </span> :</label>
-                                                <textarea id="inputNoteInquiry"
-                                                    placeholder="Enter Any Additional Information" class="form-control"
-                                                    rows="6"
+                                                <textarea id="inputNoteInquiry" class="form-control" rows="6"
                                                     onkeyup="inputValidatorText(this, '' ,'inquiry' , 'note')"></textarea>
                                             </div>
 
