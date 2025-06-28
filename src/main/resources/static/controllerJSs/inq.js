@@ -161,31 +161,7 @@ const refreshInquiryForm = async () => {
 
 }
 
-//refresh the inquiry followup section and reset all fields
-const refreshInqFollowupSection = () => {
 
-    followup = new Object();
-
-    //    const inqFollowupInputTagsIds = [
-    //        'inqFollowupDate',
-    //        'inqFollowupTime',
-    //        'inqFollowupNote',
-    //        'inqFollowupStatus',
-    //    ];
-    //
-    //    inqFollowupInputTagsIds.forEach((fieldID) => {
-    //        const field = document.getElementById(fieldID);
-    //        if (field) {
-    //            field.style.border = "1px solid #ced4da";
-    //            field.value = '';
-    //        }
-    //    });
-
-    const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
-    addNewResponseRowBtn.disabled = true;
-    addNewResponseRowBtn.style.cursor = "not-allowed";
-
-}
 
 //for natonality field
 const changeLableNicPpt = () => {
@@ -297,6 +273,9 @@ const openModal = (inqObj) => {
 
     document.getElementById('manualInqUpdateBtn').disabled = false;
     document.getElementById('manualInqUpdateBtn').style.cursor = "pointer";
+
+    document.getElementById('manualInqAddBtn').disabled = true;
+    document.getElementById('manualInqAddBtn').style.cursor = "not-allowed";
 
     document.getElementById('inqCodeInput').value = inqObj.inqcode || "";
     document.getElementById('inqRecievedMethod').value = inqObj.inqsrc || "";
@@ -414,20 +393,101 @@ const showInqValueChanges = () => {
 
 }
 
+
+//refresh the inquiry followup section and reset all fields
+const refreshInqFollowupSection = () => {
+
+    followup = new Object();
+
+    //    const inqFollowupInputTagsIds = [
+    //        'inqFollowupDate',
+    //        'inqFollowupTime',
+    //        'inqFollowupNote',
+    //        'inqFollowupStatus',
+    //    ];
+    //
+    //    inqFollowupInputTagsIds.forEach((fieldID) => {
+    //        const field = document.getElementById(fieldID);
+    //        if (field) {
+    //            field.style.border = "1px solid #ced4da";
+    //            field.value = '';
+    //        }
+    //    });
+
+    const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
+    addNewResponseRowBtn.disabled = true;
+    addNewResponseRowBtn.style.cursor = "not-allowed";
+
+}
+
 //update a manual inq(after a followup)
 const updateSystemInq = () => {
-    const changes = showInqValueChanges();
-    console.log(changes);
 
-    followup.content = changes;
-    console.log("followup : ",followup );
+    //💥💥💥errors balannath onee
 
-    console.log("Inq before followup: ", inquiry);
+    const changesHappened = showInqValueChanges();
+
+    if (changesHappened == "") {
+
+        showAlertModal('war', "No changes detected to update");
+
+    } else {
+
+        let userConfirm = confirm("Are you sure to proceed ? \n \n" + changesHappened);
+
+        if (userConfirm) {
+            followup.content = changesHappened;
+            followup.inquiry_id = oldInquiry.id;
+
+            console.log("Follow up object: ", followup);
+            try {
+
+            } catch (error) {
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+            }
+        } else {
+             showAlertModal('inf', "User cancelled the task"); 
+            }
+    }
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    const changes = showInqValueChanges();
+//    console.log(changes);
+//
+//    followup.content = changes;
+//    console.log("followup : ",followup );
+//
+//    console.log("Inq before followup: ", inquiry);
 //
 //    inquiry.followup.content = changes;
 //
 //    console.log("Inq after followup: ", inquiry);
 
-    document.getElementById('inputNoteInquiry').value = changes;
-}
-
+//document.getElementById('inputNoteInquiry').value = changes;
