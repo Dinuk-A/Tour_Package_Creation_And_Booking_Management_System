@@ -8,7 +8,7 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
     tableTag.setAttribute('class', 'table');
     tableTag.setAttribute('id', uniqueIdOfTable);
 
-    // Create thead
+    // Create thead tag
     const tableHead = document.createElement('thead');
     tableHead.setAttribute('class', 'bg-dark text-white');
 
@@ -90,14 +90,14 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
 
         //function for that button
         actionButton.onclick = function () {
-            //create a public object with the current record's values
+
+            //create a global object with the current record's values
             window['currentObject'] = record;
             // window['currentObjectIndex'] = index;
 
-            //mekedima aluth modal eka open wenna one, test
+            //run this function to open a modal with the record's details
             openModal(record);
-            //open modal ekata wena wenama function liyanna wenawa wena wena js wala
-
+           
         }
 
         //append that button to the cell

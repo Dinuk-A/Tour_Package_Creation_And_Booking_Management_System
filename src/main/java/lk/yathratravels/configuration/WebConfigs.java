@@ -21,6 +21,12 @@ public class WebConfigs {
                     .requestMatchers("/commonscripts/**", "/controllerJSs/**", "/css/**", "/images/**", "/libs/**")
                     .permitAll()
 
+                    .requestMatchers("/emp/**").hasAnyAuthority("System_Admin", "Manager")
+
+                    .requestMatchers("/user/**").hasAnyAuthority("System_Admin", "Manager")
+
+                    .requestMatchers("/privilege/**").hasAnyAuthority("System_Admin", "Manager", "Assistant Manager")
+
                     .requestMatchers("/login").permitAll()
 
                     .requestMatchers("/error").permitAll()
@@ -42,11 +48,7 @@ public class WebConfigs {
                     //.requestMatchers("/inquiryfromweb/**").permitAll()
                     //.requestMatchers(HttpMethod.POST, "/inquiryfromweb").permitAll()
 
-                    .requestMatchers("/emp/**").hasAnyAuthority("System_Admin", "Manager")
-
-                    .requestMatchers("/user/**").hasAnyAuthority("System_Admin", "Manager")
-
-                    .requestMatchers("/privilege/**").hasAnyAuthority("System_Admin", "Manager", "Assistant Manager")
+                    
 
                     .anyRequest().authenticated();
 

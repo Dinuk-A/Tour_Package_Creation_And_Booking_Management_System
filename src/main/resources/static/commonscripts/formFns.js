@@ -135,10 +135,13 @@ const disableFutureDate = (calenderTagId) => {
 //validate text inputs
 const inputValidatorText = (inputTagId, pattern, object, property) => {
 
+    //define a pattern
     const regXP = new RegExp(pattern);
+
+    //get the current value of the input field
     const currentValue = inputTagId.value
 
-    //run all this only if a value is entered
+    //run all this only if there is a value entered
     if (currentValue != "") {
 
         if (regXP.test(currentValue)) {

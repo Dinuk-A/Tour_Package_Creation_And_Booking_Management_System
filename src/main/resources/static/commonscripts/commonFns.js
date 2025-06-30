@@ -1,4 +1,4 @@
-//for get method
+//for handle GET method (form submissions)
 const ajaxGetReq = (url) => {
     return new Promise((resolve, reject) => {
         $.ajax(url, {
@@ -16,7 +16,7 @@ const ajaxGetReq = (url) => {
     });
 }
 
-//for other 3 methods
+//for POST/PUT/DELETE methods (data operations)
 const ajaxPPDRequest = (url, method, object) => {
     return new Promise((resolve, reject) => {
         $.ajax(url, {
@@ -25,11 +25,11 @@ const ajaxPPDRequest = (url, method, object) => {
             contentType: "application/json",
             success: function (data) {
                 console.log(method + " success for " + url);
-                resolve(data);  // Resolve the promise with the response data
+                resolve(data);  
             },
             error: function (response) {
                 console.error(method + " failed for " + url);
-                reject(response);  // Reject the promise with the error response
+                reject(response);  
             }
         });
     });

@@ -46,7 +46,7 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
     @Query(value = "select emp from Employee emp where emp.designation_id.name <> 'Admin'")
     public List<Employee> getAllEmployeesExceptAdmin();
 
-    // get all drivers who are available within the given date range
+    // get all internal drivers who are available within the given date range
     @Query(value = """
                 SELECT emp FROM Employee emp
                 WHERE emp.designation_id.id = 6
@@ -61,7 +61,7 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
             """)
     List<Employee> getAvailableDriversList(LocalDate startDate, LocalDate endDate);
 
-    // get all guides who are available within the given date range
+    // get all internal guides who are available within the given date range
     @Query(value = """
                 SELECT emp FROM Employee emp
                 WHERE emp.designation_id.id = 7

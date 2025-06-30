@@ -24,24 +24,30 @@ public class MyUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
+         // Print the username of user trying to log in
         System.out.println("Logged User : " + username);
    
+        // Get user details from the database using the username
         User loggedUser = userDao.getUserByUsername(username);
         
+         // If user is not found, throw an exception
         if (loggedUser == null) {
             throw new UsernameNotFoundException("Username not found" + username);
         }
 
+        // Print the user's roles (just for debugging purposes)
         System.out.println("Role: " + loggedUser.getRoles());
 
+        // Convert user roles into Spring Security's GrantedAuthority objects
         Set<GrantedAuthority> authoritiesSet = new HashSet<>();
-
         for (Role role : loggedUser.getRoles()) {
             authoritiesSet.add(new SimpleGrantedAuthority(role.getName()));
         }
 
+        // Convert the set to a list
         ArrayList<GrantedAuthority> authsArrayList = new ArrayList<>(authoritiesSet);
 
+        // Return a Spring Security User object with username, password, account status, and roles
         return new org.springframework.security.core.userdetails.User(loggedUser.getUsername(),
                 loggedUser.getPassword(),
                 loggedUser.getAcc_status(), true, true, true, authsArrayList);
