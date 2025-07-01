@@ -702,7 +702,7 @@
                                         for="pkgRelInqNationalitySelect">Nationality:</label>
                                     <input type="text" id="pkgRelInqNationalitySelect" placeholder="Enter Your Country"
                                         class="form-control" list="dataListNationality"
-                                        onkeyup="passCountryCodeInqForm(this, inqClientMobileOnePkgRelForm); dataListValidator(this, 'nationalityList' , 'inquiry' , 'nationality_id' , 'countryname')">
+                                        onkeyup=" dataListValidator(this, 'nationalityList' , 'inquiry' , 'nationality_id' , 'countryname'); passCountryCodeInqForm( inqClientMobileOnePkgRelForm);">
                                     <datalist id="dataListNationality"></datalist>
                                 </div>
                             </div>
@@ -769,19 +769,19 @@
                                     <div class="row g-0">
                                         <div class="col-6">
                                             <input type="radio" class="btn-check" name="startDateOption"
-                                                id="startDateNotSure" autocomplete="off" value="notSure">
+                                                id="startDateNotSure" autocomplete="off" value="notSure" onchange="handleApproxDatesOpts()">
                                             <label class="btn btn-outline-primary w-100 rounded-start"
                                                 for="startDateNotSure">Not sure yet</label>
                                         </div>
                                         <div class="col-6">
                                             <input type="radio" class="btn-check" name="startDateOption"
-                                                id="startDateApprox" autocomplete="off" value="approximate">
+                                                id="startDateApprox" autocomplete="off" value="approximate"  onchange="handleApproxDatesOpts()">
                                             <label class="btn btn-outline-primary w-100 rounded-end"
                                                 for="startDateApprox">I have approximate dates</label>
                                         </div>
                                     </div>
 
-                                    <input type="date" class="form-control mt-2" id="inqStartDate" style="display:none;"
+                                    <input type="date" class="form-control mt-2 d-none"  id="inqStartDate" 
                                         onchange="inputValidatorTextWeb(this, '', 'inquiry', 'inq_apprx_start_date')">
                                 </div>
 

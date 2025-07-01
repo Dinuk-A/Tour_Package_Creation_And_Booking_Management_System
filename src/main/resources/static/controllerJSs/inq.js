@@ -417,8 +417,8 @@ const refreshInqFollowupSection = () => {
     //    });
 
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
-    addNewResponseRowBtn.disabled = true;
-    addNewResponseRowBtn.style.cursor = "not-allowed";
+    addNewResponseRowBtn.disabled = false;
+    addNewResponseRowBtn.style.cursor = "pointer";
 
 }
 
@@ -529,12 +529,95 @@ const refillAllPrevResponses = async () => {
 
 }
 
-//get the inq responses for this inq
-//const getAllPrevResponsesByInq = async (inqId) => {
-//
-//
-//
-//}
+// for creating a new response record manually
+const createNewResponseRecord = async () => {
+    document.getElementById("createNewResponseRowBtn").disabled = true;
+
+    // Main outer row
+    const responseContainer = document.createElement("div");
+    responseContainer.classList.add("row", "mt-4");
+
+    // Card wrapper
+    const cardCol = document.createElement("div");
+    cardCol.classList.add("col-12");
+
+    const card = document.createElement("div");
+    card.classList.add("card", "shadow-sm", "border", "rounded", "p-4", "bg-light");
+
+    const cardBody = document.createElement("div");
+    cardBody.classList.add("card-body");
+
+    // Inner form row
+    const innerRow = document.createElement("div");
+    innerRow.classList.add("row", "gx-4");
+
+    // --- Left Column (Textarea) ---
+    const col8 = document.createElement("div");
+    col8.classList.add("col-md-8", "mb-3");
+
+    const labelResponse = document.createElement("label");
+    labelResponse.setAttribute("for", "inputNewResponseTextField");
+    labelResponse.classList.add("form-label", "fw-semibold");
+    labelResponse.textContent = "Response:";
+
+    const textarea = document.createElement("textarea");
+    textarea.id = "inputNewResponseTextField";
+    textarea.classList.add("form-control");
+    textarea.style.height = "120px";
+    textarea.setAttribute("onkeyup", "inputFieldValidator(this, '', 'newResponce', 'content')");
+
+    col8.appendChild(labelResponse);
+    col8.appendChild(textarea);
+
+    // --- Right Column (Select) ---
+    const col4 = document.createElement("div");
+    col4.classList.add("col-md-4", "mb-3");
+
+    const labelSelect = document.createElement("label");
+    labelSelect.setAttribute("for", "newInqResponseStatusSelect");
+    labelSelect.classList.add("form-label", "fw-semibold");
+    labelSelect.textContent = "Inquiry Response Status:";
+
+    const select = document.createElement("select");
+    select.classList.add("form-select");
+    select.setAttribute("onchange", "selectDynamicVal(this, '', 'newResponce', 'inqResponseStatus')");
+
+    col4.appendChild(labelSelect);
+    col4.appendChild(select);
+
+    // --- Button Row (aligned to right bottom) ---
+    const btnRow = document.createElement("div");
+    btnRow.classList.add("d-flex", "justify-content-end", "mt-3", "gap-2");
+
+    const submitBtn = document.createElement("button");
+    submitBtn.type = "button";
+    submitBtn.classList.add("btn", "btn-primary");
+    submitBtn.textContent = "Submit";
+    submitBtn.setAttribute("onclick", "submitFollowup()");
+
+    const resetBtn = document.createElement("button");
+    resetBtn.type = "reset";
+    resetBtn.classList.add("btn", "btn-secondary");
+    resetBtn.textContent = "Reset";
+
+    btnRow.appendChild(resetBtn);
+    btnRow.appendChild(submitBtn);
+
+    // Assemble all
+    innerRow.appendChild(col8);
+    innerRow.appendChild(col4);
+    cardBody.appendChild(innerRow);
+    cardBody.appendChild(btnRow);
+    card.appendChild(cardBody);
+    cardCol.appendChild(card);
+    responseContainer.appendChild(cardCol);
+
+    document.getElementById("manualResponseAddingSection").appendChild(responseContainer);
+};
+
+
+
+
 
 
 

@@ -154,7 +154,6 @@ const handleCustName = (nameInputElement) => {
     }
 };
 
-
 //validate selected options 
 const staticSelectValidatorWeb = (selectTagId, object, property) => {
 
@@ -172,6 +171,7 @@ const staticSelectValidatorWeb = (selectTagId, object, property) => {
 
 }
 
+//custom validator fn for web form
 const inputValidatorTextWeb = (inputTagId, pattern, object, property) => {
 
     const regXP = new RegExp(pattern);
@@ -203,39 +203,27 @@ const inputValidatorTextWeb = (inputTagId, pattern, object, property) => {
     }
 };
 
-
-// global object to store country data
-let countryData = {};
+//fill the data list
 const fillDataIntoDataListYathra = (fieldId, dataList, propertyName) => {
 
     fieldId.innerHTML = '';
 
-    //countryData = {};
-
     for (const obj of dataList) {
         let option = document.createElement('option');
         option.value = obj[propertyName];
-        fieldId.appendChild(option);
-
-        // Store the country code in the global object
-        countryData[obj[propertyName]] = obj.countrycode;
+        fieldId.appendChild(option)
 
     }
 }
 
-//set country code auto 💥💥💥💥💥
-const passCountryCodeInqForm = (countryInputElement, contactNumInputElement) => {
+//set country code auto
+const passCountryCodeInqForm = (contactNumInputElement) => {
 
     contactNumInputElement.value = "";
 
-    console.log(countryData);
+    if (inquiry.nationality_id?.id != null) {
 
-    if (inquiry.nationality_id.id != null) {
-        const selectedCountryName = countryInputElement.value;
-        console.log("Selected Country Name: ", selectedCountryName);
-        const countryCode = countryData[selectedCountryName];
-        console.log("Country Code: ", countryCode);
-        //country data is global object defined above
+        const countryCode = inquiry.nationality_id.countrycode;
 
         if (countryCode) {
             contactNumInputElement.value = countryCode;
@@ -634,9 +622,9 @@ const pkgRelInqAddBtn = async () => {
         try {
             inquiry.inqsrc = 'Website';
             let postServiceResponse = await ajaxPPDRequest("/inquiryfromweb", "POST", inquiry);
-            console.log("submitted inq: " , inquiry);
+            console.log("submitted inq: ", inquiry);
             if (postServiceResponse === "OK") {
-                console.log("submitted inq: " , inquiry);
+                console.log("submitted inq: ", inquiry);
                 showAlertModal("suc", "Thank you! Your inquiry has been submitted and we will get back to you soon");
                 formPkgRelateInqForm.reset();
                 refreshPkgRelInqForm();
@@ -654,9 +642,23 @@ const pkgRelInqAddBtn = async () => {
     }
 }
 
+//handle start date     
+const handleApproxDatesOpts = () => {
+    const startDateInput = document.getElementById('inqStartDate');
+    const dateNotSureCB = document.getElementById('startDateNotSure');
+    const dateSureCB = document.getElementById('startDateApprox');
 
+    if (dateNotSureCB.checked) {
+        startDateInput.classList.add('d-none');
+        startDateInput.style.border = "1px solid #ced4da"
+        startDateInput.value = "";
+        inquiry.inq_apprx_start_date = null
+    } else if (dateSureCB) {
+        startDateInput.classList.remove('d-none');
+    }
+}
 
-//days count eka anuwa FOREACH multiple accordions hadenna one💚🧡🧡
+//days count eka anuwa FOREACH multiple accordions hadenna one💥💥💥
 
 //first div tag
 // let mainDiv = document.createElement('div');
