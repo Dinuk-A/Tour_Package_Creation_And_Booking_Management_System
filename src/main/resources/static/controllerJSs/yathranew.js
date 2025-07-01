@@ -373,7 +373,7 @@ const openReusableModalForCardsReadMore = (package) => {
     }
 
     // Bind the package id with inquiry.based_tpkg_id field 💥💥💥
-    //inquiry.based_tpkg_id = package;
+    inquiry.intrstdpkgid = package;
 
     //show the selected pkg name in the form
     selectedPkgName.innerText = package.pkgtitle;

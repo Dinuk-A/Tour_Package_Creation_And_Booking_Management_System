@@ -351,6 +351,10 @@ const openModal = (inqObj) => {
         }
     });
 
+    const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
+    addNewResponseRowBtn.disabled = false;
+    addNewResponseRowBtn.style.cursor = "pointer";
+
     var myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myInqFormTab.show();
 
@@ -395,7 +399,6 @@ const showInqValueChanges = () => {
 
 }
 
-
 //refresh the inquiry followup section and reset all fields
 const refreshInqFollowupSection = () => {
 
@@ -417,8 +420,10 @@ const refreshInqFollowupSection = () => {
     //    });
 
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
-    addNewResponseRowBtn.disabled = false;
-    addNewResponseRowBtn.style.cursor = "pointer";
+    addNewResponseRowBtn.disabled = true;
+    addNewResponseRowBtn.style.cursor = "not-allowed";
+
+
 
 }
 
@@ -533,11 +538,9 @@ const refillAllPrevResponses = async () => {
 const createNewResponseRecord = async () => {
     document.getElementById("createNewResponseRowBtn").disabled = true;
 
-    // Main outer row
     const responseContainer = document.createElement("div");
     responseContainer.classList.add("row", "mt-4");
 
-    // Card wrapper
     const cardCol = document.createElement("div");
     cardCol.classList.add("col-12");
 
@@ -547,11 +550,9 @@ const createNewResponseRecord = async () => {
     const cardBody = document.createElement("div");
     cardBody.classList.add("card-body");
 
-    // Inner form row
     const innerRow = document.createElement("div");
     innerRow.classList.add("row", "gx-4");
 
-    // --- Left Column (Textarea) ---
     const col8 = document.createElement("div");
     col8.classList.add("col-md-8", "mb-3");
 
@@ -564,12 +565,11 @@ const createNewResponseRecord = async () => {
     textarea.id = "inputNewResponseTextField";
     textarea.classList.add("form-control");
     textarea.style.height = "120px";
-    textarea.setAttribute("onkeyup", "inputFieldValidator(this, '', 'newResponce', 'content')");
+    textarea.setAttribute("onkeyup", "inputValidatorText(this, '', 'followup', 'content')");
 
     col8.appendChild(labelResponse);
     col8.appendChild(textarea);
 
-    // --- Right Column (Select) ---
     const col4 = document.createElement("div");
     col4.classList.add("col-md-4", "mb-3");
 
@@ -580,12 +580,31 @@ const createNewResponseRecord = async () => {
 
     const select = document.createElement("select");
     select.classList.add("form-select");
-    select.setAttribute("onchange", "selectDynamicVal(this, '', 'newResponce', 'inqResponseStatus')");
+    select.setAttribute("onchange", "staticSelectValidator(this, 'followup', 'followup_status')");
+    const optionPlaceholder = document.createElement("option");
+    optionPlaceholder.disabled = true;
+    optionPlaceholder.selected = true;
+    optionPlaceholder.textContent = "Please select status";
+    select.appendChild(optionPlaceholder);
+
+    const option1 = document.createElement("option");
+    option1.value = "gathering_info";
+    option1.textContent = "Gathering Info";
+    select.appendChild(option1);
+
+    const option2 = document.createElement("option");
+    option2.value = "quote_sent";
+    option2.textContent = "Quote Sent";
+    select.appendChild(option2);
+
+    const option3 = document.createElement("option");
+    option3.value = "no_response";
+    option3.textContent = "No Response";
+    select.appendChild(option3);
 
     col4.appendChild(labelSelect);
     col4.appendChild(select);
 
-    // --- Button Row (aligned to right bottom) ---
     const btnRow = document.createElement("div");
     btnRow.classList.add("d-flex", "justify-content-end", "mt-3", "gap-2");
 
@@ -593,7 +612,7 @@ const createNewResponseRecord = async () => {
     submitBtn.type = "button";
     submitBtn.classList.add("btn", "btn-primary");
     submitBtn.textContent = "Submit";
-    submitBtn.setAttribute("onclick", "submitFollowup()");
+    submitBtn.setAttribute("onclick", "submitManualFollowup()");
 
     const resetBtn = document.createElement("button");
     resetBtn.type = "reset";
@@ -614,6 +633,70 @@ const createNewResponseRecord = async () => {
 
     document.getElementById("manualResponseAddingSection").appendChild(responseContainer);
 };
+
+//check manual followup errors
+const checkManualFollowupErrors = () => {
+    let errors = "";
+
+    if (followup.content == null || followup.content.trim() === "") {
+        errors = errors + " Please Enter The Follow-up Response \n";
+    }
+
+    if (followup.followup_status == null) {
+        errors = errors + " Please Select The Follow-up Status \n";
+    }
+
+    return errors;
+}
+
+//fn to submit the manual followup
+const submitManualFollowup = async () => {
+
+    const errors = checkManualFollowupErrors();
+    if (errors == '') {
+
+        let userConfirm = confirm("Are you sure to proceed ?");
+
+        if (userConfirm) {
+
+            followup.inquiry_id = inquiry;
+
+            console.log("Follow up object: ", followup);
+            try {
+                let postServiceResponse = await ajaxPPDRequest("/followup", "POST", followup);
+                if (postServiceResponse === "OK") {
+                    showAlertModal('suc', "Successfully Added");
+
+                    //var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    //myEmpTableTab.show();
+
+                    //hide form      
+                    document.getElementById('manualResponseAddingSection').innerHTML = '';
+
+                    //show previous responses list
+                    refillAllPrevResponses();
+
+                    //enable add new response button
+                    const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
+                    addNewResponseRowBtn.disabled = false;
+                    addNewResponseRowBtn.style.cursor = "pointer";
+
+                } else {
+                    showAlertModal('err', "Submit Failed \n" + putServiceResponse);
+                }
+
+            } catch (error) {
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+            }
+        } else {
+            showAlertModal('inf', "User cancelled the task");
+        }
+    } else {
+        showAlertModal('war', errors);
+    }
+}
+
+
 
 
 
