@@ -535,7 +535,7 @@ const refillAllPrevResponses = async () => {
 }
 
 // for creating a new response record manually
-const createNewResponseRecord = async () => {
+const createNewResponseInputSection = async () => {
     document.getElementById("createNewResponseRowBtn").disabled = true;
 
     const responseContainer = document.createElement("div");
@@ -666,9 +666,6 @@ const submitManualFollowup = async () => {
                 let postServiceResponse = await ajaxPPDRequest("/followup", "POST", followup);
                 if (postServiceResponse === "OK") {
                     showAlertModal('suc', "Successfully Added");
-
-                    //var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
-                    //myEmpTableTab.show();
 
                     //hide form      
                     document.getElementById('manualResponseAddingSection').innerHTML = '';

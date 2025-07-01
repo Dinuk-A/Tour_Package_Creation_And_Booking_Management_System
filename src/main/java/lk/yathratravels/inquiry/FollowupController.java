@@ -53,8 +53,8 @@ public class FollowupController {
     }
 
     // get followups by inq id
-    @GetMapping(value="/followup/byinqid/{inqId}",produces = "application/JSON")
-     public List<Followup> getFollowupsByInq(@PathVariable("inqId")int inquiryID) {
+    @GetMapping(value = "/followup/byinqid/{inqId}", produces = "application/JSON")
+    public List<Followup> getFollowupsByInq(@PathVariable("inqId") int inquiryID) {
 
         return followupDao.getAllFollowupsByInqId(inquiryID);
     }
@@ -77,15 +77,8 @@ public class FollowupController {
             flwup.setAddeddatetime(LocalDateTime.now());
             flwup.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
-            // System.out.println("Saving Followup: " + flwup);
-            //
-            // System.out.println("**********************************");
-
             followupDao.save(flwup);
-
-            // System.out.println("Inq record came with followup:
-            // "+flwup.getInquiry_id().toString());
-
+            
             inqDao.save(flwup.getInquiry_id());
 
             return "OK";
@@ -115,6 +108,10 @@ public class FollowupController {
             flwup.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             followupDao.save(flwup);
+
+            flwup.getInquiry_id().setInq_status("In-Progress");
+
+            inqDao.save(flwup.getInquiry_id());
 
             return "OK";
 

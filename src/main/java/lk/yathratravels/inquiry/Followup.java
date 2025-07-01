@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lk.yathratravels.tpkg.TourPkg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,10 @@ public class Followup {
     @ManyToOne
     @JoinColumn(name = "inquiry_id", referencedColumnName = "id")
     private Inq inquiry_id;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "last_sent_tpkg" , referencedColumnName = "id")
+    private TourPkg last_sent_tpkg;
 
 }
 

@@ -57,26 +57,40 @@
 
                             <!-- Tabs Navigation inside form-->
                             <ul class="nav nav-tabs" id="inqTabs" role="tablist">
+
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link active border border-dark" id="inqStep1-tab" data-bs-toggle="tab"
-                                        href="#inqStep1" role="tab" aria-controls="inqStep1"
+                                        href="#inqStep1" role="tab" aria-controls="inqStep1" aria-selected="true">Meta
+                                        Data</a>
+                                </li>
+
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link  border border-dark" id="inqStep2-tab" data-bs-toggle="tab"
+                                        href="#inqStep2" role="tab" aria-controls="inqStep2"
                                         aria-selected="true">Inquiry</a>
                                 </li>
 
                                 <!--in li onclick="checkFirstTab()" > -->
                                 <!-- in a class = disabled -->
                                 <li class="nav-item" role="presentation">
-                                    <a class=" nav-link border border-dark" id="inqStep2-tab" data-bs-toggle="tab"
-                                        href="#inqStep2" role="tab" aria-controls="inqStep2"
+                                    <a class=" nav-link border border-dark" id="inqStep3-tab" data-bs-toggle="tab"
+                                        href="#inqStep3" role="tab" aria-controls="inqStep3"
+                                        aria-selected="false">Additional Info</a>
+                                </li>
+
+                                <li class="nav-item" role="presentation">
+                                    <a class=" nav-link border border-dark" id="inqStep4-tab" data-bs-toggle="tab"
+                                        href="#inqStep4" role="tab" aria-controls="inqStep4"
                                         aria-selected="false">Follow-up / Responses</a>
                                 </li>
+
                             </ul>
 
                             <div class="tab-content" id="inqTabsContent">
 
                                 <!-- Step 1 -->
                                 <div class="tab-pane fade show active" id="inqStep1" role="tabpanel"
-                                    aria-labelledby="inq">
+                                    aria-labelledby="inqStep1-tab">
 
                                     <!-- Main Inquiry Section -->
                                     <fieldset class="border border-dark p-4 mb-4 mt-2 bg-light">
@@ -237,6 +251,10 @@
 
                                     </fieldset>
 
+                                </div>
+
+                                <!--step 2-->
+                                <div class="tab-pane fade" id="inqStep2" role="tabpanel" aria-labelledby="inqStep2-tab">
                                     <!-- Main Inquiry Details Section -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary">Inquiry Details</legend>
@@ -419,7 +437,10 @@
                                             </div>
                                         </div>
                                     </fieldset>
+                                </div>
 
+                                <!-- step 3 -->
+                                <div class="tab-pane fade" id="inqStep3" role="tabpanel" aria-labelledby="inqStep3-tab">
                                     <!-- Notes Section -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary">Additional Details</legend>
@@ -457,26 +478,27 @@
                                             </div>
 
                                         </div>
-                                    </fieldset>
 
-                                    <!-- Form Buttons -->
-                                    <div class="row mt-4 mb-2">
-                                        <div class="col-4">
-                                            <button type="reset" class="btn-clear fw-bold"
-                                                onclick="refreshSystemInqForm()">Reset
-                                                Form</button>
+                                        <!-- Form Buttons -->
+                                        <div class="row mt-4 mb-2">
+                                            <div class="col-4">
+                                                <button type="reset" class="btn-clear fw-bold"
+                                                    onclick="refreshSystemInqForm()">Reset
+                                                    Form</button>
+                                            </div>
+                                            <div class="col-8 text-end">
+                                                <button type="submit" id="manualInqUpdateBtn" class="btn-update fw-bold"
+                                                    onclick="updateSystemInq()">Update Entry</button>
+                                                <button type="submit" id="manualInqAddBtn" class="btn-add fw-bold"
+                                                    onclick="addNewInquiry()">Add Entry</button>
+                                            </div>
                                         </div>
-                                        <div class="col-8 text-end">
-                                            <button type="submit" id="manualInqUpdateBtn" class="btn-update fw-bold"
-                                                onclick="updateSystemInq()">Update Entry</button>
-                                            <button type="submit" id="manualInqAddBtn" class="btn-add fw-bold"
-                                                onclick="addNewInquiry()">Add Entry</button>
-                                        </div>
-                                    </div>
+
+                                    </fieldset>
                                 </div>
 
-                                <!-- Step 2 -->
-                                <div class="tab-pane fade" id="inqStep2" role="tabpanel" aria-labelledby="inqStep2-tab">
+                                <!-- Step 4 -->
+                                <div class="tab-pane fade" id="inqStep4" role="tabpanel" aria-labelledby="inqStep4-tab">
 
                                     <!-- Inquiry Response Section -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
@@ -488,8 +510,8 @@
                                                 <!-- updates histories will display here too -->
                                             </div>
 
-                                             <!-- section to add new responses -->
-                                             <div class="row mt-4" id="manualResponseAddingSection">
+                                            <!-- section to add new responses -->
+                                            <div class="row mt-4" id="manualResponseAddingSection">
                                                 <!-- a;so includes teh cancel and add response buttons -->
                                             </div>
 
@@ -497,9 +519,9 @@
                                             <div class="row mt-2">
                                                 <button id="createNewResponseRowBtn"
                                                     class="btn btn-primary mx-auto w-25"
-                                                    onclick="createNewResponseRecord();">Add a new
+                                                    onclick="createNewResponseInputSection();">Add a new
                                                     Response</button>
-                                            </div>                                   
+                                            </div>
 
                                         </div>
 
@@ -507,7 +529,6 @@
                                     </fieldset>
 
                                 </div>
-
 
                             </div>
                         </form>
