@@ -327,13 +327,13 @@ const openModal = (inqObj) => {
         'inqAdditionalContact',
         'inqClientEmail',
         'inqClientPassportNumorNIC',
-        //'inqMainEnquiry',
+        'inqMainEnquiry',
         'prefContMethodPkgRelForm',
-        //'inqApproxStartDate',
-        //'inqLocalAdultCount',
-        //'inqLocalChildCount',
-        //'inqForeignAdultCount',
-        //'inqForeignChildCount',
+        'inqApproxStartDate',
+        'inqLocalAdultCount',
+        'inqLocalChildCount',
+        'inqForeignAdultCount',
+        'inqForeignChildCount',
         'inqAccommodationNote',
         'inqPlacesPreferences',
         'inqTransportNote',
@@ -360,7 +360,36 @@ const openModal = (inqObj) => {
 
     refillAllPrevResponses();
 
-};
+}
+
+// to enable inquiry editing , enable input fields
+const enableInqEditing = () => {
+    const inputIds = [
+        "inqMainEnquiry",
+        "prefContMethodPkgRelForm",
+        "inqApproxStartDate",
+        "inqLocalAdultCount",
+        "inqLocalChildCount",
+        "inqForeignAdultCount",
+        "inqForeignChildCount",
+        "inqAccommodationNote",
+        "inqPlacesPreferences",
+        "inqTransportNote",
+        "estdPickupLocation",
+        "estdDropOffLocation",
+        "guideYes",
+        "guideNo"
+    ];
+
+    inputIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.disabled = false;
+        }
+    });
+
+    document.getElementById('inqEnableEditBtn').disabled = true;
+}
 
 //get updates
 const showInqValueChanges = () => {
@@ -561,14 +590,15 @@ const createNewResponseInputSection = async () => {
     labelResponse.classList.add("form-label", "fw-semibold");
     labelResponse.textContent = "Response:";
 
-    const textarea = document.createElement("textarea");
-    textarea.id = "inputNewResponseTextField";
-    textarea.classList.add("form-control");
-    textarea.style.height = "120px";
-    textarea.setAttribute("onkeyup", "inputValidatorText(this, '', 'followup', 'content')");
+    //for content
+    const textareaContent = document.createElement("textarea");
+    textareaContent.id = "inputNewResponseTextField";
+    textareaContent.classList.add("form-control");
+    textareaContent.style.height = "120px";
+    textareaContent.setAttribute("onkeyup", "inputValidatorText(this, '', 'followup', 'content')");
 
     col8.appendChild(labelResponse);
-    col8.appendChild(textarea);
+    col8.appendChild(textareaContent);
 
     const col4 = document.createElement("div");
     col4.classList.add("col-md-4", "mb-3");
@@ -578,32 +608,77 @@ const createNewResponseInputSection = async () => {
     labelSelect.classList.add("form-label", "fw-semibold");
     labelSelect.textContent = "Inquiry Response Status:";
 
-    const select = document.createElement("select");
-    select.classList.add("form-select");
-    select.setAttribute("onchange", "staticSelectValidator(this, 'followup', 'followup_status')");
+    //for status
+    const selectStatus = document.createElement("select");
+    selectStatus.id = "newInqResponseStatusSelect";
+    selectStatus.classList.add("form-select");
+    selectStatus.setAttribute("onchange", "staticSelectValidator(this, 'followup', 'followup_status')");
+
+    //default option
     const optionPlaceholder = document.createElement("option");
     optionPlaceholder.disabled = true;
     optionPlaceholder.selected = true;
     optionPlaceholder.textContent = "Please select status";
-    select.appendChild(optionPlaceholder);
+    selectStatus.appendChild(optionPlaceholder);
 
+    //opt 1
     const option1 = document.createElement("option");
     option1.value = "gathering_info";
     option1.textContent = "Gathering Info";
-    select.appendChild(option1);
+    selectStatus.appendChild(option1);
 
+    //opt 2
     const option2 = document.createElement("option");
     option2.value = "quote_sent";
     option2.textContent = "Quote Sent";
-    select.appendChild(option2);
+    selectStatus.appendChild(option2);
 
+    //opt 3
     const option3 = document.createElement("option");
     option3.value = "no_response";
     option3.textContent = "No Response";
-    select.appendChild(option3);
+    selectStatus.appendChild(option3);
 
     col4.appendChild(labelSelect);
-    col4.appendChild(select);
+    col4.appendChild(selectStatus);
+
+    innerRow.appendChild(col8);
+    innerRow.appendChild(col4);
+    cardBody.appendChild(innerRow);
+
+    // Last Sent Package
+    const lastPackageRow = document.createElement("div");
+    lastPackageRow.classList.add("d-flex", "align-items-center", "gap-2", "mb-3");
+
+    const lastPackageLabel = document.createElement("label");
+    lastPackageLabel.setAttribute("for", "lastSentTourPackageSelect");
+    lastPackageLabel.classList.add("mb-0", "fw-semibold");
+    lastPackageLabel.textContent = "Last Sent Tour Package (Negotiation):";
+
+    const lastPackageSelect = document.createElement("select");
+    lastPackageSelect.id = "lastSentTourPackageSelect";
+    lastPackageSelect.classList.add("form-select", "form-select-sm");
+    lastPackageSelect.style.width = "auto";
+
+    const tourPackageOptions = [
+        { value: "", text: "Please select", disabled: true, selected: true },
+        { value: "pkg1", text: "Package 1 - 3 Days, 2 Nights" },
+        { value: "pkg2", text: "Package 2 - 5 Days, 4 Nights" },
+        { value: "pkg3", text: "Package 3 - Customized Package" }
+    ];
+
+    tourPackageOptions.forEach(opt => {
+        const option = document.createElement("option");
+        option.value = opt.value;
+        option.textContent = opt.text;
+        if (opt.disabled) option.disabled = true;
+        if (opt.selected) option.selected = true;
+        lastPackageSelect.appendChild(option);
+    });
+
+    lastPackageRow.appendChild(lastPackageLabel);
+    lastPackageRow.appendChild(lastPackageSelect);
+    cardBody.appendChild(lastPackageRow);
 
     const btnRow = document.createElement("div");
     btnRow.classList.add("d-flex", "justify-content-end", "mt-3", "gap-2");
@@ -618,14 +693,12 @@ const createNewResponseInputSection = async () => {
     resetBtn.type = "reset";
     resetBtn.classList.add("btn", "btn-secondary");
     resetBtn.textContent = "Reset";
+    resetBtn.setAttribute("onclick", "refreshInqFollowupSection()");
 
     btnRow.appendChild(resetBtn);
     btnRow.appendChild(submitBtn);
 
-    // Assemble all
-    innerRow.appendChild(col8);
-    innerRow.appendChild(col4);
-    cardBody.appendChild(innerRow);
+   
     cardBody.appendChild(btnRow);
     card.appendChild(cardBody);
     cardCol.appendChild(card);
@@ -692,6 +765,8 @@ const submitManualFollowup = async () => {
         showAlertModal('war', errors);
     }
 }
+
+
 
 
 

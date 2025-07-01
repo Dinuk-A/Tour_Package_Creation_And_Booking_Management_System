@@ -22,7 +22,7 @@
     <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
     <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
 
-    <main id="mainAreaID" class="main">
+    <main id="mainAreaID" class="main mx-auto">
 
         <!-- Tabs navigation panel -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -259,7 +259,17 @@
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary">Inquiry Details</legend>
 
-                                        <div class="row mb-2">
+                                        <div class="row mt-0">
+                                            <div class="col-12 d-flex justify-content-end">
+                                                <button id="inqEnableEditBtn" type="button" class="btn btn-outline-primary btn-sm"
+                                                    onclick="enableInqEditing()">
+                                                    <i class="bi bi-pencil"></i> Enable Editing
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-3">
                                             <!-- Enquiry main Text -->
                                             <div class="col-8">
                                                 <label for="inqMainEnquiry" class="form-label mb-0">Main
@@ -504,26 +514,24 @@
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary">Inquiry Responses</legend>
 
-                                        <div class="row">
-                                            <!-- show previously submittede responses -->
-                                            <div class="row" id="submittedAllResponses">
-                                                <!-- updates histories will display here too -->
-                                            </div>
 
-                                            <!-- section to add new responses -->
-                                            <div class="row mt-4" id="manualResponseAddingSection">
-                                                <!-- a;so includes teh cancel and add response buttons -->
-                                            </div>
-
-                                            <!-- button to add new responses -->
-                                            <div class="row mt-2">
-                                                <button id="createNewResponseRowBtn"
-                                                    class="btn btn-primary mx-auto w-25"
-                                                    onclick="createNewResponseInputSection();">Add a new
-                                                    Response</button>
-                                            </div>
-
+                                        <!-- button to add new responses -->
+                                        <div class="row mt-2">
+                                            <button id="createNewResponseRowBtn" class="btn btn-primary mx-auto w-25"
+                                                onclick="createNewResponseInputSection();">Add a new
+                                                Response</button>
                                         </div>
+
+                                        <!-- section to add new responses -->
+                                        <div class="row mt-2" id="manualResponseAddingSection">
+                                            <!-- a;so includes teh cancel and add response buttons -->
+                                        </div>
+
+                                        <!-- show previously submittede responses -->
+                                        <div class="row mt-2" id="submittedAllResponses">
+                                            <!-- updates histories will display here too -->
+                                        </div>
+
 
 
                                     </fieldset>

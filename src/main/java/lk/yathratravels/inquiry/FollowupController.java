@@ -78,7 +78,7 @@ public class FollowupController {
             flwup.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             followupDao.save(flwup);
-            
+
             inqDao.save(flwup.getInquiry_id());
 
             return "OK";
@@ -109,7 +109,7 @@ public class FollowupController {
 
             followupDao.save(flwup);
 
-            flwup.getInquiry_id().setInq_status("In-Progress");
+            flwup.getInquiry_id().setInq_status("Working");
 
             inqDao.save(flwup.getInquiry_id());
 
