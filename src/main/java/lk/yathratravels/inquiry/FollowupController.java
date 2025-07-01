@@ -56,7 +56,7 @@ public class FollowupController {
     @GetMapping(value="/followup/byinqid/{inqId}",produces = "application/JSON")
      public List<Followup> getFollowupsByInq(@PathVariable("inqId")int inquiryID) {
 
-        return followupDao.getAllFollowupsByInqId( inquiryID);
+        return followupDao.getAllFollowupsByInqId(inquiryID);
     }
 
     // save a followup also with inq detail updates

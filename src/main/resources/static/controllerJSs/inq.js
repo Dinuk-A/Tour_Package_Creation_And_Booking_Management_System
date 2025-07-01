@@ -265,7 +265,7 @@ const addNewInquiry = async () => {
     }
 }
 
-//fn to view button, fill the data in form
+//fn to view button, refill the data in form
 const openModal = (inqObj) => {
 
     inquiry = JSON.parse(JSON.stringify(inqObj));
@@ -354,6 +354,8 @@ const openModal = (inqObj) => {
     var myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myInqFormTab.show();
 
+    refillAllPrevResponses();
+
 };
 
 //get updates
@@ -421,7 +423,7 @@ const refreshInqFollowupSection = () => {
 }
 
 //update a manual inq(after a followup)
-const updateSystemInq = async() => {
+const updateSystemInq = async () => {
 
     //💥💥💥errors balannath onee
 
@@ -463,15 +465,79 @@ const updateSystemInq = async() => {
 
 }
 
-//get the inq responses for this inq
-const getAllPrevResponsesByInq =(inqId)=>{
-    
+//show all the responses
+const refillAllPrevResponses = async () => {
+
+    // /followup/byinqid/{inqId}
+    try {
+        const prevResponses = await ajaxGetReq("/followup/byinqid/" + inquiry.id);
+        console.log(prevResponses);
+
+        const container = document.getElementById("submittedAllResponses");
+        container.innerHTML = ""; // Clear existing content
+
+        if (!prevResponses || prevResponses.length === 0) {
+            const noData = document.createElement("p");
+            noData.classList.add("text-muted");
+            noData.innerText = "No follow-up responses available.";
+            container.appendChild(noData);
+            return;
+        }
+
+        prevResponses.forEach(res => {
+            // Outer column div
+            const colDiv = document.createElement("div");
+            colDiv.classList.add("col-12", "mb-3");
+
+            // Card box
+            const boxDiv = document.createElement("div");
+            boxDiv.classList.add("p-3", "rounded", "border", "shadow-sm", "bg-light");
+
+            // Header row (user id + time)
+            const headerDiv = document.createElement("div");
+            headerDiv.classList.add("d-flex", "justify-content-between", "mb-2");
+
+            const userSpan = document.createElement("small");
+            userSpan.classList.add("text-muted");
+            userSpan.innerHTML = `<i class="bi bi-person"></i> User ID: ${res.addeduserid}`;
+
+            const timeSpan = document.createElement("small");
+            timeSpan.classList.add("text-muted");
+            const dateObj = new Date(res.addeddatetime);
+            timeSpan.innerHTML = `<i class="bi bi-clock-history"></i> ${dateObj.toLocaleString()}`;
+
+            headerDiv.appendChild(userSpan);
+            headerDiv.appendChild(timeSpan);
+
+            // Content (with <pre> to preserve line breaks)
+            const contentPre = document.createElement("pre");
+            contentPre.classList.add("mb-0");
+            contentPre.innerText = res.content;
+
+            // Assemble all
+            boxDiv.appendChild(headerDiv);
+            boxDiv.appendChild(contentPre);
+            colDiv.appendChild(boxDiv);
+            container.appendChild(colDiv);
+        });
+
+
+    } catch (error) {
+        console.error("Failed to fetch inquiry responses:", error);
+
+    }
+
 }
 
-//show all the responses
-const refillAllPrevResponses =()=>{
+//get the inq responses for this inq
+//const getAllPrevResponsesByInq = async (inqId) => {
+//
+//
+//
+//}
 
-} 
+
+
 
 
 
