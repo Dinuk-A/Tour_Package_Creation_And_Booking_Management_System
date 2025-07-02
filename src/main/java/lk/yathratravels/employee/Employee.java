@@ -109,6 +109,17 @@ public class Employee {
     @Column(name = "deleteduserid")
     private Integer deleteduserid;
 
+    /**
+     * @param id
+     * @param emp_code
+     * @param fullname
+     */
+    public Employee(Integer id, @NotNull String emp_code, @NotNull String fullname) {
+        this.id = id;
+        this.emp_code = emp_code;
+        this.fullname = fullname;
+    }
+
     // custom constructor for creating Employee with emp_code and fullname
     public Employee(@NotNull String emp_code, @NotNull String fullname) {
         this.emp_code = emp_code;

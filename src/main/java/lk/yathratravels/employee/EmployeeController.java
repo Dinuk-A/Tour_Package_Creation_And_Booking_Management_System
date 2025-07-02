@@ -130,15 +130,21 @@ public class EmployeeController {
     }
 
     // get emp code and fullname of the employee by his user ID
-    @GetMapping(value = "/empinfo/byuserid", params = {"userid"}, produces = "application/json")
+    @GetMapping(value = "/empinfo/byuserid", params = { "userid" }, produces = "application/json")
     public Employee getEmployeeByUser(@RequestParam("userid") Integer userId) {
         return employeeDao.getEmployeeInfoByUserId(userId);
     }
 
     // get emp code and fullname of the employee by his EMP ID
-    @GetMapping(value = "/empinfo/byempid", params = {"empId"}, produces = "application/json")
+    @GetMapping(value = "/empinfo/byempid", params = { "empId" }, produces = "application/json")
     public Employee getEmployeeByEmpId(@RequestParam("empId") Integer empId) {
         return employeeDao.getEmployeeInfoByEmpId(empId);
+    }
+
+    // get employee basics
+    @GetMapping("/emp/allbasic")
+    public List<Employee> getAllBasicEmployeeInfo() {
+        return employeeDao.getAllEmployeeBasicInfo();
     }
 
     // get all drivers who are available within the given date range

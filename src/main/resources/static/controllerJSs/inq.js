@@ -8,6 +8,16 @@ window.addEventListener('load', () => {
 
 });
 
+let allEmployeesMap = {};
+
+const loadAllEmployees = async () => {
+    const allEmps = await ajaxGetReq("/emp/allbasic");
+    allEmps.forEach(emp => {
+        allEmployeesMap[emp.id] = emp;
+    });
+};
+
+
 //handle min max of date fields
 const handleDateFields = () => {
 
@@ -48,6 +58,7 @@ let sharedTableIdPersonalTbl = "personalTableInquiry";
 const buildAllInqTable = async () => {
 
     try {
+        await loadAllEmployees();
         const allInqs = await ajaxGetReq("/inq/all");
 
         const tableColumnInfo = [
@@ -98,7 +109,7 @@ const showRecievedTimeStamp = (ob) => {
 }
 
 //show assigned user details in table
-const showAssignedEmployee = async (ob) => {
+const showAssignedEmployeeOri = async (ob) => {
 
     if (ob.assigned_empid != null && ob.assigned_empid != "") {
         try {
@@ -117,6 +128,18 @@ const showAssignedEmployee = async (ob) => {
     }
 
 }
+
+const showAssignedEmployee = (ob) => {
+    if (ob.assigned_empid && ob.assigned_empid.id && allEmployeesMap[ob.assigned_empid.id]) {
+        const empInfo = allEmployeesMap[ob.assigned_empid.id];
+        return `<div>
+                   ${empInfo.fullname} <br> (${empInfo.emp_code})
+                </div>`;
+    } else {
+        return "--";
+    }
+};
+
 
 //refresh the inquiry form and reset all fields
 const refreshInquiryForm = async () => {
