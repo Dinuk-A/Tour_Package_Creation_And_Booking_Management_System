@@ -207,7 +207,6 @@ const refreshInquiryForm = async () => {
 }
 
 
-
 //for natonality field
 const changeLableNicPpt = () => {
     const labelOfField = document.getElementById('lblForNICorPpt');
@@ -624,7 +623,7 @@ const refillAllPrevResponses = async () => {
 }
 
 // for creating a new response record manually
-const createNewResponseInputSectionOri = async () => {
+const createNewResponseInputSection = async () => {
     document.getElementById("createNewResponseRowBtn").disabled = true;
 
     const responseContainer = document.createElement("div");
@@ -762,19 +761,6 @@ const createNewResponseInputSectionOri = async () => {
     responseContainer.appendChild(cardCol);
 
     document.getElementById("manualResponseAddingSection").appendChild(responseContainer);
-};
-
-const createNewResponseInputSection = () => {
-    document.getElementById("createNewResponseRowBtn").disabled = true;
-
-    const template = document.getElementById("response-input-template");
-    const clone = template.content.cloneNode(true);
-
-    document.getElementById("manualResponseAddingSection").appendChild(clone);
-
-    // Now fill the tour package options
-    const lastPackageSelect = document.getElementById("lastSentTourPackageSelect");
-    fillMultDataIntoDynamicSelects(lastPackageSelect, 'Please Select Package', tpkgs, 'pkgcode', 'pkgtitle');
 };
 
 
