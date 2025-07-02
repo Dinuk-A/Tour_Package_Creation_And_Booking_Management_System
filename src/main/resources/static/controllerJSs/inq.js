@@ -4,7 +4,7 @@ window.addEventListener('load', () => {
     refreshInqFollowupSection();
     handleTableCreation();
     handleDateFields();
-
+    recieveTpkgs();
 
 });
 
@@ -521,6 +521,21 @@ const updateSystemInq = async () => {
 
 }
 
+//global
+let tpkgs;
+
+//get tpkgs
+const recieveTpkgs = async () => {
+    ///tpkg/custom/drafts
+    try {
+        tpkgs = await ajaxGetReq("/tpkg/custom/drafts");
+    } catch (error) {
+        console.error("Failed to fetch tour packages:", error);
+    }
+
+}
+
+
 //show all the responses
 const refillAllPrevResponses = async () => {
 
@@ -586,7 +601,7 @@ const refillAllPrevResponses = async () => {
 }
 
 // for creating a new response record manually
-const createNewResponseInputSection = async () => {
+const createNewResponseInputSectionOri = async () => {
     document.getElementById("createNewResponseRowBtn").disabled = true;
 
     const responseContainer = document.createElement("div");
@@ -670,36 +685,33 @@ const createNewResponseInputSection = async () => {
 
     // Last Sent Package
     const lastPackageRow = document.createElement("div");
-    lastPackageRow.classList.add("d-flex", "align-items-center", "gap-2", "mb-3");
+    lastPackageRow.classList.add("row", "mb-3");
+
+    const lastPackageLabelCol = document.createElement("div");
+    lastPackageLabelCol.classList.add("col-md-4", "d-flex", "align-items-center");
 
     const lastPackageLabel = document.createElement("label");
     lastPackageLabel.setAttribute("for", "lastSentTourPackageSelect");
     lastPackageLabel.classList.add("mb-0", "fw-semibold");
-    lastPackageLabel.textContent = "Last Sent Tour Package (Negotiation):";
+    lastPackageLabel.textContent = "Last Sent Tour Package:";
+
+    lastPackageLabelCol.appendChild(lastPackageLabel);
+
+    const lastPackageSelectCol = document.createElement("div");
+    lastPackageSelectCol.classList.add("col-md-8");
 
     const lastPackageSelect = document.createElement("select");
     lastPackageSelect.id = "lastSentTourPackageSelect";
-    lastPackageSelect.classList.add("form-select", "form-select-sm");
-    lastPackageSelect.style.width = "auto";
+    lastPackageSelect.classList.add("form-select", "form-select");
 
-    const tourPackageOptions = [
-        { value: "", text: "Please select", disabled: true, selected: true },
-        { value: "pkg1", text: "Package 1 - 3 Days, 2 Nights" },
-        { value: "pkg2", text: "Package 2 - 5 Days, 4 Nights" },
-        { value: "pkg3", text: "Package 3 - Customized Package" }
-    ];
+    //const tourPackageOptions = 
+    fillMultDataIntoDynamicSelects(lastPackageSelect, 'Please Select Package', tpkgs, 'pkgcode', 'pkgtitle');
 
-    tourPackageOptions.forEach(opt => {
-        const option = document.createElement("option");
-        option.value = opt.value;
-        option.textContent = opt.text;
-        if (opt.disabled) option.disabled = true;
-        if (opt.selected) option.selected = true;
-        lastPackageSelect.appendChild(option);
-    });
 
-    lastPackageRow.appendChild(lastPackageLabel);
-    lastPackageRow.appendChild(lastPackageSelect);
+    lastPackageSelectCol.appendChild(lastPackageSelect);
+
+    lastPackageRow.appendChild(lastPackageLabelCol);
+    lastPackageRow.appendChild(lastPackageSelectCol);
     cardBody.appendChild(lastPackageRow);
 
     const btnRow = document.createElement("div");
@@ -728,6 +740,20 @@ const createNewResponseInputSection = async () => {
 
     document.getElementById("manualResponseAddingSection").appendChild(responseContainer);
 };
+
+const createNewResponseInputSection = () => {
+    document.getElementById("createNewResponseRowBtn").disabled = true;
+
+    const template = document.getElementById("response-input-template");
+    const clone = template.content.cloneNode(true);
+
+    document.getElementById("manualResponseAddingSection").appendChild(clone);
+
+    // Now fill the tour package options
+    const lastPackageSelect = document.getElementById("lastSentTourPackageSelect");
+    fillMultDataIntoDynamicSelects(lastPackageSelect, 'Please Select Package', tpkgs, 'pkgcode', 'pkgtitle');
+};
+
 
 //check manual followup errors
 const checkManualFollowupErrors = () => {

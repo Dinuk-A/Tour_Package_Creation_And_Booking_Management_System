@@ -80,11 +80,11 @@ const showTpkgStatus = (tpkgObj) => {
                 </p>`;
         }
 
-        else if (tpkgObj.tpkg_status === "Published") {
+        else if (tpkgObj.tpkg_status === "Completed") {
             return `
             <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
             style="background-color: #28a745; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            Published
+            Completed
          </p>`;
         }
 

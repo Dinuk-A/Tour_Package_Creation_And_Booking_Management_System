@@ -96,6 +96,11 @@ public class TourPkgController {
         return daoTPkg.findAll(Sort.by(Direction.DESC, "id"));
     }
 
+    @GetMapping(value = "/tpkg/custom/drafts", produces = "application/json")
+    public List<TourPkg> getCustomDraftTourPackages() {
+        return daoTPkg.findAllDraftCustomPackages();
+    }
+
     // save a tout pkg + addi costs
     @PostMapping(value = "/tpkg")
     @Transactional
