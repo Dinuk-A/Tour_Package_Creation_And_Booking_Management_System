@@ -151,10 +151,10 @@ public class InqController {
 
             if (empId != null) {
                 Employee emp = empDao.findById(empId).get();
-                inq.setAssigned_userid(emp);
+                inq.setAssigned_empid(emp);
                 inq.setInq_status("Assigned");
             } else {
-                inq.setAssigned_userid(null);
+                inq.setAssigned_empid(null);
                 inq.setInq_status("New");
             }
 
@@ -205,10 +205,10 @@ public class InqController {
 
             if (empId != null) {
                 Employee emp = empDao.findById(empId).get();
-                inq.setAssigned_userid(emp);
+                inq.setAssigned_empid(emp);
                 inq.setInq_status("Assigned");
             } else {
-                inq.setAssigned_userid(null);
+                inq.setAssigned_empid(null);
                 inq.setInq_status("New");
             }
 

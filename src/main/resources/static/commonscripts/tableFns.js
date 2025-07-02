@@ -67,13 +67,27 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
 
                 case "function":
                     //getDesignation(employee[0])
-                    cell.innerHTML = columnObj.displayingPropertyOrFn(record)
+                    //cell.innerHTML = columnObj.displayingPropertyOrFn(record)
+                    //break;
+
+                    const result = columnObj.displayingPropertyOrFn(record);
+
+                    if (result instanceof Promise) {
+                        result.then(resolvedHtml => {
+                            cell.innerHTML = resolvedHtml;
+                        }).catch(err => {
+                            cell.innerHTML = `<span class="text-danger">Error loading</span>`;
+                            console.error("Error resolving async cell:", err);
+                        });
+                    } else {
+                        cell.innerHTML = result;
+                    }
                     break;
 
                 //more cases needed
 
                 default:
-                    showAlertModal('err',"error creating table");
+                    showAlertModal('err', "error creating table");
                     break;
             }
             row.appendChild(cell);
@@ -97,7 +111,7 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
 
             //run this function to open a modal with the record's details
             openModal(record);
-           
+
         }
 
         //append that button to the cell

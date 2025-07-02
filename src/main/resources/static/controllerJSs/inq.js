@@ -54,7 +54,8 @@ const buildAllInqTable = async () => {
             { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
             { displayType: 'text', displayingPropertyOrFn: 'inqsrc', colHeadName: 'Source' },
             { displayType: 'function', displayingPropertyOrFn: showRecievedTimeStamp, colHeadName: 'Recieved Time' },
-            { displayType: 'text', displayingPropertyOrFn: 'inq_status', colHeadName: 'Status' }
+            { displayType: 'text', displayingPropertyOrFn: 'inq_status', colHeadName: 'Status' },
+            { displayType: 'function', displayingPropertyOrFn: showAssignedEmployee, colHeadName: 'Assigned to' }
         ]
 
         createTable(tableHolderDiv, sharedTableIdMainTbl, allInqs, tableColumnInfo);
@@ -94,6 +95,27 @@ const buildPersonalInqTable = async () => {
 //show time stamp on table
 const showRecievedTimeStamp = (ob) => {
     return ob.recieveddate + "</br>" + (ob.recievedtime ? ob.recievedtime : "12:00")
+}
+
+//show assigned user details in table
+const showAssignedEmployee = async (ob) => {
+
+    if (ob.assigned_empid != null && ob.assigned_empid != "") {
+        try {
+            empInfo = await ajaxGetReq("empinfo/byempid?empId=" + ob.assigned_empid.id);
+            console.log(empInfo);
+        } catch (error) {
+            console.error("Failed to fetch empinfo:", error);
+        }
+
+        return ` <div class= "">
+                   ${empInfo.fullname} <br> (${empInfo.emp_code})
+                </div>
+                    `;
+    } else if (ob.assigned_empid == null || ob.assigned_empid == "") {
+        return "--"
+    }
+
 }
 
 //refresh the inquiry form and reset all fields
@@ -698,7 +720,7 @@ const createNewResponseInputSection = async () => {
     btnRow.appendChild(resetBtn);
     btnRow.appendChild(submitBtn);
 
-   
+
     cardBody.appendChild(btnRow);
     card.appendChild(cardBody);
     cardCol.appendChild(card);

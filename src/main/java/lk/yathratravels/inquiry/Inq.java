@@ -82,8 +82,8 @@ public class Inq {
 
     // in system form ✅
     @ManyToOne
-    @JoinColumn(name = "assigned_userid", referencedColumnName = "id")
-    private Employee assigned_userid;
+    @JoinColumn(name = "assigned_empid", referencedColumnName = "id")
+    private Employee assigned_empid;
 
     @Column(name = "recievedcontactoremail")
     private String recievedcontactoremail;

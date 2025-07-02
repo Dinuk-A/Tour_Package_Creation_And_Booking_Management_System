@@ -80,7 +80,7 @@ const createPriceModsTableCustomFn = (dataContainer) => {
     const tableColumnInfoArray = [
         { displayType: 'function', displayingPropertyOrFn: showActiveDateRange, colHeadName: 'Usage Period' },
         { displayType: 'function', displayingPropertyOrFn: showAllOldValues, colHeadName: 'Previous Values' },
-        { displayType: 'function', displayingPropertyOrFn: showUpdatedUnT, colHeadName: 'Updated' }
+        { displayType: 'function', displayingPropertyOrFn: showUpdatedUnT, colHeadName: 'Updated By' }
     ]
 
     // Add other column headers

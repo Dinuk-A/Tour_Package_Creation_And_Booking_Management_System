@@ -135,6 +135,12 @@ public class EmployeeController {
         return employeeDao.getEmployeeInfoByUserId(userId);
     }
 
+    // get emp code and fullname of the employee by his EMP ID
+    @GetMapping(value = "/empinfo/byempid", params = {"empId"}, produces = "application/json")
+    public Employee getEmployeeByEmpId(@RequestParam("empId") Integer empId) {
+        return employeeDao.getEmployeeInfoByEmpId(empId);
+    }
+
     // get all drivers who are available within the given date range
     @GetMapping(value = "emp/availabledriversbydates/{startDate}/{endDate}", produces = "application/JSON")
     public List<Employee> getAvailableDrivers(@PathVariable("startDate") String startDate,

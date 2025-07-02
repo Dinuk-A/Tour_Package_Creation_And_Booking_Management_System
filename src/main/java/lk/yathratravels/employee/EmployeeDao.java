@@ -77,8 +77,13 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
     List<Employee> getAvailableGuidesList(LocalDate startDate, LocalDate endDate);
 
     // to display in UIs (print,tables, etc)
+    //get employee info by USER ID, NOT EMP ID
     @Query(value = "select new Employee(e.emp_code, e.fullname) from Employee e where e.id in (select u.employee_id.id from User u where u.id = ?1)")
     Employee getEmployeeInfoByUserId(Integer userId);
+
+    //get employee info by  EMP ID,NOT USER ID
+    @Query(value = "select new Employee(e.emp_code, e.fullname) from Employee e where e.id = ?1")
+    Employee getEmployeeInfoByEmpId(Integer empID);
 
     // to used in inquiry assigning
     @Query(value = """
