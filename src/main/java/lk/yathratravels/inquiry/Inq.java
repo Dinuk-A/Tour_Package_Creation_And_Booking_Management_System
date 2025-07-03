@@ -100,9 +100,11 @@ public class Inq {
     @Column(name = "inq_local_kids")
     private Integer inq_local_kids;
 
-    // is_guideneed
     @Column(name = "inq_guideneed")
     private Boolean inq_guideneed;
+
+    @Column(name = "is_startdate_confirmed")
+    private Boolean is_startdate_confirmed;
 
     @Column(name = "inq_pick")
     private String inq_pick;

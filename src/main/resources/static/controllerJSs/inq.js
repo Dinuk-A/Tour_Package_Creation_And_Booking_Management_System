@@ -315,11 +315,13 @@ const openModal = (inqObj) => {
     inquiry = JSON.parse(JSON.stringify(inqObj));
     oldInquiry = JSON.parse(JSON.stringify(inqObj));
 
-    document.getElementById('manualInqUpdateBtn').disabled = false;
-    document.getElementById('manualInqUpdateBtn').style.cursor = "pointer";
+    const updateBtn = document.getElementById('manualInqUpdateBtn');
+    updateBtn.disabled = false;
+    updateBtn.style.cursor = "pointer";
 
-    document.getElementById('manualInqAddBtn').disabled = true;
-    document.getElementById('manualInqAddBtn').style.cursor = "not-allowed";
+    const addBtn = document.getElementById('manualInqAddBtn');
+    addBtn.disabled = true;
+    addBtn.style.cursor = "not-allowed";
 
     document.getElementById('inqCodeInput').value = inqObj.inqcode || "";
     document.getElementById('inqRecievedMethod').value = inqObj.inqsrc || "";
@@ -394,6 +396,9 @@ const openModal = (inqObj) => {
             field.disabled = true;
         }
     });
+
+
+    document.getElementById('inqEnableEditBtn').disabled = false;
 
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
     addNewResponseRowBtn.disabled = false;
@@ -833,6 +838,55 @@ const submitManualFollowup = async () => {
         }
     } else {
         showAlertModal('war', errors);
+    }
+}
+
+const enableChildCountInputs = () => {
+    if (parseInt(inqLocalAdultCount.value) > 0 || parseInt(inqForeignAdultCount.value) > 0) {
+        inqLocalChildCount.disabled = false;
+        inqForeignChildCount.disabled = false;
+
+        //autofocus test
+        // tpkgLocalChildCount.focus();
+
+    } else {
+        inqLocalChildCount.disabled = true;
+        inqForeignChildCount.disabled = true;
+        inquiry.localchildcount = 0;
+        inquiry.foreignchildcount = 0;
+
+    }
+}
+
+//to mark if start date is sure ot not
+const handleStartDateStatusChange = () => {
+
+    const startDateSure = document.getElementById('startDateConfirmed');
+    const startDateUncertain = document.getElementById('startDateUnconfirmed');
+    const startDateInput = document.getElementById('inqApproxStartDate');
+
+    if (startDateSure.checked) {
+        inquiry.is_startdate_confirmed = true;
+        startDateInput.style.border = "2px solid lime";
+
+    } else if (startDateUncertain.checked) {
+        inquiry.is_startdate_confirmed = false;
+        startDateInput.style.border = "2px solid orange";
+    }
+}
+
+const enableDateStatusRadios = () => {
+    const startDateSure = document.getElementById('startDateConfirmed');
+    const startDateUncertain = document.getElementById('startDateUnconfirmed');
+
+    if (inqApproxStartDate.value != "") {
+        startDateSure.disabled = false;
+        startDateUncertain.disabled = false;
+    } else {
+        startDateSure.disabled = true;
+        startDateUncertain.disabled = true;
+        startDateSure.checked = false;
+        startDateUncertain.checked = false;
     }
 }
 
