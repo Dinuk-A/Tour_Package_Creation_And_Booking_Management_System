@@ -2,6 +2,7 @@ window.addEventListener('load', () => {
 
     refreshYathraWebSite(openReusableModalForCardsReadMore);
     refreshPkgRelInqForm();
+    setMinDateForInquiryStart();
 
 });
 
@@ -74,6 +75,23 @@ const refreshYathraWebSite = async (openReusableModalForCardsReadMore) => {
     });
 
 }
+
+
+const setMinDateForInquiryStart = () => {
+    const dateField = document.getElementById("inqStartDate");
+    if (dateField) {
+        const today = new Date();
+        today.setDate(today.getDate() + 14); 
+
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const minDate = `${yyyy}-${mm}-${dd}`;
+
+        dateField.setAttribute("min", minDate);
+    }
+}
+
 
 //fill the datalist with data recieved from array
 const fillDataIntoDataListYathra = (dataListElement, dataArray, displayProperty) => {
@@ -656,7 +674,7 @@ const dataListValidatorWeb = (inputFieldElement, dataListGlobalArrName, bindingO
     if (fieldValue !== "") {
 
         let dataList = window[dataListGlobalArrName];
-       
+
         let existIndex = -1;
 
         for (const index in dataList) {
@@ -730,5 +748,29 @@ const dataListValidatorWeb = (inputFieldElement, dataListGlobalArrName, bindingO
 // secondDiv.appendChild(divAccHdr);
 // mainDiv.appendChild(secondDiv);
 // divForAccordions.appendChild(mainDiv);
+
+function demoPadFunctions() {
+    // padStart() example: formatting invoice numbers
+    const invoiceNumber = 7;
+    const formattedInvoice = 'INV-' + String(invoiceNumber).padStart(4, '0');
+    console.log('padStart() Example:');
+    console.log(formattedInvoice); // Output: INV-0007
+
+    // padEnd() example: aligning labels in a console/table output
+    const label = 'Name';
+    const paddedLabel = label.padEnd(10, '.');
+    console.log('\npadEnd() Example:');
+    console.log(paddedLabel + '| Dinuka'); // Output: Name......| Dinuka
+}
+
+const appendInqMessage = (checkbox, message) => {
+    const textarea = document.getElementById("inqClientEnquiriesPkgRelForm");
+    if (checkbox.checked) {
+        textarea.value += (textarea.value ? '\n' : '') + message;
+    } else {
+        textarea.value = textarea.value.replace(message, '').trim();
+    }
+    inputValidatorTextWeb(textarea, '', 'inquiry', 'main_inq_msg');
+}
 
 

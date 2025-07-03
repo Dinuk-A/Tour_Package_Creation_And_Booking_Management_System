@@ -24,8 +24,8 @@
     <!-- custom alert css -->
     <link rel="stylesheet" href="css/customAlert.css">
 
-        <!-- for custom alert js -->
-        <script src="commonscripts/customAlert.js"></script>
+    <!-- for custom alert js -->
+    <script src="commonscripts/customAlert.js"></script>
 
     <!-- main CSS -->
     <!--<link rel="stylesheet" href="css/yathranew.css">-->
@@ -743,7 +743,7 @@
 
                             <div class="row mb-2">
                                 <!-- main enquiry -->
-                                <div class="col-12 mx-auto">
+                                <div class="col-7 ">
                                     <div class="mb-3">
                                         <label for="inqClientEnquiriesPkgRelForm" class="form-label fw-bold mb-0">Your
                                             Inquiry / Request:</label>
@@ -753,9 +753,57 @@
                                             onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'main_inq_msg')"></textarea>
                                     </div>
                                 </div>
+
+                                <!-- msg presets -->
+                                <div class="col-5">
+                                    <label class="form-label fw-semibold mb-1">Select Your Concerns:</label>
+
+                                    <div class="d-flex flex-column gap-2">
+                                        <div>
+                                            <input type="checkbox" class="btn-check" id="chk2" autocomplete="off"
+                                                onclick="appendInqMessage(this, 'Please call me with more details.')">
+                                            <label class="btn btn-outline-primary w-100 text-start" for="chk2">
+                                                Please call me with more details.
+                                            </label>
+                                        </div>
+
+                                        <div>
+                                            <input type="checkbox" class="btn-check" id="chk3" autocomplete="off"
+                                                onclick="appendInqMessage(this, 'Can I customize the tour package?')">
+                                            <label class="btn btn-outline-primary w-100 text-start" for="chk3">
+                                                Can I customize the tour package?
+                                            </label>
+                                        </div>
+
+                                        <div>
+                                            <input type="checkbox" class="btn-check" id="chk7" autocomplete="off"
+                                                onclick="appendInqMessage(this, 'I need help planning the itinerary.')">
+                                            <label class="btn btn-outline-primary w-100 text-start" for="chk7">
+                                                I need help planning the itinerary.
+                                            </label>
+                                        </div>
+
+                                        <div>
+                                            <input type="checkbox" class="btn-check" id="chk4" autocomplete="off"
+                                                onclick="appendInqMessage(this, 'I would like to know the total cost.')">
+                                            <label class="btn btn-outline-primary w-100 text-start" for="chk4">
+                                                I would like to know the total cost.
+                                            </label>
+                                        </div>
+
+                                        <div>
+                                            <input type="checkbox" class="btn-check" id="chk6" autocomplete="off"
+                                                onclick="appendInqMessage(this, 'Are there any discounts or offers available?')">
+                                            <label class="btn btn-outline-primary w-100 text-start" for="chk6">
+                                                Are there any discounts or offers available?
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
-                            <div class="row mb-2">
+                            <div class="row mb-2 mt-3">
                                 <div class="col-12">
                                     <p class="fw-bold bg-info text-white p-2 rounded">
                                         Tour Preferences (to help us serve you better)
@@ -764,75 +812,98 @@
 
                                 <!-- tour dates -->
                                 <div class="col-md-6 mb-2">
-                                    <label class="form-label fw-bold mb-1">Estimated Start Date:</label>
-
-                                    <div class="row g-0">
-                                        <div class="col-6">
-                                            <input type="radio" class="btn-check" name="startDateOption"
-                                                id="startDateNotSure" autocomplete="off" value="notSure" onchange="handleApproxDatesOpts()">
-                                            <label class="btn btn-outline-primary w-100 rounded-start"
-                                                for="startDateNotSure">Not sure yet</label>
+                                    <div class="card shadow-sm border rounded">
+                                        <div class="card-header bg-primary text-white fw-bold fs-5">
+                                            Estimated Start Date
                                         </div>
-                                        <div class="col-6">
-                                            <input type="radio" class="btn-check" name="startDateOption"
-                                                id="startDateApprox" autocomplete="off" value="approximate"  onchange="handleApproxDatesOpts()">
-                                            <label class="btn btn-outline-primary w-100 rounded-end"
-                                                for="startDateApprox">I have approximate dates</label>
+                                        <div class="card-body">
+                                            <div class="row g-0">
+                                                <div class="col-4">
+                                                    <input type="radio" class="btn-check" name="startDateOption"
+                                                        id="startDateNotSure" autocomplete="off" value="notSure"
+                                                        onchange="handleApproxDatesOpts()">
+                                                    <label class="btn btn-outline-primary w-100 rounded-start"
+                                                        for="startDateNotSure">Not sure yet</label>
+                                                </div>
+                                                <div class="col-8">
+                                                    <input type="radio" class="btn-check" name="startDateOption"
+                                                        id="startDateApprox" autocomplete="off" value="approximate"
+                                                        onchange="handleApproxDatesOpts()">
+                                                    <label class="btn btn-outline-success w-100 rounded-end"
+                                                        for="startDateApprox">I have an approximate date</label>
+                                                </div>
+                                            </div>
+
+                                            <input type="date" class="form-control mt-4" id="inqStartDate"
+                                                onchange="inputValidatorTextWeb(this, '', 'inquiry', 'inq_apprx_start_date')">
                                         </div>
                                     </div>
-
-                                    <input type="date" class="form-control mt-2 d-none"  id="inqStartDate" 
-                                        onchange="inputValidatorTextWeb(this, '', 'inquiry', 'inq_apprx_start_date')">
                                 </div>
 
                                 <!-- traveller group -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold mb-1">Travel Party:</label>
-
-                                    <div class="row g-0" id="groupFamilyInputs">
-                                        <div class="mb-2">
-                                            <label for="adultsCount" class="form-label fw-bold mb-0">Adults
-                                                Count:</label>
-                                            <input type="number" id="adultsCount" class="form-control" min="1"
-                                                onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_adults')">
-                                            <div class="form-text">Adults are travelers aged 13 and above</div>
+                                    <div class="card shadow-sm border rounded">
+                                        <div class="card-header bg-primary text-white fw-bold fs-5">
+                                            Travel Group
                                         </div>
-                                        <div>
-                                            <label for="kidsCount" class="form-label fw-bold mb-0">Kids Count:</label>
-                                            <input type="number" id="kidsCount" class="form-control" min="0"
-                                                onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_kids')">
-                                            <div class="form-text">Kids are travelers aged 0-12</div>
+                                        <div class="card-body">
+                                            <div class="row g-2" id="groupFamilyInputs">
+                                                <div class="col-md-6">
+                                                    <label for="adultsCount" class="form-label fw-bold mb-0">Adults
+                                                        Count:</label>
+                                                    <input type="number" id="adultsCount" class="form-control" min="1"
+                                                        onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_adults')">
+                                                    <div class="form-text">Adults are travelers aged 13 and above</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="kidsCount" class="form-label fw-bold mb-0">Kids
+                                                        Count:</label>
+                                                    <input type="number" id="kidsCount" class="form-control" min="0"
+                                                        onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_kids')">
+                                                    <div class="form-text">Kids are travelers aged 0-12</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
 
-                                <!-- Preferred Accommodation -->
-                                <div class="col-6 mb-2">
-                                    <label class="form-label fw-bold mb-0" for="inqAccommodationNote">Accommodation
-                                        Preferences:</label>
-                                    <textarea class="form-control" id="inqAccommodationNote" rows="3"
-                                        placeholder="Let us know your preferences: e.g., type of hotel, bed type, floor level, view, etc."
-                                        onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_accos')"></textarea>
+
+                                <!-- preferences -->
+                                <div class="row mt-2">
+
+                                    <!-- visiting places preferences -->
+                                    <div class="col-6 mb-2">
+                                        <label class="form-label fw-bold mb-0" for="inqPlacesPreferences">Places
+                                            Preferences:</label>
+                                        <textarea class="form-control" id="inqPlacesPreferences"
+                                            style="resize: none; height: 120px;"
+                                            placeholder="List places you want to visit and places you'd prefer to avoid. For example: Must-visit: Sigiriya, Ella, Yala. Avoid: crowded cities."
+                                            onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_vplaces')"></textarea>
+                                    </div>
+
+                                    <!--  Accommodation preferences-->
+                                    <div class="col-6 mb-2">
+                                        <label class="form-label fw-bold mb-0" for="inqAccommodationNote">Accommodation
+                                            Preferences:</label>
+                                        <textarea class="form-control" id="inqAccommodationNote"
+                                            style="resize: none; height: 120px;"
+                                            placeholder="Let us know your preferences: e.g., type of hotel, bed type, floor level, view, etc."
+                                            onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_accos')"></textarea>
+                                    </div>
                                 </div>
 
-                                <div class="col-6 mb-2">
-                                    <label class="form-label fw-bold mb-0" for="inqPlacesPreferences">Places
-                                        Preferences:</label>
-                                    <textarea class="form-control" id="inqPlacesPreferences" rows="4"
-                                        placeholder="List places you want to visit and places you'd prefer to avoid. For example: Must-visit: Sigiriya, Ella, Yala. Avoid: crowded cities."
-                                        onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_vplaces')"></textarea>
+                                <div class="row">
+                                    <!-- Preferred Transport -->
+                                    <div class="col-6 mb-2">
+                                        <label class="form-label fw-bold mb-0" for="inqTransportNote">Transport
+                                            Preferences:</label>
+                                        <textarea class="form-control" id="inqTransportNote"
+                                            style="resize: none; height: 120px;"
+                                            placeholder="Preferred transport type, air-conditioning, private/van/bus, driving distance comfort, etc."
+                                            onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_vehi')"></textarea>
+                                    </div>
                                 </div>
-
-                                <!-- Preferred Transport -->
-                                <div class="col-6 mb-2">
-                                    <label class="form-label fw-bold mb-0" for="inqTransportNote">Transport
-                                        Preferences:</label>
-                                    <textarea class="form-control" id="inqTransportNote" rows="3"
-                                        placeholder="Preferred transport type, air-conditioning, private/van/bus, driving distance comfort, etc."
-                                        onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_vehi')"></textarea>
-                                </div>
-
 
                             </div>
 
