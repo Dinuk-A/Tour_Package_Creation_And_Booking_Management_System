@@ -93,7 +93,7 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
     @Query(value = """
             SELECT e.id
             FROM newyathra.employee AS e
-            LEFT JOIN newyathra.inquiry AS i ON i.assigned_userid = e.id AND i.inq_status = 'Assigned'
+            LEFT JOIN newyathra.inquiry AS i ON i.assigned_empid = e.id AND i.inq_status = 'Assigned'
             WHERE e.designation_id = 5
               AND e.emp_status = 'Working'
               AND (e.deleted_emp IS NULL OR e.deleted_emp = FALSE)

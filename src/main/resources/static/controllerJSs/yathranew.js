@@ -3,22 +3,13 @@ window.addEventListener('load', () => {
     refreshYathraWebSite(openReusableModalForCardsReadMore);
     refreshPkgRelInqForm();
 
-    nationalityList = [];
 });
 
+//to store country name datalist globally
+window.nationalityListArray = [];
 
 //refresh whole website
 const refreshYathraWebSite = async (openReusableModalForCardsReadMore) => {
-
-    try {
-        nationalityList = await ajaxGetReq('/nationalityforweb/all');
-    } catch (error) {
-        console.error("Error fetching nationality for Yathra website:", error);
-    }
-
-    fillDataIntoDataListYathra(dataListNationality, nationalityList, 'countryname');
-    //get nationality list to pkg related inq form
-    fillDataIntoDynamicSelects(pkgRelInqNationalitySelect, 'Select Nationality', nationalityList, 'countryname');
 
     try {
         packageList = await ajaxGetReq("/tourpackageforweb/all");
@@ -84,7 +75,19 @@ const refreshYathraWebSite = async (openReusableModalForCardsReadMore) => {
 
 }
 
-//PKG RELATED INQ FORM
+//fill the datalist with data recieved from array
+const fillDataIntoDataListYathra = (dataListElement, dataArray, displayProperty) => {
+
+    dataListElement.innerHTML = '';
+
+    dataArray.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item[displayProperty]; //countryname
+        dataListElement.appendChild(option);
+    });
+}
+
+//PKG RELATED INQ FORM refresh
 const refreshPkgRelInqForm = async () => {
 
     inquiry = new Object();
@@ -92,15 +95,15 @@ const refreshPkgRelInqForm = async () => {
     document.getElementById('formPkgRelateInqForm').reset();
 
     try {
-        nationalityList = await ajaxGetReq('/nationalityforweb/all');
-        fillDataIntoDynamicSelects(pkgRelInqNationalitySelect, 'Select Nationality', nationalityList, 'countryname');
-        fillDataIntoDataListYathra(dataListNationality, nationalityList, 'countryname');
+
+        nationalityListArray = await ajaxGetReq('/nationalityforweb/all');
+        fillDataIntoDataListYathra(dataListNationality, nationalityListArray, 'countryname');
     } catch (error) {
         console.error("Error refreshing package related inquiry form:", error);
 
     }
 
-    // Array of input field IDs to reset
+    // array of input field IDs to reset
     const inputTagsIds = [
         'inqClientTitlePkgrelated',
         'inqClientNamePkgRelForm',
@@ -126,12 +129,11 @@ const refreshPkgRelInqForm = async () => {
         }
     });
 
-    //for data list
-    // fillDataIntoDataList(pkgrelatednationalityDataList, nationalityList, 'countryname');
 }
 
 //handle customer name submission
 const handleCustName = (nameInputElement) => {
+
     const originalNameVal = nameInputElement.value.trim();
 
     const capitalized = originalNameVal
@@ -202,19 +204,6 @@ const inputValidatorTextWeb = (inputTagId, pattern, object, property) => {
         }
     }
 };
-
-//fill the data list
-const fillDataIntoDataListYathra = (fieldId, dataList, propertyName) => {
-
-    fieldId.innerHTML = '';
-
-    for (const obj of dataList) {
-        let option = document.createElement('option');
-        option.value = obj[propertyName];
-        fieldId.appendChild(option)
-
-    }
-}
 
 //set country code auto
 const passCountryCodeInqForm = (contactNumInputElement) => {
@@ -373,7 +362,7 @@ const openReusableModalForCardsReadMore = (package) => {
     }
 
     // Bind the package id with inquiry.based_tpkg_id field 💥💥💥
-    inquiry.intrstdpkgid = package;
+    inquiry.intrstdpkgid = package.id;
 
     //show the selected pkg name in the form
     selectedPkgName.innerText = package.pkgtitle;
@@ -588,6 +577,7 @@ const openModalForPkgInqs = () => {
     // document.getElementById('selectedPkgId').value = selectedpkg.id;
 }
 
+//check errors
 const checkGenInqErrors = () => {
     let genInqFormErrors = '';
 
@@ -657,6 +647,40 @@ const handleApproxDatesOpts = () => {
         startDateInput.classList.remove('d-none');
     }
 }
+
+//datalist validation
+const dataListValidatorWeb = (inputFieldElement, dataListGlobalArrName, bindingObject, bindingProperty, displayProperty) => {
+
+    const fieldValue = inputFieldElement.value;
+
+    if (fieldValue !== "") {
+
+        let dataList = window[dataListGlobalArrName];
+       
+        let existIndex = -1;
+
+        for (const index in dataList) {
+            if (fieldValue == dataList[index][displayProperty]) {
+                existIndex = index
+                break;
+            }
+        }
+        if (existIndex != -1) {
+            window[bindingObject][bindingProperty] = dataList[existIndex];
+            inputFieldElement.style.borderBottom = "4px solid lime";
+            inputFieldElement.style.borderRight = "4px solid lime";
+        } else {
+            inputFieldElement.style.borderBottom = "4px solid red";
+            inputFieldElement.style.borderRight = "4px solid red";
+            window[bindingObject][bindingProperty] = null
+        }
+    } else {
+        inputFieldElement.style.borderBottom = "4px solid red";
+        inputFieldElement.style.borderRight = "4px solid red";
+        window[bindingObject][bindingProperty] = null
+    }
+}
+
 
 //days count eka anuwa FOREACH multiple accordions hadenna one💥💥💥
 

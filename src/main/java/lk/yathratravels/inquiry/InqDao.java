@@ -12,6 +12,6 @@ public interface InqDao extends JpaRepository<Inq,Integer> {
     public String getNextInquiryCode();
 
     //get personal assigned inqs
-    @Query(value ="SELECT * from newyathra.inquiry as pinq where pinq.assigned_userid=?1", nativeQuery = true)
+    @Query(value ="SELECT * from newyathra.inquiry as pinq where pinq.assigned_empid=?1", nativeQuery = true)
     public List<Inq> returnPersonalInqsByUserId(Integer userId);
 }
