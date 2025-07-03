@@ -8,8 +8,8 @@ window.addEventListener('load', () => {
 
 });
 
+//to minmize the api calls, get all emps at once, then collect and show the empid and name from that list
 let allEmployeesMap = {};
-
 const loadAllEmployees = async () => {
     const allEmps = await ajaxGetReq("/emp/allbasic");
     allEmps.forEach(emp => {
@@ -623,7 +623,7 @@ const refillAllPrevResponses = async () => {
 }
 
 // for creating a new response record manually
-const createNewResponseInputSection = async () => {
+const createNewResponseInputSectionOri = async () => {
     document.getElementById("createNewResponseRowBtn").disabled = true;
 
     const responseContainer = document.createElement("div");
@@ -763,6 +763,19 @@ const createNewResponseInputSection = async () => {
     document.getElementById("manualResponseAddingSection").appendChild(responseContainer);
 };
 
+//re render the template
+const createNewResponseInputSection = () => {
+    document.getElementById("createNewResponseRowBtn").disabled = true;
+
+    const template = document.getElementById("response-input-template");
+    const clone = template.content.cloneNode(true);
+
+    document.getElementById("manualResponseAddingSection").appendChild(clone);
+
+    // Now fill the tour package options
+    const lastPackageSelect = document.getElementById("lastSentTourPackageSelect");
+    fillMultDataIntoDynamicSelects(lastPackageSelect, 'Please Select Package', tpkgs, 'pkgcode', 'pkgtitle');
+}
 
 //check manual followup errors
 const checkManualFollowupErrors = () => {
