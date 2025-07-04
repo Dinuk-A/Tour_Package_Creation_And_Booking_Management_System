@@ -114,9 +114,10 @@
                                                 <select id="inqRecievedMethod" class="form-control form-select mb-0"
                                                     onchange="staticSelectValidator(this,  'inquiry' , 'inqsrc'); ">
                                                     <option value="" selected disabled>Select Source</option>
+                                                    <option value="Website">Website</option>
                                                     <option value="Phone Call">Phone Call</option>
                                                     <option value="Email">Email</option>
-                                                    <!--<option value="In-person">in-person</option>-->
+                                                    <option value="In-person">in-person</option>
                                                 </select>
                                             </div>
 
@@ -143,7 +144,7 @@
 
                                         </div>
 
-                                        <div class="row">
+                                        <div class="row mt-2">
 
                                             <!-- Recieved COntact/Email -->
                                             <div class="col-4">
@@ -199,7 +200,7 @@
 
                                                 <input type="text" id="InqClientNationality" class="form-control"
                                                     list="dataListNationality"
-                                                    onkeyup="dataListValidator(this, 'nationalityList' , 'inquiry' , 'nationality' , 'countryname'); changeLableNicPpt();">
+                                                    onkeyup="dataListValidator(this, 'nationalityList' , 'inquiry' , 'nationality_id' , 'countryname'); changeLableNicPpt();">
                                                 <datalist id="dataListNationality"></datalist>
 
                                             </div>
@@ -219,7 +220,7 @@
                                             </div>
 
                                             <!-- additional contact -->
-                                            <div class="col-3">
+                                            <div class="col-3 d-none">
                                                 <label for="inqAdditionalContact" class="form-label mb-0">Contact
                                                     #2:</label>
 
@@ -255,7 +256,7 @@
                                             </div>
 
                                             <!-- passport OR nic num -->
-                                            <div class="col-3">
+                                            <div class="col-3 d-none">
                                                 <label id="lblForNICorPpt" for="inqClientPassportNumorNIC"
                                                     class="form-label mb-0">Passport
                                                     or NIC
@@ -264,8 +265,6 @@
                                                 <input id="inqClientPassportNumorNIC" class="form-control form-input"
                                                     onkeyup="filterClient();  inputValidatorText(this,'', 'inquiry' , 'passportnumornic')">
                                             </div>
-
-
 
                                         </div>
 
@@ -303,12 +302,13 @@
                                                     onkeyup="inputValidatorText(this,'', 'inquiry' , 'main_inq_msg')"></textarea>
                                             </div>
 
+                                            <!-- ests start date -->
                                             <div class="col-5">
 
                                                 <div class="row mt-0">
                                                     <div class="col-12">
                                                         <label class="form-label fw-semibold mb-0"
-                                                            for="tourStartDateStatus">Estimated Tour Start Date:</label>
+                                                            for="inqApproxStartDate">Estimated Tour Start Date:</label>
                                                     </div>
                                                 </div>
 
@@ -372,7 +372,7 @@
                                                                 class="form-label mb-0 fs-6">Local Adults</label>
                                                             <input type="number" value="0" class="w-75 form-control"
                                                                 id="inqLocalAdultCount"
-                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'localadultcount'); enableChildCountInputs();">
+                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'inq_local_adults'); enableChildCountInputs();">
                                                         </div>
 
                                                         <!-- Local Children -->
@@ -381,7 +381,7 @@
                                                                 class="form-label mb-0 fs-6">Local Children</label>
                                                             <input type="number" value="0" class="w-75 form-control"
                                                                 id="inqLocalChildCount" disabled
-                                                                onchange="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'localchildcount');">
+                                                                onchange="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'inq_local_kids');">
                                                         </div>
 
                                                         <!-- Foreign Adults -->
@@ -390,7 +390,7 @@
                                                                 class="form-label mb-0 fs-6">Foreign Adults</label>
                                                             <input type="number" value="0" class="w-75 form-control"
                                                                 id="inqForeignAdultCount"
-                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'foreignadultcount'); enableChildCountInputs();">
+                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'inq_foreign_adults'); enableChildCountInputs();">
                                                         </div>
 
                                                         <!-- Foreign Children -->
@@ -399,7 +399,7 @@
                                                                 class="form-label mb-0 fs-6">Foreign Children</label>
                                                             <input type="number" value="0" class="w-75 form-control"
                                                                 id="inqForeignChildCount" disabled
-                                                                onchange="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'foreignchildcount');">
+                                                                onchange="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'inq_foreign_kids');">
                                                         </div>
                                                         <!-- Optional Total Travellers -->
                                                         <!--
@@ -575,7 +575,7 @@
 
                                         <!-- button to add new responses -->
                                         <div class="row mt-2">
-                                            <button id="createNewResponseRowBtn" class="btn btn-primary mx-auto w-25"
+                                            <button disabled id="createNewResponseRowBtn" class="btn btn-primary mx-auto w-25"
                                                 onclick="createNewResponseInputSection();">Add a new
                                                 Response</button>
                                         </div>

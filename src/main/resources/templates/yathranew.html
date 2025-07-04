@@ -873,7 +873,7 @@
                                 <div class="row mt-2">
 
                                     <!-- visiting places preferences -->
-                                    <div class="col-6 mb-2">
+                                    <div class="col-8 mb-2">
                                         <label class="form-label fw-bold mb-0" for="inqPlacesPreferences">Places
                                             Preferences:</label>
                                         <textarea class="form-control" id="inqPlacesPreferences"
@@ -881,6 +881,43 @@
                                             placeholder="List places you want to visit and places you'd prefer to avoid. For example: Must-visit: Sigiriya, Ella, Yala. Avoid: crowded cities."
                                             onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_vplaces')"></textarea>
                                     </div>
+
+                                    <!-- guide preferences -->
+                                    <div class="col-4">
+                                        <div class="row mt-0">
+
+                                            <!-- Label Row -->
+                                            <div class="col-12">
+                                                <label class="form-label fw-semibold mb-2"
+                                                    for="guideNeedOrNot">Require a Tour Guide?</label>
+                                            </div>
+
+                                            <!-- Options Row -->
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" name="guideNeedOrNot"
+                                                    id="guideYes" autocomplete="off"
+                                                    onchange="handleNeedGuideCB()">
+                                                <label
+                                                    class="btn btn-outline-success w-100 fw-bold text-uppercase"
+                                                    for="guideYes">Yes</label>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <input type="radio" class="btn-check" name="guideNeedOrNot"
+                                                    id="guideNo" autocomplete="off"
+                                                    onchange="handleNeedGuideCB()">
+                                                <label
+                                                    class="btn btn-outline-danger w-100 fw-bold text-uppercase"
+                                                    for="guideNo">No</label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row my-2">
 
                                     <!--  Accommodation preferences-->
                                     <div class="col-6 mb-2">
@@ -891,9 +928,7 @@
                                             placeholder="Let us know your preferences: e.g., type of hotel, bed type, floor level, view, etc."
                                             onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'inq_accos')"></textarea>
                                     </div>
-                                </div>
 
-                                <div class="row">
                                     <!-- Preferred Transport -->
                                     <div class="col-6 mb-2">
                                         <label class="form-label fw-bold mb-0" for="inqTransportNote">Transport
@@ -913,7 +948,7 @@
                                     <button type="reset" id="btnClear" class="btn-clear fw-bold"
                                         onclick="refreshPkgRelInqForm();">
                                         Reset Form </button>
-       
+
                                     <button id="submitPkgRelatedInqs" type="submit" class="ms-3 btn-add fw-bold"
                                         onclick="pkgRelInqAddBtn()" style="pointer-events: all;">
                                         Submit Inquiry</button>

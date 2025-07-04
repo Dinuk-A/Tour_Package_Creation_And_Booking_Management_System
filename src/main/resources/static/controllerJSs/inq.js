@@ -108,7 +108,7 @@ const showRecievedTimeStamp = (ob) => {
     return ob.recieveddate + "</br>" + (ob.recievedtime ? ob.recievedtime : "12:00")
 }
 
-//show assigned user details in table
+//show assigned EMP details in table  (call each row, NOT USED , SLOW 💥💥💥)
 const showAssignedEmployeeOri = async (ob) => {
 
     if (ob.assigned_empid != null && ob.assigned_empid != "") {
@@ -129,6 +129,7 @@ const showAssignedEmployeeOri = async (ob) => {
 
 }
 
+//show assigned EMP details in table ✅
 const showAssignedEmployee = (ob) => {
     if (ob.assigned_empid && ob.assigned_empid.id && allEmployeesMap[ob.assigned_empid.id]) {
         const empInfo = allEmployeesMap[ob.assigned_empid.id];
@@ -141,7 +142,7 @@ const showAssignedEmployee = (ob) => {
 };
 
 
-//refresh the inquiry form and reset all fields
+//refresh the inquiry form and reset all fields 💥💥💥
 const refreshInquiryForm = async () => {
 
     inquiry = new Object();
@@ -161,10 +162,6 @@ const refreshInquiryForm = async () => {
         console.error("Error fetching nationality list:", error);
 
     }
-
-    const updateBtn = document.getElementById('manualInqUpdateBtn');
-    updateBtn.disabled = true;
-    updateBtn.style.cursor = "not-allowed";
 
     // Array of input field IDs to reset
     const inputTagsIds = [
@@ -204,6 +201,13 @@ const refreshInquiryForm = async () => {
         }
     });
 
+    //remove Website option from inq recieved method 💥💥💥
+    document.getElementById('inqRecievedMethod').children[1].classList.add('d-none');
+
+    const updateBtn = document.getElementById('manualInqUpdateBtn');
+    updateBtn.disabled = true;
+    updateBtn.style.cursor = "not-allowed";
+
 }
 
 
@@ -214,6 +218,18 @@ const changeLableNicPpt = () => {
         labelOfField.innerText = "NIC: "
     } else {
         labelOfField.innerText = "Passport Number: "
+    }
+}
+
+//handle guide need or not
+const handleNeedGuideCB = () => {
+    const guideNeed = document.getElementById('guideYes');
+    const guideDontNeed = document.getElementById('guideNo');
+
+    if (guideNeed.checked) {
+        inquiry.inq_guideneed = true;
+    } else if (guideDontNeed.checked) {
+        inquiry.inq_guideneed = false;
     }
 }
 
@@ -261,7 +277,7 @@ const checkManualInqErrors = () => {
         errors = errors + " Please Enter The Client's Name  \n";
     }
 
-    //if (inquiry.nationality == null) {
+    //if (inquiry.nationality_id == null) {
     //    errors = errors + " Please Select The Client's Nationality  \n";
     //}
 
@@ -309,55 +325,88 @@ const addNewInquiry = async () => {
     }
 }
 
-//fn to view button, refill the data in form
+//fn to view button, REFILL the data in form
 const openModal = (inqObj) => {
+
+    //email and phone number deken ekakin customer base eka filter wena url ekak run wenawa
+    //results thiyanawa nam e customer previous cx kenek kiyala me section eke pennnawa + passport, additional contacts penawa
+    //naththan e 3ma hidden 💥💥💥💥💥💥
 
     inquiry = JSON.parse(JSON.stringify(inqObj));
     oldInquiry = JSON.parse(JSON.stringify(inqObj));
-
-    const updateBtn = document.getElementById('manualInqUpdateBtn');
-    updateBtn.disabled = false;
-    updateBtn.style.cursor = "pointer";
 
     const addBtn = document.getElementById('manualInqAddBtn');
     addBtn.disabled = true;
     addBtn.style.cursor = "not-allowed";
 
-    document.getElementById('inqCodeInput').value = inqObj.inqcode || "";
-    document.getElementById('inqRecievedMethod').value = inqObj.inqsrc || "";
-    document.getElementById('inqRecievedDate').value = inqObj.recieveddate || "";
-    document.getElementById('inqRecievedTime').value = inqObj.recievedtime || "";
-    document.getElementById('inqCodeRecievedContact').value = inqObj.recievedcontactoremail || "";
-    document.getElementById('inqInterestedPkg').value = inqObj.intrstdpkgid || "";
-    document.getElementById('inqClientTitle').value = inqObj.clienttitle || "";
-    document.getElementById('inqClientName').value = inqObj.clientname || "";
-    document.getElementById('InqClientNationality').value = inqObj.nationality?.countryname || "";
-    document.getElementById('inqContactOne').value = inqObj.contactnum || "";
-    document.getElementById('inqAdditionalContact').value = inqObj.contactnumtwo || "";
-    document.getElementById('inqClientEmail').value = inqObj.email || "";
-    document.getElementById('inqClientPassportNumorNIC').value = inqObj.passportnumornic || "";
-    document.getElementById('inqMainEnquiry').value = inqObj.main_inq_msg || "";
-    document.getElementById('prefContMethodPkgRelForm').value = inqObj.prefcontactmethod || "";
-    document.getElementById('inqApproxStartDate').value = inqObj.inq_apprx_start_date || "";
+    document.getElementById('inqCodeInput').value = inqObj.inqcode || "N/A";
+    document.getElementById('inqRecievedMethod').value = inqObj.inqsrc || "N/A";
+    document.getElementById('inqRecievedDate').value = inqObj.recieveddate || "N/A";
+    document.getElementById('inqRecievedTime').value = inqObj.recievedtime || "N/A";
+    document.getElementById('inqCodeRecievedContact').value = inqObj.recievedcontactoremail || "N/A";
+    //💥💥💥document.getElementById('inqInterestedPkg').value = inqObj.intrstdpkgid || "N/A";
+    document.getElementById('inqClientTitle').value = inqObj.clienttitle || "N/A";
+    document.getElementById('inqClientName').value = inqObj.clientname || "N/A";
+    //💥💥💥
+    document.getElementById('InqClientNationality').value = inqObj.nationality_id?.countryname || "N/A";
+    document.getElementById('inqContactOne').value = inqObj.contactnum || "N/A";
+    document.getElementById('inqAdditionalContact').value = inqObj.contactnumtwo || "N/A";
+    document.getElementById('inqClientEmail').value = inqObj.email || "N/A";
+    document.getElementById('prefContMethodPkgRelForm').value = inqObj.prefcontactmethod || "N/A";
+    document.getElementById('inqClientPassportNumorNIC').value = inqObj.passportnumornic || "N/A";
+    document.getElementById('inqMainEnquiry').value = inqObj.main_inq_msg || "N/A";
+    document.getElementById('inqApproxStartDate').value = inqObj.inq_apprx_start_date || "N/A";
 
-    document.getElementById('inqLocalAdultCount').value = inqObj.inq_local_adults || 0;
-    document.getElementById('inqLocalChildCount').value = inqObj.inq_local_kids || 0;
-    document.getElementById('inqForeignAdultCount').value = inqObj.inq_adults || 0;
-    document.getElementById('inqForeignChildCount').value = inqObj.inq_kids || 0;
+    if (inqObj.inq_apprx_start_date != null || inqObj.inq_apprx_start_date != undefined) {
+        document.getElementById('startDateConfirmed').disabled = false;
+        document.getElementById('startDateUnconfirmed').disabled = false;
+    }
 
-    document.getElementById('inqAccommodationNote').value = inqObj.inq_accos || "";
-    document.getElementById('inqPlacesPreferences').value = inqObj.inq_vplaces || "";
-    document.getElementById('inqTransportNote').value = inqObj.inq_vehi || "";
-    document.getElementById('estdPickupLocation').value = inqObj.inq_pick || "";
-    document.getElementById('estdDropOffLocation').value = inqObj.inq_drop || "";
-    document.getElementById('inputNoteInquiry').value = inqObj.note || "";
-    document.getElementById('inqStatus').value = inqObj.inq_status || "";
+    if (inqObj.is_startdate_confirmed == true) {
+        document.getElementById('startDateConfirmed').checked = true;
+    } else if (inqObj.is_startdate_confirmed == false || inqObj.is_startdate_confirmed == null) {
+        document.getElementById('startDateUnconfirmed').checked = true;
+    }
+
+    //this happens only once, when opening fresh inqs
+    if (inqObj.inq_adults != 0) {
+        //this happens only once, when opening fresh inqs
+        if (inquiry.nationality_id.countryname == "Sri Lanka") {
+            document.getElementById('inqLocalAdultCount').value = inqObj.inq_adults || 0;
+            inquiry.inq_local_adults = inqObj.inq_adults;
+
+            document.getElementById('inqLocalChildCount').value = inqObj.inq_kids || 0;
+            inquiry.inq_local_kids = inqObj.inq_kids;
+
+        } else {
+            document.getElementById('inqForeignAdultCount').value = inqObj.inq_adults || 0;
+            inquiry.inq_foreign_adults = inqObj.inq_adults;
+
+            document.getElementById('inqForeignChildCount').value = inqObj.inq_kids || 0;
+            inquiry.inq_foreign_kids = inqObj.inq_kids;
+        }
+    } else if (inqObj.inq_adults == 0) {
+        document.getElementById('inqLocalAdultCount').value = inqObj.inq_local_adults || 0;
+        document.getElementById('inqLocalChildCount').value = inqObj.inq_local_kids || 0;
+        document.getElementById('inqForeignAdultCount').value = inqObj.inq_foreign_adults || 0;
+        document.getElementById('inqForeignChildCount').value = inqObj.inq_foreign_kids || 0;
+    }
+
+
 
     if (inqObj.inq_guideneed === true) {
         document.getElementById('guideYes').checked = true;
     } else if (inqObj.inq_guideneed === false) {
         document.getElementById('guideNo').checked = true;
     }
+
+    document.getElementById('inqPlacesPreferences').value = inqObj.inq_vplaces || "N/A";
+    document.getElementById('inqAccommodationNote').value = inqObj.inq_accos || "N/A";
+    document.getElementById('inqTransportNote').value = inqObj.inq_vehi || "N/A";
+    document.getElementById('estdPickupLocation').value = inqObj.inq_pick || "N/A";
+    document.getElementById('estdDropOffLocation').value = inqObj.inq_drop || "N/A";
+    document.getElementById('inputNoteInquiry').value = inqObj.note || "N/A";
+    document.getElementById('inqStatus').value = inqObj.inq_status || "N/A";
 
     const inputTagsIds = [
         'inqCodeInput',
@@ -389,7 +438,7 @@ const openModal = (inqObj) => {
         'inqStatus'
     ];
 
-    // Disable all inputs in the list
+    // disable all inputs in the list
     inputTagsIds.forEach((fieldID) => {
         const field = document.getElementById(fieldID);
         if (field) {
@@ -397,9 +446,12 @@ const openModal = (inqObj) => {
         }
     });
 
+    //enable edit button
+    const enableEditBtn = document.getElementById('inqEnableEditBtn');
+    enableEditBtn.disabled = false;
+    enableEditBtn.style.cursor = "pointer";
 
-    document.getElementById('inqEnableEditBtn').disabled = false;
-
+    //enable add new response button
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
     addNewResponseRowBtn.disabled = false;
     addNewResponseRowBtn.style.cursor = "pointer";
@@ -413,6 +465,9 @@ const openModal = (inqObj) => {
 
 // to enable inquiry editing , enable input fields
 const enableInqEditing = () => {
+
+    document.getElementById('inqEnableEditBtn').disabled = true;
+
     const inputIds = [
         "inqMainEnquiry",
         "prefContMethodPkgRelForm",
@@ -437,7 +492,10 @@ const enableInqEditing = () => {
         }
     });
 
-    document.getElementById('inqEnableEditBtn').disabled = true;
+    const updateBtn = document.getElementById('manualInqUpdateBtn');
+    updateBtn.disabled = false;
+    updateBtn.style.cursor = "pointer";
+
 }
 
 //get updates
@@ -501,8 +559,6 @@ const refreshInqFollowupSection = () => {
     addNewResponseRowBtn.disabled = true;
     addNewResponseRowBtn.style.cursor = "not-allowed";
 
-
-
 }
 
 //update a manual inq(after a followup)
@@ -521,6 +577,12 @@ const updateSystemInq = async () => {
         let userConfirm = confirm("Are you sure to proceed ? \n \n" + changesHappened);
 
         if (userConfirm) {
+
+            //to remove general traveller grp counts, bcz they are now saved in local/foreign separately
+            inquiry.inq_adults = null;
+            inquiry.inq_kids = null;
+
+            //to followup
             followup.content = changesHappened;
             followup.inquiry_id = inquiry;
 
@@ -841,22 +903,52 @@ const submitManualFollowup = async () => {
     }
 }
 
-const enableChildCountInputs = () => {
+//childs are allowed only with adult of any type
+const enableChildCountInputsOri = () => {
     if (parseInt(inqLocalAdultCount.value) > 0 || parseInt(inqForeignAdultCount.value) > 0) {
         inqLocalChildCount.disabled = false;
         inqForeignChildCount.disabled = false;
 
-        //autofocus test
-        // tpkgLocalChildCount.focus();
-
     } else {
         inqLocalChildCount.disabled = true;
         inqForeignChildCount.disabled = true;
-        inquiry.localchildcount = 0;
-        inquiry.foreignchildcount = 0;
+        inquiry.inq_local_kids = 0;
+        inquiry.inq_foreign_kids = 0;
 
     }
+
 }
+
+//inqLocalChildCount.value = 0;
+//inqForeignChildCount.value = 0;
+
+const enableChildCountInputs = () => {
+
+    const localAdultCount = parseInt(inqLocalAdultCount.value.trim()) || 0;
+    const foreignAdultCount = parseInt(inqForeignAdultCount.value.trim()) || 0;
+
+    const hasAtLeastOneAdult = localAdultCount > 0 || foreignAdultCount > 0;
+
+    if (hasAtLeastOneAdult) {
+        inqLocalChildCount.disabled = false;
+        inqForeignChildCount.disabled = false;
+    } else {
+        inqLocalChildCount.disabled = true;
+        inqForeignChildCount.disabled = true;
+
+        inqLocalChildCount.value = 0;
+        inqForeignChildCount.value = 0;
+
+        inquiry.inq_local_kids = 0;
+        inquiry.inq_foreign_kids = 0;
+
+        inqLocalChildCount.style.border = "1px solid #ced4da";
+        inqForeignChildCount.style.border = "1px solid #ced4da";
+
+    }
+};
+
+
 
 //to mark if start date is sure ot not
 const handleStartDateStatusChange = () => {
@@ -879,14 +971,15 @@ const enableDateStatusRadios = () => {
     const startDateSure = document.getElementById('startDateConfirmed');
     const startDateUncertain = document.getElementById('startDateUnconfirmed');
 
+    startDateSure.checked = false;
+    startDateUncertain.checked = false;
+
     if (inqApproxStartDate.value != "") {
         startDateSure.disabled = false;
         startDateUncertain.disabled = false;
     } else {
         startDateSure.disabled = true;
         startDateUncertain.disabled = true;
-        startDateSure.checked = false;
-        startDateUncertain.checked = false;
     }
 }
 

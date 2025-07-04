@@ -47,11 +47,12 @@ public class Inq {
     // @Column(name = "inq_grp_text")
     // private String inq_grp_text;
 
-    @Column(name = "inq_adults")
-    private Integer inq_adults;
-
+    // general traveller count
     @Column(name = "inq_kids")
     private Integer inq_kids;
+
+    @Column(name = "inq_adults")
+    private Integer inq_adults;
 
     @Column(name = "inq_vplaces")
     private String inq_vplaces;
@@ -65,7 +66,7 @@ public class Inq {
     // NATIONALITY LINK
     @ManyToOne
     @JoinColumn(name = "nationality_id", referencedColumnName = "id")
-    private Nationality nationality;
+    private Nationality nationality_id;
 
     // hidden in web form ✅
     @Column(name = "inqcode")
@@ -94,6 +95,14 @@ public class Inq {
     @Column(name = "passportnumornic")
     private String passportnumornic;
 
+    // for foreigners
+    @Column(name = "inq_foreign_adults")
+    private Integer inq_foreign_adults;
+
+    @Column(name = "inq_foreign_kids")
+    private Integer inq_foreign_kids;
+
+    // for locals
     @Column(name = "inq_local_adults")
     private Integer inq_local_adults;
 

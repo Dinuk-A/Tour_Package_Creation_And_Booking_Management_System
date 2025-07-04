@@ -150,7 +150,7 @@ const refreshPkgRelInqForm = async () => {
     document.getElementById('inqStartDate').classList.add('d-none')
 
     //cb ids
-    const checkBxesToReset =[
+    const checkBxesToReset = [
         'chk1',
         'chk2',
         'chk3',
@@ -160,11 +160,11 @@ const refreshPkgRelInqForm = async () => {
         'startDateApprox'
     ];
 
-      //clear out any previous styles
-      checkBxesToReset.forEach((fieldID) => {
+    //clear out any previous styles
+    checkBxesToReset.forEach((fieldID) => {
         const field = document.getElementById(fieldID);
         if (field) {
-           field.checked = false;
+            field.checked = false;
         }
     });
 
@@ -671,6 +671,18 @@ const pkgRelInqAddBtn = async () => {
     }
 }
 
+//handle guide need or not
+const handleNeedGuideCB = () => {
+    const guideNeed = document.getElementById('guideYes');
+    const guideDontNeed = document.getElementById('guideNo');
+
+    if (guideNeed.checked) {
+        inquiry.inq_guideneed = true;
+    } else if (guideDontNeed.checked) {
+        inquiry.inq_guideneed = false;
+    }
+}
+
 //handle start date     
 const handleApproxDatesOpts = () => {
     const startDateInput = document.getElementById('inqStartDate');
@@ -682,8 +694,10 @@ const handleApproxDatesOpts = () => {
         startDateInput.style.border = "1px solid #ced4da"
         startDateInput.value = "";
         inquiry.inq_apprx_start_date = null
+        inquiry.is_startdate_confirmed = false;
     } else if (dateSureCB) {
         startDateInput.classList.remove('d-none');
+        inquiry.is_startdate_confirmed = true;
     }
 }
 
