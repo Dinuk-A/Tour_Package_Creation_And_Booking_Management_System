@@ -369,23 +369,34 @@ const openModal = (inqObj) => {
     }
 
     //this happens only once, when opening fresh inqs
-    if (inqObj.inq_adults != 0) {
-        //this happens only once, when opening fresh inqs
+    if (inqObj.inq_adults != null && inqObj.inq_adults != 0) {
         if (inquiry.nationality_id.countryname == "Sri Lanka") {
+
             document.getElementById('inqLocalAdultCount').value = inqObj.inq_adults || 0;
             inquiry.inq_local_adults = inqObj.inq_adults;
+            oldInquiry.inq_local_adults = inqObj.inq_adults;
+            inquiry.inq_adults = null;
 
             document.getElementById('inqLocalChildCount').value = inqObj.inq_kids || 0;
             inquiry.inq_local_kids = inqObj.inq_kids;
+            oldInquiry.inq_local_kids = inqObj.inq_kids;
+            inquiry.inq_kids = null;
 
         } else {
+
             document.getElementById('inqForeignAdultCount').value = inqObj.inq_adults || 0;
             inquiry.inq_foreign_adults = inqObj.inq_adults;
+            oldInquiry.inq_foreign_adults = inqObj.inq_adults;
+            inquiry.inq_adults = null;
 
             document.getElementById('inqForeignChildCount').value = inqObj.inq_kids || 0;
             inquiry.inq_foreign_kids = inqObj.inq_kids;
+            oldInquiry.inq_foreign_kids = inqObj.inq_kids;
+            inquiry.inq_kids = null;
+
         }
-    } else if (inqObj.inq_adults == 0) {
+        //if (inqObj.inq_adults == 0)
+    } else {
         document.getElementById('inqLocalAdultCount').value = inqObj.inq_local_adults || 0;
         document.getElementById('inqLocalChildCount').value = inqObj.inq_local_kids || 0;
         document.getElementById('inqForeignAdultCount').value = inqObj.inq_foreign_adults || 0;
@@ -515,21 +526,64 @@ const showInqValueChanges = () => {
         updates = updates + "Estimated Start Date changed from " + oldInquiry.inq_apprx_start_date + " to " + inquiry.inq_apprx_start_date + "\n";
     }
 
-    if (inquiry.inq_adults != oldInquiry.inq_adults) {
-        updates = updates + "Traveller Group: Foreign Adult Count changed from " + oldInquiry.inq_adults + " to " + inquiry.inq_adults + "\n";
+    //    if (inquiry.inq_foreign_adults != oldInquiry.inq_foreign_adults) {
+    //        updates = updates + "Traveller Group: Foreign Adult Count changed from " + oldInquiry.inq_foreign_adults + " to " + inquiry.inq_foreign_adults + "\n";
+    //    }
+    //
+    //    if (inquiry.inq_foreign_kids != oldInquiry.inq_foreign_kids) {
+    //        updates = updates + "Traveller Group: Foreign Child Count changed from " + oldInquiry.inq_foreign_kids + " to " + inquiry.inq_foreign_kids + "\n";
+    //    }
+    //
+    //    if (inquiry.inq_local_adults != oldInquiry.inq_local_adults) {
+    //        updates = updates + "Traveller Group: Local Adult Count changed from " + oldInquiry.inq_local_adults + " to " + inquiry.inq_local_adults + "\n";
+    //    }
+    //
+    //    if (inquiry.inq_local_kids != oldInquiry.inq_local_kids) {
+    //        updates = updates + "Traveller Group: Local Child Count changed from " + oldInquiry.inq_local_kids + " to " + inquiry.inq_local_kids + "\n";
+    //    }
+
+    const nationality = inquiry.nationality_id?.countryname;
+
+    if (oldInquiry.inq_adults != null || oldInquiry.inq_kids != null) {
+        // Old system used general inq_adults/inq_kids fields
+        const oldAdults = oldInquiry.inq_adults || 0;
+        const oldKids = oldInquiry.inq_kids || 0;
+
+        if (nationality === "Sri Lanka") {
+            if (inquiry.inq_local_adults !== oldAdults) {
+                updates += `Traveller Group: Local Adult Count changed from ${oldAdults} to ${inquiry.inq_local_adults}\n`;
+            }
+            if (inquiry.inq_local_kids !== oldKids) {
+                updates += `Traveller Group: Local Child Count changed from ${oldKids} to ${inquiry.inq_local_kids}\n`;
+            }
+        } else {
+            if (inquiry.inq_foreign_adults !== oldAdults) {
+                updates += `Traveller Group: Foreign Adult Count changed from ${oldAdults} to ${inquiry.inq_foreign_adults}\n`;
+            }
+            if (inquiry.inq_foreign_kids !== oldKids) {
+                updates += `Traveller Group: Foreign Child Count changed from ${oldKids} to ${inquiry.inq_foreign_kids}\n`;
+            }
+        }
+
+    } else {
+        // Old system already used new local/foreign fields
+        if (inquiry.inq_local_adults !== oldInquiry.inq_local_adults) {
+            updates += `Traveller Group: Local Adult Count changed from ${oldInquiry.inq_local_adults || 0} to ${inquiry.inq_local_adults}\n`;
+        }
+
+        if (inquiry.inq_local_kids !== oldInquiry.inq_local_kids) {
+            updates += `Traveller Group: Local Child Count changed from ${oldInquiry.inq_local_kids || 0} to ${inquiry.inq_local_kids}\n`;
+        }
+
+        if (inquiry.inq_foreign_adults !== oldInquiry.inq_foreign_adults) {
+            updates += `Traveller Group: Foreign Adult Count changed from ${oldInquiry.inq_foreign_adults || 0} to ${inquiry.inq_foreign_adults}\n`;
+        }
+
+        if (inquiry.inq_foreign_kids !== oldInquiry.inq_foreign_kids) {
+            updates += `Traveller Group: Foreign Child Count changed from ${oldInquiry.inq_foreign_kids || 0} to ${inquiry.inq_foreign_kids}\n`;
+        }
     }
 
-    if (inquiry.inq_kids != oldInquiry.inq_kids) {
-        updates = updates + "Traveller Group: Foreign Child Count changed from " + oldInquiry.inq_kids + " to " + inquiry.inq_kids + "\n";
-    }
-
-    if (inquiry.inq_local_adults != oldInquiry.inq_local_adults) {
-        updates = updates + "Traveller Group: Local Adult Count changed from " + oldInquiry.inq_local_adults + " to " + inquiry.inq_local_adults + "\n";
-    }
-
-    if (inquiry.inq_local_kids != oldInquiry.inq_local_kids) {
-        updates = updates + "Traveller Group: Local Child Count changed from " + oldInquiry.inq_local_kids + " to " + inquiry.inq_local_kids + "\n";
-    }
 
     return updates;
 
@@ -905,6 +959,8 @@ const submitManualFollowup = async () => {
 
 //childs are allowed only with adult of any type
 const enableChildCountInputsOri = () => {
+
+
     if (parseInt(inqLocalAdultCount.value) > 0 || parseInt(inqForeignAdultCount.value) > 0) {
         inqLocalChildCount.disabled = false;
         inqForeignChildCount.disabled = false;
@@ -922,17 +978,21 @@ const enableChildCountInputsOri = () => {
 //inqLocalChildCount.value = 0;
 //inqForeignChildCount.value = 0;
 
-const enableChildCountInputs = () => {
+// child inputs are only available if there is adult values
+const handleChildInputAvailability = () => {
 
     const localAdultCount = parseInt(inqLocalAdultCount.value.trim()) || 0;
     const foreignAdultCount = parseInt(inqForeignAdultCount.value.trim()) || 0;
 
-    const hasAtLeastOneAdult = localAdultCount > 0 || foreignAdultCount > 0;
+    const hasAnyAdult = localAdultCount > 0 || foreignAdultCount > 0;
 
-    if (hasAtLeastOneAdult) {
+    if (hasAnyAdult) {
+
         inqLocalChildCount.disabled = false;
         inqForeignChildCount.disabled = false;
+
     } else {
+
         inqLocalChildCount.disabled = true;
         inqForeignChildCount.disabled = true;
 
@@ -944,11 +1004,8 @@ const enableChildCountInputs = () => {
 
         inqLocalChildCount.style.border = "1px solid #ced4da";
         inqForeignChildCount.style.border = "1px solid #ced4da";
-
     }
 };
-
-
 
 //to mark if start date is sure ot not
 const handleStartDateStatusChange = () => {
@@ -967,6 +1024,7 @@ const handleStartDateStatusChange = () => {
     }
 }
 
+//changes based on dates
 const enableDateStatusRadios = () => {
     const startDateSure = document.getElementById('startDateConfirmed');
     const startDateUncertain = document.getElementById('startDateUnconfirmed');

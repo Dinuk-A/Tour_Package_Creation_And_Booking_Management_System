@@ -372,7 +372,7 @@
                                                                 class="form-label mb-0 fs-6">Local Adults</label>
                                                             <input type="number" value="0" class="w-75 form-control"
                                                                 id="inqLocalAdultCount"
-                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'inq_local_adults'); enableChildCountInputs();">
+                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'inq_local_adults'); handleChildInputAvailability();">
                                                         </div>
 
                                                         <!-- Local Children -->
@@ -390,7 +390,7 @@
                                                                 class="form-label mb-0 fs-6">Foreign Adults</label>
                                                             <input type="number" value="0" class="w-75 form-control"
                                                                 id="inqForeignAdultCount"
-                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'inq_foreign_adults'); enableChildCountInputs();">
+                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'inquiry', 'inq_foreign_adults'); handleChildInputAvailability();">
                                                         </div>
 
                                                         <!-- Foreign Children -->
@@ -411,6 +411,7 @@
                                                             </div>
             -->
                                                     </div>
+
                                                 </div>
                                             </div>
 
