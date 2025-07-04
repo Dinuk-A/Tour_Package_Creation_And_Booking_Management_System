@@ -108,6 +108,21 @@ public class EmployeeController {
         return employeeDao.getNonDeletedEmployees();
     }
 
+    // get active employees who are managers, assistants and executives
+    @GetMapping(value = "/emp/active/inqoperators", produces = "application/json")
+    public List<Employee> getActiveSeniorEmployees() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "EMPLOYEE");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<Employee>();
+        }
+
+        return employeeDao.getNonDeletedManagersAndAssistantsAndExecutives();
+    }
+
     // emp list except admin
     @GetMapping(value = "/emp/exceptadmin", produces = "application/json")
     public List<Employee> returnEmpListExceptAdmin() {

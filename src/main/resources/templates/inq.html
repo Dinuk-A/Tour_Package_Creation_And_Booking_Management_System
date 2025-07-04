@@ -112,7 +112,7 @@
                                                     :</label>
 
                                                 <select id="inqRecievedMethod" class="form-control form-select mb-0"
-                                                    onchange="staticSelectValidator(this,  'inquiry' , 'inqsrc'); ">
+                                                    onchange="staticSelectValidator(this,  'inquiry' , 'inqsrc'); handleRecievedAddr();">
                                                     <option value="" selected disabled>Select Source</option>
                                                     <option value="Website">Website</option>
                                                     <option value="Phone Call">Phone Call</option>
@@ -148,10 +148,9 @@
 
                                             <!-- Recieved COntact/Email -->
                                             <div class="col-4">
-                                                <label for="inqCodeRecievedContact" class="form-label mb-0">Recieved
+                                                <label for="inqRecievedContact" class="form-label mb-0">Recieved
                                                     Contact:</label>
-                                                <input disabled id="inqCodeRecievedContact"
-                                                    class="form-control form-input"
+                                                <input disabled id="inqRecievedContact" class="form-control form-input"
                                                     onkeyup="inputValidatorText(this,'', 'inquiry' , 'recievedcontactoremail')">
                                             </div>
 
@@ -159,7 +158,7 @@
                                             <div class="col-8">
                                                 <label for="inqInterestedPkg" class="form-label mb-0">Inquired
                                                     Package :</label>
-                                                <select disabled id="inqInterestedPkg" class="form-control form-select"
+                                                <select id="inqInterestedPkg" class="form-control form-select"
                                                     onchange="dynamicSelectValidator(this, 'inquiry','intrstdpkgid')">
                                                 </select>
                                             </div>
@@ -179,8 +178,19 @@
                                             <div class="col-2">
                                                 <label for="inqClientTitle" class="form-label mb-0">
                                                     Title :</label>
-                                                <input disabled id="inqClientTitle" class="form-control form-input"
-                                                    onkeyup="inputValidatorText(this,'', 'inquiry' , 'clienttitle')">
+
+                                                <!--<input id="inqClientTitle" class="form-control form-input"
+                                                    onkeyup="inputValidatorText(this,'', 'inquiry' , 'clienttitle')">-->
+
+                                                <select class="form-select" id="inqClientTitle"
+                                                    onchange="staticSelectValidatorWeb(this, 'inquiry', 'clienttitle')">
+                                                    <option value="" selected disabled>-Select-</option>
+                                                    <option value="Mr">Mr</option>
+                                                    <option value="Ms">Ms</option>
+                                                    <option value="Mrs">Mrs</option>
+                                                    <option value="Dr">Dr</option>
+                                                </select>
+
                                             </div>
 
                                             <!-- client name -->
@@ -454,7 +464,8 @@
                                         <div class="row mb-1">
                                             <!-- v places -->
                                             <div class="col-6 mb-2">
-                                                <label class="form-label fw-bold mb-0" for="inqPlacesPreferences">Visiting Places
+                                                <label class="form-label fw-bold mb-0"
+                                                    for="inqPlacesPreferences">Visiting Places
                                                     Preferences:</label>
                                                 <textarea class="form-control" id="inqPlacesPreferences"
                                                     onkeyup=" inputValidatorText(this, '', 'inquiry', 'inq_vplaces')"
@@ -513,6 +524,36 @@
                                     <!-- Notes Section -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary">Additional Details</legend>
+
+                                        <!-- assigned user row -->
+                                        <div class="row mb-3 d-none" id="assignedUserRow">
+                                            <div class="row">
+
+                                                <!-- main selection area -->
+                                                <div class="col-6">
+                                                    <label for="assignedUserSelect"
+                                                        class="form-label fw-bold mb-1">Assigned
+                                                        To:</label>
+                                                    <select id="assignedUserSelect" class="form-select" disabled>
+                                                    </select>
+                                                </div>
+
+                                                <!-- buttons area -->
+                                                <div class="col-6">
+                                                    <div class="d-flex align-items-end h-100 justify-content-end">
+                                                        <button id="btnChangeAssignedUser"
+                                                            class="btn btn-outline-primary btn-sm"
+                                                            onclick="enableAssignedUserChange()">
+                                                            Change Assigned User
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
 
                                         <div class="row">
                                             <!-- note -->
@@ -576,7 +617,8 @@
 
                                         <!-- button to add new responses -->
                                         <div class="row mt-2">
-                                            <button disabled id="createNewResponseRowBtn" class="btn btn-primary mx-auto w-25"
+                                            <button disabled id="createNewResponseRowBtn"
+                                                class="btn btn-primary mx-auto w-25"
                                                 onclick="createNewResponseInputSection();">Add a new
                                                 Response</button>
                                         </div>

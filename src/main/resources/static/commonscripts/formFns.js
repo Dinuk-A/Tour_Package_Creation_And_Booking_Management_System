@@ -66,7 +66,7 @@ const fillDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropert
         tagId.appendChild(selectableOption);
     });
 
-    // ✅ Set the selected value on the <select> itself
+    // ✅ set the selected value on the <select> itself
     if (foundMatch) {
         const matchedOption = [...tagId.options].find(opt => opt.text === selectedValue);
         if (matchedOption) {

@@ -17,6 +17,16 @@ const loadAllEmployees = async () => {
     });
 };
 
+//clear out the form everytime a user switches to table tab
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshInquiryForm();
+            refreshInqFollowupSection();
+        }
+    });
+});
 
 //handle min max of date fields
 const handleDateFields = () => {
@@ -141,6 +151,16 @@ const showAssignedEmployee = (ob) => {
     }
 };
 
+//enable assigned user change, this is used in the inquiry form to enable the assigned user select field
+const enableAssignedUserChange = () => {
+    
+    const assignedUserSelect = document.getElementById('assignedUserSelect');
+    assignedUserSelect.disabled = false;
+
+}
+
+//global variables , used in openModal 
+let intrstdPkgList = [];
 
 //refresh the inquiry form and reset all fields 💥💥💥
 const refreshInquiryForm = async () => {
@@ -148,7 +168,7 @@ const refreshInquiryForm = async () => {
     inquiry = new Object();
 
     try {
-        const intrstdPkgList = await ajaxGetReq('/tourpackageforweb/all');
+        intrstdPkgList = await ajaxGetReq('/tourpackageforweb/all');
         fillMultDataIntoDynamicSelects(inqInterestedPkg, 'Please Select Package', intrstdPkgList, 'pkgcode', 'pkgtitle');
     } catch (error) {
         console.error('Error fetching interested packages:', error);
@@ -163,12 +183,20 @@ const refreshInquiryForm = async () => {
 
     }
 
+    try {
+        emps = await ajaxGetReq('/emp/active/inqoperators');
+        fillMultDataIntoDynamicSelects(assignedUserSelect, 'Select Employee', emps, 'emp_code', 'fullname');
+    } catch (error) {
+        console.error("Error fetching employees:", error);
+    }
+
     // Array of input field IDs to reset
     const inputTagsIds = [
+        'inqCodeInput',
         'inqRecievedMethod',
         'inqRecievedDate',
         'inqRecievedTime',
-        'inqCodeRecievedContact',
+        'inqRecievedContact',
         'inqInterestedPkg',
         'inqClientTitle',
         'inqClientName',
@@ -190,19 +218,28 @@ const refreshInquiryForm = async () => {
         'estdDropOffLocation',
         'inputNoteInquiry',
         'inqStatus',
+        'assignedUserSelect'
     ];
 
     //clear out any previous styles
     inputTagsIds.forEach((fieldID) => {
         const field = document.getElementById(fieldID);
         if (field) {
+            field.disabled = false;
             field.style.border = "1px solid #ced4da";
             field.value = '';
         }
     });
 
-    //remove Website option from inq recieved method 💥💥💥
+    document.getElementById('inqCodeInput').disabled = true;
+    document.getElementById('inqEnableEditBtn').disabled = true;
+    document.getElementById('inqRecievedContact').disabled = true;
+
     document.getElementById('inqRecievedMethod').children[1].classList.add('d-none');
+
+    document.getElementById('assignedUserRow').classList.add('d-none');
+
+    assignedUserSelect.disabled = true;
 
     const updateBtn = document.getElementById('manualInqUpdateBtn');
     updateBtn.disabled = true;
@@ -325,7 +362,22 @@ const addNewInquiry = async () => {
     }
 }
 
-//fn to view button, REFILL the data in form
+//fn to handle the inquiry received method change, enable or disable contact field
+const handleRecievedAddr = () => {
+
+    const recievedAddr = document.getElementById('inqRecievedContact');
+
+    if (this.value == "Phone Call" || this.value == "Email") {
+        recievedAddr.disabled = false;
+    } else {
+        recievedAddr.disabled = true;
+        inquiry.recievedcontactoremail = null;
+        recievedAddr.value = '';
+        recievedAddr.style.border = "1px solid #ced4da";
+    }
+}
+
+//fn to view button, REFILL the data in form 💥💥💥💥💥💥
 const openModal = (inqObj) => {
 
     //email and phone number deken ekakin customer base eka filter wena url ekak run wenawa
@@ -343,11 +395,10 @@ const openModal = (inqObj) => {
     document.getElementById('inqRecievedMethod').value = inqObj.inqsrc || "N/A";
     document.getElementById('inqRecievedDate').value = inqObj.recieveddate || "N/A";
     document.getElementById('inqRecievedTime').value = inqObj.recievedtime || "N/A";
-    document.getElementById('inqCodeRecievedContact').value = inqObj.recievedcontactoremail || "N/A";
-    //💥💥💥document.getElementById('inqInterestedPkg').value = inqObj.intrstdpkgid || "N/A";
+    document.getElementById('inqRecievedContact').value = inqObj.recievedcontactoremail || "N/A";
+    fillMultDataIntoDynamicSelects(inqInterestedPkg, 'Please Select Package', intrstdPkgList, 'pkgcode', 'pkgtitle', inqObj.intrstdpkgid?.pkgcode || "N/A");
     document.getElementById('inqClientTitle').value = inqObj.clienttitle || "N/A";
     document.getElementById('inqClientName').value = inqObj.clientname || "N/A";
-    //💥💥💥
     document.getElementById('InqClientNationality').value = inqObj.nationality_id?.countryname || "N/A";
     document.getElementById('inqContactOne').value = inqObj.contactnum || "N/A";
     document.getElementById('inqAdditionalContact').value = inqObj.contactnumtwo || "N/A";
@@ -424,7 +475,7 @@ const openModal = (inqObj) => {
         'inqRecievedMethod',
         'inqRecievedDate',
         'inqRecievedTime',
-        'inqCodeRecievedContact',
+        'inqRecievedContact',
         'inqInterestedPkg',
         'inqClientTitle',
         'inqClientName',
@@ -446,7 +497,8 @@ const openModal = (inqObj) => {
         'estdPickupLocation',
         'estdDropOffLocation',
         'inputNoteInquiry',
-        'inqStatus'
+        'inqStatus',
+        'assignedUserSelect'
     ];
 
     // disable all inputs in the list
@@ -467,10 +519,17 @@ const openModal = (inqObj) => {
     addNewResponseRowBtn.disabled = false;
     addNewResponseRowBtn.style.cursor = "pointer";
 
-    var myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
-    myInqFormTab.show();
+    document.getElementById('assignedUserRow').classList.remove('d-none');
+    fillMultDataIntoDynamicSelects(assignedUserSelect, 'Select Employee', emps, 'emp_code', 'fullname', inqObj.assigned_empid.fullname);
 
     refillAllPrevResponses();
+
+    let myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myInqFormTab.show();
+
+    let firstTab = new bootstrap.Tab(document.getElementById('inqStep1-tab'));
+    firstTab.show();
+
 
 }
 
@@ -493,7 +552,8 @@ const enableInqEditing = () => {
         "estdPickupLocation",
         "estdDropOffLocation",
         "guideYes",
-        "guideNo"
+        "guideNo",
+        "inputNoteInquiry"
     ];
 
     inputIds.forEach(id => {
@@ -514,9 +574,9 @@ const showInqValueChanges = () => {
 
     let updates = "";
 
-    if (inquiry.contactnumtwo != oldInquiry.contactnumtwo) {
-        updates = updates + "Contact #2 changed from " + oldInquiry.contactnumtwo.trim() + " to " + inquiry.contactnumtwo.trim() + "\n";
-    }
+    //if (inquiry.contactnumtwo != oldInquiry.contactnumtwo) {
+    //    updates = updates + "Contact #2 changed from " + oldInquiry.contactnumtwo.trim() + " to " + inquiry.contactnumtwo.trim() + "\n";
+    //}
 
     if (inquiry.main_inq_msg != oldInquiry.main_inq_msg) {
         updates = updates + "Main Enquiry Message changed from " + oldInquiry.main_inq_msg.trim() + " to " + inquiry.main_inq_msg.trim() + "\n";
@@ -525,6 +585,48 @@ const showInqValueChanges = () => {
     if (inquiry.inq_apprx_start_date != oldInquiry.inq_apprx_start_date) {
         updates = updates + "Estimated Start Date changed from " + oldInquiry.inq_apprx_start_date + " to " + inquiry.inq_apprx_start_date + "\n";
     }
+
+    //is_startdate_confirmed
+    //inq_guideneed
+    //inq_drop
+    //inq_pick
+    //inq_vplaces
+    //inq_accos
+    //inq_vehi
+    //note
+
+    if (inquiry.is_startdate_confirmed !== oldInquiry.is_startdate_confirmed) {
+        updates += `Start Date Confirmation changed from ${oldInquiry.is_startdate_confirmed ? "Confirmed" : "Not Confirmed"} to ${inquiry.is_startdate_confirmed ? "Confirmed" : "Not Confirmed"}\n`;
+    }
+
+    if (inquiry.inq_guideneed !== oldInquiry.inq_guideneed) {
+        updates += `Guide Requirement changed from ${oldInquiry.inq_guideneed ? "Yes" : "No"} to ${inquiry.inq_guideneed ? "Yes" : "No"}\n`;
+    }
+
+    if (inquiry.inq_pick !== oldInquiry.inq_pick) {
+        updates += `Pickup Location changed from ${oldInquiry.inq_pick?.trim() || "N/A"} to ${inquiry.inq_pick?.trim() || "N/A"}\n`;
+    }
+
+    if (inquiry.inq_drop !== oldInquiry.inq_drop) {
+        updates += `Drop-off Location changed from ${oldInquiry.inq_drop?.trim() || "N/A"} to ${inquiry.inq_drop?.trim() || "N/A"}\n`;
+    }
+
+    if (inquiry.inq_vplaces !== oldInquiry.inq_vplaces) {
+        updates += `Places Preferences changed from ${oldInquiry.inq_vplaces?.trim() || "N/A"} to ${inquiry.inq_vplaces?.trim() || "N/A"}\n`;
+    }
+
+    if (inquiry.inq_accos !== oldInquiry.inq_accos) {
+        updates += `Accommodation Note changed from ${oldInquiry.inq_accos?.trim() || "N/A"} to ${inquiry.inq_accos?.trim() || "N/A"}\n`;
+    }
+
+    if (inquiry.inq_vehi !== oldInquiry.inq_vehi) {
+        updates += `Transport Note changed from ${oldInquiry.inq_vehi?.trim() || "N/A"} to ${inquiry.inq_vehi?.trim() || "N/A"}\n`;
+    }
+
+    if (inquiry.note !== oldInquiry.note) {
+        updates += `Internal Note changed from ${oldInquiry.note?.trim() || "N/A"} to ${inquiry.note?.trim() || "N/A"}\n`;
+    }
+
 
     //    if (inquiry.inq_foreign_adults != oldInquiry.inq_foreign_adults) {
     //        updates = updates + "Traveller Group: Foreign Adult Count changed from " + oldInquiry.inq_foreign_adults + " to " + inquiry.inq_foreign_adults + "\n";
@@ -545,10 +647,11 @@ const showInqValueChanges = () => {
     const nationality = inquiry.nationality_id?.countryname;
 
     if (oldInquiry.inq_adults != null || oldInquiry.inq_kids != null) {
-        // Old system used general inq_adults/inq_kids fields
+
         const oldAdults = oldInquiry.inq_adults || 0;
         const oldKids = oldInquiry.inq_kids || 0;
 
+        //when changing for the first time
         if (nationality === "Sri Lanka") {
             if (inquiry.inq_local_adults !== oldAdults) {
                 updates += `Traveller Group: Local Adult Count changed from ${oldAdults} to ${inquiry.inq_local_adults}\n`;
@@ -565,8 +668,9 @@ const showInqValueChanges = () => {
             }
         }
 
+        //when chainging for the 2nd and after, when this happens there is no value in inq_adults or inq_kids
     } else {
-        // Old system already used new local/foreign fields
+
         if (inquiry.inq_local_adults !== oldInquiry.inq_local_adults) {
             updates += `Traveller Group: Local Adult Count changed from ${oldInquiry.inq_local_adults || 0} to ${inquiry.inq_local_adults}\n`;
         }
@@ -612,6 +716,9 @@ const refreshInqFollowupSection = () => {
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
     addNewResponseRowBtn.disabled = true;
     addNewResponseRowBtn.style.cursor = "not-allowed";
+
+    const container = document.getElementById("submittedAllResponses");
+    container.innerHTML = "";
 
 }
 
