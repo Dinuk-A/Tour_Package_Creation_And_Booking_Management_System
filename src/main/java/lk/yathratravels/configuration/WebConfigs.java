@@ -21,7 +21,7 @@ public class WebConfigs {
                     .requestMatchers("/commonscripts/**", "/controllerJSs/**", "/css/**", "/images/**", "/libs/**")
                     .permitAll()
 
-                    .requestMatchers("/emp/**").hasAnyAuthority("System_Admin", "Manager")
+                    .requestMatchers("/emp/**").hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
 
                     .requestMatchers("/user/**").hasAnyAuthority("System_Admin", "Manager")
 

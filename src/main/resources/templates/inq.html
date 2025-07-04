@@ -112,7 +112,7 @@
                                                     :</label>
 
                                                 <select id="inqRecievedMethod" class="form-control form-select mb-0"
-                                                    onchange="staticSelectValidator(this,  'inquiry' , 'inqsrc'); handleRecievedAddr();">
+                                                    onchange="staticSelectValidator(this,  'inquiry' , 'inqsrc'); handleRecievedAddr(this);">
                                                     <option value="" selected disabled>Select Source</option>
                                                     <option value="Website">Website</option>
                                                     <option value="Phone Call">Phone Call</option>
@@ -183,7 +183,7 @@
                                                     onkeyup="inputValidatorText(this,'', 'inquiry' , 'clienttitle')">-->
 
                                                 <select class="form-select" id="inqClientTitle"
-                                                    onchange="staticSelectValidatorWeb(this, 'inquiry', 'clienttitle')">
+                                                    onchange="staticSelectValidator(this, 'inquiry', 'clienttitle')">
                                                     <option value="" selected disabled>-Select-</option>
                                                     <option value="Mr">Mr</option>
                                                     <option value="Ms">Ms</option>
@@ -534,14 +534,14 @@
                                                     <label for="assignedUserSelect"
                                                         class="form-label fw-bold mb-1">Assigned
                                                         To:</label>
-                                                    <select id="assignedUserSelect" class="form-select" disabled>
+                                                    <select id="assignedUserSelect" class="form-control form-select" disabled  onchange="dynamicSelectValidator(this, 'inquiry','assigned_empid')">
                                                     </select>
                                                 </div>
 
                                                 <!-- buttons area -->
                                                 <div class="col-6">
                                                     <div class="d-flex align-items-end h-100 justify-content-end">
-                                                        <button id="btnChangeAssignedUser"
+                                                        <button disabled id="btnChangeAssignedUser"
                                                             class="btn btn-outline-primary btn-sm"
                                                             onclick="enableAssignedUserChange()">
                                                             Change Assigned User

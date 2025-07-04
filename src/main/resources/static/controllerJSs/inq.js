@@ -153,9 +153,14 @@ const showAssignedEmployee = (ob) => {
 
 //enable assigned user change, this is used in the inquiry form to enable the assigned user select field
 const enableAssignedUserChange = () => {
-    
+
     const assignedUserSelect = document.getElementById('assignedUserSelect');
     assignedUserSelect.disabled = false;
+
+    //enable update button
+    const updateBtn = document.getElementById('manualInqUpdateBtn');
+    updateBtn.disabled = false;
+    updateBtn.style.cursor = "pointer";
 
 }
 
@@ -234,10 +239,14 @@ const refreshInquiryForm = async () => {
     document.getElementById('inqCodeInput').disabled = true;
     document.getElementById('inqEnableEditBtn').disabled = true;
     document.getElementById('inqRecievedContact').disabled = true;
+    document.getElementById('inqLocalChildCount').disabled = true;
+    document.getElementById('inqForeignChildCount').disabled = true;
 
     document.getElementById('inqRecievedMethod').children[1].classList.add('d-none');
 
     document.getElementById('assignedUserRow').classList.add('d-none');
+
+    document.getElementById('btnChangeAssignedUser').disabled = true;
 
     assignedUserSelect.disabled = true;
 
@@ -245,8 +254,19 @@ const refreshInquiryForm = async () => {
     updateBtn.disabled = true;
     updateBtn.style.cursor = "not-allowed";
 
-}
+    const rolesRaw = document.getElementById('userRolesArraySection').textContent;
+    console.log("Raw roles text:", rolesRaw);
 
+    const roles = JSON.parse(rolesRaw);
+    console.log("Parsed roles:", roles);
+
+    if (roles.includes("System_Admin") || roles.includes("Manager")) {
+        btnChangeAssignedUser.disabled = false;
+    } else {
+        btnChangeAssignedUser.disabled = true;
+    }
+
+}
 
 //for natonality field
 const changeLableNicPpt = () => {
@@ -338,7 +358,15 @@ const addNewInquiry = async () => {
 
         if (userConfirm) {
             try {
-                // Await the response from the AJAX request
+
+                //bind the package's id
+                const inqInterestedPkgInput = document.getElementById('inqInterestedPkg');
+
+                if (inqInterestedPkgInput.value != null && inqInterestedPkgInput.value != "") {
+                    let selectedValue = JSON.parse(inqInterestedPkgInput.value);
+                    inquiry.intrstdpkgid = selectedValue.id;
+                }
+
                 const postServerResponse = await ajaxPPDRequest("/inq", "POST", inquiry);
 
                 if (postServerResponse === 'OK') {
@@ -363,11 +391,11 @@ const addNewInquiry = async () => {
 }
 
 //fn to handle the inquiry received method change, enable or disable contact field
-const handleRecievedAddr = () => {
+const handleRecievedAddr = (methodElement) => {
 
     const recievedAddr = document.getElementById('inqRecievedContact');
 
-    if (this.value == "Phone Call" || this.value == "Email") {
+    if (methodElement.value == "Phone Call" || methodElement.value == "Email") {
         recievedAddr.disabled = false;
     } else {
         recievedAddr.disabled = true;
@@ -574,10 +602,6 @@ const showInqValueChanges = () => {
 
     let updates = "";
 
-    //if (inquiry.contactnumtwo != oldInquiry.contactnumtwo) {
-    //    updates = updates + "Contact #2 changed from " + oldInquiry.contactnumtwo.trim() + " to " + inquiry.contactnumtwo.trim() + "\n";
-    //}
-
     if (inquiry.main_inq_msg != oldInquiry.main_inq_msg) {
         updates = updates + "Main Enquiry Message changed from " + oldInquiry.main_inq_msg.trim() + " to " + inquiry.main_inq_msg.trim() + "\n";
     }
@@ -585,15 +609,6 @@ const showInqValueChanges = () => {
     if (inquiry.inq_apprx_start_date != oldInquiry.inq_apprx_start_date) {
         updates = updates + "Estimated Start Date changed from " + oldInquiry.inq_apprx_start_date + " to " + inquiry.inq_apprx_start_date + "\n";
     }
-
-    //is_startdate_confirmed
-    //inq_guideneed
-    //inq_drop
-    //inq_pick
-    //inq_vplaces
-    //inq_accos
-    //inq_vehi
-    //note
 
     if (inquiry.is_startdate_confirmed !== oldInquiry.is_startdate_confirmed) {
         updates += `Start Date Confirmation changed from ${oldInquiry.is_startdate_confirmed ? "Confirmed" : "Not Confirmed"} to ${inquiry.is_startdate_confirmed ? "Confirmed" : "Not Confirmed"}\n`;
@@ -627,22 +642,6 @@ const showInqValueChanges = () => {
         updates += `Internal Note changed from ${oldInquiry.note?.trim() || "N/A"} to ${inquiry.note?.trim() || "N/A"}\n`;
     }
 
-
-    //    if (inquiry.inq_foreign_adults != oldInquiry.inq_foreign_adults) {
-    //        updates = updates + "Traveller Group: Foreign Adult Count changed from " + oldInquiry.inq_foreign_adults + " to " + inquiry.inq_foreign_adults + "\n";
-    //    }
-    //
-    //    if (inquiry.inq_foreign_kids != oldInquiry.inq_foreign_kids) {
-    //        updates = updates + "Traveller Group: Foreign Child Count changed from " + oldInquiry.inq_foreign_kids + " to " + inquiry.inq_foreign_kids + "\n";
-    //    }
-    //
-    //    if (inquiry.inq_local_adults != oldInquiry.inq_local_adults) {
-    //        updates = updates + "Traveller Group: Local Adult Count changed from " + oldInquiry.inq_local_adults + " to " + inquiry.inq_local_adults + "\n";
-    //    }
-    //
-    //    if (inquiry.inq_local_kids != oldInquiry.inq_local_kids) {
-    //        updates = updates + "Traveller Group: Local Child Count changed from " + oldInquiry.inq_local_kids + " to " + inquiry.inq_local_kids + "\n";
-    //    }
 
     const nationality = inquiry.nationality_id?.countryname;
 
@@ -688,6 +687,11 @@ const showInqValueChanges = () => {
         }
     }
 
+    //assigned_empid
+    if (inquiry.assigned_empid.id != oldInquiry.assigned_empid.id) {
+        updates += `Assigned Employee changed from ${oldInquiry.assigned_empid.fullname} to ${inquiry.assigned_empid.fullname}\n`;
+
+    }
 
     return updates;
 
