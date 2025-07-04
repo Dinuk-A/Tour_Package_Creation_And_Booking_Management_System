@@ -81,7 +81,7 @@ const setMinDateForInquiryStart = () => {
     const dateField = document.getElementById("inqStartDate");
     if (dateField) {
         const today = new Date();
-        today.setDate(today.getDate() + 14); 
+        today.setDate(today.getDate() + 14);
 
         const yyyy = today.getFullYear();
         const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -144,6 +144,27 @@ const refreshPkgRelInqForm = async () => {
         if (field) {
             field.style.border = "1px solid #ced4da";
             field.value = '';
+        }
+    });
+
+    document.getElementById('inqStartDate').classList.add('d-none')
+
+    //cb ids
+    const checkBxesToReset =[
+        'chk1',
+        'chk2',
+        'chk3',
+        'chk4',
+        'chk5',
+        'startDateNotSure',
+        'startDateApprox'
+    ];
+
+      //clear out any previous styles
+      checkBxesToReset.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+           field.checked = false;
         }
     });
 
@@ -591,31 +612,32 @@ const openModalForPkgInqs = () => {
     $('#reusableModalForCards').modal('hide');
     $('#modalForPkgRelatedInqs').modal('show');
 
-    //💥💥💥 + in html 197
-    // document.getElementById('selectedPkgId').value = selectedpkg.id;
 }
 
-//check errors
+//check errors in user side form
 const checkGenInqErrors = () => {
     let genInqFormErrors = '';
 
     if (inquiry.clientname == null) {
         genInqFormErrors += "Please enter your name.\n";
     }
-    //if (inquiry.nationality_id == null) {
-    //    genInqFormErrors += "Please select your country.\n";
-    //}
-    if (inquiry.email == null) {
-        genInqFormErrors += "Please provide your email address.\n";
+    if (inquiry.nationality_id == null) {
+        genInqFormErrors += "Please select your country.\n";
     }
-    //if (inquiry.contactnum == null) {
-    //    genInqFormErrors += "Please enter your contact number.\n";
-    //}
     if (inquiry.prefcontactmethod == null) {
         genInqFormErrors += "Please choose your preferred contact method.\n";
     }
+    if (inquiry.prefcontactmethod == 'Email' && inquiry.email == null) {
+        genInqFormErrors += "Please provide your email address.\n";
+    }
+    if ((inquiry.prefcontactmethod == 'Call' || inquiry.prefcontactmethod == 'Whatsapp') && inquiry.contactnum == null) {
+        genInqFormErrors += "Please enter your contact number.\n";
+    }
     if (inquiry.main_inq_msg == null) {
         genInqFormErrors += "Please enter the details of your enquiry.\n";
+    }
+    if (inquiry.is_startdate_confirmed == true && inquiry.inq_apprx_start_date == null) {
+        genInqFormErrors += "Please enter the approximate tour start date.\n";
     }
 
     return genInqFormErrors;
@@ -630,7 +652,6 @@ const pkgRelInqAddBtn = async () => {
         try {
             inquiry.inqsrc = 'Website';
             let postServiceResponse = await ajaxPPDRequest("/inquiryfromweb", "POST", inquiry);
-            console.log("submitted inq: ", inquiry);
             if (postServiceResponse === "OK") {
                 console.log("submitted inq: ", inquiry);
                 showAlertModal("suc", "Thank you! Your inquiry has been submitted and we will get back to you soon");

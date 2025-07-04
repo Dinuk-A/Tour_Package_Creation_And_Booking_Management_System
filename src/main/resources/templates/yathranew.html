@@ -748,7 +748,7 @@
                                         <label for="inqClientEnquiriesPkgRelForm" class="form-label fw-bold mb-0">Your
                                             Inquiry / Request:</label>
                                         <textarea class="form-control" id="inqClientEnquiriesPkgRelForm"
-                                            style="height: 140px;"
+                                            style="height: 225px;"
                                             placeholder="What can we help you with? Type your question or request here"
                                             onkeyup="inputValidatorTextWeb(this, '', 'inquiry', 'main_inq_msg')"></textarea>
                                     </div>
@@ -760,25 +760,25 @@
 
                                     <div class="d-flex flex-column gap-2">
                                         <div>
-                                            <input type="checkbox" class="btn-check" id="chk2" autocomplete="off"
+                                            <input type="checkbox" class="btn-check" id="chk1" autocomplete="off"
                                                 onclick="appendInqMessage(this, 'Please call me with more details.')">
-                                            <label class="btn btn-outline-primary w-100 text-start" for="chk2">
+                                            <label class="btn btn-outline-success w-100 text-start" for="chk1">
                                                 Please call me with more details.
                                             </label>
                                         </div>
 
                                         <div>
-                                            <input type="checkbox" class="btn-check" id="chk3" autocomplete="off"
+                                            <input type="checkbox" class="btn-check" id="chk2" autocomplete="off"
                                                 onclick="appendInqMessage(this, 'Can I customize the tour package?')">
-                                            <label class="btn btn-outline-primary w-100 text-start" for="chk3">
+                                            <label class="btn btn-outline-success w-100 text-start" for="chk2">
                                                 Can I customize the tour package?
                                             </label>
                                         </div>
 
                                         <div>
-                                            <input type="checkbox" class="btn-check" id="chk7" autocomplete="off"
+                                            <input type="checkbox" class="btn-check" id="chk3" autocomplete="off"
                                                 onclick="appendInqMessage(this, 'I need help planning the itinerary.')">
-                                            <label class="btn btn-outline-primary w-100 text-start" for="chk7">
+                                            <label class="btn btn-outline-success w-100 text-start" for="chk3">
                                                 I need help planning the itinerary.
                                             </label>
                                         </div>
@@ -786,15 +786,15 @@
                                         <div>
                                             <input type="checkbox" class="btn-check" id="chk4" autocomplete="off"
                                                 onclick="appendInqMessage(this, 'I would like to know the total cost.')">
-                                            <label class="btn btn-outline-primary w-100 text-start" for="chk4">
+                                            <label class="btn btn-outline-success w-100 text-start" for="chk4">
                                                 I would like to know the total cost.
                                             </label>
                                         </div>
 
                                         <div>
-                                            <input type="checkbox" class="btn-check" id="chk6" autocomplete="off"
+                                            <input type="checkbox" class="btn-check" id="chk5" autocomplete="off"
                                                 onclick="appendInqMessage(this, 'Are there any discounts or offers available?')">
-                                            <label class="btn btn-outline-primary w-100 text-start" for="chk6">
+                                            <label class="btn btn-outline-success w-100 text-start" for="chk5">
                                                 Are there any discounts or offers available?
                                             </label>
                                         </div>
@@ -834,7 +834,7 @@
                                                 </div>
                                             </div>
 
-                                            <input type="date" class="form-control mt-4" id="inqStartDate"
+                                            <input type="date" class="form-control mt-4 d-none" id="inqStartDate"
                                                 onchange="inputValidatorTextWeb(this, '', 'inquiry', 'inq_apprx_start_date')">
                                         </div>
                                     </div>
@@ -909,14 +909,12 @@
 
 
                             <div class="row mb-2">
-                                <div class="col-3">
+                                <div class="col-12 text-end">
                                     <button type="reset" id="btnClear" class="btn-clear fw-bold"
                                         onclick="refreshPkgRelInqForm();">
                                         Reset Form </button>
-                                </div>
-
-                                <div class="col-9 text-end">
-                                    <button id="submitPkgRelatedInqs" type="submit" class="btn-add fw-bold"
+       
+                                    <button id="submitPkgRelatedInqs" type="submit" class="ms-3 btn-add fw-bold"
                                         onclick="pkgRelInqAddBtn()" style="pointer-events: all;">
                                         Submit Inquiry</button>
                                 </div>
