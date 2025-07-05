@@ -112,38 +112,56 @@
                                     <fieldset class="border border-dark p-4 mb-4 bg-light mt-3">
                                         <legend class="float-none w-auto px-2 text-primary">Package Basics</legend>
 
-                                        <!-- title and code -->
-                                        <div class="row mb-3">
-
-                                            <div class="col-md-8">
-
-                                                <label for="inputPkgTitle" class="form-label fw-bold mb-0"> Package
-                                                    Title
-                                                    <span class="text-danger"> * </span> :</label>
-                                                <input id="inputPkgTitle" type="text" class="form-control"
-                                                    placeholder="Enter A Title for The Package"
-                                                    onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')"
-                                                    name="fakeName">
+                                        <!-- creation method -->
+                                        <!--<div class="row mb-2">
+                                            <label class="form-label fw-bold mb-0">Package Creation Method <span
+                                                    class="text-danger">*</span> :</label>
+                                            <div class="row col-8 mx-auto">
+                                                <div class="col-6">
+                                                    <input type="radio" class="btn-check" id="createFromScratch"
+                                                        autocomplete="off" name="creationMethod"
+                                                        onchange="handleCeationMethodSelect();">
+                                                    <label
+                                                        class="btn btn-outline-success w-100 rounded-start fw-bold text-uppercase"
+                                                        for="createFromScratch">
+                                                        Create from Scratch
+                                                    </label>
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="radio" class="btn-check" id="createFromInquiry"
+                                                        autocomplete="off" name="creationMethod"
+                                                        onchange="handleCeationMethodSelect();">
+                                                    <label
+                                                        class="btn btn-outline-primary w-100 rounded-end fw-bold text-uppercase"
+                                                        for="createFromInquiry">
+                                                        Create from Inquiry
+                                                    </label>
+                                                </div>
 
                                             </div>
 
-                                            <div class="col-md-4">
+                                        </div>-->
 
-                                                <label for="inputPkgCode" class="form-label fw-bold mb-0"> Package
-                                                    Code
-                                                    <span class="text-danger"> * </span> :</label>
-                                                <input disabled id="inputPkgCode" type="text"
-                                                    placeholder="This Will Be Auto Generated " class="form-control"
-                                                    onkeyup="inputValidatorText(this,'','tpkg' , 'pkgcode')" required>
-
+                                        <!-- based inquiry -->
+                                        <!--<div class="row mt-4 mb-2">
+                                            <div class="col-12">
+                                                <div class="row ">
+                                                    <label for="tpkgBasedInq" class="col-4 form-label mb-0">
+                                                        Based Inquiry:
+                                                    </label>
+                                                    <div class="col-8">
+                                                        <select id="tpkgBasedInq" class="form-control form-select" onchange="dynamicSelectValidator(this, 'tpkg','basedinq')" style="border: 1px solid rgb(206, 212, 218);">
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </div>-->
 
-                                        <!-- pkg type and duration -->
+                                        <!-- pkg type  -->
                                         <div class="row mb-3">
 
                                             <!-- Package Type -->
-                                            <div class="col-7 me-5">
+                                            <div class="col-8 mx-auto">
                                                 <label class="form-label fw-bold mb-0">Package Type <span
                                                         class="text-danger">*</span> :</label>
                                                 <div class="row">
@@ -166,8 +184,60 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-4 ms-5" id="startDateCol">
-                                                <label for="tpStartDateInput" class="form-label mb-0 fw-bold">Tour Start
+
+
+                                        </div>
+
+                                        <!-- based inquiry -->
+                                        <div class="row mt-4 mb-2">
+                                            <div class="col-12">
+                                                <div class="row ">
+                                                    <label for="tpkgBasedInq" class="col-4 form-label mb-0">
+                                                        Based Inquiry:
+                                                    </label>
+                                                    <div class="col-8">
+                                                        <select disabled id="tpkgBasedInq"
+                                                            class="form-control form-select"
+                                                            onchange="dynamicSelectValidator(this, 'tpkg','basedinq')"
+                                                            style="border: 1px solid rgb(206, 212, 218);">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- title and code  -->
+                                        <div class="row mb-3">
+
+                                            <!-- title -->
+                                            <div class="col-7">
+                                                <label for="inputPkgTitle" class="form-label fw-bold mb-0"> Package
+                                                    Title
+                                                    <span class="text-danger"> * </span> :</label>
+                                                <input id="inputPkgTitle" type="text" class="form-control"
+                                                    placeholder="Enter A Title for The Package"
+                                                    onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')"
+                                                    name="fakeName">
+                                            </div>
+
+                                            <!-- code -->
+                                            <div class="col-5">
+                                                <label for="inputPkgCode" class="form-label fw-bold mb-0"> Package
+                                                    Code
+                                                    <span class="text-danger"> * </span> :</label>
+                                                <input disabled id="inputPkgCode" type="text"
+                                                    placeholder="This Will Be Auto Generated " class="form-control"
+                                                    onkeyup="inputValidatorText(this,'','tpkg' , 'pkgcode')" required>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- start date+ description for web -->
+                                        <div class="row mb-2">
+                                            <!-- start date -->
+                                            <div class="col-6 " id="startDateCol">
+                                                <label for="tpStartDateInput" class="form-label mb-0 fw-bold">Tour
+                                                    Start
                                                     Date(Estimated):</label>
                                                 <input type="date" class="form-control" id="tpStartDateInput"
                                                     onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate'); showDnGAvailabilityButtons();  showVehiAvailabilityButtons();"
@@ -176,7 +246,7 @@
                                             </div>
 
                                             <!-- description (only available for web site) -->
-                                            <div class="col-5 d-none" id="tpDescRow">
+                                            <div class="col-6 d-none" id="tpDescRow">
                                                 <label for="tpDescription" class="fw-bold form-label mb-0">Short
                                                     Description
                                                     :</label>
@@ -185,8 +255,8 @@
                                                     placeholder=" Short Description For Show In WebSite"
                                                     id="tpDescription"
                                                     onkeyup="inputValidatorText(this,'','tpkg','web_description')"
-                                                    style="height: 120px;">
-                                                </textarea>
+                                                    style="height: 120px; resize: none;">
+                                                    </textarea>
 
                                             </div>
                                         </div>
@@ -546,7 +616,8 @@
                                                                     <span id="tourStartDateDisplay">Start Date Not
                                                                         Selected</span>
                                                                     <span class="mx-2">→</span>
-                                                                    <span id="tourEndDateDisplay">Please Add Day Plans</span>
+                                                                    <span id="tourEndDateDisplay">Please Add Day
+                                                                        Plans</span>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -851,7 +922,8 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled placeholder="0.00"  type="text" id="totalTktCostInput"
+                                                                    <input disabled placeholder="0.00" type="text"
+                                                                        id="totalTktCostInput"
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaltktcost');">
                                                                 </div>
@@ -875,7 +947,7 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled placeholder="0.00"  type="number"
+                                                                    <input disabled placeholder="0.00" type="number"
                                                                         id="totalVehicleParkingCost"
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalvehiparkingcost');">
@@ -899,7 +971,7 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled placeholder="0.00"  type="number"
+                                                                    <input disabled placeholder="0.00" type="number"
                                                                         id="totalLunchCostForAll"
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totallunchcost');">
@@ -923,7 +995,7 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled placeholder="0.00"  type="number"
+                                                                    <input disabled placeholder="0.00" type="number"
                                                                         id="totalVehiCostInput"
                                                                         class="form-control form-input my-auto text-center p-1"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalvehicost');">
@@ -948,7 +1020,7 @@
                                                                     <span class="input-group-text p-1 pb-0">
                                                                         <h6 class="mb-0">LKR</h6>
                                                                     </span>
-                                                                    <input disabled  placeholder="0.00" type="number"
+                                                                    <input disabled placeholder="0.00" type="number"
                                                                         id="totalStayCostInput"
                                                                         class="form-control form-input p-1 text-center"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalstaycost');">
@@ -972,7 +1044,7 @@
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
-                                                                    <input disabled placeholder="0.00"  type="number"
+                                                                    <input disabled placeholder="0.00" type="number"
                                                                         id="totalDriverCostInput"
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaldrivercost');">

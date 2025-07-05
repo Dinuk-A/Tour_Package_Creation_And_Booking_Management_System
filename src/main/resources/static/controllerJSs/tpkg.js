@@ -28,6 +28,64 @@ const resetModalTpkg = () => {
     console.log("Resetting modal form");
 }
 
+//handle the creation method radio buttons NOT USED 💥💥💥
+const handleCeationMethodSelect = () => {
+    const fromScratch = document.getElementById('createFromScratch');
+    const fromInq = document.getElementById('createFromInquiry');
+
+    // track which option was selected BEFORE reset
+    const selectedMethod = fromScratch.checked ? 'scratch' : fromInq.checked ? 'inquiry' : null;
+
+    const hasExistingData =
+        tpkg.pkgtitle != null ||
+        tpkg.sd_dayplan_id?.id != null ||
+        tpkg.dayplans?.length > 0 ||
+        tpkg.web_description != null ||
+        tpkg.img1 != null ||
+        tpkg.img2 != null ||
+        tpkg.img3 != null;
+
+    if (hasExistingData) {
+        const userConfirm = confirm("Changing the creation method will reset all current data. Do you want to continue?");
+        if (userConfirm) {
+
+            refreshTpkgForm();
+
+            // re-check the user's original choice
+            if (selectedMethod === 'scratch') {
+                document.getElementById('createFromScratch').checked = true;
+            } else if (selectedMethod === 'inquiry') {
+                document.getElementById('createFromInquiry').checked = true;
+            }
+
+            // apply changes based on the selection
+            elementChangesOnCreationMethod();
+        }
+    } else {
+        elementChangesOnCreationMethod();
+    }
+};
+
+//NOT USED 💥💥💥
+const elementChangesOnCreationMethod = () => {
+    const fromScratch = document.getElementById('createFromScratch');
+    const fromInq = document.getElementById('createFromInquiry');
+    const selectBasedInq = document.getElementById('tpkgBasedInq');
+    const forWebSiteRadio = document.getElementById('forWebSite');
+
+    if (fromScratch.checked) {
+        selectBasedInq.disabled = true;
+        selectBasedInq.value = "";
+        selectBasedInq.style.border = "1px solid #ced4da";
+        forWebSiteRadio.disabled = false;
+        tpkg.basedinq = null;
+    } else if (fromInq.checked) {
+        selectBasedInq.disabled = false;
+        forWebSiteRadio.disabled = true;
+    }
+
+}
+
 //to create and refresh content in main table   
 const buildTpkgTable = async () => {
     try {

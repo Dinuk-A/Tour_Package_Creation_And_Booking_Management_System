@@ -575,7 +575,8 @@ const restoreEmployeeRecord = async () => {
 
 // fn for print an employee record
 const printEmployeeRecord = () => {
-    // Get the content from the modal
+
+    // get the content from the modal
     const modalContent = `
         <div style="font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;">
             <h2 style="text-align: center; color: #007bff;">Employee Information</h2>
@@ -612,7 +613,7 @@ const printEmployeeRecord = () => {
         </div>
     `;
 
-    // Create a new window for the print preview
+    // a new window for the print preview
     const printWindow = window.open('', '', 'width=800, height=600');
     printWindow.document.write(`
         <html>
@@ -653,7 +654,7 @@ const printEmployeeRecord = () => {
         </html>
     `);
 
-    // Indicate that writing to the printWindow.document is complete
+    // indicate that writing to the printWindow.document is complete
     printWindow.document.close();
 
     // Trigger the print dialog
