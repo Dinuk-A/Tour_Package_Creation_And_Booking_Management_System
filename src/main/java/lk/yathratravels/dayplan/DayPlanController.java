@@ -133,9 +133,14 @@ public class DayPlanController {
             // or custom dp elkakata nam, inquiry ekath ekka sambanda code ekak hadanna
             // 💥💥💥
 
+            //get start dist id from the first attraction
+            District startDistId = dplan.getVplaces().iterator().next().getDistrict_id();
+            dplan.setStart_district_id(startDistId);
+
             // Generate the dayplancode
             String nextCode;
             List<DayPlan> dpCountByDistrict = daoDP.getDayPlansByStartDistrict(dplan.getStart_district_id().getId());
+
             if (dpCountByDistrict.size() == 0) {
                 nextCode = dplan.getDayplancode() + dplan.getStart_district_id().getName().substring(0, 3).toUpperCase()
                         + "1";

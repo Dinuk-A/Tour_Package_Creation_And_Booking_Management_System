@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    
+
     document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
         if (event.target.id === 'table-tab') {
             console.log("Switching to table tab - clearing form");
@@ -1001,9 +1001,11 @@ const addOne = () => {
         showAlertModal('err', 'this place is already selected')
     } else {
 
+        //fill right side (selected places)
         dayplan.vplaces.push(selectedPlace);
         fillDataIntoDynamicSelects(selectedVPsBox, '', dayplan.vplaces, 'name');
 
+        //remove it from left side
         let updatedVpByDist = vpByDist.filter(vp => vp.id != selectedPlace.id);
         fillDataIntoDynamicSelects(allVPsBox, '', updatedVpByDist, 'name');
 
@@ -1022,9 +1024,7 @@ const addOne = () => {
         calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "foreignchildtktcost");
 
         calcTotalVehiParkingfee();
-        //getLunchAndHotelAuto();
 
-        //calculateRoadDistanceFromDayplan(dayplan);
     }
 
 }
@@ -1032,6 +1032,7 @@ const addOne = () => {
 //for pass all locations 
 const addAll = () => {
 
+    //get control of all (loop)
     for (const leftVplz of vpByDist) {
 
         let isPlaceAlreadySelected = false;
@@ -1049,9 +1050,9 @@ const addAll = () => {
         }
     }
 
-    //original
-    vplaces = [];
-    fillDataIntoDynamicSelects(allVPs, '', vplaces, 'name');
+    //an empty array to fill the left side
+    vplacesByDist = [];
+    fillDataIntoDynamicSelects(allVPs, '', vplacesByDist, 'name');
 
     //CALC TOTAL TKT COSTS AND VEHICLE PARKING COSTS 
     calcTktCost("feelocaladult", dpTotalLocalAdultTktCost, "localadulttktcost");
@@ -1066,15 +1067,22 @@ const addAll = () => {
 //for remove a single location
 const removeOne = () => {
 
+    //left side
     fillDataIntoDynamicSelects(allVPs, '', vpByDist, 'name');
 
+    //selected (clicked) value in right side
     let selectedPlaceToRemove = JSON.parse(selectedVPs.value);
 
+    //dayplan.vplaces array eke thiynawada balanawa selected option eke name eka (=== selectedPlaceToRemove.name) ;
+    // passe eke index eka gannawa; 
     let existIndex = dayplan.vplaces.map(place => place.name).indexOf(selectedPlaceToRemove.name);
+
+    //exist nam(ehema namak thiyanawa nam) right side eke list ekenma remove karanawa
     if (existIndex != -1) {
         dayplan.vplaces.splice(existIndex, 1)
     }
 
+    //eka remove unama ithuru selected vplaces tika
     fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name');
 
     //CALC TOTAL TKT COSTS AND VEHICLE PARKING COSTS 
@@ -1083,16 +1091,14 @@ const removeOne = () => {
     calcTktCost("feechildlocal", dpTotalLocalChildTktCost, "localchildtktcost");
     calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "foreignchildtktcost");
 
-    //calcTktCost("vehicleparkingfee", dpTotalVehiParkingCost, "totalvehiparkcost");
     calcTotalVehiParkingfee();
-
-    //getLunchAndHotelAuto();
 
 }
 
 //for remove all locations
 const removeAll = () => {
 
+    //empty the entire right side
     dayplan.vplaces = [];
     fillDataIntoDynamicSelects(selectedVPs, '', dayplan.vplaces, 'name');
 

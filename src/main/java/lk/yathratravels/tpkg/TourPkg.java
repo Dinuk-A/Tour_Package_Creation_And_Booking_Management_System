@@ -48,6 +48,10 @@ public class TourPkg {
     @Column(name = "pkgcode")
     private String pkgcode;
 
+    //not the full obj, only the id/code
+    @Column(name = "basedinq")
+    private String basedinq;
+
     @Column(name = "tourstartdate")
     private LocalDate tourstartdate;
 
