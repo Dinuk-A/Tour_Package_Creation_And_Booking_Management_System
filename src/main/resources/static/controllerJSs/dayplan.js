@@ -170,6 +170,11 @@ const refreshDayPlanForm = async () => {
         'selectedVPs',
         'dpSelectStatus',
         'dpTotalKMcount',
+        'dpTotalLocalAdultTktCost',
+        'dpTotalLocalChildTktCost',
+        'dpTotalForeignAdultTktCost',
+        'dpTotalForeignChildTktCost',
+        'dpTotalVehiParkingCost'
     ];
 
     //clear out any previous styles
@@ -177,7 +182,12 @@ const refreshDayPlanForm = async () => {
         const field = document.getElementById(fieldID);
         if (field) {
             field.style.border = "1px solid #ced4da";
-            field.value = '';
+            //field.value = '';
+            if ('value' in field) {
+                field.value = '';
+            } else {
+                field.textContent = 'LKR 0.00';
+            }
         }
     });
 
@@ -195,6 +205,7 @@ const refreshDayPlanForm = async () => {
         'generalDropOffCB',
         'accommodationsDropOffCB',
         'manualDropOffCB'
+
     ];
 
     radioIdsToReset.forEach(id => {
@@ -1006,8 +1017,10 @@ const addOne = () => {
         fillDataIntoDynamicSelects(selectedVPsBox, '', dayplan.vplaces, 'name');
 
         //remove it from left side
-        let updatedVpByDist = vpByDist.filter(vp => vp.id != selectedPlace.id);
-        fillDataIntoDynamicSelects(allVPsBox, '', updatedVpByDist, 'name');
+
+        //opt 1 
+        //let updatedVpByDist = vpByDist.filter(vp => vp.id != selectedPlace.id);
+        //fillDataIntoDynamicSelects(allVPsBox, '', updatedVpByDist, 'name');
 
         //opt 2 💥
         //let existIndex = vpByDist.map(place => place.name).indexOf(selectedPlace.name);
@@ -1050,7 +1063,7 @@ const addAll = () => {
         }
     }
 
-    //an empty array to fill the left side
+    //an empty array to fill the left side as empty
     vplacesByDist = [];
     fillDataIntoDynamicSelects(allVPs, '', vplacesByDist, 'name');
 
@@ -1068,7 +1081,7 @@ const addAll = () => {
 const removeOne = () => {
 
     //left side
-    fillDataIntoDynamicSelects(allVPs, '', vpByDist, 'name');
+    //fillDataIntoDynamicSelects(allVPs, '', vpByDist, 'name');
 
     //selected (clicked) value in right side
     let selectedPlaceToRemove = JSON.parse(selectedVPs.value);
@@ -1592,6 +1605,20 @@ const openModal = (dpObj) => {
 // refill the form to update a record
 const refillDayPlanForm = async (dpObj) => {
 
+    //emptyArray = [];
+    let allStays = [];
+    let allProvinces = [];
+    let allDistricts = [];
+
+    try {
+        allStays = await ajaxGetReq('/stay/all');
+        allProvinces = await ajaxGetReq("/province/all");
+        allDistricts = await ajaxGetReq("/district/all");
+    } catch (error) {
+        console.error('failed to fetch provinces and stays')
+    }
+
+    //💥💥💥
     if (dpObj.dp_status == "Completed") {
         showAlertModal('err', "tour for this day plan is already completed, hence cant edit")
     } else {
@@ -1699,12 +1726,14 @@ const refillDayPlanForm = async (dpObj) => {
 
             try {
 
-                const allProvinces = await ajaxGetReq("/province/all");
                 fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.pickup_stay_id.district_id.province_id.name);
+                fillDataIntoDynamicSelects(pickupDistrictSelect, 'Please Select The District', allDistricts, 'name', dpObj.pickup_stay_id.district_id.name);
 
-                await getDistByProvince(pickupProvinceSelect, pickupDistrictSelect);
+                //call these manually here , using dpObj.pickup_stay_id.district_id.province_id 💥💥💥
+                //await getDistByProvince(pickupProvinceSelect, pickupDistrictSelect);
+                //await getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect);
 
-                await getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect);
+                fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Please Select Accomodation', allStays, 'name', dpObj.pickup_stay_id.name);
 
             } catch (error) {
                 console.error('error fetching previous start stay info')
@@ -1767,9 +1796,9 @@ const refillDayPlanForm = async (dpObj) => {
 
             //enable the 3 radios
             const radioIds = [
-                'generalPickupCB',
-                'accommodationsPickupCB',
-                'manualPickupCB'
+                'generalDropOffCB',
+                'accommodationsDropOffCB',
+                'manualDropOffCB'
             ];
 
             radioIds.forEach((radioId) => {
@@ -1785,9 +1814,9 @@ const refillDayPlanForm = async (dpObj) => {
 
             //enable the 3 radios
             const radioIds = [
-                'generalPickupCB',
-                'accommodationsPickupCB',
-                'manualPickupCB'
+                'generalDropOffCB',
+                'accommodationsDropOffCB',
+                'manualDropOffCB'
             ];
 
             radioIds.forEach((radioId) => {
@@ -1799,14 +1828,18 @@ const refillDayPlanForm = async (dpObj) => {
 
             try {
 
-                const allProvinces = await ajaxGetReq("/province/all");
                 fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
+                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDistricts, 'name', dpObj.drop_stay_id.district_id.name);
 
-                await getDistByProvince(dropOffProvinceSelect, dropOffDistrictSelect);
+                fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select Accomodation', allStays, 'name', dpObj.drop_stay_id.name);
+                fillDataIntoDynamicSelects(altStay1Select, 'Please Select Accomodation', allStays, 'name', dpObj.alt_stay_1_id.name);
+                fillDataIntoDynamicSelects(altStay2Select, 'Please Select Accomodation', allStays, 'name', dpObj.alt_stay_2_id.name);
 
-                await getStayByDistrict(dropOffDistrictSelect, dropOffAccommodationSelect);
-                await getStayByDistrict(dropOffDistrictSelect, altStay1Select);
-                await getStayByDistrict(dropOffDistrictSelect, altStay2Select);
+                //await getDistByProvince(dropOffProvinceSelect, dropOffDistrictSelect);
+
+                //await getStayByDistrict(dropOffDistrictSelect, dropOffAccommodationSelect);
+                //await getStayByDistrict(dropOffDistrictSelect, altStay1Select);
+                //await getStayByDistrict(dropOffDistrictSelect, altStay2Select);
 
             } catch (error) {
                 console.error('error fetching previous end stay info');
