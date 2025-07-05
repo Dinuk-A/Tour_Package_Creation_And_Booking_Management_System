@@ -85,7 +85,7 @@ const fillMultDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPro
         const firstOption = document.createElement('option');
         firstOption.innerText = msg;
         firstOption.value = "";
-        //firstOption.selected = true;
+        firstOption.selected = true;
         firstOption.disabled = true;
         tagId.appendChild(firstOption);
     }

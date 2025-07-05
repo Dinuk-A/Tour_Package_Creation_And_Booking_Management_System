@@ -167,7 +167,7 @@ const enableAssignedUserChange = () => {
 //global variables , used in openModal 
 let intrstdPkgList = [];
 
-//refresh the inquiry form and reset all fields 💥💥💥
+//refresh the inquiry form and reset all fields 
 const refreshInquiryForm = async () => {
 
     inquiry = new Object();
@@ -236,24 +236,26 @@ const refreshInquiryForm = async () => {
         }
     });
 
+    //disable these permanantly
     document.getElementById('inqCodeInput').disabled = true;
     document.getElementById('inqEnableEditBtn').disabled = true;
     document.getElementById('inqRecievedContact').disabled = true;
     document.getElementById('inqLocalChildCount').disabled = true;
     document.getElementById('inqForeignChildCount').disabled = true;
+    document.getElementById('btnChangeAssignedUser').disabled = true;
+    document.getElementById('assignedUserSelect').disabled = true;
 
+    //hide WebSite opt
     document.getElementById('inqRecievedMethod').children[1].classList.add('d-none');
 
+    //hide this row
     document.getElementById('assignedUserRow').classList.add('d-none');
 
-    document.getElementById('btnChangeAssignedUser').disabled = true;
+    //clear previous responses
+    const container = document.getElementById("previousSubmittedAllResponses");
+    container.innerHTML = "";
 
-    assignedUserSelect.disabled = true;
-
-    const updateBtn = document.getElementById('manualInqUpdateBtn');
-    updateBtn.disabled = true;
-    updateBtn.style.cursor = "not-allowed";
-
+    //get roles 
     const rolesRaw = document.getElementById('userRolesArraySection').textContent;
     console.log("Raw roles text:", rolesRaw);
 
@@ -264,6 +266,50 @@ const refreshInquiryForm = async () => {
         btnChangeAssignedUser.disabled = false;
     } else {
         btnChangeAssignedUser.disabled = true;
+    }
+
+    //disable add new responses button
+    const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
+    addNewResponseRowBtn.disabled = true;
+    addNewResponseRowBtn.style.cursor = "not-allowed";
+
+    //disable update button
+    const updateBtn = document.getElementById('manualInqUpdateBtn');
+    updateBtn.disabled = true;
+    updateBtn.style.cursor = "not-allowed";
+
+    //enable add button
+    const addBtn = document.getElementById('manualInqAddBtn');
+    addBtn.disabled = false;
+    addBtn.style.cursor = "pointer";
+
+}
+
+//set status auto
+const setInqStatusAuto = () => {
+
+    const inqSelectElement = document.getElementById('inqStatus');
+
+    inqSelectElement.value = 'New';
+    inqSelectElement.style.border = '2px solid lime';
+    inqSelectElement.children[2].setAttribute('class', 'd-none');
+    inqSelectElement.children[3].setAttribute('class', 'd-none');
+    inqSelectElement.children[4].setAttribute('class', 'd-none');
+    inqSelectElement.children[5].setAttribute('class', 'd-none');
+    inqSelectElement.children[6].setAttribute('class', 'd-none');
+    inquiry.inq_status = 'New';
+}
+
+//delete followup section
+const deleteInqFollowupSection = () => {
+
+    let userConfirm = confirm("Are you sure to delete this? this data wont be saved");
+    if (userConfirm) {
+
+        refreshInqFollowupSection();
+
+    } else {
+        showAlertModal('inf', "Followup response deletion cancelled");
     }
 
 }
@@ -482,8 +528,6 @@ const openModal = (inqObj) => {
         document.getElementById('inqForeignChildCount').value = inqObj.inq_foreign_kids || 0;
     }
 
-
-
     if (inqObj.inq_guideneed === true) {
         document.getElementById('guideYes').checked = true;
     } else if (inqObj.inq_guideneed === false) {
@@ -557,7 +601,6 @@ const openModal = (inqObj) => {
 
     let firstTab = new bootstrap.Tab(document.getElementById('inqStep1-tab'));
     firstTab.show();
-
 
 }
 
@@ -667,7 +710,7 @@ const showInqValueChanges = () => {
             }
         }
 
-        //when chainging for the 2nd and after, when this happens there is no value in inq_adults or inq_kids
+        //when chainging for the 2nd time and after, when this happens there is no value in inq_adults or inq_kids
     } else {
 
         if (inquiry.inq_local_adults !== oldInquiry.inq_local_adults) {
@@ -702,27 +745,11 @@ const refreshInqFollowupSection = () => {
 
     followup = new Object();
 
-    //    const inqFollowupInputTagsIds = [
-    //        'inqFollowupDate',
-    //        'inqFollowupTime',
-    //        'inqFollowupNote',
-    //        'inqFollowupStatus',
-    //    ];
-    //
-    //    inqFollowupInputTagsIds.forEach((fieldID) => {
-    //        const field = document.getElementById(fieldID);
-    //        if (field) {
-    //            field.style.border = "1px solid #ced4da";
-    //            field.value = '';
-    //        }
-    //    });
+    document.getElementById('manualResponseAddingSection').innerHTML = '';
 
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
-    addNewResponseRowBtn.disabled = true;
-    addNewResponseRowBtn.style.cursor = "not-allowed";
-
-    const container = document.getElementById("submittedAllResponses");
-    container.innerHTML = "";
+    addNewResponseRowBtn.disabled = false;
+    addNewResponseRowBtn.style.cursor = "pointer";
 
 }
 
@@ -775,7 +802,7 @@ const updateSystemInq = async () => {
 
 }
 
-//global
+//global + this will be needed for last sent packages in response
 let tpkgs;
 
 //get tpkgs
@@ -789,7 +816,6 @@ const recieveTpkgs = async () => {
 
 }
 
-
 //show all the responses
 const refillAllPrevResponses = async () => {
 
@@ -798,8 +824,8 @@ const refillAllPrevResponses = async () => {
         const prevResponses = await ajaxGetReq("/followup/byinqid/" + inquiry.id);
         console.log(prevResponses);
 
-        const container = document.getElementById("submittedAllResponses");
-        container.innerHTML = ""; // Clear existing content
+        const container = document.getElementById("previousSubmittedAllResponses");
+        container.innerHTML = "";
 
         if (!prevResponses || prevResponses.length === 0) {
             const noData = document.createElement("p");
@@ -854,7 +880,142 @@ const refillAllPrevResponses = async () => {
 
 }
 
-// for creating a new response record manually
+//re render the template USING ✅
+const createNewResponseInputSection = () => {
+    document.getElementById("createNewResponseRowBtn").disabled = true;
+
+    const template = document.getElementById("response-input-template");
+    const clone = template.content.cloneNode(true);
+
+    document.getElementById("manualResponseAddingSection").appendChild(clone);
+
+    fillMultDataIntoDynamicSelects(lastSentTourPackageSelect, 'Please Select Package', tpkgs, 'pkgcode', 'pkgtitle');
+}
+
+//check manual followup errors
+const checkManualFollowupErrors = () => {
+    let errors = "";
+
+    if (followup.content == null || followup.content.trim() === "") {
+        errors = errors + " Please Enter The Follow-up Response \n";
+    }
+
+    if (followup.followup_status == null) {
+        errors = errors + " Please Select The Follow-up Status \n";
+    }
+
+    return errors;
+}
+
+//fn to submit the manual followup
+const submitManualFollowup = async () => {
+
+    const errors = checkManualFollowupErrors();
+    if (errors == '') {
+
+        let userConfirm = confirm("Are you sure to proceed ?");
+
+        if (userConfirm) {
+
+            followup.inquiry_id = inquiry;
+
+            console.log("Follow up object: ", followup);
+            try {
+                let postServiceResponse = await ajaxPPDRequest("/followup", "POST", followup);
+                if (postServiceResponse === "OK") {
+                    showAlertModal('suc', "Successfully Added");
+
+                    //hide followup form section
+                    document.getElementById('manualResponseAddingSection').innerHTML = '';
+
+                    //show previous responses list
+                    refillAllPrevResponses();
+
+                    //enable add new response button
+                    const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
+                    addNewResponseRowBtn.disabled = false;
+                    addNewResponseRowBtn.style.cursor = "pointer";
+
+                } else {
+                    showAlertModal('err', "Submit Failed \n" + putServiceResponse);
+                }
+
+            } catch (error) {
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+            }
+        } else {
+            showAlertModal('inf', "User cancelled the task");
+        }
+    } else {
+        showAlertModal('war', errors);
+    }
+}
+
+// child inputs are only available if there is adult values
+const handleChildInputAvailability = () => {
+
+    const localAdultCount = parseInt(inqLocalAdultCount.value.trim()) || 0;
+    const foreignAdultCount = parseInt(inqForeignAdultCount.value.trim()) || 0;
+
+    const hasAnyAdult = localAdultCount > 0 || foreignAdultCount > 0;
+
+    if (hasAnyAdult) {
+
+        inqLocalChildCount.disabled = false;
+        inqForeignChildCount.disabled = false;
+
+    } else {
+
+        inqLocalChildCount.disabled = true;
+        inqForeignChildCount.disabled = true;
+
+        inqLocalChildCount.value = 0;
+        inqForeignChildCount.value = 0;
+
+        inquiry.inq_local_kids = 0;
+        inquiry.inq_foreign_kids = 0;
+
+        inqLocalChildCount.style.border = "1px solid #ced4da";
+        inqForeignChildCount.style.border = "1px solid #ced4da";
+    }
+};
+
+//to mark if start date is sure ot not
+const handleStartDateStatusChange = () => {
+
+    const startDateSure = document.getElementById('startDateConfirmed');
+    const startDateUncertain = document.getElementById('startDateUnconfirmed');
+    const startDateInput = document.getElementById('inqApproxStartDate');
+
+    if (startDateSure.checked) {
+        inquiry.is_startdate_confirmed = true;
+        startDateInput.style.border = "2px solid lime";
+
+    } else if (startDateUncertain.checked) {
+        inquiry.is_startdate_confirmed = false;
+        startDateInput.style.border = "2px solid orange";
+    }
+}
+
+//changes based on dates
+const enableDateStatusRadios = () => {
+    const startDateSure = document.getElementById('startDateConfirmed');
+    const startDateUncertain = document.getElementById('startDateUnconfirmed');
+
+    startDateSure.checked = false;
+    startDateUncertain.checked = false;
+
+    if (inqApproxStartDate.value != "") {
+        startDateSure.disabled = false;
+        startDateUncertain.disabled = false;
+    } else {
+        startDateSure.disabled = true;
+        startDateUncertain.disabled = true;
+    }
+}
+
+// for creating a new response record manually NOT USED 💥💥
+/*
 const createNewResponseInputSectionOri = async () => {
     document.getElementById("createNewResponseRowBtn").disabled = true;
 
@@ -958,9 +1119,7 @@ const createNewResponseInputSectionOri = async () => {
     lastPackageSelect.id = "lastSentTourPackageSelect";
     lastPackageSelect.classList.add("form-select", "form-select");
 
-    //const tourPackageOptions = 
     fillMultDataIntoDynamicSelects(lastPackageSelect, 'Please Select Package', tpkgs, 'pkgcode', 'pkgtitle');
-
 
     lastPackageSelectCol.appendChild(lastPackageSelect);
 
@@ -993,82 +1152,9 @@ const createNewResponseInputSectionOri = async () => {
     responseContainer.appendChild(cardCol);
 
     document.getElementById("manualResponseAddingSection").appendChild(responseContainer);
-};
+}; */
 
-//re render the template
-const createNewResponseInputSection = () => {
-    document.getElementById("createNewResponseRowBtn").disabled = true;
-
-    const template = document.getElementById("response-input-template");
-    const clone = template.content.cloneNode(true);
-
-    document.getElementById("manualResponseAddingSection").appendChild(clone);
-
-    // Now fill the tour package options
-    const lastPackageSelect = document.getElementById("lastSentTourPackageSelect");
-    fillMultDataIntoDynamicSelects(lastPackageSelect, 'Please Select Package', tpkgs, 'pkgcode', 'pkgtitle');
-}
-
-//check manual followup errors
-const checkManualFollowupErrors = () => {
-    let errors = "";
-
-    if (followup.content == null || followup.content.trim() === "") {
-        errors = errors + " Please Enter The Follow-up Response \n";
-    }
-
-    if (followup.followup_status == null) {
-        errors = errors + " Please Select The Follow-up Status \n";
-    }
-
-    return errors;
-}
-
-//fn to submit the manual followup
-const submitManualFollowup = async () => {
-
-    const errors = checkManualFollowupErrors();
-    if (errors == '') {
-
-        let userConfirm = confirm("Are you sure to proceed ?");
-
-        if (userConfirm) {
-
-            followup.inquiry_id = inquiry;
-
-            console.log("Follow up object: ", followup);
-            try {
-                let postServiceResponse = await ajaxPPDRequest("/followup", "POST", followup);
-                if (postServiceResponse === "OK") {
-                    showAlertModal('suc', "Successfully Added");
-
-                    //hide form      
-                    document.getElementById('manualResponseAddingSection').innerHTML = '';
-
-                    //show previous responses list
-                    refillAllPrevResponses();
-
-                    //enable add new response button
-                    const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
-                    addNewResponseRowBtn.disabled = false;
-                    addNewResponseRowBtn.style.cursor = "pointer";
-
-                } else {
-                    showAlertModal('err', "Submit Failed \n" + putServiceResponse);
-                }
-
-            } catch (error) {
-                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
-            }
-        } else {
-            showAlertModal('inf', "User cancelled the task");
-        }
-    } else {
-        showAlertModal('war', errors);
-    }
-}
-
-//childs are allowed only with adult of any type
+//childs are allowed only with adult of any type NOT USED 💥💥
 const enableChildCountInputsOri = () => {
 
 
@@ -1085,76 +1171,6 @@ const enableChildCountInputsOri = () => {
     }
 
 }
-
-//inqLocalChildCount.value = 0;
-//inqForeignChildCount.value = 0;
-
-// child inputs are only available if there is adult values
-const handleChildInputAvailability = () => {
-
-    const localAdultCount = parseInt(inqLocalAdultCount.value.trim()) || 0;
-    const foreignAdultCount = parseInt(inqForeignAdultCount.value.trim()) || 0;
-
-    const hasAnyAdult = localAdultCount > 0 || foreignAdultCount > 0;
-
-    if (hasAnyAdult) {
-
-        inqLocalChildCount.disabled = false;
-        inqForeignChildCount.disabled = false;
-
-    } else {
-
-        inqLocalChildCount.disabled = true;
-        inqForeignChildCount.disabled = true;
-
-        inqLocalChildCount.value = 0;
-        inqForeignChildCount.value = 0;
-
-        inquiry.inq_local_kids = 0;
-        inquiry.inq_foreign_kids = 0;
-
-        inqLocalChildCount.style.border = "1px solid #ced4da";
-        inqForeignChildCount.style.border = "1px solid #ced4da";
-    }
-};
-
-//to mark if start date is sure ot not
-const handleStartDateStatusChange = () => {
-
-    const startDateSure = document.getElementById('startDateConfirmed');
-    const startDateUncertain = document.getElementById('startDateUnconfirmed');
-    const startDateInput = document.getElementById('inqApproxStartDate');
-
-    if (startDateSure.checked) {
-        inquiry.is_startdate_confirmed = true;
-        startDateInput.style.border = "2px solid lime";
-
-    } else if (startDateUncertain.checked) {
-        inquiry.is_startdate_confirmed = false;
-        startDateInput.style.border = "2px solid orange";
-    }
-}
-
-//changes based on dates
-const enableDateStatusRadios = () => {
-    const startDateSure = document.getElementById('startDateConfirmed');
-    const startDateUncertain = document.getElementById('startDateUnconfirmed');
-
-    startDateSure.checked = false;
-    startDateUncertain.checked = false;
-
-    if (inqApproxStartDate.value != "") {
-        startDateSure.disabled = false;
-        startDateUncertain.disabled = false;
-    } else {
-        startDateSure.disabled = true;
-        startDateUncertain.disabled = true;
-    }
-}
-
-
-
-
 
 
 

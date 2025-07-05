@@ -34,7 +34,7 @@
             <!-- for form side -->
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formSystemInqHolderDiv" role="tab"
-                    aria-controls="formSystemInqHolderDiv" aria-selected="false">Form</a>
+                    aria-controls="formSystemInqHolderDiv" aria-selected="false"  onclick="setInqStatusAuto()">Form</a>
                 <!-- onclick="setEmpStatusAuto()" -->
             </li>
         </ul>
@@ -534,7 +534,9 @@
                                                     <label for="assignedUserSelect"
                                                         class="form-label fw-bold mb-1">Assigned
                                                         To:</label>
-                                                    <select id="assignedUserSelect" class="form-control form-select" disabled  onchange="dynamicSelectValidator(this, 'inquiry','assigned_empid')">
+                                                    <select id="assignedUserSelect" class="form-control form-select"
+                                                        disabled
+                                                        onchange="dynamicSelectValidator(this, 'inquiry','assigned_empid')">
                                                     </select>
                                                 </div>
 
@@ -629,7 +631,7 @@
                                         </div>
 
                                         <!-- show previously submittede responses -->
-                                        <div class="row mt-2" id="submittedAllResponses">
+                                        <div class="row mt-2" id="previousSubmittedAllResponses">
                                             <!-- updates histories will display here too -->
                                         </div>
 
@@ -654,7 +656,7 @@
                                             <div class="row gx-4">
                                                 <div class="col-md-8 mb-3">
                                                     <label for="inputNewResponseTextField"
-                                                        class="form-label fw-semibold">Response:</label>
+                                                        class="form-label fw-semibold">Followup Response:</label>
                                                     <textarea id="inputNewResponseTextField" class="form-control"
                                                         style="height: 120px;"
                                                         onkeyup="inputValidatorText(this, '', 'followup', 'content')"></textarea>
@@ -662,7 +664,7 @@
 
                                                 <div class="col-md-4 mb-3">
                                                     <label for="newInqResponseStatusSelect"
-                                                        class="form-label fw-semibold">Inquiry Response
+                                                        class="form-label fw-semibold">Followup Response
                                                         Status:</label>
                                                     <select id="newInqResponseStatusSelect" class="form-select"
                                                         onchange="staticSelectValidator(this, 'followup', 'followup_status')">
@@ -684,17 +686,16 @@
                                                 </div>
                                                 <div class="col-md-8">
                                                     <select id="lastSentTourPackageSelect"
-                                                        class="form-select form-select">
-                                                        <!-- Options will be filled by JS -->
+                                                        class="form-select form-select"  onchange="dynamicSelectValidator(this, 'followup','last_sent_tpkg')">
                                                     </select>
                                                 </div>
                                             </div>
 
-                                            <div class="d-flex justify-content-end mt-3 gap-2">
+                                            <div class="d-flex justify-content-end mb-0 mt-3 gap-2">
                                                 <button type="reset" class="btn btn-secondary"
-                                                    onclick="refreshInqFollowupSection()">Reset</button>
+                                                    onclick="deleteInqFollowupSection()">Cancel</button>
                                                 <button type="button" class="btn btn-primary"
-                                                    onclick="submitManualFollowup()">Submit</button>
+                                                    onclick="submitManualFollowup()">Submit Followup Response</button>
                                             </div>
 
                                         </div>
