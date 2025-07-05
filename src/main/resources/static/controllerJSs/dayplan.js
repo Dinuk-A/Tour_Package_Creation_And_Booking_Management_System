@@ -128,6 +128,10 @@ const refreshDayPlanForm = async () => {
 
     document.getElementById('formDayPlan').reset();
 
+    document.getElementById('dayTypeMsgForTemplate').classList.add("d-none");
+    document.getElementById('pickupMsgForTemplate').classList.add("d-none");
+    document.getElementById('noLunchMsgForTemplate').classList.add("d-none");
+
     try {
         const allProvinces = await ajaxGetReq("/province/all");
 
@@ -215,8 +219,6 @@ const refreshDayPlanForm = async () => {
             radio.disabled = false;
         }
     });
-
-
 
     // show EMPTY district selects, before filtered by province
     emptyArray = [];
@@ -569,14 +571,57 @@ const selectDayType = (feild) => {
 }
 
 //handle values when the day type radio is selected
-const handleDayTypeRadio = (fieldId) => {
-    dayplan.is_template = fieldId.value;
+//const handleDayTypeRadio = (fieldId) => {
+//    dayplan.is_template = fieldId.value;
+//}
+
+const handleDPTypeSelection = () => {
+
+    const isTemp = document.getElementById('dpTemplate');
+    const isCust = document.getElementById('dpNotTemplate');
+
+    // track which option was selected BEFORE reset
+    const selectedMethod = isTemp.checked ? 'template' : isCust.checked ? 'custom' : null;
+
+    if (dayplan.pickuppoint != null || dayplan.pickup_stay_id != null || dayplan.lunchplace_id != null || dayplan.is_takepackedlunch != null) {
+        const userConfirm = confirm("Changing the creation method will reset all current data. Do you want to continue?");
+        if (userConfirm) {
+            refreshDayPlanForm();
+
+            //            if (selectedMethod === 'template') {
+            //                document.getElementById('dpTemplate').checked = true;
+            //            } else if (selectedMethod === 'custom') {
+            //                document.getElementById('dpNotTemplate').checked = true;
+            //            }
+            //
+            //            changesBasedDPType();
+
+            setTimeout(() => {
+                if (selectedMethod === 'template') {
+                    isTemp.checked = true;
+                } else if (selectedMethod === 'custom') {
+                    isCust.checked = true;
+                }
+
+                changesBasedDPType();
+            }, 50);
+
+        }
+    } else {
+        changesBasedDPType();
+    }
 }
 
+
+//mulin template dila, data fill karala, passe custom karana eka awulak na 
+//mulin custom dila. data fill karala passe template dunnoth data wadiy+awul
+
 //handle changes based on dp type(Template or not)
-const handleChangesBasedDPType = () => {
+const changesBasedDPType = () => {
 
     if (dpTemplate.checked) {
+
+        dayplan.is_template = true;
 
         //show these messages 
         document.getElementById('dayTypeMsgForTemplate').classList.remove("d-none");
@@ -662,6 +707,8 @@ const handleChangesBasedDPType = () => {
         setDayPlanStatus();
 
     } else if (dpNotTemplate.checked) {
+
+        dayplan.is_template = false;
 
         //hide these messages 
         document.getElementById('dayTypeMsgForTemplate').classList.add("d-none");
@@ -860,8 +907,9 @@ const calcTotalVehiParkingfee = () => {
     });
 
     const roundedCost = Math.ceil(cost / 10) * 10;
-    dpTotalVehiParkingCost.innerText = roundedCost;
+    dpTotalVehiParkingCost.value = roundedCost;
     dayplan.totalvehiparkcost = roundedCost;
+
 }
 
 //common fn for calculate the total cost of a single fee type
@@ -875,7 +923,8 @@ const calcTktCost = (vpCostType, dpInputFieldID, dpPropertName) => {
     });
 
     dpInputFieldID.value = parseFloat(cost).toFixed(2);
-    dpInputFieldID.innerText = parseFloat(cost).toFixed(2);
+    //dpInputFieldID.innerText = parseFloat(cost).toFixed(2);
+    dpInputFieldID.innerText = dpInputFieldID.value
     dayplan[dpPropertName] = dpInputFieldID.value;
 
 }
