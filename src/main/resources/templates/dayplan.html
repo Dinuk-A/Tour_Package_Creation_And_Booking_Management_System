@@ -102,7 +102,7 @@
                                             <div class="col-6">
                                                 <input type="radio" class="btn-check" id="dpTemplate" autocomplete="off"
                                                     name="dpTemplateOrNot" value="true"
-                                                    onchange="handleDPTypeSelection();">
+                                                    onchange="handleDayPlanTypeSelection();">
 
                                                 <label
                                                     class="btn btn-outline-success w-100 rounded-start fw-bold text-uppercase"
@@ -112,7 +112,7 @@
                                             <div class="col-6">
                                                 <input type="radio" class="btn-check" id="dpNotTemplate"
                                                     autocomplete="off" name="dpTemplateOrNot" value="false"
-                                                    onchange="handleDPTypeSelection();">
+                                                    onchange="handleDayPlanTypeSelection();">
 
                                                 <label
                                                     class="btn btn-outline-warning w-100 rounded-end fw-bold text-uppercase"
@@ -127,7 +127,7 @@
 
                                             <div class="col-4">
                                                 <input type="radio" class="btn-check" id="firstDayCB" autocomplete="off"
-                                                    name="dpDayType" value="FD" onchange="selectDayType(this);">
+                                                    name="dpDayType" value="FD" onchange="handleDayTypeFMLSelection();">
                                                 <label class="btn btn-outline-success w-100 fw-bold text-uppercase"
                                                     for="firstDayCB">First Day</label>
                                             </div>
@@ -135,14 +135,14 @@
                                             <div class="col-4">
                                                 <input type="radio" class="btn-check" id="middleDayCB"
                                                     autocomplete="off" name="dpDayType" value="MD"
-                                                    onchange="selectDayType(this);">
+                                                    onchange="handleDayTypeFMLSelection();">
                                                 <label class="btn btn-outline-warning w-100 fw-bold text-uppercase"
                                                     for="middleDayCB">Middle Day</label>
                                             </div>
 
                                             <div class="col-4">
                                                 <input type="radio" class="btn-check" id="lastDayCB" autocomplete="off"
-                                                    name="dpDayType" value="LD" onchange="selectDayType(this);">
+                                                    name="dpDayType" value="LD" onchange="handleDayTypeFMLSelection();">
                                                 <label class="btn btn-outline-danger w-100 fw-bold text-uppercase"
                                                     for="lastDayCB">Last Day</label>
                                             </div>

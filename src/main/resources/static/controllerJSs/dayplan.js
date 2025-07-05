@@ -491,6 +491,53 @@ const clearOtherInputsManualDropOff = () => {
     document.getElementById('altStay2Select').disabled = true;
 }
 
+const handleDayTypeFMLSelection = () => {
+
+    const fdRadio = document.getElementById('firstDayCB');
+    const mdRadio = document.getElementById('middleDayCB');
+    const ldRadio = document.getElementById('lastDayCB');
+
+    // Store current selection
+    const selectedType = fdRadio.checked ? 'FD' : mdRadio.checked ? 'MD' : ldRadio.checked ? 'LD' : null;
+
+    const hasPickupOrDrop =
+        dayplan.pickuppoint != null ||
+        dayplan.pickup_stay_id != null ||        
+        dayplan.droppoint != null ||
+        dayplan.drop_stay_id != null ||
+        pickupPointGCoords !== '' ||
+        dropoffPointGCoords !== '';
+
+    if (hasPickupOrDrop) {
+        const userConfirm = confirm("Changing the day type will reset pickup/drop-off details. Do you want to continue?");
+        if (userConfirm) {
+            refreshDayPlanForm(); 
+
+            setTimeout(() => {
+                if (selectedType === 'FD') {
+                    fdRadio.checked = true;
+                    selectDayType(fdRadio);
+                } else if (selectedType === 'MD') {
+                    mdRadio.checked = true;
+                    selectDayType(mdRadio);
+                } else if (selectedType === 'LD') {
+                    ldRadio.checked = true;
+                    selectDayType(ldRadio);
+                }
+            }, 50);
+        }
+    } else {
+        if (selectedType === 'FD') {
+            selectDayType(fdRadio);
+        } else if (selectedType === 'MD') {
+            selectDayType(mdRadio);
+        } else if (selectedType === 'LD') {
+            selectDayType(ldRadio);
+        }
+    }
+};
+
+
 //to select day type (FD,MD,LD)
 const selectDayType = (feild) => {
     dayplan.dayplancode = feild.value;
@@ -575,7 +622,7 @@ const selectDayType = (feild) => {
 //    dayplan.is_template = fieldId.value;
 //}
 
-const handleDPTypeSelection = () => {
+const handleDayPlanTypeSelection = () => {
 
     const isTemp = document.getElementById('dpTemplate');
     const isCust = document.getElementById('dpNotTemplate');
