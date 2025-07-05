@@ -313,15 +313,20 @@ const setTpkgStartDateToFuture = () => {
 //for first 2 radio buttons to choose package type   
 const changesTpkgCustomOrTemp = () => {
 
+    const selectBasedInq = document.getElementById('tpkgBasedInq');
+
     //if a custom package
     if (customTP.checked) {
 
         tpkg.is_custompkg = true;
 
         //add me-5 
-        const input = document.getElementById('customTP');
-        const col7Div = input.parentElement.parentElement.parentElement;
-        col7Div.classList.add('me-5');
+        //const input = document.getElementById('customTP');
+        //const col7Div = input.parentElement.parentElement.parentElement;
+        //col7Div.classList.add('me-5');
+
+        //enable selecting based inq
+        selectBasedInq.disabled = false;
 
         // hide
         tpDescRow.classList.add('d-none');
@@ -348,11 +353,17 @@ const changesTpkgCustomOrTemp = () => {
     } else if (forWebSite.checked) {
 
         //remove me-5 
-        const input = document.getElementById('customTP');
-        const col7Div = input.parentElement.parentElement.parentElement;
-        col7Div.classList.remove('me-5');
+        //const input = document.getElementById('customTP');
+        //const col7Div = input.parentElement.parentElement.parentElement;
+        //col7Div.classList.remove('me-5');
 
         tpkg.is_custompkg = false;
+
+        //disable selecting based inq
+        selectBasedInq.disabled = true;
+        selectBasedInq.value = '';
+        selectBasedInq.style.border = '1px solid #ced4da';
+        tpkg.basedinq = null
 
         // unhide
         tpDescRow.classList.remove('d-none');
