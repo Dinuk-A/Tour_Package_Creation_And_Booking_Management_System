@@ -1661,6 +1661,8 @@ const showDayPlanDetails = (selectElementId) => {
     //the view button is clicked from this select element's card
     editingDPsSelectElementIdVal = selectElementId;
 
+    console.log("select element id for editing DPs: ", editingDPsSelectElementIdVal);
+
     //this will be helps when refilling a dp and set the correct day type auto
     selectedDayTypeToEdit = getDayTypeFromLabel(selectElementId);
 
@@ -2135,12 +2137,13 @@ const feedAndSelectNewlyAddedDp = async () => {
             console.error("final day fetch failed " + error)
         }
 
-         //for mid days
+        //for mid days
     } else {
-       
+
         const midDaySelect = document.getElementById(editingDPsSelectElementIdVal);
         if (midDaySelect) {
             resetSelectElements(midDaySelect, "Please Select The Itinerary");
+            console.log("midDaySelect:", midDaySelect);
 
             try {
                 const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
@@ -2153,9 +2156,15 @@ const feedAndSelectNewlyAddedDp = async () => {
                     const selectedDayPlan = JSON.parse(selectedVal);
                     //const index = parseInt(getDayTypeFromLabel(editingDPsSelectElementIdVal).split(" ")[1]) - 1;
                     //tpkg.dayplans[index] = selectedDayPlan;
-                    const index = getDayNumberFromLabel(editingDPsSelectElementIdVal) - 1;
-                    tpkg.dayplans[index] = selectedDayPlan;
+
+                    //ORI
+                    //const index = getDayNumberFromLabel(editingDPsSelectElementIdVal) - 1;
+                    //tpkg.dayplans[index] = selectedDayPlan;
+
+                    tpkg.dayplans.push(selectedDayPlan);
                     console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+                    midDaySelect.style.border = "2px solid lime";
+
                 } else {
                     console.warn("No value selected in mid day select");
                 }
@@ -2216,6 +2225,56 @@ const saveAndSelectEditedDp = () => {
 
 //######################################################
 
+// Handle mid-day select change FN
+function handleMidDaySelectChange(selectElement, currentIndex) {
+    const selectedValue = JSON.parse(selectElement.value);
+    console.log("Selected DayPlan:", selectedValue);
+
+    const selectedDayNum = selectElement.parentNode.parentNode.children[0].children[0].innerText.split(" ")[2];
+    console.log("Selected Day Number:", selectedDayNum);
+    const index = parseInt(selectedDayNum) - 1;
+
+    const msgId = `midDayMsg${currentIndex}`;
+    const msgElement = document.getElementById(msgId);
+
+    let isDuplicate = tpkg.dayplans.some(dp => dp && dp.id === selectedValue.id);
+
+    if (isDuplicate) {
+        showAlertModal('war', 'This DayPlan has already been selected!');
+        selectElement.value = "";
+        selectElement.style.border = "2px solid red";
+        return;
+    }
+
+    if (selectedValue.is_template) {
+        selectElement.style.border = "2px solid orange";
+        msgElement.classList.remove("d-none");
+        tpkg.dayplans[index] = null;
+
+        console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+        updateTotalDaysCount();
+        showTotalKmCount();
+
+        addNewDaysBtn.disabled = true;
+    } else {
+        selectElement.style.border = "2px solid lime";
+        msgElement.classList.add("d-none");
+
+        tpkg.dayplans[index] = selectedValue;
+
+        console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+        updateTotalDaysCount();
+        showTotalKmCount();
+
+        addNewDaysBtn.disabled = false;
+        finalDaySelectUseTempsBtn.disabled = false;
+        finalDaySelectUseExistingBtn.disabled = false;
+    }
+
+    document.getElementById(`showMidDayBtn${currentIndex}`).disabled = false;
+    document.getElementById(`midDayDeleteBtn${currentIndex}`).disabled = false;
+}
+
 //this will be needed for create dyamic IDs in mid days
 let midDayCounter = 1;
 
@@ -2273,7 +2332,7 @@ const generateNormalDayPlanSelectSections = () => {
         let isDuplicate = tpkg.dayplans.some(dp => {
             return dp && dp.id === selectedValue.id;
         });
-        
+
 
         if (isDuplicate) {
 
@@ -2284,10 +2343,10 @@ const generateNormalDayPlanSelectSections = () => {
         } else {
 
             if (selectedValue.is_template) {
+
                 this.style.border = "2px solid orange";
                 msgElement.classList.remove("d-none");
 
-                //this.value = "";
                 tpkg.dayplans[index] = null;
 
                 console.log("Updated tpkg.dayplans:", tpkg.dayplans);
@@ -2296,6 +2355,7 @@ const generateNormalDayPlanSelectSections = () => {
                 showTotalKmCount();
 
                 addNewDaysBtn.disabled = true;
+
             } else {
                 this.style.border = "2px solid lime";
                 msgElement.classList.add("d-none");
