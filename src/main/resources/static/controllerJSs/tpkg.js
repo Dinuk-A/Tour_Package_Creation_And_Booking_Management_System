@@ -356,9 +356,23 @@ const refreshTpkgForm = async () => {
         document.getElementById('forWebSite').disabled = false;
     }
 
+    const updateBtn = document.getElementById('tpkgUpdateBtn');
+    updateBtn.disabled = true;
+    updateBtn.style.cursor = "not-allowed";
+
     //set the min start date to 7 days future
     setTpkgStartDateToFuture();
 
+}
+
+//to handle the reset button click in the form
+const handlePkgReset = () => {
+    let userConfirm = confirm("Are you sure you want to reset the form? All unsaved data will be lost.");
+    if (userConfirm) {
+        refreshTpkgForm();
+    } else {
+        showAlertModal('inf', "Reset Cancelled");
+    }
 }
 
 //set status auto
@@ -396,11 +410,6 @@ const changesTpkgCustomOrTemp = () => {
 
         tpkg.is_custompkg = true;
 
-        //add me-5 
-        //const input = document.getElementById('customTP');
-        //const col7Div = input.parentElement.parentElement.parentElement;
-        //col7Div.classList.add('me-5');
-
         //enable selecting based inq
         selectBasedInq.disabled = false;
 
@@ -427,11 +436,6 @@ const changesTpkgCustomOrTemp = () => {
 
         //if a package is for show in website
     } else if (forWebSite.checked) {
-
-        //remove me-5 
-        //const input = document.getElementById('customTP');
-        //const col7Div = input.parentElement.parentElement.parentElement;
-        //col7Div.classList.remove('me-5');
 
         tpkg.is_custompkg = false;
 
@@ -812,7 +816,6 @@ const handleFirstDayChange = (selectElement) => {
     dynamicSelectValidator(selectElement, 'tpkg', 'sd_dayplan_id');
     showFirstDayBtn.disabled = false;
     const fdMsg = document.getElementById('firstDayMsg');
-    showTotalKmCount();
 
     if (tpkg.sd_dayplan_id.is_template) {
         selectElement.style.border = "2px solid orange";
@@ -827,10 +830,13 @@ const handleFirstDayChange = (selectElement) => {
         finalDaySelectUseExistingBtn.disabled = false;
         updateTotalDaysCount();
     }
-    //💥💥💥
-    //refreshMainCostCard();
+
+    showTotalKmCount();
 
 }
+
+//💥💥💥
+//refreshMainCostCard();
 
 // to handle last day changes  
 const handleFinalDayChange = (selectElement) => {
@@ -2083,6 +2089,7 @@ const refillSelectedDayPlan = async (dpObj) => {
 //auto select the newly added dp into the correct select element
 const feedAndSelectNewlyAddedDp = async () => {
 
+    //for first days
     if (editingDPsSelectElementIdVal === "tpkgFirstDaySelect") {
 
         resetSelectElements(tpkgFirstDaySelect, "Please Select First Day");
@@ -2094,8 +2101,9 @@ const feedAndSelectNewlyAddedDp = async () => {
             console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
             fillDataIntoDynamicSelects(tpkgFirstDaySelect, "Please Select First Day", onlyFirstDays, "daytitle", newlyAddedDayTitle);
             const selectedVal = tpkgFirstDaySelect.value;
-
+            console.log("Selected value in tpkgFirstDaySelect:", selectedVal);
             if (selectedVal) {
+
                 tpkg.sd_dayplan_id = JSON.parse(selectedVal);
                 handleFirstDayChange(tpkgFirstDaySelect);
             } else {
@@ -2105,6 +2113,7 @@ const feedAndSelectNewlyAddedDp = async () => {
             console.error("first day fetch failed " + error)
         }
 
+        //for last days
     } else if (editingDPsSelectElementIdVal === "tpkgFinalDaySelect") {
 
         resetSelectElements(tpkgFinalDaySelect, "Please Select Final Day");
@@ -2126,9 +2135,9 @@ const feedAndSelectNewlyAddedDp = async () => {
             console.error("final day fetch failed " + error)
         }
 
+         //for mid days
     } else {
-
-        //for mid days
+       
         const midDaySelect = document.getElementById(editingDPsSelectElementIdVal);
         if (midDaySelect) {
             resetSelectElements(midDaySelect, "Please Select The Itinerary");
@@ -2137,9 +2146,9 @@ const feedAndSelectNewlyAddedDp = async () => {
                 const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
                 console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
                 const onlyMidDays = await ajaxGetReq("/dayplan/onlymiddays");
-                fillDataIntoDynamicSelects(midDaySelect, "Please Select Middle Day catttt222", onlyMidDays, "daytitle", newlyAddedDayTitle);
+                fillDataIntoDynamicSelects(midDaySelect, "Please Select Middle Day", onlyMidDays, "daytitle", newlyAddedDayTitle);
                 const selectedVal = midDaySelect.value;
-
+                console.log("Selected value in mid day select:", selectedVal);
                 if (selectedVal) {
                     const selectedDayPlan = JSON.parse(selectedVal);
                     //const index = parseInt(getDayTypeFromLabel(editingDPsSelectElementIdVal).split(" ")[1]) - 1;
@@ -2169,10 +2178,11 @@ const addNewDayPlanInTpkg = async () => {
             try {
                 dayplan.id = null;
                 dayplan.is_template = false;
-                const postServerResponse = await ajaxPPDRequest("/dayplan", "POST", dayplan);
+                const postServerResponse = await ajaxPPDRequest("/dayplan/saveasnew", "POST", dayplan);
 
-                if (postServerResponse === 'OK') {
-                    showAlertModal('suc', 'Saved Successfully');
+                if (postServerResponse && !postServerResponse.startsWith("save not completed")) {
+                    window.newlyAddedDayTitleGlobal = postServerResponse;
+                    showAlertModal('suc', 'Saved Successfully as ' + postServerResponse);
                     feedAndSelectNewlyAddedDp();
                     document.getElementById('formDayPlanInTpkg').reset();
                     refreshDpFormInTpkg();
@@ -2214,19 +2224,20 @@ const generateNormalDayPlanSelectSections = () => {
 
     const container = document.getElementById('tpkgMidDaysSelectSection');
 
+    const currentIndex = midDayCounter;
     const selectId = `tpkgMidDaySelect${midDayCounter}`;
     const btnId = `showMidDayBtn${midDayCounter}`;
     const actionRowId = `midDayActionBtnsRow${midDayCounter}`;
 
-    // Outer container
+    // outer container
     const outerDiv = document.createElement('div');
     outerDiv.className = 'col-12 mt-0';
 
-    // Row
+    // row
     const row = document.createElement('div');
     row.className = 'row border border-secondary rounded p-3 mb-3 bg-white shadow-sm';
 
-    // Row 1: Day selector
+    //day selector
     const selectorRow = document.createElement('div');
     selectorRow.className = 'col-12 d-flex align-items-center';
 
@@ -2240,6 +2251,8 @@ const generateNormalDayPlanSelectSections = () => {
 
     const selectCol = document.createElement('div');
     selectCol.className = 'col-7';
+
+    //actual select element
     const select = document.createElement('select');
     select.id = selectId;
     select.disabled = true;
@@ -2253,40 +2266,77 @@ const generateNormalDayPlanSelectSections = () => {
         console.log("Selected Day Number:", selectedDayNum);
         const index = parseInt(selectedDayNum) - 1;
 
-        let isDuplicate = tpkg.dayplans.some(dp => dp.id === selectedValue.id);
+        const msgId = `midDayMsg${currentIndex}`;
+        const msgElement = document.getElementById(msgId);
+
+        //let isDuplicate = tpkg.dayplans.some(dp => dp.id === selectedValue.id);
+        let isDuplicate = tpkg.dayplans.some(dp => {
+            return dp && dp.id === selectedValue.id;
+        });
+        
 
         if (isDuplicate) {
-            alert("This DayPlan has already been selected!");
+
+            showAlertModal('war', 'This DayPlan has already been selected!');
             this.value = "";
             this.style.border = "2px solid red";
 
+        } else {
+
+            if (selectedValue.is_template) {
+                this.style.border = "2px solid orange";
+                msgElement.classList.remove("d-none");
+
+                //this.value = "";
+                tpkg.dayplans[index] = null;
+
+                console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+
+                updateTotalDaysCount();
+                showTotalKmCount();
+
+                addNewDaysBtn.disabled = true;
+            } else {
+                this.style.border = "2px solid lime";
+                msgElement.classList.add("d-none");
+
+                tpkg.dayplans[index] = selectedValue;
+
+                console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+
+                updateTotalDaysCount();
+                showTotalKmCount();
+
+                addNewDaysBtn.disabled = false;
+                finalDaySelectUseTempsBtn.disabled = false;
+                finalDaySelectUseExistingBtn.disabled = false;
+
+            }
+
             document.getElementById(btnId).disabled = false;
             document.getElementById(`midDayDeleteBtn${currentIndex}`).disabled = false;
-
-        } else {
-            this.style.border = "2px solid lime";
 
             //some arrays cant insert elements for specific indexes if its empty
             //while (tpkg.dayplans.length <= index) {
             //    tpkg.dayplans.push(null);
             //}
 
-            tpkg.dayplans[index] = selectedValue;
-            console.log("Updated tpkg.dayplans:", tpkg.dayplans);
-
-            updateTotalDaysCount();
-            showTotalKmCount();
-
-            document.getElementById(btnId).disabled = false;
-            document.getElementById(`midDayDeleteBtn${currentIndex}`).disabled = false;
         }
 
     };
 
     selectCol.appendChild(select);
 
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'text-danger d-none';
+    msgDiv.id = `midDayMsg${currentIndex}`;
+    msgDiv.textContent = 'This is a template day plan. Customize this to suit the tour';
+    selectCol.appendChild(msgDiv);
+
     const btnCol = document.createElement('div');
     btnCol.className = 'col-3 d-flex justify-content-end gap-2';
+
+    //view btn
     const viewBtn = document.createElement('button');
     viewBtn.type = 'button';
     viewBtn.id = btnId;
@@ -2298,9 +2348,10 @@ const generateNormalDayPlanSelectSections = () => {
     };
     btnCol.appendChild(viewBtn);
 
-    //will be needed for delete button
-    const currentIndex = midDayCounter;
+    //will be needed for delete button (ORIGINAL)
+    //const currentIndex = midDayCounter;
 
+    //delete btn
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
     deleteBtn.className = 'btn btn-outline-danger btn-sm';
@@ -2361,41 +2412,50 @@ const generateNormalDayPlanSelectSections = () => {
 //  to delete a new midday select section
 const deleteMidDay = (index) => {
 
-    const select = document.getElementById(`tpkgMidDaySelect${index}`);
+    let userConfirm = confirm("Are you sure you want to delete this middle day?");
+    if (userConfirm) {
 
-    // Remove from tpkg.dayplans if a valid plan was selected
-    if (select && select.value && select.value.trim() !== "") {
-        try {
-            const deletedDayPlan = JSON.parse(select.value);
-            tpkg.dayplans = tpkg.dayplans.filter(dp => dp && dp.id !== deletedDayPlan.id);
-        } catch (err) {
-            console.warn("Invalid JSON in select value, skipping removal from tpkg.dayplans");
+        const select = document.getElementById(`tpkgMidDaySelect${index}`);
+
+        // Remove from tpkg.dayplans if a valid plan was selected
+        if (select && select.value && select.value.trim() !== "") {
+            try {
+                const deletedDayPlan = JSON.parse(select.value);
+                tpkg.dayplans = tpkg.dayplans.filter(dp => dp && dp.id !== deletedDayPlan.id);
+            } catch (err) {
+                console.warn("Invalid JSON in select value, skipping removal from tpkg.dayplans");
+            }
         }
+
+        // Remove from DOM
+        const row = select.closest('.row').parentElement;
+        row.remove();
+
+        // Shift remaining selects and update IDs/texts
+        for (let i = index + 1; i < midDayCounter; i++) {
+            const oldSelect = document.getElementById(`tpkgMidDaySelect${i}`);
+            if (!oldSelect) continue;
+
+            const oldRow = oldSelect.closest('.row').parentElement;
+            const newIndex = i - 1;
+
+            oldSelect.id = `tpkgMidDaySelect${newIndex}`;
+            oldRow.querySelector('label').textContent = `Middle Day ${newIndex} :`;
+            oldRow.querySelector('label').setAttribute('for', `tpkgMidDaySelect${newIndex}`);
+            oldRow.querySelector('button.btn-all').id = `showMidDayBtn${newIndex}`;
+            oldRow.querySelector('div.col-12.mt-3').id = `midDayActionBtnsRow${newIndex}`;
+            oldRow.querySelector(`#midDayDeleteBtn${i}`).id = `midDayDeleteBtn${newIndex}`;
+        }
+
+        midDayCounter--;
+        updateTotalDaysCount();
+
+        //enable add new days btn
+        document.getElementById('addNewDaysBtn').disabled = false;
     }
-
-    // Remove from DOM
-    const row = select.closest('.row').parentElement;
-    row.remove();
-
-    // Shift remaining selects and update IDs/texts
-    for (let i = index + 1; i < midDayCounter; i++) {
-        const oldSelect = document.getElementById(`tpkgMidDaySelect${i}`);
-        if (!oldSelect) continue;
-
-        const oldRow = oldSelect.closest('.row').parentElement;
-        const newIndex = i - 1;
-
-        oldSelect.id = `tpkgMidDaySelect${newIndex}`;
-        oldRow.querySelector('label').textContent = `Middle Day ${newIndex} :`;
-        oldRow.querySelector('label').setAttribute('for', `tpkgMidDaySelect${newIndex}`);
-        oldRow.querySelector('button.btn-all').id = `showMidDayBtn${newIndex}`;
-        oldRow.querySelector('div.col-12.mt-3').id = `midDayActionBtnsRow${newIndex}`;
-        oldRow.querySelector(`#midDayDeleteBtn${i}`).id = `midDayDeleteBtn${newIndex}`;
+    else {
+        showAlertModal('inf', 'User cancelled the mid day deletion task');
     }
-
-    midDayCounter--;
-    //updateTourEndDate();
-    updateTotalDaysCount();
 };
 
 // remove the final day from the tpkg

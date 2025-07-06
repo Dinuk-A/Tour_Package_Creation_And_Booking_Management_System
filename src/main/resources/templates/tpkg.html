@@ -1274,7 +1274,7 @@
                                     <div class="row mt-4 mb-2">
                                         <div class="col-4">
                                             <button type="reset" class="btn-clear w-50 fw-bold"
-                                                onclick="refreshTpkgForm()">Reset
+                                                onclick="handlePkgReset()">Reset
                                                 Form</button>
                                         </div>
                                         <div class="col-8 text-end">
@@ -1391,7 +1391,8 @@
                                                     <span class="text-danger">*</span> :</label>
                                                 <input id="dpTitle" class="form-control"
                                                     placeholder="Enter The Itinerary Title"
-                                                    onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle'); window.newlyAddedDayTitleGlobal=this.value;">
+                                                    onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle');">
+                                                    <!--  window.newlyAddedDayTitleGlobal=this.value; -->
                                             </div>
 
                                             <!-- code  -->

@@ -1,6 +1,7 @@
 package lk.yathratravels.dayplan;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,21 +120,7 @@ public class DayPlanController {
 
         try {
 
-            // set start dist id from vplaces or activities
-            // remove activities after attr == type == activity 💥💥
-
-            // if activities have data
-//            if (!dplan.getVplaces().isEmpty()) {
-//
-//                Attraction firstVPlace = dplan.getVplaces().iterator().next();
-//                dplan.setStart_district_id(firstVPlace.getDistrict_id());
-//
-//            }
-
-            // or custom dp elkakata nam, inquiry ekath ekka sambanda code ekak hadanna
-            // 💥💥💥
-
-            //get start dist id from the first attraction
+            // get start dist id from the first attraction
             District startDistId = dplan.getVplaces().iterator().next().getDistrict_id();
             dplan.setStart_district_id(startDistId);
 
@@ -176,7 +163,7 @@ public class DayPlanController {
         }
 
         try {
-                     
+
             // Generate the dayplancode
             String nextCode;
             List<DayPlan> dpCountByDistrict = daoDP.getDayPlansByStartDistrict(dplan.getStart_district_id().getId());
@@ -189,15 +176,24 @@ public class DayPlanController {
             }
 
             dplan.setDayplancode(nextCode);
+
+            if (dplan.getId() == null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
+            String timestampSuffix = "Custom_" + LocalDateTime.now().format(formatter);
+            dplan.setDaytitle(dplan.getDaytitle() + " - " + timestampSuffix);
+        }
+
             dplan.setAddeddatetime(LocalDateTime.now());
             dplan.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
             daoDP.save(dplan);
-            return "OK";
+
+            
+            return dplan.getDaytitle();
+
         } catch (Exception e) {
             return "save not completed : " + e.getMessage();
         }
     }
-   
 
     // to update a dayplan
     @PutMapping(value = "/dayplan")
