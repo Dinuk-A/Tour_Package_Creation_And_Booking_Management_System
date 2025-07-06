@@ -45,28 +45,28 @@ const showEmpDesignation = (empObj) => {
 
     switch (designation) {
         case "Admin":
-            bgColor = "#2c3e50"; 
+            bgColor = "#2c3e50";
             break;
         case "Manager":
-            bgColor = "#8e44ad"; 
+            bgColor = "#8e44ad";
             break;
         case "Assistant Manager":
-            bgColor = "#6c5ce7"; 
+            bgColor = "#6c5ce7";
             break;
         case "Receptionist":
-            bgColor = "#00cec9"; 
+            bgColor = "#00cec9";
             break;
         case "Driver":
-            bgColor = "#e67e22"; 
+            bgColor = "#e67e22";
             break;
         case "Executive":
-            bgColor = "#1e90ff"; 
+            bgColor = "#1e90ff";
             break;
         case "Guide":
-            bgColor = "#d63031"; 
+            bgColor = "#d63031";
             break;
         default:
-            bgColor = "#7f8c8d"; 
+            bgColor = "#7f8c8d";
     }
 
     return `
@@ -576,93 +576,125 @@ const restoreEmployeeRecord = async () => {
 // fn for print an employee record
 const printEmployeeRecord = () => {
 
+    const empFullName = document.getElementById('modalEmpFullName').innerText || 'Employee';
+
     // get the content from the modal
     const modalContent = `
-        <div style="font-family: Arial, sans-serif; padding: 20px; line-height: 1.6;">
-            <h2 style="text-align: center; color: #007bff;">Employee Information</h2>
-            <hr style="border: 1px solid #007bff; margin-bottom: 20px;">
+<div class="container my-3 p-3 border border-primary rounded shadow-sm">
+    <h2 class="text-center text-primary mb-3">Employee Information</h2>
+    <hr class="border border-primary border-2">
 
-            <!-- Employee Image and Basic Info -->
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <div style="flex: 1; text-align: center;">
-                    <img src="${document.getElementById('modalPreviewEmployeeImg').src}" 
-                         alt="Employee Photo" 
-                         style="width: 150px; height: 150px; border-radius: 50%; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
-                </div>
-                <div style="flex: 2; padding-left: 20px;">
-                    <p><strong>Full Name:</strong> ${document.getElementById('modalEmpFullName').innerText || 'N/A'}</p>
-                    <p><strong>NIC:</strong> ${document.getElementById('modalEmpNIC').innerText || 'N/A'}</p>
-                </div>
-            </div>
-
-            <!-- Additional Details -->
-            <p><strong>Employee Code:</strong> ${document.getElementById('modalEmpCode').innerText || 'N/A'}</p>
-            <p><strong>Designation:</strong> ${document.getElementById('modalEmpDesignation').innerText || 'N/A'}</p>
-            <p><strong>Working Status:</strong> ${document.getElementById('modalEmpStatus').innerText || 'N/A'}</p>
-            <p><strong>Gender:</strong> ${document.getElementById('modalEmpGender').innerText || 'N/A'}</p>
-            <p><strong>Date of Birth:</strong> ${document.getElementById('modalEmpDOB').innerText || 'N/A'}</p>
-            <p><strong>Mobile Number:</strong> ${document.getElementById('modalEmpMobileNum').innerText || 'N/A'}</p>
-            <p><strong>Landline Number:</strong> ${document.getElementById('modalEmpLandNum').innerText || 'N/A'}</p>
-            <p><strong>Personal Email:</strong> ${document.getElementById('modalEmpPersonalEmail').innerText || 'N/A'}</p>
-            <p><strong>Address:</strong> ${document.getElementById('modalEmpAddress').innerText || 'N/A'}</p>
-            <p><strong>Additional Details:</strong> ${document.getElementById('modalEmpNote').innerText || 'N/A'}</p>
-
-            <hr style="margin-top: 30px;">
-            <p style="text-align: center; font-size: 12px; color: #555;">Generated on: 
-               ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+    <!-- Employee Image and Basic Info -->
+    <div class="row mb-4">
+        <div class="col-md-4 text-center">
+            <img src="${document.getElementById('modalPreviewEmployeeImg').src}" 
+                 alt="Employee Photo" 
+                 class="img-thumbnail rounded-circle border border-secondary"
+                 style="width: 150px; height: 150px;">
         </div>
-    `;
+        <div class="col-md-8">
+            <p><strong>Full Name:</strong> ${empFullName}</p>
+            <p><strong>NIC:</strong> ${document.getElementById('modalEmpNIC').innerText || 'N/A'}</p>
+        </div>
+    </div>
+
+    <!-- Additional Details -->
+    <div class="mb-3">
+        <p><strong>Employee Code:</strong> ${document.getElementById('modalEmpCode').innerText || 'N/A'}</p>
+        <p><strong>Designation:</strong> ${document.getElementById('modalEmpDesignation').innerText || 'N/A'}</p>
+        <p><strong>Working Status:</strong> ${document.getElementById('modalEmpStatus').innerText || 'N/A'}</p>
+        <p><strong>Gender:</strong> ${document.getElementById('modalEmpGender').innerText || 'N/A'}</p>
+        <p><strong>Date of Birth:</strong> ${document.getElementById('modalEmpDOB').innerText || 'N/A'}</p>
+        <p><strong>Mobile Number:</strong> ${document.getElementById('modalEmpMobileNum').innerText || 'N/A'}</p>
+        <p><strong>Landline Number:</strong> ${document.getElementById('modalEmpLandNum').innerText || 'N/A'}</p>
+        <p><strong>Personal Email:</strong> ${document.getElementById('modalEmpPersonalEmail').innerText || 'N/A'}</p>
+        <p><strong>Address:</strong> ${document.getElementById('modalEmpAddress').innerText || 'N/A'}</p>
+        <p><strong>Additional Details:</strong> ${document.getElementById('modalEmpNote').innerText || 'N/A'}</p>
+    </div>
+
+    <hr class="mt-4 border border-primary">
+
+    <p class="text-center text-muted small">Generated on: 
+       ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+</div>
+`;
 
     // a new window for the print preview
     const printWindow = window.open('', '', 'width=800, height=600');
-    printWindow.document.write(`
-        <html>
-            <head>
-                <title>Employee Information</title>
-                <style>
-                    body {
-                        margin: 0;
-                        padding: 20px;
-                        font-family: Arial, sans-serif;
-                        color: #333;
-                    }
-                    h2 {
-                        color: #007bff;
-                        text-align: center;
-                    }
-                    p {
-                        margin: 5px 0;
-                        font-size: 14px;
-                    }
-                    img {
-                        display: block;
-                        margin: auto;
-                    }
-                    hr {
-                        border: none;
-                        border-top: 1px solid #007bff;
-                    }
-                    @media print {
-                        body {
-                            margin: 0;
-                            padding: 0;
-                        }
-                    }
-                </style>
-            </head>
-            <body>${modalContent}</body>
-        </html>
-    `);
+    const printableTitle = `Employee_${empFullName.trim().replace(/\s+/g, '_')}`;
 
-    // indicate that writing to the printWindow.document is complete
+    printWindow.document.write(`
+<html>
+    <head>
+        <title>${printableTitle}</title>
+        <!-- link bootstrap css -->
+        <link rel="stylesheet" href="../libs/bootstrap-5.2.3/css/bootstrap.min.css">
+        <!-- link bootstrap icons -->
+        <link rel="stylesheet" href="../libs/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
+        <!-- bootstrap js -->
+        <script src="../libs/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+        <style>
+            body {
+                margin: 0;
+                padding: 10px;
+                font-family: Arial, sans-serif;
+                background-color: #f8f9fa;
+            }
+            @media print {
+                body {
+                    margin: 0;
+                    padding: 0;
+                    background-color: white;
+                }
+                .shadow-sm {
+                    box-shadow: none !important;
+                }
+            }
+        </style>
+    </head>
+    <body>${modalContent}</body>
+</html>
+`);
+
     printWindow.document.close();
 
-    // Trigger the print dialog
-    printWindow.print();
+    printWindow.onload = () => {
+        printWindow.focus();
+        printWindow.print();
 
-    // Close the print window after printing
-    printWindow.onafterprint = () => printWindow.close();
+        setTimeout(() => {
+            printWindow.close();
+        }, 1000);
+    };
+
+
 };
+
+//ORIGINAL 💥💥💥 NOT WORKING
+//make the same value as title of the doc
+//printWindow.document.title = printableTitle;
+
+// indicate that writing to the printWindow.document is complete
+//printWindow.document.close();
+
+// Trigger the print dialog
+//printWindow.print();
+
+// Close the print window after printing (original NOT WORKING)
+//printWindow.onafterprint = () => printWindow.close();
+
+//force close after a sec
+//setTimeout(() => {
+//    printWindow.close();
+//}, 1000)
+
+
+/* setTimeout(() => {
+   newWindow.stop();  //load wena eka stop karanawa
+   newWindow.print();   //eke print option eka call karanawa
+   newWindow.close();  //then close after click cancel button
+}, 1000);
+*/
 
 
 

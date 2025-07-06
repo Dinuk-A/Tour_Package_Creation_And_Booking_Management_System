@@ -403,43 +403,58 @@
                                             <div class="col-6 ">
                                                 <div class="row mt-1 mb-0">
                                                     <div class="col-6">
-                                                        <label class="form-label mb-0 fw-bold" for="dpTotalLocalAdultTktCost">Local Adult</label>
-                                                        <input id="dpTotalLocalAdultTktCost" class="p-1 text-center border rounded bg-white form-control" value="LKR 0.00" readonly>
+                                                        <label class="form-label mb-0 fw-bold"
+                                                            for="dpTotalLocalAdultTktCost">Local Adult</label>
+                                                        <input id="dpTotalLocalAdultTktCost"
+                                                            class="p-1 text-center border rounded bg-white form-control"
+                                                            value="LKR 0.00" readonly>
                                                     </div>
-                                        
+
                                                     <div class="col-6">
-                                                        <label class="form-label mb-0 fw-bold" for="dpTotalLocalChildTktCost">Local Children</label>
-                                                        <input id="dpTotalLocalChildTktCost" class="p-1 text-center border rounded bg-white form-control" value="LKR 0.00" readonly>
+                                                        <label class="form-label mb-0 fw-bold"
+                                                            for="dpTotalLocalChildTktCost">Local Children</label>
+                                                        <input id="dpTotalLocalChildTktCost"
+                                                            class="p-1 text-center border rounded bg-white form-control"
+                                                            value="LKR 0.00" readonly>
                                                     </div>
                                                 </div>
                                             </div>
-                                        
+
                                             <!-- Foreign -->
                                             <div class="col-6 ">
                                                 <div class="row mt-1 mb-0">
                                                     <div class="col-6">
-                                                        <label class="form-label mb-0 fw-bold" for="dpTotalForeignAdultTktCost">Foreign Adult</label>
-                                                        <input id="dpTotalForeignAdultTktCost" class="p-1 text-center border rounded bg-white form-control" value="LKR 0.00" readonly>
+                                                        <label class="form-label mb-0 fw-bold"
+                                                            for="dpTotalForeignAdultTktCost">Foreign Adult</label>
+                                                        <input id="dpTotalForeignAdultTktCost"
+                                                            class="p-1 text-center border rounded bg-white form-control"
+                                                            value="LKR 0.00" readonly>
                                                     </div>
-                                        
+
                                                     <div class="col-6">
-                                                        <label class="form-label mb-0 fw-bold" for="dpTotalForeignChildTktCost">Foreign Children</label>
-                                                        <input id="dpTotalForeignChildTktCost" class="p-1 text-center border rounded bg-white form-control" value="LKR 0.00" readonly>
+                                                        <label class="form-label mb-0 fw-bold"
+                                                            for="dpTotalForeignChildTktCost">Foreign Children</label>
+                                                        <input id="dpTotalForeignChildTktCost"
+                                                            class="p-1 text-center border rounded bg-white form-control"
+                                                            value="LKR 0.00" readonly>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <hr style="border: 3px double blue;">
-                                        
+
                                         <!-- Other Costs -->
                                         <div class="row mb-3">
                                             <div class="col-3">
-                                                <label class="form-label fw-bold mb-0" for="dpTotalVehiParkingCost">Total Parking Fees</label>
-                                                <input id="dpTotalVehiParkingCost" class="p-1 text-center border rounded bg-white form-control" value="LKR 0.00" readonly>
+                                                <label class="form-label fw-bold mb-0"
+                                                    for="dpTotalVehiParkingCost">Total Parking Fees</label>
+                                                <input id="dpTotalVehiParkingCost"
+                                                    class="p-1 text-center border rounded bg-white form-control"
+                                                    value="LKR 0.00" readonly>
                                             </div>
                                         </div>
-                                        
+
 
 
 
@@ -906,7 +921,11 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">
-                        <button class="btn-print fw-bold" onclick="printDayPlanRecord()">
+                        <button class="btn-print fw-bold d-none" onclick="printDayPlanRecordOld()">
+                            Print Record
+                        </button>
+
+                        <button class="btn-print fw-bold" onclick="printDayPlanRecordNew(window['currentObject'])">
                             Print Record
                         </button>
                         <div>
@@ -928,8 +947,7 @@
             </div>
         </div>
 
-
-
+        
     </main>
 
 </body>

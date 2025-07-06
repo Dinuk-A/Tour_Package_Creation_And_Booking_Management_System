@@ -502,7 +502,7 @@ const handleDayTypeFMLSelection = () => {
 
     const hasPickupOrDrop =
         dayplan.pickuppoint != null ||
-        dayplan.pickup_stay_id != null ||        
+        dayplan.pickup_stay_id != null ||
         dayplan.droppoint != null ||
         dayplan.drop_stay_id != null ||
         pickupPointGCoords !== '' ||
@@ -511,7 +511,7 @@ const handleDayTypeFMLSelection = () => {
     if (hasPickupOrDrop) {
         const userConfirm = confirm("Changing the day type will reset pickup/drop-off details. Do you want to continue?");
         if (userConfirm) {
-            refreshDayPlanForm(); 
+            refreshDayPlanForm();
 
             setTimeout(() => {
                 if (selectedType === 'FD') {
@@ -1530,21 +1530,18 @@ const checkDPFormErrors = () => {
     }
 
     if (!dayplan.vplaces || dayplan.vplaces.length === 0) {
-        errors += "At least select one attraction \n";
+        errors += "At least select one visiing place \n";
     }
 
     if (dayplan.drop_stay_id != null) {
-        if (dayplan.alt_stay_1_id == null) {
-            errors += " Alternative Stay 1 cannot be empty \n";
+        if (dayplan.alt_stay_1_id == null && dayplan.alt_stay_2_id == null) {
+            errors += " Please select at least one alternative accomodation \n";
         }
 
-        if (dayplan.alt_stay_2_id == null) {
-            errors += " Alternative Stay 2 cannot be empty \n";
-        }
     }
 
-    // if not a template, do additional checks
-    if (!dayplan.is_template) {
+    // if a custom package, do additional checks
+    if (dayplan.is_template && dayplan.is_template == false) {
 
         // either drop_stay_id or droppoint
         if (!dayplan.drop_stay_id && (!dayplan.droppoint)) {
@@ -1564,6 +1561,15 @@ const checkDPFormErrors = () => {
         if (dayplan.totalkmcount == null) {
             errors += "Total KM count cannot be empty \n";
         }
+
+        if (dayplan.pickuppoint != null && dayplan.pick_manual_gcoords != null) {
+            errors += "Enter the Geo Coords of pickup point \n";
+        }
+
+        if (dayplan.droppoint != null && dayplan.drop_manual_gcoords != null) {
+            errors += "Enter the Geo Coords of pickup point \n";
+        }
+
     }
 
     return errors;
@@ -1679,8 +1685,6 @@ const openModal = (dpObj) => {
     document.getElementById('modalDPNote').innerText = dpObj.note || 'N/A';
     document.getElementById('modalDPStatus').innerText = dpObj.dp_status || 'N/A';
 
-
-
     if (dpObj.deleted_dp) {
         document.getElementById('modalDPIfDeleted').classList.remove('d-none');
         document.getElementById('modalDPIfDeleted').innerHTML =
@@ -1697,6 +1701,134 @@ const openModal = (dpObj) => {
     $('#infoModalDayPlan').modal('show');
 
 };
+
+const printDayPlanRecordNew = (dpObj) => {
+
+    if (!dpObj) {
+        alert('No DayPlan data available to print.');
+        return;
+    }
+
+    console.log(dpObj);
+
+    // prepare attractions badges html
+    let attractionsHTML = 'N/A';
+    if (dpObj.vplaces && dpObj.vplaces.length > 0) {
+        const badges = dpObj.vplaces.map((el, i) => `<span class="fs-6 px-2 py-1 mb-1 fw-bold border rounded">${i + 1}. ${el.name}</span>`);
+        attractionsHTML = badges.join('<br>');
+    }
+
+    // create printable model
+    const modalContent = `
+      <div class="container-fluid my-3 p-1 border border-primary rounded shadow-sm" style="font-family: Arial, sans-serif;">
+        <h2 class="text-center text-primary mb-3">DayPlan Information</h2>
+        <hr class="border border-primary border-2">
+  
+        <div class="row mb-2">
+          <div class="col-md-6 mb-0"><p><strong>DayPlan Code:</strong> ${dpObj.dayplancode || 'N/A'}</p></div>
+          <div class="col-md-6"><p><strong>Day Title:</strong> ${dpObj.daytitle || 'N/A'}</p></div>
+        </div>
+  
+        <hr>
+  
+        <div class="row mb-2">
+          <div class="col-md-4"><p><strong>Start / Pickup Location:</strong> ${dpObj.pickuppoint || (dpObj.pickup_stay_id?.name) || 'N/A'}</p></div>
+          <div class="col-md-4"><p><strong>Lunch For Day:</strong> ${dpObj.lunchplace_id?.name || (dpObj.is_takepackedlunch ? 'Take Packed Lunch' : 'N/A')}</p></div>
+          <div class="col-md-4"><p><strong>End / DropOff Location Day:</strong> ${dpObj.drop_stay_id?.name || dpObj.droppoint || 'N/A'}</p></div>
+        </div>
+  
+        <div class="row mb-2">
+          <div class="col-md-4 mb-0"><p><strong>Alternative Stay 1:</strong> ${dpObj.alt_stay_1_id?.name || 'N/A'}</p></div>
+          <div class="col-md-4 mb-0"><p><strong>Alternative Stay 2:</strong> ${dpObj.alt_stay_2_id?.name || 'N/A'}</p></div>
+        </div>
+  
+        <hr>
+  
+        <div class="mb-2">
+        <p class="h5 fw-bold text-primary">Visiting Places:</p>
+          <div style="border: 1px solid #0d6efd; border-radius: 4px; padding: 8px;">
+            ${attractionsHTML}
+          </div>
+        </div>
+   
+        <!-- Ticket Costs -->
+        <div class="mb-1 p-3 border rounded bg-light">
+          <p class="h5 fw-bold text-primary mb-3">Total Ticket Costs:</p>
+        
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <p><strong>Local Adults:</strong> LKR ${dpObj.localadulttktcost?.toFixed(2) || '0.00'}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Local Child:</strong> LKR ${dpObj.localchildtktcost?.toFixed(2) || '0.00'}</p>
+            </div>
+          </div>
+        
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Foreign Adults:</strong> LKR ${dpObj.foreignadulttktcost?.toFixed(2) || '0.00'}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Foreign Child:</strong> LKR ${dpObj.foreignchildtktcost?.toFixed(2) || '0.00'}</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Parking Fee & Distance -->
+        <div class="row mb-2">
+          <div class="col-md-6">
+            <p><strong>Total Parking Fee:</strong> LKR ${dpObj.totalvehiparkcost?.toFixed(2) || '0.00'}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Total Distance Covered:</strong> ${dpObj.totalkmcount > 0 ? dpObj.totalkmcount + ' KM' : 'N/A'}</p>
+          </div>
+        </div>
+        
+        <hr>
+  
+        <div class="mb-1"><p><strong>Additional Information:</strong> ${dpObj.note || 'N/A'}</p></div>
+        <div class="mb-4"><p><strong>Status:</strong> ${dpObj.dp_status || 'N/A'}</p></div>
+  
+        <p class="text-center text-muted small">Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+      </div>
+    `;
+
+    const printableTitle = `DayPlan_${(dpObj.dayplancode || 'Example').replace(/\s+/g, '_')}`;
+
+    //url, window name, settings=== 'width=1000,height=700,resizable=yes,scrollbars=yes'
+    const printWindow = window.open('', '', 'width=900,height=700');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>${printableTitle}</title>
+          <link rel="stylesheet" href="../libs/bootstrap-5.2.3/css/bootstrap.min.css">
+          <style>
+            body {
+              margin: 0;
+              padding: 10px;
+              background-color: #f8f9fa;
+              font-family: Arial, sans-serif;
+            }
+            @media print {
+              body {
+                background-color: white;
+                margin: 0; padding: 0;
+              }
+            }
+          </style>
+        </head>
+        <body>${modalContent}</body>
+      </html>
+    `);
+    printWindow.document.close();
+
+    printWindow.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+        setTimeout(() => printWindow.close(), 1000);
+    };
+};
+
 
 // refill the form to update a record
 const refillDayPlanForm = async (dpObj) => {
@@ -2036,6 +2168,7 @@ const refillDayPlanForm = async (dpObj) => {
 
 }
 
+//show updated values
 const showDPValueChanges = () => {
     let updates = "";
 
@@ -2097,7 +2230,6 @@ const showDPValueChanges = () => {
 
     return updates;
 };
-
 
 //fn for update button to update a record
 const updateDayPlan = async () => {
@@ -2263,6 +2395,100 @@ const checkAltStayDuplications = () => {
     }
 }
 
-//💥💥💥💥 print day plan
+//print day plan with input values (NOT USING)
+const printDayPlanRecordOld = () => {
+    const dpTitle = document.getElementById('modalDPTitle').innerText || 'Day Plan';
+
+    const modalContent = `
+<div class="container my-3 p-3 border border-info rounded shadow-sm">
+    <h2 class="text-center text-info mb-3">Day Plan Information</h2>
+    <hr class="border border-info border-2">
+
+    <div class="mb-3">
+        <p><strong>Day Plan Code:</strong> ${document.getElementById('modalDPCode').innerText || 'N/A'}</p>
+        <p><strong>Title:</strong> ${dpTitle}</p>
+        <p><strong>Status:</strong> ${document.getElementById('modalDPStatus').innerText || 'N/A'}</p>
+    </div>
+
+    <div class="mb-3">
+        <p><strong>Start Location:</strong> ${document.getElementById('modalDPStartLocation').innerText || 'N/A'}</p>
+        <p><strong>Lunch Place:</strong> ${document.getElementById('modalDPLunch').innerText || 'N/A'}</p>
+        <p><strong>Stay Location:</strong> ${document.getElementById('modalDPStay').innerText || 'N/A'}</p>
+        <p><strong>Alternate Stay 1:</strong> ${document.getElementById('modalDPAltStay1')?.innerText || 'N/A'}</p>
+        <p><strong>Alternate Stay 2:</strong> ${document.getElementById('modalDPAltStay2')?.innerText || 'N/A'}</p>
+    </div>
+
+    <div class="mb-3">
+        <p><strong>Local Adult Ticket:</strong> ${document.getElementById('modalDPTktLocalAdult').innerText || 'N/A'}</p>
+        <p><strong>Local Child Ticket:</strong> ${document.getElementById('modalDPTktLocalChild').innerText || 'N/A'}</p>
+        <p><strong>Foreign Adult Ticket:</strong> ${document.getElementById('modalDPTktForeignAdult').innerText || 'N/A'}</p>
+        <p><strong>Foreign Child Ticket:</strong> ${document.getElementById('modalDPTktForeignChild').innerText || 'N/A'}</p>
+        <p><strong>Parking Fee:</strong> ${document.getElementById('modalDPParkingFee').innerText || 'N/A'}</p>
+        <p><strong>Total Distance:</strong> ${document.getElementById('modalDPTotalDistance').innerText || 'N/A'}</p>
+    </div>
+
+    <div class="mb-3">
+        <p><strong>Attractions:</strong></p>
+        <div class="border rounded p-2 d-flex flex-column gap-1">
+        ${document.getElementById('modalDPAttractions').innerHTML || 'N/A'}
+      </div>
+    </div>
+
+    <div class="mb-3">
+        <p><strong>Additional Note:</strong> ${document.getElementById('modalDPNote').innerText || 'N/A'}</p>
+    </div>
+
+    <hr class="mt-4 border border-info">
+    <p class="text-center text-muted small">Generated on: 
+        ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+</div>
+`;
+
+    const printWindow = window.open('', '', 'width=800,height=600');
+    const printableTitle = `DayPlan_${dpTitle.trim().replace(/\s+/g, '_')}`;
+
+    printWindow.document.write(`
+<html>
+<head>
+    <title>${printableTitle}</title>
+    <link rel="stylesheet" href="../libs/bootstrap-5.2.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../libs/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
+    <script src="../libs/bootstrap-5.2.3/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: white;
+            }
+            .shadow-sm {
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="print-content">Loading...</div>
+</body>
+</html>
+`);
+
+    printWindow.document.close();
+
+    printWindow.onload = () => {
+        printWindow.focus();
+        printWindow.document.getElementById('print-content').innerHTML = modalContent;
+        printWindow.print();
+        setTimeout(() => {
+            printWindow.close();
+        }, 1000);
+    };
+};
 
 
