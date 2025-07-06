@@ -631,7 +631,7 @@ const handleDayPlanTypeSelection = () => {
     const selectedMethod = isTemp.checked ? 'template' : isCust.checked ? 'custom' : null;
 
     if (dayplan.pickuppoint != null || dayplan.pickup_stay_id != null || dayplan.lunchplace_id != null || dayplan.is_takepackedlunch != null) {
-        const userConfirm = confirm("Changing the creation method will reset all current data. Do you want to continue?");
+        const userConfirm = confirm("Changing the Day Type will reset all current data. Do you want to continue?");
         if (userConfirm) {
             refreshDayPlanForm();
 

@@ -333,7 +333,7 @@
                                                                 </div>
                                                             </div>
 
-                                                            <!-- Action buttons -->
+                                                            <!-- Action buttons first day-->
                                                             <div class="col-12 mt-3" id="firstDayActionBtnsRow">
                                                                 <div
                                                                     class="d-flex justify-content-center flex-wrap gap-2">
@@ -404,7 +404,7 @@
                                                             </div>
                                                         </div>
 
-                                                        <!-- Action buttons -->
+                                                        <!-- Action buttons final day -->
                                                         <div class="col-12 mt-3" id="finalDayActionBtnsRow">
                                                             <div class="d-flex justify-content-center flex-wrap gap-2">
                                                                 <!--<button class="btn btn-outline-success btn-sm">
@@ -415,8 +415,7 @@
                                                                     class="btn btn-outline-primary btn-sm"
                                                                     onclick="loadTemplates(tpkgFinalDaySelect)">
                                                                     <i class="bi bi-pencil-square me-1"></i>
-                                                                    Use
-                                                                    Templates
+                                                                    Use Templates
                                                                 </button>
                                                                 <button id="finalDaySelectUseExistingBtn" disabled
                                                                     class="btn btn-outline-secondary btn-sm"
@@ -1097,7 +1096,7 @@
                                                                         onchange="inputValidatorText(this,'','tpkg','totaladditionalcosts');">
                                                                 </div>
                                                                 <div class="d-none text-warning  bg-dark"
-                                                                    id="totalAddiCostMsg">
+                                                                    id="totalAddiCostMsg"> Please add additional costs
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1126,7 +1125,7 @@
                                                         <div
                                                             class="row mt-3 bg-light rounded p-2 border border-success">
                                                             <div class="col-4 my-auto">
-                                                                <label for="finalPriceInput"
+                                                                <label for="pkgFinalPrice"
                                                                     class="form-label fw-bold text-success fs-5">Package
                                                                     Final
                                                                     Price:</label>
@@ -1138,7 +1137,7 @@
                                                                         LKR
                                                                     </span>
                                                                     <input type="number" disabled placeholder="0.00"
-                                                                        id="finalPriceInput"
+                                                                        id="pkgFinalPrice"
                                                                         class="form-control text-center text-success fw-bold fs-5" />
                                                                 </div>
                                                             </div>
@@ -1207,7 +1206,7 @@
                                                         <div class="col-12 mx-auto">
                                                             <div class="d-grid gap-2">
                                                                 <!-- Bootstrap grid for vertical spacing -->
-                                                                <button type="reset"
+                                                                <button type="button"
                                                                     class="btn btn-outline-danger btn-sm fw-semibold"
                                                                     onclick="refreshAddiCostForm()">Reset</button>
 
