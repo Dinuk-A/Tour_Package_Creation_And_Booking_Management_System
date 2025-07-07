@@ -136,30 +136,8 @@ public class TourPkgController {
                 ac.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
                 ac.setTourPkg(tpkg);
             }
-            TourPkg savedTpkg = daoTPkg.save(tpkg);
 
-            /*
-             * System.out.println("additional cost list : " +
-             * tpkg.getAddiCostList().toString());
-             * 
-             * if (tpkg.getAddiCostList() != null && !tpkg.getAddiCostList().isEmpty()) {
-             * 
-             * for (AdditionalCost ac : tpkg.getAddiCostList()) {
-             * AdditionalCost additionalCost = new AdditionalCost();
-             * 
-             * System.out.println("additional cost : " + ac.toString());
-             * 
-             * additionalCost.setTourPkg(savedTpkg);
-             * additionalCost.setCostname(ac.getCostname());
-             * additionalCost.setAmount(ac.getAmount());
-             * additionalCost.setAddeddatetime(LocalDateTime.now());
-             * additionalCost.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId
-             * ());
-             * additionalCostDao.save(additionalCost);
-             * }
-             * 
-             * }
-             */
+            daoTPkg.save(tpkg);
 
             return "OK";
         } catch (Exception e) {
@@ -167,6 +145,29 @@ public class TourPkgController {
         }
 
     }
+
+    /*
+     * System.out.println("additional cost list : " +
+     * tpkg.getAddiCostList().toString());
+     * 
+     * if (tpkg.getAddiCostList() != null && !tpkg.getAddiCostList().isEmpty()) {
+     * 
+     * for (AdditionalCost ac : tpkg.getAddiCostList()) {
+     * AdditionalCost additionalCost = new AdditionalCost();
+     * 
+     * System.out.println("additional cost : " + ac.toString());
+     * 
+     * additionalCost.setTourPkg(savedTpkg);
+     * additionalCost.setCostname(ac.getCostname());
+     * additionalCost.setAmount(ac.getAmount());
+     * additionalCost.setAddeddatetime(LocalDateTime.now());
+     * additionalCost.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId
+     * ());
+     * additionalCostDao.save(additionalCost);
+     * }
+     * 
+     * }
+     */
 
     @PutMapping(value = "/tpkg")
     public String updateTourPkg(@RequestBody TourPkg tpkg) {

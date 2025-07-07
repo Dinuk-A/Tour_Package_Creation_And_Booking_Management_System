@@ -697,6 +697,7 @@ const resetSelectElements = (selectElement, defaultText = "Please Select") => {
 // to load templates   
 const loadTemplates = async (selectElementId) => {
 
+    //for first days
     if (selectElementId.id == "tpkgFirstDaySelect") {
         console.log(' if (selectElementId == "tpkgFirstDaySelect") called');
         tpkg.sd_dayplan_id = null;
@@ -704,6 +705,7 @@ const loadTemplates = async (selectElementId) => {
         document.getElementById('firstDayMsg').classList.add('d-none');
     }
 
+    //for final days
     if (selectElementId.id == "tpkgFinalDaySelect") {
         console.log(' if (selectElementId == "tpkgFinalDaySelect") called');
         tpkg.ed_dayplan_id = null;
@@ -711,6 +713,15 @@ const loadTemplates = async (selectElementId) => {
 
     selectElementId.style.border = "1px solid #ced4da";
     clearDpInfoShowSection();
+
+    // Remove selected plan from tpkg.dayplans if it's a mid-day select
+    if (selectElementId.id.startsWith("tpkgMidDaySelect")) {
+        const selectedDayNum = selectElementId.parentNode.parentNode.children[0].children[0].innerText.split(" ")[2];
+        const index = parseInt(selectedDayNum) - 1;
+        tpkg.dayplans[index] = null;
+        console.log(`Cleared tpkg.dayplans[${index}] due to template load`);
+    }
+
 
     if (tpkg.sd_dayplan_id?.id == null) {
         showFirstDayBtn.disabled = true;
@@ -766,6 +777,15 @@ const loadExistingMDs = async (selectElementId) => {
 
     selectElementId.style.border = "1px solid #ced4da";
     clearDpInfoShowSection();
+
+    // Remove selected plan from tpkg.dayplans if it's a mid-day select
+    if (selectElementId.id.startsWith("tpkgMidDaySelect")) {
+        const selectedDayNum = selectElementId.parentNode.parentNode.children[0].children[0].innerText.split(" ")[2];
+        const index = parseInt(selectedDayNum) - 1;
+        tpkg.dayplans[index] = null;
+        console.log(`Cleared tpkg.dayplans[${index}] due to existing load`);
+    }
+
 
     if (selectElementId.value == null) {
         showMidDayBtn.disabled = true;
@@ -880,6 +900,7 @@ const updateTotalDaysCount = () => {
     }
 
     // add number of middle day plans
+    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
     if (tpkg.dayplans && Array.isArray(tpkg.dayplans)) {
         total += tpkg.dayplans.length;
     }
@@ -966,6 +987,8 @@ const calcFinalPrice = () => {
 // update total km count of the tour package
 const showTotalKmCount = () => {
 
+    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+
     //first day
     const kmCountFD = tpkg.sd_dayplan_id?.totalkmcount || 0;
 
@@ -977,7 +1000,7 @@ const showTotalKmCount = () => {
 
     //mid days
     let kmCountMD = 0;
-    if (tpkg.dayplans > 0) {
+    if (tpkg.dayplans.length > 0) {
         tpkg.dayplans.forEach((day) => {
             kmCountMD = kmCountMD + (day.totalkmcount || 0);
         })
@@ -1148,6 +1171,8 @@ const calcTotalTktCosts = () => {
     const tktInput = document.getElementById("totalTktCostInput");
     const tktMsg = document.getElementById("totalTktCostMsg");
 
+    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+
     const hasAtLeastOneDay =
         (tpkg.sd_dayplan_id != null) ||
         (tpkg.dayplans.length > 0) ||
@@ -1215,6 +1240,8 @@ const calcTotalLunchCost = () => {
     const lunchGroup = document.getElementById("totalLunchCostGroup");
     const lunchMsg = document.getElementById("totalLunchCostMsg");
 
+    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+
     const hasItineraries =
         (tpkg.sd_dayplan_id != null) ||
         (tpkg.dayplans.length > 0) ||
@@ -1268,6 +1295,8 @@ const calcTotalLunchCost = () => {
 //to calculate the total stay cost of the tour package
 //add incremental cost for KIDS 💥💥💥
 const calcTotalStayCost = () => {
+
+    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
 
     //updateTotalTravellers();
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value);
@@ -1349,6 +1378,8 @@ const calcTotalStayCost = () => {
 //calc total vehicle fee  
 const calcTotalVehiParkingfeeTpkg = () => {
 
+    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+
     const costInput = document.getElementById("totalVehicleParkingCost");
     const groupDiv = document.getElementById("totalVehiParkCostGroup");
     const msgDiv = document.getElementById("totalVehicleParkingCostMsg");
@@ -1380,10 +1411,15 @@ const calcTotalVehiParkingfeeTpkg = () => {
 
         // parking cost for mid days
         let parkingCostMidDays = 0.00;
+      
         if (tpkg.dayplans.length > 0) {
             tpkg.dayplans.forEach(day => {
-                let midDaysParkingCost = day.totalvehiparkcost;
-                parkingCostMidDays += midDaysParkingCost || 0.00;
+
+                if (day) {
+                    let midDaysParkingCost = day.totalvehiparkcost;
+                    parkingCostMidDays += midDaysParkingCost || 0.00;
+                }
+
             });
         }
 
@@ -2264,7 +2300,7 @@ function handleMidDaySelectChange(selectElement, currentIndex) {
     if (selectedValue.is_template) {
         selectElement.style.border = "2px solid orange";
         msgElement.classList.remove("d-none");
-        //tpkg.dayplans[index] = null;
+        tpkg.dayplans[index] = null;
 
         console.log("Updated tpkg.dayplans:", tpkg.dayplans);
         updateTotalDaysCount();
@@ -2276,6 +2312,8 @@ function handleMidDaySelectChange(selectElement, currentIndex) {
         msgElement.classList.add("d-none");
 
         tpkg.dayplans[index] = selectedValue;
+        //or 
+        //tpkg.dayplans.push(selectedValue);
 
         console.log("Updated tpkg.dayplans:", tpkg.dayplans);
         updateTotalDaysCount();
@@ -2440,22 +2478,18 @@ const generateNormalDayPlanSelectSections = () => {
     };
     btnCol.appendChild(deleteBtn);
 
-    // Assemble selector row
+    // appnd selector row
     selectorRow.appendChild(labelCol);
     selectorRow.appendChild(selectCol);
     selectorRow.appendChild(btnCol);
 
-    // Row 2: Action buttons
+    // action buttons
     const actionsWrapper = document.createElement('div');
     actionsWrapper.className = 'col-12 mt-3';
     actionsWrapper.id = actionRowId;
 
     const btnGroup = document.createElement('div');
     btnGroup.className = 'd-flex justify-content-center flex-wrap gap-2';
-
-    //const createBtn = document.createElement('button');
-    //createBtn.className = 'btn btn-outline-success btn-sm';
-    //createBtn.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Create New`;
 
     const templateBtn = document.createElement('button');
     templateBtn.className = 'btn btn-outline-primary btn-sm';
@@ -2620,7 +2654,10 @@ const addNewTpkg = async () => {
             try {
 
                 //bind addiCost array with the tpkg obj 💥💥💥
-                console.log("tpkg.addiCostList:", tpkg.addiCostList);
+                //console.log("tpkg.addiCostList:", tpkg.addiCostList);
+
+                //remove null days from dayplans list
+                tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
 
                 const postServerResponse = await ajaxPPDRequest("/tpkg", "POST", tpkg);
                 if (postServerResponse === 'OK') {
