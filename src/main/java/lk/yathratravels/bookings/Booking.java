@@ -3,8 +3,10 @@ package lk.yathratravels.bookings;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lk.yathratravels.employee.Employee;
@@ -44,6 +47,9 @@ public class Booking {
     @Column(name = "final_price")
     private BigDecimal final_price;
 
+    @Column(name = "total_paid")
+    private BigDecimal total_paid;
+
     @Column(name = "booking_status")
     private String booking_status;
 
@@ -58,6 +64,14 @@ public class Booking {
     @ManyToMany
     @JoinTable(name = "booking_has_int_guides", joinColumns = @JoinColumn(name = "booking_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))
     private Set<Employee> int_guides;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "booking_id") 
+    private List<ExtPersonnel> externalPersonnel;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "booking_id") 
+    private List<ExtVehicles> externalVehicles;
 
     // common 6
     @Column(name = "addeddatetime")
