@@ -178,16 +178,24 @@ public class DayPlanController {
             dplan.setDayplancode(nextCode);
 
             if (dplan.getId() == null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
-            String timestampSuffix = "Custom_" + LocalDateTime.now().format(formatter);
-            dplan.setDaytitle(dplan.getDaytitle() + " - " + timestampSuffix);
-        }
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
+                String timestampSuffix = "Custom_" + LocalDateTime.now().format(formatter);
+
+                String originalTitle = dplan.getDaytitle();
+
+                // Pattern to match a previous Custom_ timestamp (e.g., " - Custom_2507070048")
+                String updatedTitle = originalTitle.replaceAll("( - Custom_\\d{10})$", "");
+
+                dplan.setNote("This day plan is customized by the original template " + updatedTitle);
+
+                // Append new timestamp suffix
+                dplan.setDaytitle(updatedTitle + " - " + timestampSuffix);
+            }
 
             dplan.setAddeddatetime(LocalDateTime.now());
             dplan.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
             daoDP.save(dplan);
 
-            
             return dplan.getDaytitle();
 
         } catch (Exception e) {
