@@ -183,4 +183,19 @@ public class TourPkg {
     @Column(name = "deleteduserid")
     private Integer deleteduserid;
 
+    /**
+     * @param id
+     * @param pkgtitle
+     * @param sd_dayplan_id
+     * @param ed_dayplan_id
+     * @param dayplans
+     */
+    //public TourPkg(Integer id, String pkgtitle, DayPlan sd_dayplan_id, DayPlan ed_dayplan_id, List<DayPlan> dayplans) {
+    //    this.id = id;
+    //    this.pkgtitle = pkgtitle;
+    //    this.sd_dayplan_id = sd_dayplan_id;
+    //    this.ed_dayplan_id = ed_dayplan_id;
+    //    this.dayplans = dayplans;
+    //}
+
 }

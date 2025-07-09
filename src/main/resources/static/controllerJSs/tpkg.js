@@ -182,6 +182,10 @@ const resetDayPlanInfoSection = () => {
     document.getElementById('dayPlanInfoEditBtn').disabled = true;
 };
 
+let onlyFirstDays = [];
+let onlyLastDays = [];
+let onlyMidDays = [];
+
 //to ready the main form   
 const refreshTpkgForm = async () => {
 
@@ -206,6 +210,27 @@ const refreshTpkgForm = async () => {
         fillMultDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname')
     } catch (error) {
         console.error("Failed to fetch form data inquiries:", error);
+    }
+
+    //get first days only
+    try {
+        onlyFirstDays = await ajaxGetReq("/dayplan/onlyfirstdays");
+    } catch (error) {
+        console.error('Error fetching first days:', error);
+    }
+
+    //get last days only
+    try {
+        onlyLastDays = await ajaxGetReq("/dayplan/onlylastdays");
+    } catch (error) {
+        console.error('Error fetching last days:', error);
+    }
+
+    //get mid days only
+    try {
+        onlyMidDays = await ajaxGetReq("/dayplan/onlymiddays");
+    } catch (error) {
+        console.error('Error fetching mid days:', error);
     }
 
     // Array of input field IDs to reset
@@ -374,7 +399,7 @@ const refreshTpkgForm = async () => {
 }
 
 //handle refill tpkg data from inquiry
-const fillDataFromInq = async() => {
+const fillDataFromInq = async () => {
     if (tpkg.basedinq?.id != null) {
 
         if (tpkg.basedinq.inq_apprx_start_date != null && tpkg.basedinq.is_startdate_confirmed == true) {
@@ -392,11 +417,59 @@ const fillDataFromInq = async() => {
             document.getElementById('guideYes').checked = false;
         }
 
-        if (tpkg.basedinq.intrstdpkgid != null) {
-            const interestedTemplatePkg = await ajaxGetReq("/tourpackageforweb/all")
-            //await ajaxGetReq('/tourpackageforweb/all');
-        }
+        //const emptyArray = [];
+        //emptyArray.push(interestedTemplatePkg.sd_dayplan_id); if needed to show the result in an empty array
 
+        if (tpkg.basedinq.intrstdpkgid != null) {
+
+            const interestedTemplatePkg = await ajaxGetReq("/tpkg/byid?tpkgId=" + tpkg.basedinq.intrstdpkgid);
+
+            //for first day
+            const fdSelect = document.getElementById('tpkgFirstDaySelect');
+            fdSelect.disabled = true;
+            fillDataIntoDynamicSelects(fdSelect, 'please select', onlyFirstDays, 'daytitle', interestedTemplatePkg.sd_dayplan_id.daytitle);
+            showFirstDayBtn.disabled = false;
+            firstDayMsg.classList.remove('d-none');
+
+            //for final day
+            const ldSelect = document.getElementById('tpkgFinalDaySelect');
+            ldSelect.disabled = true;
+            fillDataIntoDynamicSelects(ldSelect, 'please select', onlyLastDays, 'daytitle', interestedTemplatePkg.ed_dayplan_id.daytitle);
+            showFinalDayBtn.disabled = false;
+            finalDayMsg.classList.remove('d-none');
+
+
+            //for middays
+            const intrstdPkgMidDays = interestedTemplatePkg.dayplans
+            for (let i = 0; i < intrstdPkgMidDays.length; i++) {
+                const dayPlan = intrstdPkgMidDays[i];
+
+                generateNormalDayPlanSelectSections();
+
+                const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
+                const selectElem = document.getElementById(midDaySelectId);
+
+                selectElem.disabled = false;
+
+                fillDataIntoDynamicSelects(
+                    selectElem,
+                    'Please Select',
+                    onlyMidDays,
+                    'daytitle',
+                    dayPlan.daytitle
+                );
+
+                tpkg.dayplans[i] = dayPlan;
+
+                document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
+                document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
+            }
+
+
+
+
+
+        }
     }
 }
 
@@ -2311,7 +2384,7 @@ const generateNormalDayPlanSelectSections = () => {
     midDayCounter++;
 }
 
-const handleMidDaySelectChange = (selectElem, currentDay) => {
+const handleMidDaySelectChange = (selectElem, currentDay = null) => {
     const selectedValue = JSON.parse(selectElem.value);
     const msgId = `midDayMsg${currentDay}`;
     const viewBtnId = `showMidDayBtn${currentDay}`;
@@ -2423,7 +2496,7 @@ const loadExistingFDs = async (selectElementId) => {
     }
 
     try {
-        const onlyFirstDays = await ajaxGetReq("/dayplan/onlyfirstdays");
+        // onlyFirstDays = await ajaxGetReq("/dayplan/onlyfirstdays");
         resetSelectElements(selectElementId, "Please Select");
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyFirstDays, "daytitle");
         const editBtn = document.getElementById('dayPlanInfoEditBtn');
@@ -2454,7 +2527,6 @@ const loadExistingMDs = async (selectElement) => {
     }
 
     try {
-        const onlyMidDays = await ajaxGetReq("/dayplan/onlymiddays");
         resetSelectElements(selectElement, "Please Select");
         fillDataIntoDynamicSelects(selectElement, "Please Select", onlyMidDays, "daytitle");
         const editBtn = document.getElementById('dayPlanInfoEditBtn');
@@ -2481,7 +2553,6 @@ const loadExistingLDs = async (selectElementId) => {
     }
 
     try {
-        const onlyLastDays = await ajaxGetReq("/dayplan/onlylastdays");
         resetSelectElements(selectElementId, "Please Select");
         fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyLastDays, "daytitle");
         const editBtn = document.getElementById('dayPlanInfoEditBtn');

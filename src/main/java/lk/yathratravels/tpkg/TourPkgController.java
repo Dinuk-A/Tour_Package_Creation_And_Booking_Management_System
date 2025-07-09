@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -78,8 +79,8 @@ public class TourPkgController {
             // get logged users'id to filter his own assigned inqs
             tpkgView.addObject("loggedUserId", loggedUser.getId());
 
-             // get logged users' employee id to filter his own assigned inqs
-             tpkgView.addObject("loggedUserEmpId", loggedUser.getEmployee_id().getId());
+            // get logged users' employee id to filter his own assigned inqs
+            tpkgView.addObject("loggedUserEmpId", loggedUser.getEmployee_id().getId());
 
             return tpkgView;
         }
@@ -99,9 +100,16 @@ public class TourPkgController {
         return daoTPkg.findAll(Sort.by(Direction.DESC, "id"));
     }
 
+    // get draft custom pkgs
     @GetMapping(value = "/tpkg/custom/drafts", produces = "application/json")
     public List<TourPkg> getCustomDraftTourPackages() {
         return daoTPkg.findAllDraftCustomPackages();
+    }
+
+    // get the tpkg by id
+    @GetMapping(value = "/tpkg/byid", params = { "tpkgId" }, produces = "application/json")
+    public TourPkg getTpkgById(@RequestParam("tpkgId") Integer tpkgId) {
+        return daoTPkg.findTpkgById(tpkgId);
     }
 
     // save a tout pkg + addi costs
