@@ -113,6 +113,12 @@ public class InqController {
         return inqDao.returnPersonalInqsByUserId(userempid);
     }
 
+    // get only the active ones
+    @GetMapping(value = "inq/active", produces = "application/json")
+    public List<Inq> getOnlyActiveInquiries(){
+        return inqDao.getOnlyActiveInqs();
+    }
+
     // inqs from website
     @PostMapping(value = "/inquiryfromweb")
     public String saveInqFromWeb(@RequestBody Inq inq) {

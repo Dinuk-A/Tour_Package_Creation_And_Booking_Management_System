@@ -2345,7 +2345,7 @@ const loadTemplates = async (selectElementId) => {
     // Handle mid-days
     if (selectElementId.id.startsWith("tpkgMidDaySelect")) {
         const index = getMidDayIndexFromSelect(selectElementId);
-        tpkg.dayplans[index] = null;
+        tpkg.dayplans[index] = {};
         console.log(`Cleared tpkg.dayplans[${index}] due to template load`);
     }
 
@@ -2407,7 +2407,7 @@ const loadExistingMDs = async (selectElement) => {
 
     if (selectElement.id.startsWith("tpkgMidDaySelect")) {
         const index = getMidDayIndexFromSelect(selectElement);
-        tpkg.dayplans[index] = null;
+        tpkg.dayplans[index] = {};
         console.log(`Cleared tpkg.dayplans[${index}] due to existing load`);
 
         const viewBtnId = `showMidDayBtn${index + 1}`;
