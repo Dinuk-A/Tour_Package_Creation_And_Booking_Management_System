@@ -25,16 +25,11 @@ public interface TourPkgDao extends JpaRepository<TourPkg, Integer> {
     // only get active ones
 
     // get template pkgs by id
-    //@Query(value = "select  TourPkg(tp.id , tp.pkgtitle, tp.sd_dayplan_id , tp.ed_dayplan_id , tp.dayplans ) from TourPkg tp where tp.id = ?1")
+    // @Query(value = "select TourPkg(tp.id , tp.pkgtitle, tp.sd_dayplan_id ,
+    // tp.ed_dayplan_id , tp.dayplans ) from TourPkg tp where tp.id = ?1")
+
+    
     @Query(value = "select  tp from TourPkg tp where tp.id = ?1")
     public TourPkg findTpkgById(Integer tpkgId);
-
-    /*
-     * this.id = id;
-     * this.pkgtitle = pkgtitle;
-     * this.sd_dayplan_id = sd_dayplan_id;
-     * this.ed_dayplan_id = ed_dayplan_id;
-     * this.dayplans = dayplans;
-     */
 
 }

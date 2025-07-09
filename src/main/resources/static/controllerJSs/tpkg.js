@@ -240,6 +240,7 @@ const refreshTpkgForm = async () => {
         'tpStartDateInput',
         'tpDescription',
         'showTotalKMCount',
+        'tpkgBasedInq',
         'showTotalDaysCount',
         'tpkgFirstDaySelect',
         'tpkgFinalDaySelect',
@@ -411,14 +412,17 @@ const fillDataFromInq = async () => {
         document.getElementById('tpkgForeignAdultCount').value = tpkg.basedinq.inq_foreign_adults || 0;
         document.getElementById('tpkgForeignChildCount').value = tpkg.basedinq.inq_foreign_kids || 0;
 
-        if (tpkg.basedinq.is_guide_needed != null && tpkg.basedinq.is_guide_needed == true) {
+        if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == true) {
             document.getElementById('guideYes').checked = true;
-        } else if (tpkg.basedinq.is_guide_needed != null && tpkg.basedinq.is_guide_needed == false) {
-            document.getElementById('guideYes').checked = false;
+            console.log("guideYes");
+        } else if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == false) {
+            document.getElementById('guideNo').checked = true;
+            console.log("guideNo");
         }
 
+        //if needed to show the result in an empty array
         //const emptyArray = [];
-        //emptyArray.push(interestedTemplatePkg.sd_dayplan_id); if needed to show the result in an empty array
+        //emptyArray.push(interestedTemplatePkg.sd_dayplan_id); 
 
         if (tpkg.basedinq.intrstdpkgid != null) {
 
@@ -428,31 +432,32 @@ const fillDataFromInq = async () => {
             const fdSelect = document.getElementById('tpkgFirstDaySelect');
             fdSelect.disabled = true;
             fillDataIntoDynamicSelects(fdSelect, 'please select', onlyFirstDays, 'daytitle', interestedTemplatePkg.sd_dayplan_id.daytitle);
-            showFirstDayBtn.disabled = false;
-            firstDayMsg.classList.remove('d-none');
+            handleFirstDayChange(tpkgFirstDaySelect);
 
             //for final day
             const ldSelect = document.getElementById('tpkgFinalDaySelect');
             ldSelect.disabled = true;
             fillDataIntoDynamicSelects(ldSelect, 'please select', onlyLastDays, 'daytitle', interestedTemplatePkg.ed_dayplan_id.daytitle);
-            showFinalDayBtn.disabled = false;
-            finalDayMsg.classList.remove('d-none');
-
+            //showFinalDayBtn.disabled = false;
+            //finalDayMsg.classList.remove('d-none');
+            handleFinalDayChange(tpkgFinalDaySelect);
 
             //for middays
             const intrstdPkgMidDays = interestedTemplatePkg.dayplans
+
             for (let i = 0; i < intrstdPkgMidDays.length; i++) {
                 const dayPlan = intrstdPkgMidDays[i];
 
+                //created once per loop element
                 generateNormalDayPlanSelectSections();
 
                 const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
-                const selectElem = document.getElementById(midDaySelectId);
+                const selectElement = document.getElementById(midDaySelectId);
 
-                selectElem.disabled = false;
+                selectElement.disabled = false;
 
                 fillDataIntoDynamicSelects(
-                    selectElem,
+                    selectElement,
                     'Please Select',
                     onlyMidDays,
                     'daytitle',
@@ -463,6 +468,10 @@ const fillDataFromInq = async () => {
 
                 document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
                 document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
+
+                if (tpkg.dayplans[i].is_template) {
+                        console.log("a template");
+                }
             }
 
 

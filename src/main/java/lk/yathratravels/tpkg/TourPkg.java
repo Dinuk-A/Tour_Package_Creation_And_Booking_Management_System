@@ -48,7 +48,7 @@ public class TourPkg {
     @Column(name = "pkgcode")
     private String pkgcode;
 
-    //not the full obj, only the id/code
+    // not the full obj, only the id/code
     @Column(name = "basedinq")
     private String basedinq;
 
@@ -85,7 +85,7 @@ public class TourPkg {
 
     @ManyToMany
     @JoinTable(name = "tpkg_has_dayplan", joinColumns = @JoinColumn(name = "tpkg_id"), inverseJoinColumns = @JoinColumn(name = "dayplan_id"))
-    @OrderColumn(name = "day_order") 
+    @OrderColumn(name = "day_order")
     private List<DayPlan> dayplans;
 
     // additional costs one to many 1 add karana 1 optional 💥💥
@@ -190,12 +190,12 @@ public class TourPkg {
      * @param ed_dayplan_id
      * @param dayplans
      */
-    //public TourPkg(Integer id, String pkgtitle, DayPlan sd_dayplan_id, DayPlan ed_dayplan_id, List<DayPlan> dayplans) {
-    //    this.id = id;
-    //    this.pkgtitle = pkgtitle;
-    //    this.sd_dayplan_id = sd_dayplan_id;
-    //    this.ed_dayplan_id = ed_dayplan_id;
-    //    this.dayplans = dayplans;
-    //}
+    public TourPkg(Integer id, String pkgtitle, DayPlan sd_dayplan_id, DayPlan ed_dayplan_id, List<DayPlan> dayplans) {
+        this.id = id;
+        this.pkgtitle = pkgtitle;
+        this.sd_dayplan_id = sd_dayplan_id;
+        this.ed_dayplan_id = ed_dayplan_id;
+        this.dayplans = dayplans;
+    }
 
 }
