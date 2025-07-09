@@ -13,9 +13,13 @@ public interface InqDao extends JpaRepository<Inq,Integer> {
 
     //get personal assigned inqs
     @Query(value ="SELECT * from newyathra.inquiry as pinq where pinq.assigned_empid=?1", nativeQuery = true)
-    public List<Inq> returnPersonalInqsByUserId(Integer userId);
+    public List<Inq> returnPersonalInqsByEmpId(Integer empid);
 
     //get only active inqs
     @Query(value ="SELECT * from newyathra.inquiry as inq where inq.inq_status not in ('Dropped','Deleted','Success')", nativeQuery = true)
     public List<Inq> getOnlyActiveInqs();
+
+    //get only active inqs
+    @Query(value ="SELECT * from newyathra.inquiry as inq where inq.inq_status not in ('Dropped','Deleted','Success') and inq.assigned_empid=?1", nativeQuery = true)
+    public List<Inq> getOnlyActiveInqsByAssignedEmp(Integer empId);
 }

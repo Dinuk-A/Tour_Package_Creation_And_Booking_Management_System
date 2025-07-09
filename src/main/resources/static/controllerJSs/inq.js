@@ -95,7 +95,7 @@ const buildPersonalInqTable = async () => {
     console.log(userEmpId);
 
     try {
-        const assignedInqs = await ajaxGetReq("/inq/personal?userempid=" + userEmpId);
+        const assignedInqs = await ajaxGetReq("/inq/personal?empid=" + userEmpId);
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
@@ -470,6 +470,7 @@ const openModal = (inqObj) => {
     document.getElementById('inqRecievedDate').value = inqObj.recieveddate || "N/A";
     document.getElementById('inqRecievedTime').value = inqObj.recievedtime || "N/A";
     document.getElementById('inqRecievedContact').value = inqObj.recievedcontactoremail || "N/A";
+    //💥💥💥
     fillMultDataIntoDynamicSelects(inqInterestedPkg, 'Please Select Package', intrstdPkgList, 'pkgcode', 'pkgtitle', inqObj.intrstdpkgid?.pkgcode || "N/A");
     document.getElementById('inqClientTitle').value = inqObj.clienttitle || "N/A";
     document.getElementById('inqClientName').value = inqObj.clientname || "N/A";

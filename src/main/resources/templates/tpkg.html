@@ -142,20 +142,7 @@
 
                                         </div>-->
 
-                                        <!-- based inquiry -->
-                                        <!--<div class="row mt-4 mb-2">
-                                            <div class="col-12">
-                                                <div class="row ">
-                                                    <label for="tpkgBasedInq" class="col-4 form-label mb-0">
-                                                        Based Inquiry:
-                                                    </label>
-                                                    <div class="col-8">
-                                                        <select id="tpkgBasedInq" class="form-control form-select" onchange="dynamicSelectValidator(this, 'tpkg','basedinq')" style="border: 1px solid rgb(206, 212, 218);">
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>-->
+                                        
 
                                         <!-- pkg type  -->
                                         <div class="row mb-3">
@@ -198,7 +185,7 @@
                                                     <div class="col-8">
                                                         <select disabled id="tpkgBasedInq"
                                                             class="form-control form-select"
-                                                            onchange="dynamicSelectValidator(this, 'tpkg','basedinq')">
+                                                            onchange="dynamicSelectValidator(this, 'tpkg','basedinq'); fillDataFromInq();">
                                                         </select>
                                                     </div>
                                                 </div>

@@ -78,6 +78,9 @@ public class TourPkgController {
             // get logged users'id to filter his own assigned inqs
             tpkgView.addObject("loggedUserId", loggedUser.getId());
 
+             // get logged users' employee id to filter his own assigned inqs
+             tpkgView.addObject("loggedUserEmpId", loggedUser.getEmployee_id().getId());
+
             return tpkgView;
         }
     }

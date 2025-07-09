@@ -195,7 +195,17 @@ const refreshTpkgForm = async () => {
         fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'name');
 
     } catch (error) {
-        console.error("Failed to fetch form data:", error);
+        console.error("Failed to fetch form data vehicles:", error);
+    }
+
+    const loggedEmpId = document.getElementById('loggedUserEmpIdSectionId').textContent;
+    console.log(loggedEmpId);
+
+    try {
+        const allActiveInqs = await ajaxGetReq("/inq/personal/active?empid=" + loggedEmpId);
+        fillMultDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname')
+    } catch (error) {
+        console.error("Failed to fetch form data inquiries:", error);
     }
 
     // Array of input field IDs to reset
@@ -361,6 +371,33 @@ const refreshTpkgForm = async () => {
     //set the min start date to 7 days future
     setTpkgStartDateToFuture();
 
+}
+
+//handle refill tpkg data from inquiry
+const fillDataFromInq = async() => {
+    if (tpkg.basedinq?.id != null) {
+
+        if (tpkg.basedinq.inq_apprx_start_date != null && tpkg.basedinq.is_startdate_confirmed == true) {
+            document.getElementById('tpStartDateInput').value = tpkg.basedinq.inq_apprx_start_date;
+        }
+
+        document.getElementById('tpkgLocalAdultCount').value = tpkg.basedinq.inq_local_adults || 0;
+        document.getElementById('tpkgLocalChildCount').value = tpkg.basedinq.inq_local_kids || 0;
+        document.getElementById('tpkgForeignAdultCount').value = tpkg.basedinq.inq_foreign_adults || 0;
+        document.getElementById('tpkgForeignChildCount').value = tpkg.basedinq.inq_foreign_kids || 0;
+
+        if (tpkg.basedinq.is_guide_needed != null && tpkg.basedinq.is_guide_needed == true) {
+            document.getElementById('guideYes').checked = true;
+        } else if (tpkg.basedinq.is_guide_needed != null && tpkg.basedinq.is_guide_needed == false) {
+            document.getElementById('guideYes').checked = false;
+        }
+
+        if (tpkg.basedinq.intrstdpkgid != null) {
+            const interestedTemplatePkg = await ajaxGetReq("/tourpackageforweb/all")
+            //await ajaxGetReq('/tourpackageforweb/all');
+        }
+
+    }
 }
 
 //to handle the reset button click in the form

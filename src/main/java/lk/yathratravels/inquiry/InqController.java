@@ -101,21 +101,27 @@ public class InqController {
         }
 
         return inqDao.findAll();
-        //return inqDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        // return inqDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
-    @GetMapping(value = "/inq/personal", params = { "userempid" }, produces = "application/json")
-    public List<Inq> getPersonalAssignedInquiries(@RequestParam("userempid") Integer userempid) {
+    @GetMapping(value = "/inq/personal", params = { "empid" }, produces = "application/json")
+    public List<Inq> getPersonalAssignedInquiries(@RequestParam("empid") Integer empid) {
 
-       //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-       //user dao and auth eke logged userge USER obj samanada kiyala
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // user dao and auth eke logged userge USER obj samanada kiyala
 
-        return inqDao.returnPersonalInqsByUserId(userempid);
+        return inqDao.returnPersonalInqsByEmpId(empid);
+    }
+
+    @GetMapping(value = "/inq/personal/active", params = { "empid" }, produces = "application/json")
+    public List<Inq> getOnlyActivePersonalAssignedInquiries(@RequestParam("empid") Integer empid) {
+
+        return inqDao.getOnlyActiveInqsByAssignedEmp(empid);
     }
 
     // get only the active ones
-    @GetMapping(value = "inq/active", produces = "application/json")
-    public List<Inq> getOnlyActiveInquiries(){
+    @GetMapping(value = "/inq/active", produces = "application/json")
+    public List<Inq> getOnlyActiveInquiries() {
         return inqDao.getOnlyActiveInqs();
     }
 
@@ -166,8 +172,7 @@ public class InqController {
 
             inqDao.save(inq);
 
-            //Followup fup = new Followup;
-            
+            // Followup fup = new Followup;
 
             return "OK";
 
