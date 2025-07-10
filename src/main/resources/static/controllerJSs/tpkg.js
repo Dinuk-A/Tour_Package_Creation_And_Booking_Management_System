@@ -126,10 +126,26 @@ const openModalTpkg = (tpkgObj) => {
 
     // Deleted Record
     if (tpkgObj.deleted_tpkg) {
-        document.getElementById('modTpkgIfDeleted').classList.remove('d-none');
-        document.getElementById('modTpkgIfDeleted').innerHTML =
-            'This is a deleted record. <br>Deleted at ' + new Date(tpkgObj.deleteddatetime).toLocaleString();
+        const deletedBanner = document.getElementById('modTpkgIfDeleted');
+        const editBtn = document.getElementById('modalDPEditBtn');
+        const deleteBtn = document.getElementById('modalDPDeleteBtn');
+        const recoverBtn = document.getElementById('modalDPRecoverBtn');
+    
+        // Show deleted message
+        deletedBanner.classList.remove('d-none');
+        deletedBanner.innerHTML = 'This is a deleted record.<br>Deleted at ' +
+            new Date(tpkgObj.deleteddatetime).toLocaleString();
+    
+        // Disable edit & delete buttons and hide them
+        editBtn.disabled = true;
+        deleteBtn.disabled = true;
+        editBtn.classList.add('d-none');
+        deleteBtn.classList.add('d-none');
+    
+        // Show restore button
+        recoverBtn.classList.remove('d-none');
     }
+    
 
     // Show modal
     $('#infoModalTpkg').modal('show');
@@ -796,7 +812,7 @@ const updateTpkg = async () => {
                         document.getElementById('formTpkg').reset();
                         refreshTpkgForm();
                         buildTpkgTable();
-                      
+
                         let myPkgTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myPkgTab.show();
 
@@ -813,6 +829,193 @@ const updateTpkg = async () => {
     } else {
         showAlertModal('war', errors);
     }
+};
+
+//delete tpkg
+const deleteTpkgRecord = async (tpkgObj) => {
+    const userConfirm = confirm("Are you sure to delete the package " + tpkgObj.pkgcode + " ?");
+    if (userConfirm) {
+        try {
+            const deleteServerResponse = await ajaxPPDRequest("/tpkg", "DELETE", tpkgObj);
+
+            if (deleteServerResponse === 'OK') {
+                showAlertModal('suc', 'Record Deleted');
+                $('#infoModalTpkg').modal('hide');
+                window.location.reload();
+            } else {
+                showAlertModal('err', 'Delete Failed' + deleteServerResponce);
+            }
+        } catch (error) {
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else {
+        showAlertModal('inf', "User cancelled the task")
+    }
+}
+
+//restore after a deletion
+const restoreTpkgRecord = async () => {
+
+    const userConfirm = confirm("Are you sure to recover this deleted record ?");
+
+    if (userConfirm) {
+        try {
+
+            tpkg = window.currentObject;
+            tpkg.deleted_tpkg = false;
+
+            let putServiceResponse = await ajaxPPDRequest("/tpkg", "PUT", tpkg);
+
+            if (putServiceResponse === "OK") {
+                showAlertModal('suc', "Successfully Restored");
+                $("#infoModalTpkg").modal("hide");
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 200);
+              
+
+            } else {
+                showAlertModal('err', "Restore Failed \n" + putServiceResponse);
+            }
+
+        } catch (error) {
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else {
+        showAlertModal('inf', 'User cancelled the restoration task');
+    }
+}
+
+//print tpkg
+const printTpkgRecord = (tpkgObj) => {
+    if (!tpkgObj) {
+        alert('No Tour Package data available to print.');
+        return;
+    }
+
+    const travelersList = `
+        <li>Local Adults: ${tpkgObj.localadultcount ?? 0}</li>
+        <li>Local Children: ${tpkgObj.localchildcount ?? 0}</li>
+        <li>Foreign Adults: ${tpkgObj.foreignadultcount ?? 0}</li>
+        <li>Foreign Children: ${tpkgObj.foreignchildcount ?? 0}</li>
+    `;
+
+    const costList = `
+        <li>Ticket Cost: LKR ${tpkgObj.totaltktcost?.toFixed(2) || '0.00'}</li>
+        <li>Lunch Cost: LKR ${tpkgObj.totallunchcost?.toFixed(2) || '0.00'}</li>
+        <li>Vehicle Parking Cost: LKR ${tpkgObj.totalvehiparkingcost?.toFixed(2) || '0.00'}</li>
+        <li>Vehicle Cost: LKR ${tpkgObj.totalvehicost?.toFixed(2) || '0.00'}</li>
+        <li>Driver Cost: LKR ${tpkgObj.totaldrivercost?.toFixed(2) || '0.00'}</li>
+        <li>Guide Cost: LKR ${tpkgObj.totalguidecost?.toFixed(2) || '0.00'}</li>
+        <li>Stay Cost: LKR ${tpkgObj.totalstaycost?.toFixed(2) || '0.00'}</li>
+        <li>Additional Costs: LKR ${tpkgObj.totaladditionalcosts?.toFixed(2) || '0.00'}</li>
+        <li><strong>Total Cost:</strong> LKR ${tpkgObj.pkgcostsum?.toFixed(2) || '0.00'}</li>
+        <li><strong>Final Price:</strong> LKR ${tpkgObj.pkgfinalprice?.toFixed(2) || '0.00'}</li>
+    `;
+
+    // Middle Day Plan List
+    let middleDaysHTML = '';
+    if (Array.isArray(tpkgObj.dayplans) && tpkgObj.dayplans.length > 0) {
+        tpkgObj.dayplans.forEach((dp, idx) => {
+            middleDaysHTML += `<li><strong>Middle Day ${idx + 1}:</strong> ${dp.daytitle || 'Untitled Day Plan'}</li>`;
+        });
+    } else {
+        middleDaysHTML = '<li><strong>Middle Days:</strong> None</li>';
+    }
+
+    const dayPlanSectionHTML = `
+        <div class="mb-2">
+            <p class="h5 fw-bold text-primary">Day Plan Sequence</p>
+            <ul style="padding-left: 18px;">
+                <li><strong>First Day:</strong> ${tpkgObj.sd_dayplan_id?.daytitle || 'N/A'}</li>
+                ${middleDaysHTML}
+                <li><strong>Final Day:</strong> ${tpkgObj.ed_dayplan_id?.daytitle || 'N/A'}</li>
+            </ul>
+        </div>
+    `;
+
+    const modalContent = `
+    <div class="container-fluid my-3 p-2 border border-primary rounded shadow-sm" style="font-family: Arial, sans-serif;">
+        <h2 class="text-center text-primary mb-3">Tour Package Information</h2>
+        <hr class="border border-primary border-2">
+
+        <div class="mb-2">
+            <p><strong>Package Code:</strong> ${tpkgObj.tpcode || 'N/A'}</p>
+            <p><strong>Title:</strong> ${tpkgObj.pkgtitle || 'N/A'}</p>
+            <p><strong>Status:</strong> ${tpkgObj.tpkg_status || 'N/A'}</p>
+            <p><strong>Based Inquiry:</strong> ${tpkgObj.basedinq || 'N/A'}</p>
+        </div>
+
+        <div class="mb-2">
+            <p><strong>Start Date:</strong> ${tpkgObj.tourstartdate || 'N/A'}</p>
+            <p><strong>End Date:</strong> ${tpkgObj.tourenddate || 'N/A'}</p>
+            <p><strong>Total Days:</strong> ${tpkgObj.totaldays || 0}</p>
+        </div>
+
+        <div class="mb-2">
+            <p><strong>Travellers:</strong></p>
+            <ul>${travelersList}</ul>
+        </div>
+
+        ${dayPlanSectionHTML}
+
+        <div class="mb-2">
+            <p><strong>Guide Included:</strong> ${tpkgObj.is_guide_needed ? 'Yes' : 'No'}</p>
+            <p><strong>Company Guide:</strong> ${tpkgObj.is_company_guide ? 'Yes' : 'No'}</p>
+            <p><strong>Company Vehicle:</strong> ${tpkgObj.is_company_vehicle ? 'Yes' : 'No'}</p>
+            <p><strong>Company Driver:</strong> ${tpkgObj.is_company_driver ? 'Yes' : 'No'}</p>
+            <p><strong>Preferred Transport Type:</strong> ${tpkgObj.pref_vehi_type || 'N/A'}</p>
+        </div>
+
+        <div class="mb-2">
+            <p><strong>Web Description:</strong> ${tpkgObj.web_description || 'N/A'}</p>
+            <p><strong>Note:</strong> ${tpkgObj.note || 'N/A'}</p>
+        </div>
+
+        <div class="mb-2">
+            <p><strong>Cost Breakdown:</strong></p>
+            <ul>${costList}</ul>
+        </div>
+
+        <hr class="mt-4 border border-primary">
+        <p class="text-center text-muted small">Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+    </div>`;
+
+    const printableTitle = `TourPackage_${(tpkgObj.tpcode || 'Example').replace(/\s+/g, '_')}`;
+
+    const printWindow = window.open('', '', 'width=900,height=700');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>${printableTitle}</title>
+          <link rel="stylesheet" href="../libs/bootstrap-5.2.3/css/bootstrap.min.css">
+          <style>
+            body {
+              margin: 0;
+              padding: 10px;
+              background-color: #f8f9fa;
+              font-family: Arial, sans-serif;
+            }
+            @media print {
+              body {
+                background-color: white;
+                margin: 0; padding: 0;
+              }
+            }
+          </style>
+        </head>
+        <body>${modalContent}</body>
+      </html>
+    `);
+
+    printWindow.document.close();
+
+    printWindow.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+        setTimeout(() => printWindow.close(), 1000);
+    };
 };
 
 
@@ -907,15 +1110,16 @@ const handlePkgReset = () => {
 }
 
 //set status auto
-//think new values 💥💥💥
 const setTpkgStatus = () => {
     const tpkgStatusSelectElement = document.getElementById('tpSelectStatus');
     tpkg.tpkg_status = "Draft";
     tpkgStatusSelectElement.value = "Draft";
     tpkgStatusSelectElement.style.border = "2px solid lime";
-    tpkgStatusSelectElement.children[2].classList.add('d-none');
-    tpkgStatusSelectElement.children[3].classList.add('d-none');
-    tpkgStatusSelectElement.children[4].classList.add('d-none');
+    for (let i = 2; i <= 4; i++) {
+        if (tpkgStatusSelectElement.children[i]) {
+            tpkgStatusSelectElement.children[i].classList.add('d-none');
+        }
+    }
     //tpkgStatusSelectElement.children[5].classList.add('d-none');
 }
 
@@ -3321,15 +3525,6 @@ const updateTourEndDate = () => {
     //endDateDisplay.innerText = endDate.toLocaleDateString(undefined, options);
 };
 
-//show all the info
-//function openTourPkgModal(tpkgObj) {
-//    console.log("openTourPkgModal called with tpkgObj:", tpkgObj);
-//    
-//}
-//$('#infoModalTpkg').modal('show');
-//const openModal =(tpkgObj)=>{
-//  
-//}
 
 //💥💥💥💥💥💥💥💥💥💥💥
 //add , delete, update

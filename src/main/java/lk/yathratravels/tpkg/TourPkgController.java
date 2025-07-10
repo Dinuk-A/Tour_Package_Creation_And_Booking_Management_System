@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -201,5 +202,33 @@ public class TourPkgController {
     }
 
     // think a logic for delete tour package 💥💥💥
+    @DeleteMapping(value = "/tpkg")
+    public String deleteTpkg(@RequestBody TourPkg tpkg) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "TOUR_PACKAGE");
+
+        if (!privilegeLevelForLoggedUser.getPrvdelete()) {
+            return "You do not have permission to delete a tour package.";
+        }
+
+        TourPkg existingRecord = daoTPkg.getReferenceById(tpkg.getId());
+
+        if (existingRecord == null) {
+            return "Delete Not Completed : Package Does Not Exists";
+        }
+
+        try {
+            existingRecord.setDeleted_tpkg(true);
+            existingRecord.setDeleteddatetime(LocalDateTime.now());
+            existingRecord.setDeleteduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+            daoTPkg.save(existingRecord);
+
+            return "OK";
+        } catch (Exception e) {
+            return "Delete Not Completed " + e.getMessage();
+        }
+
+    }
 }

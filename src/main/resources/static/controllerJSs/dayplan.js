@@ -1708,6 +1708,7 @@ const openModal = (dpObj) => {
 
 };
 
+//print dp
 const printDayPlanRecordNew = (dpObj) => {
 
     if (!dpObj) {
@@ -2279,7 +2280,7 @@ const updateDayPlan = async () => {
 
 //fn for delete button to delete a record
 const deleteDayPlanRecord = async (dpObj) => {
-    const userConfirm = confirm("Are you sure to delete the dayplan " + dpObj.emp_code + " ?");
+    const userConfirm = confirm("Are you sure to delete the dayplan " + dpObj.dayplancode + " ?");
     if (userConfirm) {
         try {
             const deleteServerResponse = await ajaxPPDRequest("/dayplan", "DELETE", dpObj);

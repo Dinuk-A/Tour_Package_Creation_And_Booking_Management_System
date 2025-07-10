@@ -337,7 +337,6 @@ const openModal = (empObj) => {
     document.getElementById('modalEmpNIC').innerText = empObj.nic || 'N/A';
     document.getElementById('modalEmpDOB').innerText = empObj.dob || 'N/A';
     document.getElementById('modalEmpPersonalEmail').innerText = empObj.email || 'N/A';
-    //document.getElementById('modalEmpWorkEmail').innerText = empObj.email || 'N/A';
     document.getElementById('modalEmpMobileNum').innerText = empObj.mobilenum || 'N/A';
     document.getElementById('modalEmpLandNum').innerText = empObj.landnum || 'N/A';
     document.getElementById('modalEmpAddress').innerText = empObj.address || 'N/A';
@@ -569,8 +568,6 @@ const restoreEmployeeRecord = async () => {
     } else {
         showAlertModal('inf', 'User cancelled the recovery task');
     }
-
-
 }
 
 // fn for print an employee record

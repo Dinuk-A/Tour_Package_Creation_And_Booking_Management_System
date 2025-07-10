@@ -400,6 +400,7 @@ public class EmployeeController {
             employeeDao.save(existingEmployee);
 
             User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
+            
             if (relatedUserAcc != null) {
                 relatedUserAcc.setAcc_status(false);
                 relatedUserAcc.setNote("Account disabled due to Employee record is deleted");
