@@ -581,7 +581,7 @@
                                             </div>
                                         </div>
 
-                                         <!-- resources availability and type -->
+                                        <!-- resources availability and type -->
                                         <div class="row">
                                             <!-- to show how many available -->
                                             <div class="col-6">
@@ -903,7 +903,7 @@
                                                                     Entrance/Tickets:</label>
                                                             </div>
                                                             <div class="col-7">
-                                                                <div class="input-group d-none " id="totalTktCostGroup">
+                                                                <div class="input-group" id="totalTktCostGroup">
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
@@ -912,7 +912,8 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaltktcost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark" id="totalTktCostMsg">
+                                                                <div class="text-warning bg-dark d-none"
+                                                                    id="totalTktCostMsg">
                                                                     Please
                                                                     enter number of travellers and select itineraries
                                                                 </div>
@@ -927,8 +928,7 @@
                                                                     Parking:</label>
                                                             </div>
                                                             <div class="col-7">
-                                                                <div class="input-group d-none "
-                                                                    id="totalVehiParkCostGroup">
+                                                                <div class="input-group  " id="totalVehiParkCostGroup">
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
@@ -937,7 +937,7 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalvehiparkingcost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark"
+                                                                <div class="text-warning bg-dark d-none"
                                                                     id="totalVehicleParkingCostMsg">Please select
                                                                     itineraries</div>
                                                             </div>
@@ -951,8 +951,7 @@
                                                                     Lunch/Meals:</label>
                                                             </div>
                                                             <div class="col-7">
-                                                                <div class="input-group d-none "
-                                                                    id="totalLunchCostGroup">
+                                                                <div class="input-group " id="totalLunchCostGroup">
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
@@ -961,7 +960,7 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totallunchcost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark"
+                                                                <div class="text-warning bg-dark  d-none"
                                                                     id="totalLunchCostMsg">Please
                                                                     enter number of travellers and select itineraries
                                                                 </div>
@@ -975,8 +974,7 @@
                                                                     class="form-label fw-bold mb-0">For Vehicle:</label>
                                                             </div>
                                                             <div class="col-7">
-                                                                <div class="input-group d-none "
-                                                                    id="totalVehiCostGroup">
+                                                                <div class="input-group  " id="totalVehiCostGroup">
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
@@ -985,7 +983,7 @@
                                                                         class="form-control form-input my-auto text-center p-1"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalvehicost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark"
+                                                                <div class="text-warning bg-dark d-none"
                                                                     id="totalVehicleCostMsg">
                                                                     Please choose vehicle type and select itineraries
                                                                 </div>
@@ -1000,8 +998,7 @@
                                                                     Accommodation:</label>
                                                             </div>
                                                             <div class="col-7">
-                                                                <div class="input-group d-none "
-                                                                    id="totalStayCostGroup">
+                                                                <div class="input-group " id="totalStayCostGroup">
                                                                     <span class="input-group-text p-1 pb-0">
                                                                         <h6 class="mb-0">LKR</h6>
                                                                     </span>
@@ -1010,7 +1007,8 @@
                                                                         class="form-control form-input p-1 text-center"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalstaycost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark" id="totalStayCostMsg">
+                                                                <div class="text-warning bg-dark d-none"
+                                                                    id="totalStayCostMsg">
                                                                     Please
                                                                     enter number of travellers and select itineraries
                                                                 </div>
@@ -1024,8 +1022,7 @@
                                                                     class="form-label fw-bold mb-0">For Driver:</label>
                                                             </div>
                                                             <div class="col-7">
-                                                                <div class="input-group d-none"
-                                                                    id="totalDriverCostGroup">
+                                                                <div class="input-group " id="totalDriverCostGroup">
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
@@ -1034,7 +1031,7 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaldrivercost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark"
+                                                                <div class="text-warning bg-dark d-none"
                                                                     id="totalDriverCostMsg">
                                                                     Please select itineraries and driver preference
                                                                 </div>
@@ -1048,8 +1045,7 @@
                                                                     class="form-label fw-bold mb-0">For Guide:</label>
                                                             </div>
                                                             <div class="col-7">
-                                                                <div class="input-group d-none"
-                                                                    id="totalGuideCostGroup">
+                                                                <div class="input-group " id="totalGuideCostGroup">
                                                                     <span class="input-group-text p-1">
                                                                         <h6 class="my-auto">LKR</h6>
                                                                     </span>
@@ -1058,7 +1054,7 @@
                                                                         class="form-control form-input text-center p-1 my-auto"
                                                                         onchange="inputValidatorText(this,'','tpkg','totalguidecost');">
                                                                 </div>
-                                                                <div class="text-warning bg-dark"
+                                                                <div class="text-warning bg-dark d-none"
                                                                     id="totalGuideCostMsg">
                                                                     Please select itineraries and guide preference
                                                                 </div>
@@ -1082,7 +1078,7 @@
                                                                         class="text-center form-control form-input p-1"
                                                                         onchange="inputValidatorText(this,'','tpkg','totaladditionalcosts');">
                                                                 </div>
-                                                                <div class="d-none text-warning  bg-dark"
+                                                                <div class="d-none text-warning bg-dark"
                                                                     id="totalAddiCostMsg"> Please add additional costs
                                                                 </div>
                                                             </div>
@@ -1486,7 +1482,7 @@
 
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">
-                      
+
                         <button class="btn-print fw-bold" onclick="printTpkgRecord(window['currentObject'])">
                             Print Record
                         </button>
@@ -1515,8 +1511,8 @@
             aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="dayPlanModalLabel">Edit Itinerary</h5>
+                    <div class="modal-header bg-primary text-white rounded-top-4">
+                        <h5 class="modal-title fw-bold" id="dayPlanModalLabel">Edit Itinerary</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">

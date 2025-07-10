@@ -218,26 +218,27 @@ const refreshTpkgForm = async () => {
     document.getElementById('rentalGuideCB').disabled = true;
 
     //total costs section 
-    document.getElementById('totalTktCostGroup').classList.add('d-none');
-    document.getElementById('totalTktCostMsg').classList.remove('d-none');
+    document.getElementById('totalTktCostGroup').classList.remove('d-none');
+    document.getElementById('totalTktCostMsg').classList.add('d-none');
 
-    document.getElementById('totalVehiParkCostGroup').classList.add('d-none');
-    document.getElementById('totalVehicleParkingCostMsg').classList.remove('d-none');
+    document.getElementById('totalVehiParkCostGroup').classList.remove('d-none');
+    document.getElementById('totalVehicleParkingCostMsg').classList.add('d-none');
 
-    document.getElementById('totalLunchCostGroup').classList.add('d-none');
-    document.getElementById('totalLunchCostMsg').classList.remove('d-none');
+    document.getElementById('totalLunchCostGroup').classList.remove('d-none');
+    document.getElementById('totalLunchCostMsg').classList.add('d-none');
 
-    document.getElementById('totalVehiCostGroup').classList.add('d-none');
-    document.getElementById('totalVehicleCostMsg').classList.remove('d-none');
+    document.getElementById('totalVehiCostGroup').classList.remove('d-none');
+    document.getElementById('totalVehicleCostMsg').classList.add('d-none');
 
-    document.getElementById('totalStayCostGroup').classList.add('d-none');
-    document.getElementById('totalStayCostMsg').classList.remove('d-none');
+    document.getElementById('totalStayCostGroup').classList.remove('d-none');
+    document.getElementById('totalStayCostMsg').classList.add('d-none');
 
-    document.getElementById('totalDriverCostGroup').classList.add('d-none');
-    document.getElementById('totalDriverCostMsg').classList.remove('d-none');
+    document.getElementById('totalDriverCostGroup').classList.remove('d-none');
+    document.getElementById('totalDriverCostMsg').classList.add('d-none');
 
-    document.getElementById('totalGuideCostGroup').classList.add('d-none');
-    document.getElementById('totalGuideCostMsg').classList.remove('d-none');
+    document.getElementById('totalGuideCostGroup').classList.remove('d-none');
+    document.getElementById('totalGuideCostMsg').classList.add('d-none');
+
 
     document.getElementById('finalTotalCost').value = '';
     const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
@@ -2506,7 +2507,7 @@ const refillSelectedDayPlan = async (dpObj) => {
 
         airportDropCBVar.disabled = true;
         airportSelectDrop.disabled = true;
-        
+
         airportPickupCB.disabled = false;
         airportSelect.disabled = false;
 
