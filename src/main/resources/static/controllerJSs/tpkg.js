@@ -4,6 +4,7 @@ window.addEventListener('load', () => {
     refreshTpkgForm();
     refreshAddiCostForm();
     fetchPriceMods();
+    fetchDays();
 
 });
 
@@ -62,26 +63,26 @@ const openModalTpkg = (tpkgObj) => {
 
     const dayplansContainer = document.getElementById('modTpkgDayPlans');
     let allDayBadges = [];
-    
+
     // Start Day Plan
     if (tpkgObj.sd_dayplan_id) {
         allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">Start - ${tpkgObj.sd_dayplan_id.daytitle} (${tpkgObj.sd_dayplan_id.dayplancode})</span></div>`);
     }
-    
+
     // Mid Day Plans
     if (tpkgObj.dayplans && tpkgObj.dayplans.length > 0) {
         tpkgObj.dayplans.forEach((dp, i) => {
             allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">Day ${i + 2} - ${dp.daytitle} (${dp.dayplancode})</span></div>`);
         });
     }
-    
+
     // End Day Plan
     if (tpkgObj.ed_dayplan_id) {
         allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">End - ${tpkgObj.ed_dayplan_id.daytitle} (${tpkgObj.ed_dayplan_id.dayplancode})</span></div>`);
     }
-    
+
     dayplansContainer.innerHTML = allDayBadges.length > 0 ? allDayBadges.join('') : 'N/A';
-    
+
 
     // Show Preview Image if available
     const previewSection = document.getElementById('modTpkgImagePreviewSection');
@@ -134,7 +135,7 @@ const openModalTpkg = (tpkgObj) => {
     $('#infoModalTpkg').modal('show');
 };
 
-
+//💥💥💥
 const resetModalTpkg = () => {
     console.log("Resetting modal form");
 }
@@ -228,31 +229,7 @@ let onlyFirstDays = [];
 let onlyLastDays = [];
 let onlyMidDays = [];
 
-//to ready the main form   
-const refreshTpkgForm = async () => {
-
-    tpkg = new Object();
-    tpkg.dayplans = new Array();
-    tpkg.addiCostList = new Array();
-    document.getElementById('formTpkg').reset();
-
-    try {
-        const vehiTypes = await ajaxGetReq("/vehitypes/all");
-        fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'name');
-
-    } catch (error) {
-        console.error("Failed to fetch form data vehicles:", error);
-    }
-
-    const loggedEmpId = document.getElementById('loggedUserEmpIdSectionId').textContent;
-    console.log(loggedEmpId);
-
-    try {
-        const allActiveInqs = await ajaxGetReq("/inq/personal/active?empid=" + loggedEmpId);
-        fillMultDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname')
-    } catch (error) {
-        console.error("Failed to fetch form data inquiries:", error);
-    }
+const fetchDays = async () => {
 
     //get first days only
     try {
@@ -273,6 +250,39 @@ const refreshTpkgForm = async () => {
         onlyMidDays = await ajaxGetReq("/dayplan/onlymiddays");
     } catch (error) {
         console.error('Error fetching mid days:', error);
+    }
+}
+
+
+//to ready the main form   
+const refreshTpkgForm = async () => {
+
+    tpkg = new Object();
+    tpkg.dayplans = new Array();
+    tpkg.addiCostList = new Array();
+    document.getElementById('formTpkg').reset();
+
+    document.getElementById('tpkgStep3-tab').innerText = "Preferences"
+    startDateCol.classList.remove('d-none');
+    preferencesFieldset.classList.remove('d-none');
+    document.getElementById('tpkgStep4-tab').parentElement.classList.remove('d-none');
+
+    try {
+        const vehiTypes = await ajaxGetReq("/vehitypes/all");
+        fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'name');
+
+    } catch (error) {
+        console.error("Failed to fetch form data vehicles:", error);
+    }
+
+    const loggedEmpId = document.getElementById('loggedUserEmpIdSectionId').textContent;
+    console.log(loggedEmpId);
+
+    try {
+        const allActiveInqs = await ajaxGetReq("/inq/personal/active?empid=" + loggedEmpId);
+        fillMultDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname')
+    } catch (error) {
+        console.error("Failed to fetch form data inquiries:", error);
     }
 
     // Array of input field IDs to reset
@@ -456,10 +466,11 @@ const fillDataFromInq = async () => {
 
         if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == true) {
             document.getElementById('guideYes').checked = true;
-            console.log("guideYes");
+            document.getElementById('yathraGuideCB').disabled = false;
+            document.getElementById('rentalGuideCB').disabled = false;
         } else if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == false) {
             document.getElementById('guideNo').checked = true;
-            console.log("guideNo");
+
         }
 
         //if needed to show the result in an empty array
@@ -2824,8 +2835,8 @@ const checkTpkgFormErrors = () => {
     }
 
     //for template packages
-    if (tpkg.is_custompkg != null && tpkg.is_custompkg==false) {
-   
+    if (tpkg.is_custompkg != null && tpkg.is_custompkg == false) {
+
         if (!tpkg.web_discription || tpkg.web_discription.trim() === "") {
             errors += "Please enter the description for the website \n";
         }
@@ -2845,7 +2856,6 @@ const checkTpkgFormErrors = () => {
 
     return errors;
 }
-
 
 //add a tpkg
 const addNewTpkg = async () => {
