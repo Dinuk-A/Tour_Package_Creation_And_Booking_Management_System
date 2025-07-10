@@ -8,245 +8,12 @@ window.addEventListener('load', () => {
 
 });
 
-//global var to store id of the table
-let sharedTableIdForTpkg = "mainTableTpkg";
-
-//declared globally because needed for filterings
-let allItineraryTemplates = [];
-
-//to create and refresh content in main table   
-const buildTpkgTable = async () => {
-    try {
-        const tpkgs = await ajaxGetReq("/tpkg/all");
-
-        const tableColumnInfo = [
-            { displayType: 'function', displayingPropertyOrFn: showTpkgType, colHeadName: 'Type' },
-            { displayType: 'text', displayingPropertyOrFn: 'pkgcode', colHeadName: 'Code' },
-            { displayType: 'text', displayingPropertyOrFn: 'pkgtitle', colHeadName: 'Title' },
-            { displayType: 'function', displayingPropertyOrFn: showTpkgStatus, colHeadName: 'Status' }
-        ]
-
-        createTable(tableTpkgHolderDiv, sharedTableIdForTpkg, tpkgs, tableColumnInfo, openModalTpkg);
-
-        $(`#${sharedTableIdForTpkg}`).dataTable();
-
-    } catch (error) {
-        console.error("Failed to build table:", error);
-    }
-}
-
-//open modal to show all the info
-const openModalTpkg = (tpkgObj) => {
-    console.log("Opening modal for Template Package");
-    resetModalTpkg();
-
-    // Show template info if applicable
-    if (!tpkgObj.is_custompkg) {
-        document.getElementById('modTpkgInfoTemplate').classList.remove('d-none');
-        document.getElementById('modTpkgIsTemplateOrNot').innerText = 'This is a Template Package';
-    }
-
-    // Basic Info
-    document.getElementById('modTpkgCode').innerText = tpkgObj.pkgcode || 'N/A';
-    document.getElementById('modTpkgTitle').innerText = tpkgObj.pkgtitle || 'N/A';
-    document.getElementById('modTpkgBasedInq').innerText = tpkgObj.basedinq?.inqcode || 'N/A';
-
-    document.getElementById('modTpkgStartDate').innerText = tpkgObj.tourstartdate || 'N/A';
-    document.getElementById('modTpkgEndDate').innerText = tpkgObj.tourenddate || 'N/A';
-    document.getElementById('modTpkgDays').innerText = tpkgObj.totaldays || 'N/A';
-
-    // Traveller Counts
-    document.getElementById('modTpkgLocalAdults').innerText = tpkgObj.localadultcount ?? 0;
-    document.getElementById('modTpkgLocalChildren').innerText = tpkgObj.localchildcount ?? 0;
-    document.getElementById('modTpkgForeignAdults').innerText = tpkgObj.foreignadultcount ?? 0;
-    document.getElementById('modTpkgForeignChildren').innerText = tpkgObj.foreignchildcount ?? 0;
-
-    const dayplansContainer = document.getElementById('modTpkgDayPlans');
-    let allDayBadges = [];
-
-    // Start Day Plan
-    if (tpkgObj.sd_dayplan_id) {
-        allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">Start - ${tpkgObj.sd_dayplan_id.daytitle} (${tpkgObj.sd_dayplan_id.dayplancode})</span></div>`);
-    }
-
-    // Mid Day Plans
-    if (tpkgObj.dayplans && tpkgObj.dayplans.length > 0) {
-        tpkgObj.dayplans.forEach((dp, i) => {
-            allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">Day ${i + 2} - ${dp.daytitle} (${dp.dayplancode})</span></div>`);
-        });
-    }
-
-    // End Day Plan
-    if (tpkgObj.ed_dayplan_id) {
-        allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">End - ${tpkgObj.ed_dayplan_id.daytitle} (${tpkgObj.ed_dayplan_id.dayplancode})</span></div>`);
-    }
-
-    dayplansContainer.innerHTML = allDayBadges.length > 0 ? allDayBadges.join('') : 'N/A';
-
-
-    // Show Preview Image if available
-    const previewSection = document.getElementById('modTpkgImagePreviewSection');
-    const previewImg = document.getElementById('modTpkgPreviewImg');
-
-    if (tpkgObj.img1) {
-        previewSection.classList.remove('d-none');
-        previewImg.src = atob(tpkgObj.img1);
-    } else {
-        previewSection.classList.add('d-none');
-        previewImg.src = 'images/tpkg-default.png';
-    }
-
-    // Cost Summary
-    document.getElementById('modTpkgTotalTktCost').innerText = 'LKR ' + (tpkgObj.totaltktcost?.toFixed(2) || '0.00');
-    document.getElementById('modTpkgTotalLunchCost').innerText = 'LKR ' + (tpkgObj.totallunchcost?.toFixed(2) || '0.00');
-    document.getElementById('modTpkgTotalParkingCost').innerText = 'LKR ' + (tpkgObj.totalvehiparkingcost?.toFixed(2) || '0.00');
-    document.getElementById('modTpkgTotalVehicleCost').innerText = 'LKR ' + (tpkgObj.totalvehicost?.toFixed(2) || '0.00');
-    document.getElementById('modTpkgTotalDriverCost').innerText = 'LKR ' + (tpkgObj.totaldrivercost?.toFixed(2) || '0.00');
-    document.getElementById('modTpkgTotalGuideCost').innerText = 'LKR ' + (tpkgObj.totalguidecost?.toFixed(2) || '0.00');
-    document.getElementById('modTpkgTotalStayCost').innerText = 'LKR ' + (tpkgObj.totalstaycost?.toFixed(2) || '0.00');
-    document.getElementById('modTpkgAddCostTotal').innerText = 'LKR ' + (tpkgObj.totaladditionalcosts?.toFixed(2) || '0.00');
-    document.getElementById('modTpkgPkgCostSum').innerText = 'LKR ' + (tpkgObj.pkgcostsum?.toFixed(2) || '0.00');
-    document.getElementById('modTpkgFinalPrice').innerText = 'LKR ' + (tpkgObj.pkgfinalprice?.toFixed(2) || '0.00');
-
-    // Booleans
-    document.getElementById('modTpkgIsGuideNeeded').innerText = tpkgObj.is_guide_needed ? 'Yes' : 'No';
-    document.getElementById('modTpkgIsCompanyGuide').innerText = tpkgObj.is_company_guide ? 'Yes' : 'No';
-    document.getElementById('modTpkgIsCompanyVehicle').innerText = tpkgObj.is_company_vehicle ? 'Yes' : 'No';
-    document.getElementById('modTpkgIsCompanyDriver').innerText = tpkgObj.is_company_driver ? 'Yes' : 'No';
-
-    // Preferred Vehicle
-    document.getElementById('modTpkgPrefVehicleType').innerText = tpkgObj.pref_vehi_type || 'N/A';
-
-    // Web Desc & Notes
-    document.getElementById('modTpkgWebDesc').innerText = tpkgObj.web_description || 'N/A';
-    document.getElementById('modTpkgNote').innerText = tpkgObj.note || 'N/A';
-
-    // Status
-    document.getElementById('modTpkgStatus').innerText = tpkgObj.tpkg_status || 'N/A';
-
-    // Deleted Record
-    if (tpkgObj.deleted_tpkg) {
-        const deletedBanner = document.getElementById('modTpkgIfDeleted');
-        const editBtn = document.getElementById('modalDPEditBtn');
-        const deleteBtn = document.getElementById('modalDPDeleteBtn');
-        const recoverBtn = document.getElementById('modalDPRecoverBtn');
-    
-        // Show deleted message
-        deletedBanner.classList.remove('d-none');
-        deletedBanner.innerHTML = 'This is a deleted record.<br>Deleted at ' +
-            new Date(tpkgObj.deleteddatetime).toLocaleString();
-    
-        // Disable edit & delete buttons and hide them
-        editBtn.disabled = true;
-        deleteBtn.disabled = true;
-        editBtn.classList.add('d-none');
-        deleteBtn.classList.add('d-none');
-    
-        // Show restore button
-        recoverBtn.classList.remove('d-none');
-    }
-    
-
-    // Show modal
-    $('#infoModalTpkg').modal('show');
-};
-
-//💥💥💥
-const resetModalTpkg = () => {
-    console.log("Resetting modal form");
-}
-
-//clear out the form everytime a user switches to table tab   
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('myTabTpkg').addEventListener('shown.bs.tab', function (event) {
-        if (event.target.id === 'table-tab') {
-            console.log("Switching to table tab - clearing form");
-            refreshTpkgForm();
-        }
-    });
-});
-
-//to support fill main table   
-const showTpkgType = (tpkgObj) => {
-    if (!tpkgObj.is_custompkg) {
-        return `
-            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-               style="background-color: #007bff; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-               Template Package
-            </p>`;
-    } else {
-        return `
-            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-               style="background-color: #17a2b8; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-               Custom Package
-            </p>`;
-    }
-}
-
-//to support fill main table  
-const showTpkgStatus = (tpkgObj) => {
-
-    if (tpkgObj.deleted_tpkg == null || tpkgObj.deleted_tpkg === false) {
-
-        if (tpkgObj.tpkg_status === "Draft") {
-            return `
-                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-                   style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                   Draft
-                </p>`;
-        }
-
-        else if (tpkgObj.tpkg_status === "Completed") {
-            return `
-            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-            style="background-color: #28a745; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            Completed
-         </p>`;
-        }
-
-        else if (tpkgObj.tpkg_status === "Inactive") {
-            return `
-                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-                   style="background-color: #6c757d; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                   Inactive
-                </p>`;
-        }
-
-    } else if (tpkgObj.deleted_tpkg != null && tpkgObj.deleted_tpkg === true) {
-        return `
-            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-               style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-               Deleted Record
-            </p>`;
-    }
-}
-
-//to clear the day plan info section 
-const resetDayPlanInfoSection = () => {
-
-    document.getElementById('tempInfoDisRow').classList.add('d-none');
-    document.getElementById('dpInfoIsTemplate').innerText = '';
-
-    // Reset all <span> elements to 'N/A'
-    document.getElementById('dpInfoCode').innerText = 'N/A';
-    document.getElementById('dpInfoTitle').innerText = 'N/A';
-    document.getElementById('dpInfoStartLocation').innerText = 'N/A';
-    document.getElementById('dpInfoLunchPlace').innerText = 'N/A';
-    document.getElementById('dpInfoDropPoint').innerText = 'N/A';
-    document.getElementById('dpInfoNote').innerText = 'N/A';
-
-    const placesList = document.getElementById('dpInfoPlaces');
-    placesList.innerHTML = '<li>N/A</li>';
-
-    document.getElementById('dayPlanInfoEditBtn').disabled = true;
-};
-
+//get all day plans and save in global variables
 let onlyFirstDays = [];
 let onlyLastDays = [];
 let onlyMidDays = [];
 let allActiveInqs = [];
 let vehiTypes = [];
-
 const fetchDays = async () => {
 
     //get first days only
@@ -268,6 +35,41 @@ const fetchDays = async () => {
         onlyMidDays = await ajaxGetReq("/dayplan/onlymiddays");
     } catch (error) {
         console.error('Error fetching mid days:', error);
+    }
+}
+
+// to fetch all price modifiers and store them globally 
+let globalPriceMods = null;
+const fetchPriceMods = async () => {
+    try {
+        const pricemods = await ajaxGetReq("/pricemods/all");
+        globalPriceMods = pricemods;
+    } catch (error) {
+        console.error("Failed to load price modifiers:", error);
+    }
+}
+
+//global var to store id of the table
+let sharedTableIdForTpkg = "mainTableTpkg";
+
+//to create and refresh content in main table   
+const buildTpkgTable = async () => {
+    try {
+        const tpkgs = await ajaxGetReq("/tpkg/all");
+
+        const tableColumnInfo = [
+            { displayType: 'function', displayingPropertyOrFn: showTpkgType, colHeadName: 'Type' },
+            { displayType: 'text', displayingPropertyOrFn: 'pkgcode', colHeadName: 'Code' },
+            { displayType: 'text', displayingPropertyOrFn: 'pkgtitle', colHeadName: 'Title' },
+            { displayType: 'function', displayingPropertyOrFn: showTpkgStatus, colHeadName: 'Status' }
+        ]
+
+        createTable(tableTpkgHolderDiv, sharedTableIdForTpkg, tpkgs, tableColumnInfo, openModalTpkg);
+
+        $(`#${sharedTableIdForTpkg}`).dataTable();
+
+    } catch (error) {
+        console.error("Failed to build table:", error);
     }
 }
 
@@ -469,6 +271,234 @@ const refreshTpkgForm = async () => {
     setTpkgStartDateToFuture();
 
 }
+
+//clear out the form everytime a user switches to table tab   
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTabTpkg').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshTpkgForm();
+        }
+    });
+});
+
+//to reset the modal when opening it
+const resetModalTpkg = () => {
+
+    // Hide deleted record message
+    const deletedMsg = document.getElementById('modTpkgIfDeleted');
+    if (deletedMsg) {
+        deletedMsg.innerText = '';
+        deletedMsg.classList.add('d-none');
+    }
+
+    // Enable and show edit/delete buttons
+    const editBtn = document.getElementById('modalDPEditBtn');
+    const deleteBtn = document.getElementById('modalDPDeleteBtn');
+    if (editBtn && deleteBtn) {
+        editBtn.disabled = false;
+        deleteBtn.disabled = false;
+        editBtn.classList.remove('d-none');
+        deleteBtn.classList.remove('d-none');
+    }
+
+    // Hide recover button
+    const recoverBtn = document.getElementById('modalDPRecoverBtn');
+    if (recoverBtn) {
+        recoverBtn.classList.add('d-none');
+    }
+};
+
+//open modal to show all the info
+const openModalTpkg = (tpkgObj) => {
+
+    resetModalTpkg();
+
+    // Show template info if applicable
+    if (!tpkgObj.is_custompkg) {
+        document.getElementById('modTpkgInfoTemplate').classList.remove('d-none');
+        document.getElementById('modTpkgIsTemplateOrNot').innerText = 'This is a Template Package';
+    }
+
+    // Basic Info
+    document.getElementById('modTpkgCode').innerText = tpkgObj.pkgcode || 'N/A';
+    document.getElementById('modTpkgTitle').innerText = tpkgObj.pkgtitle || 'N/A';
+    document.getElementById('modTpkgBasedInq').innerText = tpkgObj.basedinq?.inqcode || 'N/A';
+
+    document.getElementById('modTpkgStartDate').innerText = tpkgObj.tourstartdate || 'N/A';
+    document.getElementById('modTpkgEndDate').innerText = tpkgObj.tourenddate || 'N/A';
+    document.getElementById('modTpkgDays').innerText = tpkgObj.totaldays || 'N/A';
+
+    // Traveller Counts
+    document.getElementById('modTpkgLocalAdults').innerText = tpkgObj.localadultcount ?? 0;
+    document.getElementById('modTpkgLocalChildren').innerText = tpkgObj.localchildcount ?? 0;
+    document.getElementById('modTpkgForeignAdults').innerText = tpkgObj.foreignadultcount ?? 0;
+    document.getElementById('modTpkgForeignChildren').innerText = tpkgObj.foreignchildcount ?? 0;
+
+    const dayplansContainer = document.getElementById('modTpkgDayPlans');
+    let allDayBadges = [];
+
+    // Start Day Plan
+    if (tpkgObj.sd_dayplan_id) {
+        allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">Start - ${tpkgObj.sd_dayplan_id.daytitle} (${tpkgObj.sd_dayplan_id.dayplancode})</span></div>`);
+    }
+
+    // Mid Day Plans
+    if (tpkgObj.dayplans && tpkgObj.dayplans.length > 0) {
+        tpkgObj.dayplans.forEach((dp, i) => {
+            allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">Day ${i + 2} - ${dp.daytitle} (${dp.dayplancode})</span></div>`);
+        });
+    }
+
+    // End Day Plan
+    if (tpkgObj.ed_dayplan_id) {
+        allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">End - ${tpkgObj.ed_dayplan_id.daytitle} (${tpkgObj.ed_dayplan_id.dayplancode})</span></div>`);
+    }
+
+    dayplansContainer.innerHTML = allDayBadges.length > 0 ? allDayBadges.join('') : 'N/A';
+
+
+    // Show Preview Image if available
+    const previewSection = document.getElementById('modTpkgImagePreviewSection');
+    const previewImg = document.getElementById('modTpkgPreviewImg');
+
+    if (tpkgObj.img1) {
+        previewSection.classList.remove('d-none');
+        previewImg.src = atob(tpkgObj.img1);
+    } else {
+        previewSection.classList.add('d-none');
+        previewImg.src = 'images/tpkg-default.png';
+    }
+
+    // Cost Summary
+    document.getElementById('modTpkgTotalTktCost').innerText = 'LKR ' + (tpkgObj.totaltktcost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalLunchCost').innerText = 'LKR ' + (tpkgObj.totallunchcost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalParkingCost').innerText = 'LKR ' + (tpkgObj.totalvehiparkingcost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalVehicleCost').innerText = 'LKR ' + (tpkgObj.totalvehicost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalDriverCost').innerText = 'LKR ' + (tpkgObj.totaldrivercost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalGuideCost').innerText = 'LKR ' + (tpkgObj.totalguidecost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalStayCost').innerText = 'LKR ' + (tpkgObj.totalstaycost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgAddCostTotal').innerText = 'LKR ' + (tpkgObj.totaladditionalcosts?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgPkgCostSum').innerText = 'LKR ' + (tpkgObj.pkgcostsum?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgFinalPrice').innerText = 'LKR ' + (tpkgObj.pkgfinalprice?.toFixed(2) || '0.00');
+
+    // Booleans
+    document.getElementById('modTpkgIsGuideNeeded').innerText = tpkgObj.is_guide_needed ? 'Yes' : 'No';
+    document.getElementById('modTpkgIsCompanyGuide').innerText = tpkgObj.is_company_guide ? 'Yes' : 'No';
+    document.getElementById('modTpkgIsCompanyVehicle').innerText = tpkgObj.is_company_vehicle ? 'Yes' : 'No';
+    document.getElementById('modTpkgIsCompanyDriver').innerText = tpkgObj.is_company_driver ? 'Yes' : 'No';
+
+    // Preferred Vehicle
+    document.getElementById('modTpkgPrefVehicleType').innerText = tpkgObj.pref_vehi_type || 'N/A';
+
+    // Web Desc & Notes
+    document.getElementById('modTpkgWebDesc').innerText = tpkgObj.web_description || 'N/A';
+    document.getElementById('modTpkgNote').innerText = tpkgObj.note || 'N/A';
+
+    // Status
+    document.getElementById('modTpkgStatus').innerText = tpkgObj.tpkg_status || 'N/A';
+
+    // Deleted Record
+    if (tpkgObj.deleted_tpkg) {
+        const deletedBanner = document.getElementById('modTpkgIfDeleted');
+        const editBtn = document.getElementById('modalDPEditBtn');
+        const deleteBtn = document.getElementById('modalDPDeleteBtn');
+        const recoverBtn = document.getElementById('modalDPRecoverBtn');
+
+        // Show deleted message
+        deletedBanner.classList.remove('d-none');
+        deletedBanner.innerHTML = 'This is a deleted record.<br>Deleted at ' +
+            new Date(tpkgObj.deleteddatetime).toLocaleString();
+
+        // Disable edit & delete buttons and hide them
+        editBtn.disabled = true;
+        deleteBtn.disabled = true;
+        editBtn.classList.add('d-none');
+        deleteBtn.classList.add('d-none');
+
+        // Show restore button
+        recoverBtn.classList.remove('d-none');
+    }
+
+
+    // Show modal
+    $('#infoModalTpkg').modal('show');
+};
+
+//to support fill main table   
+const showTpkgType = (tpkgObj) => {
+    if (!tpkgObj.is_custompkg) {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #007bff; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Template Package
+            </p>`;
+    } else {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #17a2b8; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Custom Package
+            </p>`;
+    }
+}
+
+//to support fill main table  
+const showTpkgStatus = (tpkgObj) => {
+
+    if (tpkgObj.deleted_tpkg == null || tpkgObj.deleted_tpkg === false) {
+
+        if (tpkgObj.tpkg_status === "Draft") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Draft
+                </p>`;
+        }
+
+        else if (tpkgObj.tpkg_status === "Completed") {
+            return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+            style="background-color: #28a745; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            Completed
+         </p>`;
+        }
+
+        else if (tpkgObj.tpkg_status === "Inactive") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #6c757d; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Inactive
+                </p>`;
+        }
+
+    } else if (tpkgObj.deleted_tpkg != null && tpkgObj.deleted_tpkg === true) {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Deleted Record
+            </p>`;
+    }
+}
+
+//to clear the day plan info section 
+const resetDayPlanInfoSection = () => {
+
+    document.getElementById('tempInfoDisRow').classList.add('d-none');
+    document.getElementById('dpInfoIsTemplate').innerText = '';
+
+    // Reset all <span> elements to 'N/A'
+    document.getElementById('dpInfoCode').innerText = 'N/A';
+    document.getElementById('dpInfoTitle').innerText = 'N/A';
+    document.getElementById('dpInfoStartLocation').innerText = 'N/A';
+    document.getElementById('dpInfoLunchPlace').innerText = 'N/A';
+    document.getElementById('dpInfoDropPoint').innerText = 'N/A';
+    document.getElementById('dpInfoNote').innerText = 'N/A';
+
+    const placesList = document.getElementById('dpInfoPlaces');
+    placesList.innerHTML = '<li>N/A</li>';
+
+    document.getElementById('dayPlanInfoEditBtn').disabled = true;
+};
 
 //refill the TPKG
 const refillTpkgForm = (tpkgObj) => {
@@ -873,7 +903,7 @@ const restoreTpkgRecord = async () => {
                 setTimeout(() => {
                     window.location.reload();
                 }, 200);
-              
+
 
             } else {
                 showAlertModal('err', "Restore Failed \n" + putServiceResponse);
@@ -1017,7 +1047,6 @@ const printTpkgRecord = (tpkgObj) => {
         setTimeout(() => printWindow.close(), 1000);
     };
 };
-
 
 //handle refill tpkg data from inquiry
 const fillDataFromInq = async () => {
@@ -1286,15 +1315,6 @@ const enableChildCountInputs = () => {
     }
 }
 
-// common debounce to delay the execution of a function    
-function debounce(func, delay) {
-    let timeout;
-    return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), delay);
-    };
-}
-
 // to get vehicle types by minimum seats based on total travellers  
 const getVehicleTypesByMinSeats = async () => {
     const totalTravellers = parseInt(document.getElementById('tpkgTotalTravellers').value) || 0;
@@ -1341,7 +1361,7 @@ const getVehicleTypesByMinSeats = async () => {
     } catch (error) {
         console.error("Failed to fetch vehicle types:", error);
     }
-};
+}
 
 // debounced version to limit query calls  
 const debouncedGetVehicleTypesByMinSeats = debounce(getVehicleTypesByMinSeats, 300);
@@ -1429,26 +1449,11 @@ const resetSelectElements = (selectElement, defaultText = "Please Select") => {
     selectElement.add(defaultOption);
 }
 
-//
-//    if (selectElementId.id.startsWith("tpkgMidDaySelect")) {
-//        const index = getMidDayIndexFromSelect(selectElementId);
-//        if (index >= 0) {
-//            console.log(`Clearing tpkg.dayplans[${index}] for select ${selectElementId.id}`);
-//            tpkg.dayplans[index] = null;
-//            console.log("Updated tpkg.dayplans after template load:", tpkg.dayplans);
-//            
-//            const selectNumber = selectElementId.id.replace('tpkgMidDaySelect', '');
-//            document.getElementById(`showMidDayBtn${selectNumber}`).disabled = true;
-//            document.getElementById(`midDayDeleteBtn${selectNumber}`).disabled = true;
-//        }
-//    }
-
+// get the index of the midday select element from its label text
 const getMidDayIndexFromSelect = (selectEl) => {
     const labelText = selectEl.closest('.row').querySelector('label').innerText;
     return parseInt(labelText.split(" ")[2]) - 1;
 };
-
-
 
 // to handle first day changes  
 const handleFirstDayChange = (selectElement) => {
@@ -1474,9 +1479,6 @@ const handleFirstDayChange = (selectElement) => {
     showTotalKmCount();
 
 }
-
-//💥💥💥
-//refreshMainCostCard();
 
 // to handle last day changes  
 const handleFinalDayChange = (selectElement) => {
@@ -1539,16 +1541,7 @@ const refreshMainCostCard = () => {
     //and also show a hidden msg
 }
 
-// to fetch all price modifiers and store them globally 
-let globalPriceMods = null;
-const fetchPriceMods = async () => {
-    try {
-        const pricemods = await ajaxGetReq("/pricemods/all");
-        globalPriceMods = pricemods;
-    } catch (error) {
-        console.error("Failed to load price modifiers:", error);
-    }
-};
+
 
 //to calculate the total costs of the tour package 
 const calculateMainCosts = () => {
@@ -2104,7 +2097,7 @@ const savePrefVehitype = (selectElement) => {
 
 }
 
-const showVehiAvailabilityButtons = () => {
+function showVehiAvailabilityButtons() {
     // show the vehi availability button
     document.getElementById("btnCheckVehiAvailability").classList.remove("d-none");
 
@@ -2114,7 +2107,7 @@ const showVehiAvailabilityButtons = () => {
 }
 
 // function to show both buttons again
-const showDnGAvailabilityButtons = () => {
+function showDnGAvailabilityButtons() {
 
     document.getElementById("btnCheckGuideAvailability").classList.remove("d-none");
     document.getElementById("btnCheckDriverAvailability").classList.remove("d-none");
@@ -2351,9 +2344,7 @@ const getDayNumberFromLabel = (selectId) => {
 const refreshDpFormInTpkg = async () => {
 
     dayplan = new Object();
-
     dayplan.vplaces = new Array();
-
     document.getElementById('formDayPlanInTpkg').reset();
 
     try {
@@ -3793,7 +3784,10 @@ const updateTotalAdditionalCost = () => {
 };
 
 
-//######################################################
+//###################################################### NOT USED
+
+//declared globally because needed for filterings
+let allItineraryTemplates = [];
 
 //not used 💥
 const filterDayPlanTemplatesByDistrict = () => {
@@ -3851,6 +3845,27 @@ const displayFilteredTemplates = (templates) => {
 
 }
 
+//not used 💥
+const fetchAllDataParallel = async () => {
+    const endpoints = [
+        { key: 'onlyFirstDays', url: "/dayplan/onlyfirstdays" },
+        { key: 'onlyLastDays', url: "/dayplan/onlylastdays" },
+        { key: 'onlyMidDays', url: "/dayplan/onlymiddays" },
+        { key: 'globalPriceMods', url: "/pricemods/all" },
+    ];
+
+    const results = await Promise.allSettled(
+        endpoints.map(ep => ajaxGetReq(ep.url))
+    );
+
+    results.forEach((result, i) => {
+        if (result.status === 'fulfilled') {
+            window[endpoints[i].key] = result.value;
+        } else {
+            console.error(`Failed to fetch ${endpoints[i].key}:`, result.reason);
+        }
+    });
+}
 
 
 

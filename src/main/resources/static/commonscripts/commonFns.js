@@ -62,7 +62,14 @@ const insertDecimals = (elementId) => {
     }
 }
 
-
+// common debounce to delay the execution of a function    
+function debounce(func, delay) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+}
 
 /*Array.from(select.options).map((opt, index) => {
     opt.hidden = index > 1; // Hide all except first two
