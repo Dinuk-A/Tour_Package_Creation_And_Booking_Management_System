@@ -367,7 +367,7 @@ const openModalTpkg = (tpkgObj) => {
         previewImg.src = atob(tpkgObj.img1);
     } else {
         previewSection.classList.add('d-none');
-        previewImg.src = 'images/tpkg-default.png';
+        previewImg.src = 'images/sigiriya.jpg';
     }
 
     // Cost Summary
@@ -2097,6 +2097,7 @@ const savePrefVehitype = (selectElement) => {
 
 }
 
+//
 function showVehiAvailabilityButtons() {
     // show the vehi availability button
     document.getElementById("btnCheckVehiAvailability").classList.remove("d-none");
@@ -2467,10 +2468,32 @@ const refillSelectedDayPlan = async (dpObj) => {
         console.error("Failed to fetch districts or provinces:", error);
     }
 
+    //dom elements
     const firstDayCbVar = document.getElementById('firstDayCB');
     const midDayCbVar = document.getElementById('middleDayCB');
     const lastDayCbVar = document.getElementById('lastDayCB');
 
+    //pickups
+    const airportSelect = document.getElementById('airportSelect');
+    const airportPickRow = document.getElementById('generalPickupOptions');
+    const airportPickupCB = document.getElementById('generalPickupCB');
+    const manualPickupRow = document.getElementById('manualPickupOptions');
+    const manualPickupInput = document.getElementById('manualLocationPickup');
+    const manualPickupGCoordsInput = document.getElementById('geoCoords');
+    const manualPickupCBVar = document.getElementById('manualPickupCB');
+    const stayPickupRow = document.getElementById('accommodationPickupOptions');
+
+    //dropoffs
+    const airportDropCBVar = document.getElementById('generalDropOffCB');
+    const airportDropRow = document.getElementById('generalDropOffOptions');
+    const airportSelectDrop = document.getElementById('airportSelectDropOff');
+    const manualDropCBVar = document.getElementById('manualDropOffCB');
+    const manualDropRow = document.getElementById('manualDropOffOptions');
+    const manualDropInput = document.getElementById('manualLocationDropOff');
+    const manualDropGCoordsInput = document.getElementById('geoCoordsDropOff');
+    const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions');
+
+    //if this dp is chosen from first day select box
     if (selectedDayTypeToEdit === "first") {
 
         firstDayCbVar.checked = true;
@@ -2481,6 +2504,13 @@ const refillSelectedDayPlan = async (dpObj) => {
         lastDayCbVar.disabled = true;
         lastDayCbVar.style.cursor = 'not-allowed';
 
+        airportDropCBVar.disabled = true;
+        airportSelectDrop.disabled = true;
+        
+        airportPickupCB.disabled = false;
+        airportSelect.disabled = false;
+
+        //if this dp is chosen from a mid day select box
     } else if (selectedDayTypeToEdit === "middle") {
 
         midDayCbVar.checked = true;
@@ -2491,6 +2521,13 @@ const refillSelectedDayPlan = async (dpObj) => {
         lastDayCbVar.disabled = true;
         lastDayCbVar.style.cursor = 'not-allowed';
 
+        airportDropCBVar.disabled = true;
+        airportSelectDrop.disabled = true;
+
+        airportPickupCB.disabled = true;
+        airportSelect.disabled = true;
+
+        //if this dp is chosen from final day select box
     } else if (selectedDayTypeToEdit === "final") {
 
         lastDayCbVar.checked = true;
@@ -2500,6 +2537,12 @@ const refillSelectedDayPlan = async (dpObj) => {
         firstDayCbVar.style.cursor = 'not-allowed';
         midDayCbVar.disabled = true;
         midDayCbVar.style.cursor = 'not-allowed';
+
+        airportDropCBVar.disabled = false;
+        airportSelectDrop.disabled = false;
+
+        airportPickupCB.disabled = true;
+        airportSelect.disabled = true;
 
     } else {
         console.log("selectedDayTypeToEdit: " + selectedDayTypeToEdit);
@@ -2526,15 +2569,6 @@ const refillSelectedDayPlan = async (dpObj) => {
 
     //if the pickup point was an airport or manual location
     if (dpObj.pickuppoint != null) {
-
-        const airportSelect = document.getElementById('airportSelect');
-        const airportPickRow = document.getElementById('generalPickupOptions');
-        const airportPickupCB = document.getElementById('generalPickupCB');
-        const manualPickupRow = document.getElementById('manualPickupOptions');
-        const manualPickupInput = document.getElementById('manualLocationPickup');
-        const manualPickupGCoordsInput = document.getElementById('geoCoords');
-        const manualPickupCBVar = document.getElementById('manualPickupCB');
-        const stayPickupRow = document.getElementById('accommodationPickupOptions');
 
         airportPickRow.style.display = 'none';
         manualPickupRow.style.display = 'none';
@@ -2595,44 +2629,33 @@ const refillSelectedDayPlan = async (dpObj) => {
     //if droppoint is an airport or manual location
     if (dpObj.droppoint != null) {
 
-        const airportDropCBVar = document.getElementById('generalDropOffCB');
-        const airportDropRow = document.getElementById('generalDropOffOptions');
-        const airportSelect = document.getElementById('airportSelectDropOff');
-
-        const manualDropCBVar = document.getElementById('manualDropOffCB');
-        const manualDropRow = document.getElementById('manualDropOffOptions');
-        const manualDropInput = document.getElementById('manualLocationDropOff');
-        const manualDropGCoordsInput = document.getElementById('geoCoordsDropOff');
-
-        const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions');
-
         airportDropRow.style.display = 'none';
         manualDropRow.style.display = 'none';
         dropOffAccommodationRow.style.display = 'none';
 
         switch (dpObj.droppoint) {
             case "BIA":
-                airportSelect.selectedIndex = 1;
+                airportSelectDrop.selectedIndex = 1;
                 airportDropRow.style.display = 'block';
                 airportDropCBVar.checked = true;
                 break;
             case "MATTALA":
-                airportSelect.selectedIndex = 2;
+                airportSelectDrop.selectedIndex = 2;
                 airportDropRow.style.display = 'block';
                 airportDropCBVar.checked = true;
                 break;
             case "RATMALANA":
-                airportSelect.selectedIndex = 3;
+                airportSelectDrop.selectedIndex = 3;
                 airportDropRow.style.display = 'block';
                 airportDropCBVar.checked = true;
                 break;
             case "JAFFNA":
-                airportSelect.selectedIndex = 4;
+                airportSelectDrop.selectedIndex = 4;
                 airportDropRow.style.display = 'block';
                 airportDropCBVar.checked = true;
                 break;
             default:
-                airportSelect.selectedIndex = 0;
+                airportSelectDrop.selectedIndex = 0;
                 manualDropRow.style.display = 'block';
                 manualDropInput.value = dpObj.droppoint;
                 manualDropGCoordsInput.value = dpObj.drop_manual_gcoords;
@@ -2680,7 +2703,6 @@ const refillSelectedDayPlan = async (dpObj) => {
         try {
 
             fillDataIntoDynamicSelects(selectLPProv, 'Please Select The Province', allProvinces, 'name');
-
             fillDataIntoDynamicSelects(selectLPDist, 'Please Select The District', allDists, 'name');
 
             const lhsEmptyArray = [];
@@ -2718,7 +2740,6 @@ const refillSelectedDayPlan = async (dpObj) => {
     document.getElementById('dpTitle').value = dpObj.daytitle;
     document.getElementById('dpTotalKMcount').value = dpObj.totalkmcount;
     document.getElementById('dpCode').value = dpObj.dayplancode;
-    document.getElementById('dpSelectStatus').value = dpObj.dp_status;
     document.getElementById('dpNote').value = dpObj.note;
     document.getElementById('dpTotalVehiParkingCost').innerText = 'LKR ' + dpObj.totalvehiparkcost.toFixed(2);
     document.getElementById('dpTotalForeignChildTktCost').innerText = 'LKR ' + dpObj.foreignchildtktcost.toFixed(2);
@@ -2727,10 +2748,12 @@ const refillSelectedDayPlan = async (dpObj) => {
     document.getElementById('dpTotalLocalAdultTktCost').innerText = 'LKR ' + dpObj.localadulttktcost.toFixed(2);
 
     //give another value 💥💥💥
-    document.getElementById('dpSelectStatus').style.border = '1px solid #ced4da';
-    //
-    //    var step1Tab = new bootstrap.Tab(document.getElementById('dayStep1-tab'));
-    //    step1Tab.show();
+    const dpSelectStatusElement = document.getElementById('dpSelectStatus');
+    dpSelectStatusElement.value = dpObj.dp_status;
+    dpSelectStatusElement.style.border = '1px solid #ced4da';
+
+    var step1Tab = new bootstrap.Tab(document.getElementById('dayStep1-tab'));
+    step1Tab.show();
 
     $("#dayPlanModalInTpkg").modal("show");
 }
