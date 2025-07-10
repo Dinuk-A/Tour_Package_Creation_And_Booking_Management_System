@@ -581,8 +581,8 @@
                                             </div>
                                         </div>
 
+                                         <!-- resources availability and type -->
                                         <div class="row">
-
                                             <!-- to show how many available -->
                                             <div class="col-6">
                                                 <div class="card mt-4 px-3 py-3 border rounded shadow-sm mx-auto"
@@ -1423,7 +1423,7 @@
 
                             <hr>
 
-                            <!-- Booleans -->
+                            <!-- preferences -->
                             <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
                                 <div class="col">
                                     <p class="fw-bold mb-1 text-primary">Guide Needed:</p>
@@ -1485,8 +1485,25 @@
                     </div>
 
                     <!-- Modal Footer -->
-                    <div>
-
+                    <div class="modal-footer d-flex justify-content-between bg-light">
+                      
+                        <button class="btn-print fw-bold" onclick="printTpkgRecord(window['currentObject'])">
+                            Print Record
+                        </button>
+                        <div>
+                            <button id="modalDPEditBtn" class="btn-edit me-2 fw-bold"
+                                onclick="refillTpkgForm(window['currentObject'])">
+                                Edit Entry
+                            </button>
+                            <button id="modalDPDeleteBtn" class="btn-delete fw-bold"
+                                onclick="deleteTpkgRecord(window['currentObject'])">
+                                Delete Entry
+                            </button>
+                            <button id="modalDPRecoverBtn" class="btn-restore d-none fw-bold"
+                                onclick="restoreTpkgRecord()">
+                                Restore Entry
+                            </button>
+                        </div>
                     </div>
 
                 </div>

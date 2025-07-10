@@ -1849,7 +1849,7 @@ const refillDayPlanForm = async (dpObj) => {
         allProvinces = await ajaxGetReq("/province/all");
         allDistricts = await ajaxGetReq("/district/all");
     } catch (error) {
-        console.error('failed to fetch provinces and stays')
+        console.error('failed to fetch provinces,districts and stays')
     }
 
     //💥💥💥

@@ -1,7 +1,7 @@
 //+++++++ fns to populate data into form elements +++++++++
 
 // fill and display <option> inside <select> elements of forms (data recieved from databases)
-const fillDataIntoDynamicSelectsOri = (tagId, msg, dataContainer, displayingPropertyName, selectedValue) => {
+const fillDataIntoDynamicSelectsOriOri = (tagId, msg, dataContainer, displayingPropertyName, selectedValue) => {
 
     tagId.innerHTML = "";
 

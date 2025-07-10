@@ -228,6 +228,8 @@ const resetDayPlanInfoSection = () => {
 let onlyFirstDays = [];
 let onlyLastDays = [];
 let onlyMidDays = [];
+let allActiveInqs = [];
+let vehiTypes = [];
 
 const fetchDays = async () => {
 
@@ -253,7 +255,6 @@ const fetchDays = async () => {
     }
 }
 
-
 //to ready the main form   
 const refreshTpkgForm = async () => {
 
@@ -267,8 +268,9 @@ const refreshTpkgForm = async () => {
     preferencesFieldset.classList.remove('d-none');
     document.getElementById('tpkgStep4-tab').parentElement.classList.remove('d-none');
 
+    // vehicle types
     try {
-        const vehiTypes = await ajaxGetReq("/vehitypes/all");
+        vehiTypes = await ajaxGetReq("/vehitypes/all");
         fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'name');
 
     } catch (error) {
@@ -278,9 +280,10 @@ const refreshTpkgForm = async () => {
     const loggedEmpId = document.getElementById('loggedUserEmpIdSectionId').textContent;
     console.log(loggedEmpId);
 
+    //active inquiries of the logged user
     try {
-        const allActiveInqs = await ajaxGetReq("/inq/personal/active?empid=" + loggedEmpId);
-        fillMultDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname')
+        allActiveInqs = await ajaxGetReq("/inq/personal/active?empid=" + loggedEmpId);
+        fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname')
     } catch (error) {
         console.error("Failed to fetch form data inquiries:", error);
     }
@@ -451,6 +454,163 @@ const refreshTpkgForm = async () => {
 
 }
 
+//refill the TPKG
+const refillTpkgForm = (tpkgObj) => {
+
+    console.log("Refilling Template Package Form with data:", tpkgObj);
+
+    tpkg = JSON.parse(JSON.stringify(tpkgObj));
+    oldTpkg = JSON.parse(JSON.stringify(tpkgObj));
+
+    //pkg type
+    if (tpkgObj.is_custompkg === true) {
+        document.getElementById("customTP").checked = true;
+    } else if (tpkgObj.is_custompkg === false) {
+        document.getElementById("forWebSite").checked = true;
+    }
+    //changesTpkgCustomOrTemp();
+
+    //inq
+    fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', tpkg.basedinq.inqcode);
+    tpkgBasedInq.disabled = false;
+
+    //title and code
+    document.getElementById("inputPkgTitle").value = tpkgObj.pkgtitle || "";
+    document.getElementById("inputPkgCode").value = tpkgObj.pkgcode || "";
+
+    //start date
+    document.getElementById("tpStartDateInput").value = tpkgObj.tourstartdate || "";
+
+    //web description
+    document.getElementById("tpDescription").value = tpkgObj.web_discription || "";
+
+    //start date
+    fillDataIntoDynamicSelects(tpkgFirstDaySelect, 'please select', onlyFirstDays, 'daytitle', tpkg.sd_dayplan_id.daytitle);
+
+    //last date
+    fillDataIntoDynamicSelects(tpkgFinalDaySelect, 'please select', onlyLastDays, 'daytitle', tpkg.ed_dayplan_id.daytitle);
+
+    //reset midday counter
+    let midDayCounter = 1;
+
+    //mid days    
+    for (let i = 0; i < tpkg.dayplans.length; i++) {
+
+        console.log("Processing mid day plan start:", i);
+
+        const dayPlan = tpkg.dayplans[i];
+
+        console.log(dayPlan);
+
+        //created once per loop element
+        generateNormalDayPlanSelectSections();
+
+        const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
+        const selectElement = document.getElementById(midDaySelectId);
+
+        selectElement.disabled = false;
+
+        fillDataIntoDynamicSelects(
+            selectElement,
+            'Please Select',
+            onlyMidDays,
+            'daytitle',
+            dayPlan.daytitle
+        );
+
+        document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
+        document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
+
+        console.log("Processing mid day plan end:", i);
+
+        midDayCounter++;
+    }
+
+    //traevellers counts
+    document.getElementById("tpkgLocalAdultCount").value = tpkgObj.localadultcount ?? 0;
+    document.getElementById("tpkgLocalChildCount").value = tpkgObj.localchildcount ?? 0;
+    document.getElementById("tpkgForeignAdultCount").value = tpkgObj.foreignadultcount ?? 0;
+    document.getElementById("tpkgForeignChildCount").value = tpkgObj.foreignchildcount ?? 0;
+
+    // update total travellers
+    updateTotalTravellers();
+
+    // preferred vehicle type
+    fillDataIntoDynamicSelects(
+        document.getElementById("tpkgVehitype"),
+        'Please Select Vehicle Type',
+        vehiTypes,
+        'vehiclename',
+        tpkgObj.pref_vehi_type
+    );
+
+    // include guide
+    if (tpkgObj.is_guide_needed === true) {
+        document.getElementById("guideYes").checked = true;
+    } else if (tpkgObj.is_guide_needed === false) {
+        document.getElementById("guideNo").checked = true;
+    }
+    handleNeedGuideCB();
+
+    // vehicle source
+    if (tpkgObj.is_company_vehicle === true) {
+        document.getElementById("yathraVehiCB").checked = true;
+    } else if (tpkgObj.is_company_vehicle === false) {
+        document.getElementById("rentalVehiCB").checked = true;
+    }
+
+    // driver source
+    if (tpkgObj.is_company_driver === true) {
+        document.getElementById("yathraDriverCB").checked = true;
+    } else if (tpkgObj.is_company_driver === false) {
+        document.getElementById("rentalDriverCB").checked = true;
+    }
+  
+    // guide source
+    if (tpkgObj.is_company_guide === true) {
+        document.getElementById("yathraGuideCB").checked = true;
+    } else if (tpkgObj.is_company_guide === false) {
+        document.getElementById("rentalGuideCB").checked = true;
+    }
+ 
+    const defaultImgPath = "images/sigiriya.jpg";
+
+    if (tpkgObj.img1 != null) {
+        imgPreview1.src = atob(tpkgObj.img1);
+    } else {
+        imgPreview1.src = defaultImgPath;
+    }
+
+    if (tpkgObj.img2 != null) {
+        imgPreview2.src = atob(tpkgObj.img2);
+    } else {
+        imgPreview2.src = defaultImgPath;
+    }
+
+    if (tpkgObj.img3 != null) {
+        imgPreview3.src = atob(tpkgObj.img3);
+    } else {
+        imgPreview3.src = defaultImgPath;
+    }
+
+    //additional cost table💥💥💥
+
+    // note , status
+    document.getElementById('tpNote').value = tpkgObj.note;
+    document.getElementById('tpSelectStatus').value = tpkgObj.tpkg_status;
+
+    $("#infoModalTpkg").modal("hide");
+
+    var myTPKGFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myTPKGFormTab.show();
+
+    var step1Tab = new bootstrap.Tab(document.getElementById('tpkgStep1-tab'));
+    step1Tab.show();
+
+    midDayCounter = 1;
+
+}
+
 //handle refill tpkg data from inquiry
 const fillDataFromInq = async () => {
     if (tpkg.basedinq?.id != null) {
@@ -526,10 +686,6 @@ const fillDataFromInq = async () => {
                     console.log("a template");
                 }
             }
-
-
-
-
 
         }
     }
