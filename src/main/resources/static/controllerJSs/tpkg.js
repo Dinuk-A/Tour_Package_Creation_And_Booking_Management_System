@@ -565,14 +565,14 @@ const refillTpkgForm = (tpkgObj) => {
     } else if (tpkgObj.is_company_driver === false) {
         document.getElementById("rentalDriverCB").checked = true;
     }
-  
+
     // guide source
     if (tpkgObj.is_company_guide === true) {
         document.getElementById("yathraGuideCB").checked = true;
     } else if (tpkgObj.is_company_guide === false) {
         document.getElementById("rentalGuideCB").checked = true;
     }
- 
+
     const defaultImgPath = "images/sigiriya.jpg";
 
     if (tpkgObj.img1 != null) {
@@ -599,6 +599,14 @@ const refillTpkgForm = (tpkgObj) => {
     document.getElementById('tpNote').value = tpkgObj.note;
     document.getElementById('tpSelectStatus').value = tpkgObj.tpkg_status;
 
+    const updateBtn = document.getElementById('tpkgUpdateBtn');
+    updateBtn.disabled = false;
+    updateBtn.style.cursor = "pointer";
+
+    const addBtn = document.getElementById('tpkgAddBtn');
+    addBtn.disabled = true;
+    addBtn.style.cursor = "not-allowed";
+
     $("#infoModalTpkg").modal("hide");
 
     var myTPKGFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
@@ -610,6 +618,203 @@ const refillTpkgForm = (tpkgObj) => {
     midDayCounter = 1;
 
 }
+
+//show updated values
+const showTpkgValueChanges = () => {
+    let updates = "";
+
+    if (tpkg.is_custompkg !== oldTpkg.is_custompkg) {
+        updates += `Package type will be changed to "${tpkg.is_custompkg ? 'Custom Package' : 'Template Package'}"\n`;
+    }
+
+    if (tpkg.pkgtitle !== oldTpkg.pkgtitle) {
+        updates += `Package title will be changed to "${tpkg.pkgtitle}"\n`;
+    }
+
+    if (tpkg.basedinq !== oldTpkg.basedinq) {
+        updates += `Based inquiry will be changed to "${tpkg.basedinq}"\n`;
+    }
+
+    if (tpkg.tourstartdate !== oldTpkg.tourstartdate) {
+        updates += `Tour start date will be changed to "${tpkg.tourstartdate}"\n`;
+    }
+
+    if (tpkg.tourenddate !== oldTpkg.tourenddate) {
+        updates += `Tour end date will be changed to "${tpkg.tourenddate}"\n`;
+    }
+
+    if (tpkg.totaldays !== oldTpkg.totaldays) {
+        updates += `Total days will be changed to "${tpkg.totaldays}"\n`;
+    }
+
+    // Travellers
+    if (tpkg.localadultcount !== oldTpkg.localadultcount) {
+        updates += `Local adult count will be changed to "${tpkg.localadultcount}"\n`;
+    }
+
+    if (tpkg.localchildcount !== oldTpkg.localchildcount) {
+        updates += `Local child count will be changed to "${tpkg.localchildcount}"\n`;
+    }
+
+    if (tpkg.foreignadultcount !== oldTpkg.foreignadultcount) {
+        updates += `Foreign adult count will be changed to "${tpkg.foreignadultcount}"\n`;
+    }
+
+    if (tpkg.foreignchildcount !== oldTpkg.foreignchildcount) {
+        updates += `Foreign child count will be changed to "${tpkg.foreignchildcount}"\n`;
+    }
+
+    // Start & End Day Plan
+    if ((tpkg.sd_dayplan_id?.id) !== (oldTpkg.sd_dayplan_id?.id)) {
+        updates += `Start day plan will be changed to "${tpkg.sd_dayplan_id?.daytitle || 'N/A'}"\n`;
+    }
+
+    if ((tpkg.ed_dayplan_id?.id) !== (oldTpkg.ed_dayplan_id?.id)) {
+        updates += `End day plan will be changed to "${tpkg.ed_dayplan_id?.daytitle || 'N/A'}"\n`;
+    }
+
+    // Mid days
+    if ((tpkg.dayplans?.length) !== (oldTpkg.dayplans?.length)) {
+        updates += `Mid day plan count will be changed to "${tpkg.dayplans?.length}"\n`;
+    }
+
+    // Costs
+    if (tpkg.totaltktcost !== oldTpkg.totaltktcost) {
+        updates += `Total ticket cost will be changed to "${tpkg.totaltktcost} LKR"\n`;
+    }
+
+    if (tpkg.totallunchcost !== oldTpkg.totallunchcost) {
+        updates += `Total lunch cost will be changed to "${tpkg.totallunchcost} LKR"\n`;
+    }
+
+    if (tpkg.totalvehiparkingcost !== oldTpkg.totalvehiparkingcost) {
+        updates += `Total vehicle parking cost will be changed to "${tpkg.totalvehiparkingcost} LKR"\n`;
+    }
+
+    if (tpkg.totalvehicost !== oldTpkg.totalvehicost) {
+        updates += `Total vehicle cost will be changed to "${tpkg.totalvehicost} LKR"\n`;
+    }
+
+    if (tpkg.totaldrivercost !== oldTpkg.totaldrivercost) {
+        updates += `Total driver cost will be changed to "${tpkg.totaldrivercost} LKR"\n`;
+    }
+
+    if (tpkg.totalguidecost !== oldTpkg.totalguidecost) {
+        updates += `Total guide cost will be changed to "${tpkg.totalguidecost} LKR"\n`;
+    }
+
+    if (tpkg.totalstaycost !== oldTpkg.totalstaycost) {
+        updates += `Total stay cost will be changed to "${tpkg.totalstaycost} LKR"\n`;
+    }
+
+    if (tpkg.totaladditionalcosts !== oldTpkg.totaladditionalcosts) {
+        updates += `Total additional costs will be changed to "${tpkg.totaladditionalcosts} LKR"\n`;
+    }
+
+    if (tpkg.pkgcostsum !== oldTpkg.pkgcostsum) {
+        updates += `Package cost sum will be changed to "${tpkg.pkgcostsum} LKR"\n`;
+    }
+
+    if (tpkg.pkgfinalprice !== oldTpkg.pkgfinalprice) {
+        updates += `Package final price will be changed to "${tpkg.pkgfinalprice} LKR"\n`;
+    }
+
+    // Others
+    if (tpkg.note !== oldTpkg.note) {
+        updates += `Note will be changed to "${tpkg.note}"\n`;
+    }
+
+    if (tpkg.tpkg_status !== oldTpkg.tpkg_status) {
+        updates += `Status will be changed to "${tpkg.tpkg_status}"\n`;
+    }
+
+    // Guide, vehicle, driver
+    if (tpkg.is_guide_needed !== oldTpkg.is_guide_needed) {
+        updates += `Guide needed will be changed to "${tpkg.is_guide_needed ? 'Yes' : 'No'}"\n`;
+    }
+
+    if (tpkg.is_company_guide !== oldTpkg.is_company_guide) {
+        updates += `Guide source will be changed to "${tpkg.is_company_guide ? 'Company Guide' : 'External Guide'}"\n`;
+    }
+
+    if (tpkg.is_company_vehicle !== oldTpkg.is_company_vehicle) {
+        updates += `Vehicle source will be changed to "${tpkg.is_company_vehicle ? 'Company Vehicle' : 'Rental Vehicle'}"\n`;
+    }
+
+    if (tpkg.is_company_driver !== oldTpkg.is_company_driver) {
+        updates += `Driver source will be changed to "${tpkg.is_company_driver ? 'Company Driver' : 'External Driver'}"\n`;
+    }
+
+    // Web
+    if (tpkg.web_description !== oldTpkg.web_description) {
+        updates += `Web description will be updated\n`;
+    }
+
+    if (tpkg.pref_vehi_type !== oldTpkg.pref_vehi_type) {
+        updates += `Preferred transport type will be changed to "${tpkg.pref_vehi_type}"\n`;
+    }
+
+    // Images
+    if (tpkg.img1 !== oldTpkg.img1) {
+        updates += `Cover image 1 will be updated\n`;
+    }
+
+    if (tpkg.img2 !== oldTpkg.img2) {
+        updates += `Image 2 will be updated\n`;
+    }
+
+    if (tpkg.img3 !== oldTpkg.img3) {
+        updates += `Image 3 will be updated\n`;
+    }
+
+    // Additional cost list
+    if ((tpkg.addiCostList?.length) !== (oldTpkg.addiCostList?.length)) {
+        updates += `Additional cost list has been updated\n`;
+    }
+
+    return updates;
+};
+
+//to update the TPKG
+const updateTpkg = async () => {
+    const errors = checkTpkgFormErrors();
+
+    if (errors === "") {
+        let updates = showTpkgValueChanges();
+
+        if (updates === "") {
+            showAlertModal('err', "No changes detected to update");
+        } else {
+            let userConfirm = confirm("Are you sure to proceed?\n\n" + updates);
+
+            if (userConfirm) {
+                try {
+                    let putServiceResponse = await ajaxPPDRequest("/tpkg", "PUT", tpkg);
+
+                    if (putServiceResponse === "OK") {
+                        showAlertModal('suc', 'Tour package updated successfully');
+                        document.getElementById('formTpkg').reset();
+                        refreshTpkgForm();
+                        buildTpkgTable();
+                      
+                        let myPkgTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                        myPkgTab.show();
+
+                    } else {
+                        showAlertModal('err', "Update failed\n" + putServiceResponse);
+                    }
+                } catch (error) {
+                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+                }
+            } else {
+                showAlertModal('inf', 'User cancelled the task');
+            }
+        }
+    } else {
+        showAlertModal('war', errors);
+    }
+};
+
 
 //handle refill tpkg data from inquiry
 const fillDataFromInq = async () => {

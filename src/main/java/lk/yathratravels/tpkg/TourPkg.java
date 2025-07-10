@@ -127,9 +127,6 @@ public class TourPkg {
     @Column(name = "tpkg_status")
     private String tpkg_status;
 
-    @Column(name = "deleted_tpkg")
-    private Boolean deleted_tpkg;
-
     @Column(name = "is_guide_needed")
     private Boolean is_guide_needed;
 
@@ -141,6 +138,9 @@ public class TourPkg {
 
     @Column(name = "is_company_driver")
     private Boolean is_company_driver;
+
+    @Column(name = "deleted_tpkg")
+    private Boolean deleted_tpkg;
 
     @Column(name = "img1")
     private byte[] img1;
