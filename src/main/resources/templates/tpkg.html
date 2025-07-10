@@ -142,7 +142,7 @@
 
                                         </div>-->
 
-                                        
+
 
                                         <!-- pkg type  -->
                                         <div class="row mb-3">
@@ -1305,10 +1305,11 @@
                         <div class="container">
 
                             <!-- Template Info -->
-                            <div id="modTpkgInfoTemplate" class="mb-4 text-center p-3 bg-light border rounded shadow-sm d-none">
+                            <div id="modTpkgInfoTemplate"
+                                class="mb-4 text-center p-3 bg-light border rounded shadow-sm d-none">
                                 <p id="modTpkgIsTemplateOrNot" class="mb-0 text-primary fw-bold fs-5"></p>
                             </div>
-                        
+
                             <!-- Basic Details -->
                             <div class="row mb-4">
                                 <div class="col-md-6">
@@ -1320,13 +1321,13 @@
                                     <p id="modTpkgTitle" class="mb-0"></p>
                                 </div>
                             </div>
-                        
+
                             <!-- Based Inquiry -->
                             <div class="mb-4">
                                 <p class="fw-bold mb-1 text-primary">Based on Inquiry:</p>
                                 <p id="modTpkgBasedInq" class="mb-0"></p>
                             </div>
-                        
+
                             <!-- Dates & Duration -->
                             <div class="row mb-4">
                                 <div class="col-md-4">
@@ -1342,47 +1343,40 @@
                                     <p id="modTpkgDays" class="mb-0"></p>
                                 </div>
                             </div>
-                        
-                            <!-- Traveller Count -->
-                            <div class="row mb-4">
-                                <div class="col-md-3">
-                                    <p class="fw-bold mb-1 text-primary">Local Adults:</p>
-                                    <p id="modTpkgLocalAdults" class="mb-0"></p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p class="fw-bold mb-1 text-primary">Local Children:</p>
-                                    <p id="modTpkgLocalChildren" class="mb-0"></p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p class="fw-bold mb-1 text-primary">Foreign Adults:</p>
-                                    <p id="modTpkgForeignAdults" class="mb-0"></p>
-                                </div>
-                                <div class="col-md-3">
-                                    <p class="fw-bold mb-1 text-primary">Foreign Children:</p>
-                                    <p id="modTpkgForeignChildren" class="mb-0"></p>
-                                </div>
-                            </div>
-                        
-                            <!-- Start & End Day Plans -->
-                            <div class="row mb-4">
-                                <div class="col-md-6">
-                                    <p class="fw-bold mb-1 text-primary">Start Day Plan:</p>
-                                    <p id="modTpkgStartDP" class="mb-0"></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p class="fw-bold mb-1 text-primary">End Day Plan:</p>
-                                    <p id="modTpkgEndDP" class="mb-0"></p>
-                                </div>
-                            </div>
-                        
-                            <!-- Day Plan List -->
+
+                            <!-- Traveller Group -->
                             <div class="mb-4">
-                                <p class="fw-bold mb-1 text-primary">Included Day Plans:</p>
+                                <p class="fw-bold mb-1 text-primary">Traveller Group:</p>
+                                <div class="bg-white border rounded p-3 shadow-sm">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <p class="fw-bold mb-1 text-primary">Local Adults:</p>
+                                            <p id="modTpkgLocalAdults" class="mb-0"></p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="fw-bold mb-1 text-primary">Local Children:</p>
+                                            <p id="modTpkgLocalChildren" class="mb-0"></p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="fw-bold mb-1 text-primary">Foreign Adults:</p>
+                                            <p id="modTpkgForeignAdults" class="mb-0"></p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <p class="fw-bold mb-1 text-primary">Foreign Children:</p>
+                                            <p id="modTpkgForeignChildren" class="mb-0"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- All Day Plans -->
+                            <div class="mb-4">
+                                <p class="fw-bold mb-1 text-primary">All Day Plans:</p>
                                 <div id="modTpkgDayPlans" class="bg-white border rounded p-3 shadow-sm"></div>
                             </div>
-                        
+
                             <hr>
-                        
+
                             <!-- Cost Summary -->
                             <div class="row row-cols-1 row-cols-md-2 g-4 mb-4">
                                 <div class="col">
@@ -1426,9 +1420,9 @@
                                     <p id="modTpkgFinalPrice" class="mb-0"></p>
                                 </div>
                             </div>
-                        
+
                             <hr>
-                        
+
                             <!-- Booleans -->
                             <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
                                 <div class="col">
@@ -1448,38 +1442,46 @@
                                     <p id="modTpkgIsCompanyDriver" class="mb-0"></p>
                                 </div>
                             </div>
-                        
+
                             <!-- Preferred Vehicle -->
                             <div class="mb-4">
                                 <p class="fw-bold mb-1 text-primary">Preferred Vehicle Type:</p>
                                 <p id="modTpkgPrefVehicleType" class="mb-0"></p>
                             </div>
-                        
+
                             <!-- Web Description -->
                             <div class="mb-4">
                                 <p class="fw-bold mb-1 text-primary">Web Description:</p>
                                 <p id="modTpkgWebDesc" class="mb-0"></p>
                             </div>
-                        
+
+                            <!-- Preview Image -->
+                            <div id="modTpkgImagePreviewSection" class="mb-4 d-none text-center">
+                                <p class="fw-bold mb-2 text-primary">Preview Image:</p>
+                                <img id="modTpkgPreviewImg" src="images/tpkg-default.png" alt="Preview"
+                                    class="img-thumbnail rounded shadow-sm" style="max-height: 200px; width: auto;">
+                            </div>
+
+
                             <!-- Notes -->
                             <div class="mb-4">
                                 <p class="fw-bold mb-1 text-primary">Additional Notes:</p>
                                 <p id="modTpkgNote" class="mb-0"></p>
                             </div>
-                        
+
                             <!-- Status -->
                             <div class="mb-4">
                                 <p class="fw-bold mb-1 text-primary">Status:</p>
                                 <p id="modTpkgStatus" class="mb-0"></p>
                             </div>
-                        
+
                             <!-- Deleted Info -->
                             <div class="mb-4">
                                 <p id="modTpkgIfDeleted" class="text-danger d-none mb-0"></p>
                             </div>
-                        
+
                         </div>
-                        
+
                     </div>
 
                     <!-- Modal Footer -->
@@ -1554,7 +1556,7 @@
                                                 <input id="dpTitle" class="form-control"
                                                     placeholder="Enter The Itinerary Title"
                                                     onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle');">
-                                                    <!--  window.newlyAddedDayTitleGlobal=this.value; -->
+                                                <!--  window.newlyAddedDayTitleGlobal=this.value; -->
                                             </div>
 
                                             <!-- code  -->

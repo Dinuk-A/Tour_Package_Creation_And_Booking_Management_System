@@ -25,7 +25,7 @@ const buildTpkgTable = async () => {
             { displayType: 'function', displayingPropertyOrFn: showTpkgStatus, colHeadName: 'Status' }
         ]
 
-        createTable(tableTpkgHolderDiv, sharedTableIdForTpkg, tpkgs, tableColumnInfo,openModalTpkg);
+        createTable(tableTpkgHolderDiv, sharedTableIdForTpkg, tpkgs, tableColumnInfo, openModalTpkg);
 
         $(`#${sharedTableIdForTpkg}`).dataTable();
 
@@ -60,19 +60,39 @@ const openModalTpkg = (tpkgObj) => {
     document.getElementById('modTpkgForeignAdults').innerText = tpkgObj.foreignadultcount ?? 0;
     document.getElementById('modTpkgForeignChildren').innerText = tpkgObj.foreignchildcount ?? 0;
 
-    // Start & End Day Plan
-    document.getElementById('modTpkgStartDP').innerText = tpkgObj.sd_dayplan_id?.daytitle + ' (' + tpkgObj.sd_dayplan_id?.dayplancode + ')' || 'N/A';
-    document.getElementById('modTpkgEndDP').innerText = tpkgObj.ed_dayplan_id?.daytitle + ' (' + tpkgObj.ed_dayplan_id?.dayplancode + ')' || 'N/A';
-
-    // Included Mid Day Plans
     const dayplansContainer = document.getElementById('modTpkgDayPlans');
+    let allDayBadges = [];
+    
+    // Start Day Plan
+    if (tpkgObj.sd_dayplan_id) {
+        allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">Start - ${tpkgObj.sd_dayplan_id.daytitle} (${tpkgObj.sd_dayplan_id.dayplancode})</span></div>`);
+    }
+    
+    // Mid Day Plans
     if (tpkgObj.dayplans && tpkgObj.dayplans.length > 0) {
-        const dayPlanBadges = tpkgObj.dayplans.map((dp, i) => {
-            return `<span class="badge bg-secondary me-2 mb-2">${i + 1}. ${dp.daytitle} (${dp.dayplancode})</span>`;
-        }).join(' ');
-        dayplansContainer.innerHTML = dayPlanBadges;
+        tpkgObj.dayplans.forEach((dp, i) => {
+            allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">Day ${i + 2} - ${dp.daytitle} (${dp.dayplancode})</span></div>`);
+        });
+    }
+    
+    // End Day Plan
+    if (tpkgObj.ed_dayplan_id) {
+        allDayBadges.push(`<div><span class="badge bg-info text-dark fs-6 px-3 py-2 mb-2 fw-semibold">End - ${tpkgObj.ed_dayplan_id.daytitle} (${tpkgObj.ed_dayplan_id.dayplancode})</span></div>`);
+    }
+    
+    dayplansContainer.innerHTML = allDayBadges.length > 0 ? allDayBadges.join('') : 'N/A';
+    
+
+    // Show Preview Image if available
+    const previewSection = document.getElementById('modTpkgImagePreviewSection');
+    const previewImg = document.getElementById('modTpkgPreviewImg');
+
+    if (tpkgObj.img1) {
+        previewSection.classList.remove('d-none');
+        previewImg.src = atob(tpkgObj.img1);
     } else {
-        dayplansContainer.innerHTML = 'N/A';
+        previewSection.classList.add('d-none');
+        previewImg.src = 'images/tpkg-default.png';
     }
 
     // Cost Summary
@@ -2733,59 +2753,99 @@ const removeFinalDay = () => {
     showVehiAvailabilityButtons();
 }
 
-//check errors before adding 💥💥💥💥💥
+//check errors before adding 
 const checkTpkgFormErrors = () => {
-
     let errors = "";
 
-    if (tpkg.pkgtitle == null) {
+    if (!tpkg.pkgtitle) {
         errors += "Title cannot be empty \n";
     }
 
-    if (tpkg.is_custompkg == null) {
-        errors += " Please select the type of package \n";
+    if (tpkg.is_custompkg === null || tpkg.is_custompkg === undefined) {
+        errors += "Please select the type of package \n";
     }
 
-    if (tpkg.sd_dayplan_id == null) {
-        errors += " Please select the first day plan \n";
+    if (!tpkg.sd_dayplan_id) {
+        errors += "Please select the first day plan \n";
     }
 
-    if (tpkg.ed_dayplan_id == null) {
-        errors += " Please select the Last day plan \n";
+    if (!tpkg.ed_dayplan_id && tpkg.dayplans && tpkg.dayplans.length > 0) {
+        errors += "Please add a last day plan \n";
     }
 
-    if ((tpkg.localadultcount == null || tpkg.localadultcount < 0) && (tpkg.foreignadultcount == null || tpkg.foreignadultcount < 0)) {
-        errors += "At least one adult count must be greater than 0 \n";
-    }
-
-    if (tpkg.tpkg_status == null) {
+    if (!tpkg.tpkg_status) {
         errors += "Please select the status of the package \n";
     }
 
-    if (tpkg.is_custompkg && tpkg.tourstartdate == null) {
-        errors += "Please select the start date of the tour \n";
+    //for custom packages
+    if (tpkg.is_custompkg) {
+        if (!tpkg.basedinq) {
+            errors += "Custom packages must be based on an inquiry \n";
+        }
+
+        if (!tpkg.tourstartdate) {
+            errors += "Please select the start date of the tour \n";
+        }
+
+        if (
+            (tpkg.localadultcount == null || tpkg.localadultcount < 0) &&
+            (tpkg.foreignadultcount == null || tpkg.foreignadultcount < 0)
+        ) {
+            errors += "At least one adult count must be greater than 0 \n";
+        }
+
+        if (tpkg.pkgcostsum == null) {
+            errors += "Package cost sum is required \n";
+        }
+
+        if (tpkg.pkgfinalprice == null) {
+            errors += "Final price is required \n";
+        }
+
+        if (tpkg.is_guide_needed === null || tpkg.is_guide_needed === undefined) {
+            errors += "Please specify whether a guide is needed \n";
+        }
+
+        if (tpkg.is_guide_needed && (tpkg.is_company_guide === null || tpkg.is_company_guide === undefined)) {
+            errors += "Please specify if the guide is from the company \n";
+        }
+
+        if (tpkg.is_company_vehicle === null || tpkg.is_company_vehicle === undefined) {
+            errors += "Please specify if the vehicle is from the company \n";
+        }
+
+        if (tpkg.is_company_driver === null || tpkg.is_company_driver === undefined) {
+            errors += "Please specify if the driver is from the company \n";
+        }
+
+        if (!tpkg.pref_vehi_type) {
+            errors += "Preferred vehicle type is required \n";
+        }
     }
 
-    if (!tpkg.is_custompkg && (tpkg.web_discription == null || tpkg.web_discription == "")) {
-        errors += "Please enter the description for the website \n";
-    }
+    //for template packages
+    if (tpkg.is_custompkg != null && tpkg.is_custompkg==false) {
+   
+        if (!tpkg.web_discription || tpkg.web_discription.trim() === "") {
+            errors += "Please enter the description for the website \n";
+        }
 
-    if (!tpkg.is_custompkg && (tpkg.img1 == null || tpkg.img1 == "")) {
-        errors += "Please upload the first image for the website \n";
-    }
+        if (!tpkg.img1 || tpkg.img1.trim() === "") {
+            errors += "Please upload the first image for the website \n";
+        }
 
-    if (!tpkg.is_custompkg && (tpkg.img2 == null || tpkg.img2 == "")) {
-        errors += "Please upload the second image for the website \n";
-    }
+        if (!tpkg.img2 || tpkg.img2.trim() === "") {
+            errors += "Please upload the second image for the website \n";
+        }
 
-    if (!tpkg.is_custompkg && (tpkg.img3 == null || tpkg.img3 == "")) {
-        errors += "Please upload the third image for the website \n";
+        if (!tpkg.img3 || tpkg.img3.trim() === "") {
+            errors += "Please upload the third image for the website \n";
+        }
     }
 
     return errors;
-
-
 }
+
 
 //add a tpkg
 const addNewTpkg = async () => {
