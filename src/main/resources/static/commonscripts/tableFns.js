@@ -1,4 +1,4 @@
-const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColumnInfoArray) => {
+const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColumnInfoArray,customOpenModal = null) => {
 
     // Clear out any previous data
     tableHolderDivId.innerHTML = '';
@@ -102,16 +102,28 @@ const createTable = (tableHolderDivId, uniqueIdOfTable, dataContainer, tableColu
         actionButton.setAttribute('class', 'btn-view');
         actionButton.innerText = "View";
 
-        //function for that button
-        actionButton.onclick = function () {
+        //function for that button ORIGINAL
+        //actionButton.onclick = function () {
 
             //create a global object with the current record's values
-            window['currentObject'] = record;
+            //window['currentObject'] = record;
             // window['currentObjectIndex'] = index;
 
             //run this function to open a modal with the record's details
-            openModal(record);
+            //openModal(record);
 
+        //}
+
+        //custom openModal per each fn
+        actionButton.onclick = function () {
+            window['currentObject'] = record;
+            
+            // Use custom modal function if provided, otherwise use global openModal
+            if (customOpenModal && typeof customOpenModal === 'function') {
+                customOpenModal(record);
+            } else {
+                openModal(record);
+            }
         }
 
         //append that button to the cell

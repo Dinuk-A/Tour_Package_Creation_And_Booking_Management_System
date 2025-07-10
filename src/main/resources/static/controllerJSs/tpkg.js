@@ -13,79 +13,6 @@ let sharedTableIdForTpkg = "mainTableTpkg";
 //declared globally because needed for filterings
 let allItineraryTemplates = [];
 
-//clear out the form everytime a user switches to table tab   
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('myTabTpkg').addEventListener('shown.bs.tab', function (event) {
-        if (event.target.id === 'table-tab') {
-            console.log("Switching to table tab - clearing form");
-            refreshTpkgForm();
-        }
-    });
-});
-
-// 💥💥💥
-const resetModalTpkg = () => {
-    console.log("Resetting modal form");
-}
-
-//handle the creation method radio buttons NOT USED 💥💥💥
-const handleCeationMethodSelect = () => {
-    const fromScratch = document.getElementById('createFromScratch');
-    const fromInq = document.getElementById('createFromInquiry');
-
-    // track which option was selected BEFORE reset
-    const selectedMethod = fromScratch.checked ? 'scratch' : fromInq.checked ? 'inquiry' : null;
-
-    const hasExistingData =
-        tpkg.pkgtitle != null ||
-        tpkg.sd_dayplan_id?.id != null ||
-        tpkg.dayplans?.length > 0 ||
-        tpkg.web_description != null ||
-        tpkg.img1 != null ||
-        tpkg.img2 != null ||
-        tpkg.img3 != null;
-
-    if (hasExistingData) {
-        const userConfirm = confirm("Changing the creation method will reset all current data. Do you want to continue?");
-        if (userConfirm) {
-
-            refreshTpkgForm();
-
-            // re-check the user's original choice
-            if (selectedMethod === 'scratch') {
-                document.getElementById('createFromScratch').checked = true;
-            } else if (selectedMethod === 'inquiry') {
-                document.getElementById('createFromInquiry').checked = true;
-            }
-
-            // apply changes based on the selection
-            elementChangesOnCreationMethod();
-        }
-    } else {
-        elementChangesOnCreationMethod();
-    }
-};
-
-//NOT USED 💥💥💥
-const elementChangesOnCreationMethod = () => {
-    const fromScratch = document.getElementById('createFromScratch');
-    const fromInq = document.getElementById('createFromInquiry');
-    const selectBasedInq = document.getElementById('tpkgBasedInq');
-    const forWebSiteRadio = document.getElementById('forWebSite');
-
-    if (fromScratch.checked) {
-        selectBasedInq.disabled = true;
-        selectBasedInq.value = "";
-        selectBasedInq.style.border = "1px solid #ced4da";
-        forWebSiteRadio.disabled = false;
-        tpkg.basedinq = null;
-    } else if (fromInq.checked) {
-        selectBasedInq.disabled = false;
-        forWebSiteRadio.disabled = true;
-    }
-
-}
-
 //to create and refresh content in main table   
 const buildTpkgTable = async () => {
     try {
@@ -98,7 +25,7 @@ const buildTpkgTable = async () => {
             { displayType: 'function', displayingPropertyOrFn: showTpkgStatus, colHeadName: 'Status' }
         ]
 
-        createTable(tableTpkgHolderDiv, sharedTableIdForTpkg, tpkgs, tableColumnInfo);
+        createTable(tableTpkgHolderDiv, sharedTableIdForTpkg, tpkgs, tableColumnInfo,openModalTpkg);
 
         $(`#${sharedTableIdForTpkg}`).dataTable();
 
@@ -106,6 +33,101 @@ const buildTpkgTable = async () => {
         console.error("Failed to build table:", error);
     }
 }
+
+//open modal to show all the info
+const openModalTpkg = (tpkgObj) => {
+    console.log("Opening modal for Template Package");
+    resetModalTpkg();
+
+    // Show template info if applicable
+    if (!tpkgObj.is_custompkg) {
+        document.getElementById('modTpkgInfoTemplate').classList.remove('d-none');
+        document.getElementById('modTpkgIsTemplateOrNot').innerText = 'This is a Template Package';
+    }
+
+    // Basic Info
+    document.getElementById('modTpkgCode').innerText = tpkgObj.pkgcode || 'N/A';
+    document.getElementById('modTpkgTitle').innerText = tpkgObj.pkgtitle || 'N/A';
+    document.getElementById('modTpkgBasedInq').innerText = tpkgObj.basedinq?.inqcode || 'N/A';
+
+    document.getElementById('modTpkgStartDate').innerText = tpkgObj.tourstartdate || 'N/A';
+    document.getElementById('modTpkgEndDate').innerText = tpkgObj.tourenddate || 'N/A';
+    document.getElementById('modTpkgDays').innerText = tpkgObj.totaldays || 'N/A';
+
+    // Traveller Counts
+    document.getElementById('modTpkgLocalAdults').innerText = tpkgObj.localadultcount ?? 0;
+    document.getElementById('modTpkgLocalChildren').innerText = tpkgObj.localchildcount ?? 0;
+    document.getElementById('modTpkgForeignAdults').innerText = tpkgObj.foreignadultcount ?? 0;
+    document.getElementById('modTpkgForeignChildren').innerText = tpkgObj.foreignchildcount ?? 0;
+
+    // Start & End Day Plan
+    document.getElementById('modTpkgStartDP').innerText = tpkgObj.sd_dayplan_id?.daytitle + ' (' + tpkgObj.sd_dayplan_id?.dayplancode + ')' || 'N/A';
+    document.getElementById('modTpkgEndDP').innerText = tpkgObj.ed_dayplan_id?.daytitle + ' (' + tpkgObj.ed_dayplan_id?.dayplancode + ')' || 'N/A';
+
+    // Included Mid Day Plans
+    const dayplansContainer = document.getElementById('modTpkgDayPlans');
+    if (tpkgObj.dayplans && tpkgObj.dayplans.length > 0) {
+        const dayPlanBadges = tpkgObj.dayplans.map((dp, i) => {
+            return `<span class="badge bg-secondary me-2 mb-2">${i + 1}. ${dp.daytitle} (${dp.dayplancode})</span>`;
+        }).join(' ');
+        dayplansContainer.innerHTML = dayPlanBadges;
+    } else {
+        dayplansContainer.innerHTML = 'N/A';
+    }
+
+    // Cost Summary
+    document.getElementById('modTpkgTotalTktCost').innerText = 'LKR ' + (tpkgObj.totaltktcost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalLunchCost').innerText = 'LKR ' + (tpkgObj.totallunchcost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalParkingCost').innerText = 'LKR ' + (tpkgObj.totalvehiparkingcost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalVehicleCost').innerText = 'LKR ' + (tpkgObj.totalvehicost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalDriverCost').innerText = 'LKR ' + (tpkgObj.totaldrivercost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalGuideCost').innerText = 'LKR ' + (tpkgObj.totalguidecost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgTotalStayCost').innerText = 'LKR ' + (tpkgObj.totalstaycost?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgAddCostTotal').innerText = 'LKR ' + (tpkgObj.totaladditionalcosts?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgPkgCostSum').innerText = 'LKR ' + (tpkgObj.pkgcostsum?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgFinalPrice').innerText = 'LKR ' + (tpkgObj.pkgfinalprice?.toFixed(2) || '0.00');
+
+    // Booleans
+    document.getElementById('modTpkgIsGuideNeeded').innerText = tpkgObj.is_guide_needed ? 'Yes' : 'No';
+    document.getElementById('modTpkgIsCompanyGuide').innerText = tpkgObj.is_company_guide ? 'Yes' : 'No';
+    document.getElementById('modTpkgIsCompanyVehicle').innerText = tpkgObj.is_company_vehicle ? 'Yes' : 'No';
+    document.getElementById('modTpkgIsCompanyDriver').innerText = tpkgObj.is_company_driver ? 'Yes' : 'No';
+
+    // Preferred Vehicle
+    document.getElementById('modTpkgPrefVehicleType').innerText = tpkgObj.pref_vehi_type || 'N/A';
+
+    // Web Desc & Notes
+    document.getElementById('modTpkgWebDesc').innerText = tpkgObj.web_description || 'N/A';
+    document.getElementById('modTpkgNote').innerText = tpkgObj.note || 'N/A';
+
+    // Status
+    document.getElementById('modTpkgStatus').innerText = tpkgObj.tpkg_status || 'N/A';
+
+    // Deleted Record
+    if (tpkgObj.deleted_tpkg) {
+        document.getElementById('modTpkgIfDeleted').classList.remove('d-none');
+        document.getElementById('modTpkgIfDeleted').innerHTML =
+            'This is a deleted record. <br>Deleted at ' + new Date(tpkgObj.deleteddatetime).toLocaleString();
+    }
+
+    // Show modal
+    $('#infoModalTpkg').modal('show');
+};
+
+
+const resetModalTpkg = () => {
+    console.log("Resetting modal form");
+}
+
+//clear out the form everytime a user switches to table tab   
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTabTpkg').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshTpkgForm();
+        }
+    });
+});
 
 //to support fill main table   
 const showTpkgType = (tpkgObj) => {
@@ -470,7 +492,7 @@ const fillDataFromInq = async () => {
                 document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
 
                 if (tpkg.dayplans[i].is_template) {
-                        console.log("a template");
+                    console.log("a template");
                 }
             }
 
@@ -2868,13 +2890,79 @@ const updateTourEndDate = () => {
     //endDateDisplay.innerText = endDate.toLocaleDateString(undefined, options);
 };
 
+//show all the info
+//function openTourPkgModal(tpkgObj) {
+//    console.log("openTourPkgModal called with tpkgObj:", tpkgObj);
+//    
+//}
+//$('#infoModalTpkg').modal('show');
+//const openModal =(tpkgObj)=>{
+//  
+//}
+
 //💥💥💥💥💥💥💥💥💥💥💥
 //add , delete, update
 //check errors, check updates 
 //refill 
 //print
 
+//handle the creation method radio buttons NOT USED 💥💥💥
+const handleCeationMethodSelect = () => {
+    const fromScratch = document.getElementById('createFromScratch');
+    const fromInq = document.getElementById('createFromInquiry');
 
+    // track which option was selected BEFORE reset
+    const selectedMethod = fromScratch.checked ? 'scratch' : fromInq.checked ? 'inquiry' : null;
+
+    const hasExistingData =
+        tpkg.pkgtitle != null ||
+        tpkg.sd_dayplan_id?.id != null ||
+        tpkg.dayplans?.length > 0 ||
+        tpkg.web_description != null ||
+        tpkg.img1 != null ||
+        tpkg.img2 != null ||
+        tpkg.img3 != null;
+
+    if (hasExistingData) {
+        const userConfirm = confirm("Changing the creation method will reset all current data. Do you want to continue?");
+        if (userConfirm) {
+
+            refreshTpkgForm();
+
+            // re-check the user's original choice
+            if (selectedMethod === 'scratch') {
+                document.getElementById('createFromScratch').checked = true;
+            } else if (selectedMethod === 'inquiry') {
+                document.getElementById('createFromInquiry').checked = true;
+            }
+
+            // apply changes based on the selection
+            elementChangesOnCreationMethod();
+        }
+    } else {
+        elementChangesOnCreationMethod();
+    }
+};
+
+//NOT USED 💥💥💥
+const elementChangesOnCreationMethod = () => {
+    const fromScratch = document.getElementById('createFromScratch');
+    const fromInq = document.getElementById('createFromInquiry');
+    const selectBasedInq = document.getElementById('tpkgBasedInq');
+    const forWebSiteRadio = document.getElementById('forWebSite');
+
+    if (fromScratch.checked) {
+        selectBasedInq.disabled = true;
+        selectBasedInq.value = "";
+        selectBasedInq.style.border = "1px solid #ced4da";
+        forWebSiteRadio.disabled = false;
+        tpkg.basedinq = null;
+    } else if (fromInq.checked) {
+        selectBasedInq.disabled = false;
+        forWebSiteRadio.disabled = true;
+    }
+
+}
 
 
 //################ additional costs related codes ###################

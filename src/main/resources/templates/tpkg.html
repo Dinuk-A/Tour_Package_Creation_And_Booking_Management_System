@@ -1288,7 +1288,7 @@
 
         </div>
 
-        <!-- Modal to display full details of a row 💥💥💥 -->
+        <!-- Modal to display full details of a row  -->
         <div class="modal fade py-5" id="infoModalTpkg" tabindex="-1" aria-labelledby="infoModalLabel"
             aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
@@ -1304,7 +1304,182 @@
                     <div class="modal-body">
                         <div class="container">
 
+                            <!-- Template Info -->
+                            <div id="modTpkgInfoTemplate" class="mb-4 text-center p-3 bg-light border rounded shadow-sm d-none">
+                                <p id="modTpkgIsTemplateOrNot" class="mb-0 text-primary fw-bold fs-5"></p>
+                            </div>
+                        
+                            <!-- Basic Details -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1 text-primary">Package Code:</p>
+                                    <p id="modTpkgCode" class="mb-0"></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1 text-primary">Package Title:</p>
+                                    <p id="modTpkgTitle" class="mb-0"></p>
+                                </div>
+                            </div>
+                        
+                            <!-- Based Inquiry -->
+                            <div class="mb-4">
+                                <p class="fw-bold mb-1 text-primary">Based on Inquiry:</p>
+                                <p id="modTpkgBasedInq" class="mb-0"></p>
+                            </div>
+                        
+                            <!-- Dates & Duration -->
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Start Date:</p>
+                                    <p id="modTpkgStartDate" class="mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">End Date:</p>
+                                    <p id="modTpkgEndDate" class="mb-0"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold mb-1 text-primary">Total Days:</p>
+                                    <p id="modTpkgDays" class="mb-0"></p>
+                                </div>
+                            </div>
+                        
+                            <!-- Traveller Count -->
+                            <div class="row mb-4">
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-1 text-primary">Local Adults:</p>
+                                    <p id="modTpkgLocalAdults" class="mb-0"></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-1 text-primary">Local Children:</p>
+                                    <p id="modTpkgLocalChildren" class="mb-0"></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-1 text-primary">Foreign Adults:</p>
+                                    <p id="modTpkgForeignAdults" class="mb-0"></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <p class="fw-bold mb-1 text-primary">Foreign Children:</p>
+                                    <p id="modTpkgForeignChildren" class="mb-0"></p>
+                                </div>
+                            </div>
+                        
+                            <!-- Start & End Day Plans -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1 text-primary">Start Day Plan:</p>
+                                    <p id="modTpkgStartDP" class="mb-0"></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="fw-bold mb-1 text-primary">End Day Plan:</p>
+                                    <p id="modTpkgEndDP" class="mb-0"></p>
+                                </div>
+                            </div>
+                        
+                            <!-- Day Plan List -->
+                            <div class="mb-4">
+                                <p class="fw-bold mb-1 text-primary">Included Day Plans:</p>
+                                <div id="modTpkgDayPlans" class="bg-white border rounded p-3 shadow-sm"></div>
+                            </div>
+                        
+                            <hr>
+                        
+                            <!-- Cost Summary -->
+                            <div class="row row-cols-1 row-cols-md-2 g-4 mb-4">
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Total Ticket Cost:</p>
+                                    <p id="modTpkgTotalTktCost" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Total Lunch Cost:</p>
+                                    <p id="modTpkgTotalLunchCost" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Total Parking Cost:</p>
+                                    <p id="modTpkgTotalParkingCost" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Total Vehicle Cost:</p>
+                                    <p id="modTpkgTotalVehicleCost" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Total Driver Cost:</p>
+                                    <p id="modTpkgTotalDriverCost" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Total Guide Cost:</p>
+                                    <p id="modTpkgTotalGuideCost" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Total Stay Cost:</p>
+                                    <p id="modTpkgTotalStayCost" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Additional Costs Total:</p>
+                                    <p id="modTpkgAddCostTotal" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Package Cost Sum:</p>
+                                    <p id="modTpkgPkgCostSum" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Final Price:</p>
+                                    <p id="modTpkgFinalPrice" class="mb-0"></p>
+                                </div>
+                            </div>
+                        
+                            <hr>
+                        
+                            <!-- Booleans -->
+                            <div class="row row-cols-1 row-cols-md-2 g-3 mb-4">
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Guide Needed:</p>
+                                    <p id="modTpkgIsGuideNeeded" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Company Guide:</p>
+                                    <p id="modTpkgIsCompanyGuide" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Company Vehicle:</p>
+                                    <p id="modTpkgIsCompanyVehicle" class="mb-0"></p>
+                                </div>
+                                <div class="col">
+                                    <p class="fw-bold mb-1 text-primary">Company Driver:</p>
+                                    <p id="modTpkgIsCompanyDriver" class="mb-0"></p>
+                                </div>
+                            </div>
+                        
+                            <!-- Preferred Vehicle -->
+                            <div class="mb-4">
+                                <p class="fw-bold mb-1 text-primary">Preferred Vehicle Type:</p>
+                                <p id="modTpkgPrefVehicleType" class="mb-0"></p>
+                            </div>
+                        
+                            <!-- Web Description -->
+                            <div class="mb-4">
+                                <p class="fw-bold mb-1 text-primary">Web Description:</p>
+                                <p id="modTpkgWebDesc" class="mb-0"></p>
+                            </div>
+                        
+                            <!-- Notes -->
+                            <div class="mb-4">
+                                <p class="fw-bold mb-1 text-primary">Additional Notes:</p>
+                                <p id="modTpkgNote" class="mb-0"></p>
+                            </div>
+                        
+                            <!-- Status -->
+                            <div class="mb-4">
+                                <p class="fw-bold mb-1 text-primary">Status:</p>
+                                <p id="modTpkgStatus" class="mb-0"></p>
+                            </div>
+                        
+                            <!-- Deleted Info -->
+                            <div class="mb-4">
+                                <p id="modTpkgIfDeleted" class="text-danger d-none mb-0"></p>
+                            </div>
+                        
                         </div>
+                        
                     </div>
 
                     <!-- Modal Footer -->

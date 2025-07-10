@@ -1637,6 +1637,12 @@ const resetModal = () => {
 //fn for edit button to open the modal that shows all the info
 const openModal = (dpObj) => {
 
+     //this is added because we use the dayplan.js inside the tpkg.html too
+     const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
+     if (!tableDayPlanHolderDivElement) {
+         return;
+     }
+
     resetModal();
 
     if (dpObj.is_template) {
