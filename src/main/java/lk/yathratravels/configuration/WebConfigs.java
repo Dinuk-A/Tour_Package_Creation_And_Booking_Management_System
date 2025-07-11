@@ -20,35 +20,79 @@ public class WebConfigs {
             auth
                     .requestMatchers("/commonscripts/**", "/controllerJSs/**", "/css/**", "/images/**", "/libs/**")
                     .permitAll()
-
-                    .requestMatchers("/emp/**").hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
-
-                    .requestMatchers("/user/**").hasAnyAuthority("System_Admin", "Manager")
-
-                    .requestMatchers("/privilege/**").hasAnyAuthority("System_Admin", "Manager", "Assistant Manager")
-
                     .requestMatchers("/login").permitAll()
-
                     .requestMatchers("/error").permitAll()
-
                     .requestMatchers("/createadmin").permitAll()
-
+                    // dashboard ekatath roles okkoma denawada permit all nodi???
                     .requestMatchers("/dashboard").permitAll()
-
+                    .requestMatchers("/lost").permitAll()
                     .requestMatchers("/edituserinfo").permitAll()
-
                     .requestMatchers("/nationalityforweb/**").permitAll()
                     .requestMatchers("/attractionforweb/**").permitAll()
                     .requestMatchers("/dayplanforweb/**").permitAll()
                     .requestMatchers("/tourpackageforweb/**").permitAll()
                     .requestMatchers("/yathra").permitAll()
-
                     .requestMatchers("/inquiryfromweb").permitAll()
+                    // .requestMatchers(HttpMethod.POST, "/inquiryfromweb").permitAll()
+                    .requestMatchers("/district").permitAll()
+                    .requestMatchers("/province").permitAll()
 
-                    //.requestMatchers("/inquiryfromweb/**").permitAll()
-                    //.requestMatchers(HttpMethod.POST, "/inquiryfromweb").permitAll()
+                    // loggeduser 💥💥💥
+                    // edituserinfo 💥💥💥
+                    // desig 💥💥💥
+                    // empinfo 💥💥💥
+                    // nationality 💥💥💥
+                    // module 💥💥💥
 
-                    
+                    .requestMatchers("/emp/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/user/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+                    .requestMatchers("/privilege/**").hasAnyAuthority("System_Admin", "Assistant Manager", "Manager")
+
+                    .requestMatchers("/pricemods/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/pricemodhistory/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/attraction/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/booking/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    // ext personal and ext vehicles 💥💥💥
+
+                    .requestMatchers("/booking/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/dayplan/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/inq/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/followup/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/lunchplace/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/stay/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/staytype/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    // additionalcosts 💥💥💥
+
+                    .requestMatchers("/vehicle/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
+
+                    .requestMatchers("/vehitypes/**")
+                    .hasAnyAuthority("System_Admin", "Manager", "Assistant Manager", "Executive")
 
                     .anyRequest().authenticated();
 

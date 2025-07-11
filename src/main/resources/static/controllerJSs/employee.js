@@ -138,6 +138,8 @@ const refreshEmployeeForm = async () => {
         }
     });
 
+    inputNIC.disabled = false;
+
     empUpdateBtn.disabled = true;
     empUpdateBtn.style.cursor = "not-allowed";
 
@@ -384,6 +386,8 @@ const refillEmployeeForm = async (empObj) => {
     inputNote.value = empObj.note;
     dateDateOfBirth.value = empObj.dob;
     selectEmployeementStatus.value = empObj.emp_status;
+
+    inputNIC.disabled = true;
 
     if (empObj.gender == "Male") {
         radioMale.checked = true;

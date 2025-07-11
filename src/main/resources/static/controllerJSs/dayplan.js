@@ -262,6 +262,8 @@ const refreshDayPlanForm = async () => {
     dpAddBtn.style.cursor = "pointer";
 
     document.getElementById('dpSelectStatus').children[2].removeAttribute('class', 'd-none');
+
+    dpResetBtn.classList.remove("d-none");
 }
 
 //to select the pickup type(general,accomodations,stays)
@@ -2226,6 +2228,8 @@ const refillDayPlanForm = async (dpObj) => {
 
         dpAddBtn.disabled = true;
         dpAddBtn.style.cursor = "not-allowed";
+
+        dpResetBtn.classList.add("d-none");
 
         document.getElementById('dpSelectStatus').style.border = '1px solid #ced4da';
 
