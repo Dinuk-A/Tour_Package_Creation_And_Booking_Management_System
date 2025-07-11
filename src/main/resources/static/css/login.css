@@ -3,7 +3,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #6b73ff 10%, #000dff 100%);
     background-size: cover;
     background-repeat: no-repeat;
     margin: 0;
@@ -37,10 +36,10 @@ body {
 }
 
 .title {
-    font-size: 2rem; /* Adjust size as needed */
-    font-weight: 700; /* Bold weight */
-    color: #333; /* Adjust color for better contrast */
-    margin-bottom: 1.5rem; /* Space below the heading */
+    font-size: 2rem; 
+    font-weight: 700; 
+    color: #333; 
+    margin-bottom: 1.5rem; 
 }
 
 .form-input {
@@ -86,16 +85,16 @@ body {
 }
 
 button[type="submit"] {
-    font-size: 1.1rem; /* Slightly larger text */
-    font-weight: 600; /* Medium bold */
-    padding: 10px 20px; /* Adequate padding */
-    border-radius: 25px; /* Rounded corners */
-    background: linear-gradient(45deg, #007bff, #0056b3); /* Gradient background */
-    border: none; /* Remove border */
-    color: #fff; /* White text */
-    transition: background 0.3s; /* Smooth background transition */
+    font-size: 1.1rem;
+    font-weight: 600; 
+    padding: 10px 20px; 
+    border-radius: 25px; 
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none; 
+    color: #fff;
+    transition: background 0.3s; 
 }
 
 button[type="submit"]:hover {
-    background: linear-gradient(45deg, #0056b3, #004080); /* Darker gradient on hover */
+    background: linear-gradient(45deg, #0056b3, #004080); 
 }
