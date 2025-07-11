@@ -154,6 +154,8 @@ const refreshEmployeeForm = async () => {
     empAddBtn.disabled = false;
     empAddBtn.style.cursor = "pointer";
 
+    empFormResetBtn.classList.remove('d-none');
+
     employee.emp_photo = null;
     document.getElementById('previewEmployeeImg').src = 'images/employee.png';
     document.getElementById('fileInputEmpPhoto').files = null;
@@ -421,6 +423,8 @@ const refillEmployeeForm = async (empObj) => {
 
     empAddBtn.disabled = true;
     empAddBtn.style.cursor = "not-allowed";
+
+    empFormResetBtn.classList.add('d-none');
 
     document.getElementById('selectEmployeementStatus').style.border = '1px solid #ced4da';
     //document.getElementById('selectEmployeementStatus').children[2].classList.remove('d-none');
