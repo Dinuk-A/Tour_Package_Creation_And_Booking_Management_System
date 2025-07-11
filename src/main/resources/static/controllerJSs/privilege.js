@@ -2,8 +2,52 @@ window.addEventListener('load', () => {
 
     buildPriviTable();
     refreshPrivilegeForm();
+    refreshPriviFilters();
 
 })
+
+let roles = [];
+let modules = [];
+
+//for filters
+const refreshPriviFilters = async () => {
+
+    //get roles
+    try {
+        roles = await ajaxGetReq("role/exceptadmin");
+
+        let allRoles = {
+            id: -10,
+            name: "All Roles"
+        };
+        roles.unshift(allRoles);
+
+        fillDataIntoDynamicSelects(roleFilter, 'Please Select The Role', roles, 'name');
+        console.log("Roles fetched for filter:", roles);
+
+    } catch (error) {
+        console.error("Error fetching roles for filter:", error);
+    }
+
+    //get modules
+    try {
+        modules = await ajaxGetReq("module/all");
+
+        let allModules = {
+            id: -10,
+            name: "All Modules"
+        };
+        modules.unshift(allModules);
+
+        fillDataIntoDynamicSelects(moduleFilter, 'Please Select The Module', modules, 'name');
+        console.log("Modules fetched for filter:", modules);
+
+    } catch (error) {
+        console.error("Error fetching modules for filter:", error);
+
+    }
+
+}
 
 //global var to store id of the table
 let sharedTableId = "mainTablePrivi";
@@ -144,6 +188,8 @@ const createPriviTableCustomFn = (dataContainer) => {
     tablePriviHolderDiv.appendChild(tableTag);
 }
 
+let permissions = [];
+
 //define fn for refresh privilege table
 const buildPriviTable = async () => {
 
@@ -153,7 +199,15 @@ const buildPriviTable = async () => {
 
         createPriviTableCustomFn(permissions);
 
-        $(`#${sharedTableId}`).dataTable();
+        $(`#${sharedTableId}`).dataTable({
+            destroy: true, // Allows re-initialization
+            searching: false, // Remove the search bar
+            info: false, // Show entries count
+            pageLength: 10, // Number of rows per page
+            ordering: false,// Remove up and down arrows
+            lengthChange: false // Disable ability to change the number of rows
+            // dom: 't', // Just show the table (t) with no other controls
+        });
 
     } catch (error) {
         console.error("Failed to build privi table:", error);
@@ -164,6 +218,56 @@ const buildPriviTable = async () => {
     }
 
 }
+
+const applyPrivilegeFilter = () => {
+    const selectedRoleRaw = document.getElementById('roleFilter').value;
+    const selectedModuleRaw = document.getElementById('moduleFilter').value;
+
+    let selectedRole = null;
+    let selectedModule = null;
+
+    try {
+        if (selectedRoleRaw) selectedRole = JSON.parse(selectedRoleRaw);
+        if (selectedModuleRaw) selectedModule = JSON.parse(selectedModuleRaw);
+    } catch (e) {
+        console.error("Error parsing selected filter options:", e);
+    }
+
+    const filteredPermissions = permissions.filter(p => {
+        const matchRole = !selectedRole || selectedRole.id === -10 || p.role_id.id === selectedRole.id;
+        const matchModule = !selectedModule || selectedModule.id === -10 || p.module_id.id === selectedModule.id;
+        return matchRole && matchModule;
+    });
+
+    console.log("Filtered Permissions:", filteredPermissions);
+
+    $('#mainTablePrivi').empty();
+
+    if ($.fn.DataTable.isDataTable('#mainTablePrivi')) {
+        $('#mainTablePrivi').DataTable().clear().destroy();
+    }
+
+    createPriviTableCustomFn(filteredPermissions);
+
+    setTimeout(() => {
+        $(`#${sharedTableId}`).DataTable({
+            searching: false,
+            info: false,
+            pageLength: 10,
+            ordering: false,
+            lengthChange: false
+        });
+    }, 500);
+};
+
+
+//clear out any filters
+function resetPrivilegeFilters() {
+    document.getElementById('roleFilter').value = '';
+    document.getElementById('moduleFilter').value = '';
+    applyPrivilegeFilter(); // Will reload the full list
+}
+
 
 const getRoles = (priviObj) => {
     return priviObj.role_id.name;
@@ -205,27 +309,19 @@ const getDelete = (priviObj) => {
     }
 }
 
+
+
 //fn for refresh privi form
 const refreshPrivilegeForm = async () => {
 
     privilege = new Object();
     document.getElementById('formPrivilege').reset();
 
-    try {
-        // Get ROLES list for select element
-        roles = await ajaxGetReq("role/exceptadmin");
-        fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name');
-        selectRole.disabled = false;
+    fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name');
+    selectRole.disabled = false;
 
-        // Get MODULES list for select element
-        modules = await ajaxGetReq("module/all");
-        fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name');
-        selectModule.disabled = false;
-
-
-    } catch (error) {
-        console.error("Error fetching data in refreshPrivilegeForm:", error);
-    }
+    fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name');
+    selectModule.disabled = false;
 
     selectRole.style.border = "1px solid #ced4da";
     selectModule.style.border = "1px solid #ced4da";

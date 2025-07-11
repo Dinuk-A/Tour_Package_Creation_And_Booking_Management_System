@@ -18,7 +18,7 @@
     <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
     <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
 
-    <main id="mainAreaID" class="main min-vh-100 ">
+    <main id="mainAreaID" class="mx-auto main min-vh-100 ">
 
         <!-- Tabs navigation panel -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -37,6 +37,30 @@
         <!-- Tabs content -->
         <div class="tab-content mt-1" id="myTabContent">
             <!-- Table tab  -->
+            <!-- filters -->
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label for="roleFilter" class="form-label fw-bold">Filter by Role</label>
+                    <select id="roleFilter" class="form-select" onchange="applyPrivilegeFilter();">
+                        <!-- options will be filled dynamically -->
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="moduleFilter" class="form-label fw-bold">Filter by Module</label>
+                    <select id="moduleFilter" class="form-select" onchange="applyPrivilegeFilter();">
+                        <!-- options will be filled dynamically -->
+                    </select>
+                </div>
+
+                <!-- reset btm -->
+                <div class="col-md-4">
+                    <button onclick="resetPrivilegeFilters()" class="btn btn-secondary mt-3">Reset Filters</button>
+                </div>
+
+            </div>
+
+            <!-- table -->
             <div id="tablePriviHolderDiv" class="tab-pane fade show active table-container bg-info bg-opacity-25"
                 role="tabpanel" aria-labelledby="table-tab">
                 <!-- a table will be dynamically generated in here -->
@@ -98,7 +122,8 @@
                                                 </label>
 
                                                 <input type="radio" class="btn-check" name="selectPrivi"
-                                                    id="selectRevokeSwitch" onchange="revokePrivileges(this,'prvselect');">
+                                                    id="selectRevokeSwitch"
+                                                    onchange="revokePrivileges(this,'prvselect');">
                                                 <label
                                                     class="btn btn-outline-danger btn-sm flex-grow-1 d-flex align-items-center justify-content-center"
                                                     for="selectRevokeSwitch">
@@ -120,7 +145,8 @@
                                                 </label>
 
                                                 <input type="radio" class="btn-check" name="insertPrivi"
-                                                    id="insertRevokeSwitch" onchange="revokePrivileges(this,'prvinsert');">
+                                                    id="insertRevokeSwitch"
+                                                    onchange="revokePrivileges(this,'prvinsert');">
                                                 <label
                                                     class="btn btn-outline-danger btn-sm flex-grow-1 d-flex align-items-center justify-content-center"
                                                     for="insertRevokeSwitch">
@@ -142,7 +168,8 @@
                                                 </label>
 
                                                 <input type="radio" class="btn-check" name="updatePrivi"
-                                                    id="updateRevokeSwitch" onchange="revokePrivileges(this,'prvupdate');">
+                                                    id="updateRevokeSwitch"
+                                                    onchange="revokePrivileges(this,'prvupdate');">
                                                 <label
                                                     class="btn btn-outline-danger btn-sm flex-grow-1 d-flex align-items-center justify-content-center"
                                                     for="updateRevokeSwitch">
@@ -164,7 +191,8 @@
                                                 </label>
 
                                                 <input type="radio" class="btn-check" name="deletePrivi"
-                                                    id="deleteRevokeSwitch" onchange="revokePrivileges(this,'prvdelete');">
+                                                    id="deleteRevokeSwitch"
+                                                    onchange="revokePrivileges(this,'prvdelete');">
                                                 <label
                                                     class="btn btn-outline-danger btn-sm flex-grow-1 d-flex align-items-center justify-content-center"
                                                     for="deleteRevokeSwitch">
@@ -179,8 +207,8 @@
                             <!-- 3 FORM buttons start -->
                             <div class="row m-2">
                                 <div class="col-4 text-start">
-                                    <button type="reset" class="btn-clear"
-                                        onclick="refreshPrivilegeForm()">Reset Form</button>
+                                    <button type="reset" class="btn-clear" onclick="refreshPrivilegeForm()">Reset
+                                        Form</button>
                                 </div>
                                 <div class="col-8 text-end">
                                     <button type="submit" id="priviUpdateBtn" class="btn-update fw-bold"

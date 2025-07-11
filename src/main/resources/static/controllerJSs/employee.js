@@ -26,7 +26,15 @@ const buildEmployeeTable = async () => {
 
         createTable(tableEmployeeHolderDiv, sharedTableId, employees, tableColumnInfo);
 
-        $(`#${sharedTableId}`).dataTable();
+        $(`#${sharedTableId}`).dataTable({
+            destroy: true, // Allows re-initialization
+            searching: false, // Remove the search bar
+            info: false, // Show entries count
+            pageLength: 10, // Number of rows per page
+            ordering: false  ,// Remove up and down arrows
+            lengthChange: false // Disable ability to change the number of rows
+            // dom: 't', // Just show the table (t) with no other controls
+        });
 
     } catch (error) {
         console.error("Failed to build employee table:", error);
