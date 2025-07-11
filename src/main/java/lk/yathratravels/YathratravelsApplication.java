@@ -19,3 +19,21 @@ public class YathratravelsApplication {
 	}
 
 }
+
+//go to dev
+//git checkout dev
+
+//in dev
+//git add .
+//git commit -m "Add new feature"
+//git push origin dev
+
+//switch to main
+//git checkout main
+
+//get latest changes from dev
+//git merge dev
+
+//push to remote
+//git push origin main
+
