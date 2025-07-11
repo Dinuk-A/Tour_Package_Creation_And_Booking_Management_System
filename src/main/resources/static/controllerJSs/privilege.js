@@ -234,9 +234,18 @@ const applyPrivilegeFilter = () => {
     }
 
     const filteredPermissions = permissions.filter(p => {
-        const matchRole = !selectedRole || selectedRole.id === -10 || p.role_id.id === selectedRole.id;
-        const matchModule = !selectedModule || selectedModule.id === -10 || p.module_id.id === selectedModule.id;
-        return matchRole && matchModule;
+        let isRoleMatch = true;
+        let isModuleMatch = true;
+
+        if (selectedRole && selectedRole.id !== -10) {
+            isRoleMatch = p.role_id.id === selectedRole.id;
+        }
+
+        if (selectedModule && selectedModule.id !== -10) {
+            isModuleMatch = p.module_id.id === selectedModule.id;
+        }
+
+        return isRoleMatch && isModuleMatch;
     });
 
     console.log("Filtered Permissions:", filteredPermissions);
@@ -616,5 +625,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-//print entire table module vise or ???
+//print entire table module vise or ??? 💥💥💥
 const printPrivi = (prvObj) => { showAlertModal('inf', 'test print ') }
+
+//const adults = users.filter(user => user.age >= 18);
+//is same as 
+//const adults = users.filter(user => {
+//    return user.age >= 18;
+//});
