@@ -1121,7 +1121,7 @@ const getLunchAndHotelAuto = async () => {
                 el.style.border = "2px solid orange";
             }
 
-        })
+        });
 
     }
 
@@ -1259,22 +1259,48 @@ const removeAll = () => {
 
     calcTotalVehiParkingfee();
 
-    //remove and clear automatically binded lp and end stay info too (not used)
+    //remove and clear automatically binded lp and end stay info too 
     dayplan.lunchplace_id = null;
     dayplan.drop_stay_id = null;
 
     let lunchPlaceSelect = document.getElementById("selectDPLunch");
     let endStaySelect = document.getElementById("dropOffAccommodationSelect");
 
-    lunchPlaceSelect.style.border = "1px solid #ced4da";
-    endStaySelect.style.border = "1px solid #ced4da";
-
     let emptyArr = [];
     fillDataIntoDynamicSelects(lunchPlaceSelect, 'Please Select The Restaurant', emptyArr, 'name');
     fillDataIntoDynamicSelects(endStaySelect, 'Please Select The Accomodation', emptyArr, 'name');
 
-    lunchPlaceSelect.disabled = true;
-    endStaySelect.disabled = true;
+    fillDataIntoDynamicSelects(selectLPProv, 'Please Select The Province', allProvinces, 'name');
+    fillDataIntoDynamicSelects(selectLPDist, 'Please Select The District', allDistricts, 'name');
+
+    fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name');
+    fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDistricts, 'name');
+
+    selectLPProv.style.border = "1px solid #ced4da";
+    dropOffProvinceSelect.style.border = "1px solid #ced4da";
+
+    const inputTagsToEnable = [
+
+        'selectLPDist',
+        'lunchPlaceSelect',
+        'dropOffDistrictSelect',
+        'endStaySelect',
+        'selectDPLunch',
+        'dropOffAccommodationSelect'
+    ];
+
+    inputTagsToEnable.forEach((element) => {
+
+        const el = document.getElementById(element);
+
+        if (el) {
+            el.disabled = true;
+            el.style.border = "1px solid #ced4da";
+        }
+
+    });
+
+
 
 }
 
