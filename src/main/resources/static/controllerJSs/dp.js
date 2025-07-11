@@ -5,11 +5,6 @@ window.addEventListener('load', () => {
 
 });
 
-//globally available
-let allStays = [];
-let allProvinces = [];
-let allDistricts = [];
-
 //global var to store id of the table
 let sharedTableId = "mainTableDayPlan";
 
@@ -85,6 +80,7 @@ const showDayType = (dpObj) => {
     }
 };
 
+
 //to support fill main table
 const showDayPlanStatus = (dpObj) => {
 
@@ -117,21 +113,13 @@ const showDayPlanStatus = (dpObj) => {
     }
 }
 
-//to reset and ready the main form 
+//to ready the main form 
 const refreshDayPlanForm = async () => {
 
     //this is added because we use the dayplan.js inside the tpkg.html too
     const dpFormElement = document.getElementById('formDayPlan');
     if (!dpFormElement) {
         return;
-    }
-
-    try {
-        allStays = await ajaxGetReq('/stay/all');
-        allProvinces = await ajaxGetReq("/province/all");
-        allDistricts = await ajaxGetReq("/district/all");
-    } catch (error) {
-        console.error('failed to fetch provinces,districts and stays')
     }
 
     dayplan = new Object();
@@ -145,7 +133,7 @@ const refreshDayPlanForm = async () => {
     document.getElementById('noLunchMsgForTemplate').classList.add("d-none");
 
     try {
-        //const allProvinces = await ajaxGetReq("/province/all");
+        const allProvinces = await ajaxGetReq("/province/all");
 
         fillDataIntoDynamicSelects(selectVPProv, 'Please Select The Province', allProvinces, 'name');
         fillDataIntoDynamicSelects(selectLPProv, 'Please Select The Province', allProvinces, 'name');
@@ -503,7 +491,6 @@ const clearOtherInputsManualDropOff = () => {
     document.getElementById('altStay2Select').disabled = true;
 }
 
-//first , mid or last selection
 const handleDayTypeFMLSelection = () => {
 
     const fdRadio = document.getElementById('firstDayCB');
@@ -549,6 +536,7 @@ const handleDayTypeFMLSelection = () => {
         }
     }
 };
+
 
 //to select day type (FD,MD,LD)
 const selectDayType = (feild) => {
@@ -1068,24 +1056,18 @@ const takePackedLunchNo = () => {
 
 }
 
+//(NOT USED 💥💥💥)
 //auto populate lunch restaurants and end stays, based on last element of vplaces array 
 const getLunchAndHotelAuto = async () => {
 
-    if (dayplan.vplaces.length > 0 && !dayplan.is_template) {
+    if (dayplan.vplaces.length != 0 && dayplan.is_template == "false") {
 
         let lastElement = (dayplan.vplaces).at(-1);
         let distIdOfLastEle = lastElement.district_id.id;
         let provIdOfLastEle = lastElement.district_id.province_id.id;
+        console.log("distIdOfLastEle: " + distIdOfLastEle);
+        console.log("provIdOfLastEle: " + provIdOfLastEle);
 
-        let distName = lastElement.district_id.name;
-        let provName = lastElement.district_id.province_id.name;
-
-        console.log("distIdOfLastEle: ", distIdOfLastEle, distName);
-        console.log("provIdOfLastEle: ", provIdOfLastEle, provName);
-
-        //for lunch place
-        fillDataIntoDynamicSelects(selectLPProv, 'Please Select The Province', allProvinces, 'name', provName);
-        fillDataIntoDynamicSelects(selectLPDist, 'Please Select The District', allDistricts, 'name', distName);
         try {
             lunchByDist = await ajaxGetReq("/lunchplace/bydistrict/" + distIdOfLastEle);
             fillDataIntoDynamicSelects(selectDPLunch, 'Please Select The Hotel', lunchByDist, 'name');
@@ -1094,34 +1076,13 @@ const getLunchAndHotelAuto = async () => {
             console.error('getLunchAndHotelAuto lunch fails');
         }
 
-        //for end stay
-        fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', provName);
-        fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDistricts, 'name', distName);
         try {
             staysByDist = await ajaxGetReq("/stay/bydistrict/" + distIdOfLastEle);
             fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select The Accomodation', staysByDist, 'name');
             dropOffAccommodationSelect.disabled = false
         } catch (error) {
-            console.error('getLunchAndHotelAuto stay failed')
+            console.error('getLunchAndHotelAuto failed')
         }
-
-        const inputTagsToEnable = [
-            'selectLPProv',
-            'selectLPDist',
-            'dropOffProvinceSelect',
-            'dropOffDistrictSelect'
-        ];
-
-        inputTagsToEnable.forEach((element) => {
-
-            const el = document.getElementById(element);
-
-            if (el) {
-                el.disabled = false;
-                el.style.border = "2px solid orange";
-            }
-
-        })
 
     }
 
@@ -1172,7 +1133,6 @@ const addOne = () => {
         calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "foreignchildtktcost");
 
         calcTotalVehiParkingfee();
-        getLunchAndHotelAuto();
 
     }
 
@@ -1210,7 +1170,7 @@ const addAll = () => {
     calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "foreignchildtktcost");
 
     calcTotalVehiParkingfee();
-    getLunchAndHotelAuto();
+
 }
 
 //for remove a single location
@@ -1241,7 +1201,7 @@ const removeOne = () => {
     calcTktCost("feechildforeign", dpTotalForeignChildTktCost, "foreignchildtktcost");
 
     calcTotalVehiParkingfee();
-    getLunchAndHotelAuto();
+
 }
 
 //for remove all locations
@@ -1260,21 +1220,21 @@ const removeAll = () => {
     calcTotalVehiParkingfee();
 
     //remove and clear automatically binded lp and end stay info too (not used)
-    dayplan.lunchplace_id = null;
-    dayplan.drop_stay_id = null;
-
-    let lunchPlaceSelect = document.getElementById("selectDPLunch");
-    let endStaySelect = document.getElementById("dropOffAccommodationSelect");
-
-    lunchPlaceSelect.style.border = "1px solid #ced4da";
-    endStaySelect.style.border = "1px solid #ced4da";
-
-    let emptyArr = [];
-    fillDataIntoDynamicSelects(lunchPlaceSelect, 'Please Select The Restaurant', emptyArr, 'name');
-    fillDataIntoDynamicSelects(endStaySelect, 'Please Select The Accomodation', emptyArr, 'name');
-
-    lunchPlaceSelect.disabled = true;
-    endStaySelect.disabled = true;
+    //    dayplan.lunchplace_id = null;
+    //    dayplan.drop_stay_id = null;
+    //
+    //    let lunchPlaceSelect = document.getElementById("selectDPLunch");
+    //    let endStaySelect = document.getElementById("dropOffAccommodationSelect");
+    //
+    //    lunchPlaceSelect.style.border = "1px solid #ced4da";
+    //    endStaySelect.style.border = "1px solid #ced4da";
+    //
+    //    let emptyArr = [];
+    //    fillDataIntoDynamicSelects(lunchPlaceSelect, 'Please Select The Restaurant', emptyArr, 'name');
+    //    fillDataIntoDynamicSelects(endStaySelect, 'Please Select The Accomodation', emptyArr, 'name');
+    //
+    //    lunchPlaceSelect.disabled = true;
+    //    endStaySelect.disabled = true;
 
 }
 
@@ -1677,11 +1637,11 @@ const resetModal = () => {
 //fn for edit button to open the modal that shows all the info
 const openModal = (dpObj) => {
 
-    //this is added because we use the dayplan.js inside the tpkg.html too
-    const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
-    if (!tableDayPlanHolderDivElement) {
-        return;
-    }
+     //this is added because we use the dayplan.js inside the tpkg.html too
+     const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
+     if (!tableDayPlanHolderDivElement) {
+         return;
+     }
 
     resetModal();
 
@@ -1881,17 +1841,17 @@ const printDayPlanRecordNew = (dpObj) => {
 const refillDayPlanForm = async (dpObj) => {
 
     //emptyArray = [];
-    //let allStays = [];
-    //let allProvinces = [];
-    //let allDistricts = [];
+    let allStays = [];
+    let allProvinces = [];
+    let allDistricts = [];
 
-    //try {
-    //    allStays = await ajaxGetReq('/stay/all');
-    //    allProvinces = await ajaxGetReq("/province/all");
-    //    allDistricts = await ajaxGetReq("/district/all");
-    //} catch (error) {
-    //    console.error('failed to fetch provinces,districts and stays')
-    //}
+    try {
+        allStays = await ajaxGetReq('/stay/all');
+        allProvinces = await ajaxGetReq("/province/all");
+        allDistricts = await ajaxGetReq("/district/all");
+    } catch (error) {
+        console.error('failed to fetch provinces,districts and stays')
+    }
 
     //💥💥💥
     if (dpObj.dp_status == "Completed") {
@@ -2165,10 +2125,10 @@ const refillDayPlanForm = async (dpObj) => {
                 const lhs = await ajaxGetReq("/lunchplace/all");
                 fillDataIntoDynamicSelects(selectDPLunch, '', lhs, 'name', dpObj.lunchplace_id.name);
 
-                //const allProvinces = await ajaxGetReq("/province/all");
+                const allProvinces = await ajaxGetReq("/province/all");
                 fillDataIntoDynamicSelects(selectLPProv, 'Select Province', allProvinces, 'name', dpObj.lunchplace_id.district_id.province_id.name);
 
-                //const allDistricts = await ajaxGetReq("/district/all");
+                const allDistricts = await ajaxGetReq("/district/all");
                 fillDataIntoDynamicSelects(selectLPDist, 'Select District', allDistricts, 'name', dpObj.lunchplace_id.district_id.name);
 
             } catch (error) {
@@ -2537,5 +2497,4 @@ const printDayPlanRecordOld = () => {
         }, 1000);
     };
 };
-
 
