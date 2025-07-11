@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+let dayplans = [];
+
 //to create and refresh content in main dayplan table
 const buildDayPlanTable = async () => {
 
@@ -49,7 +51,7 @@ const buildDayPlanTable = async () => {
     }
 
     try {
-        const dayplans = await ajaxGetReq("/dayplan/all");
+        dayplans = await ajaxGetReq("/dayplan/all");
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'dayplancode', colHeadName: 'Code' },
@@ -60,12 +62,71 @@ const buildDayPlanTable = async () => {
 
         createTable(tableDayPlanHolderDiv, sharedTableId, dayplans, tableColumnInfo);
 
-        $(`#${sharedTableId}`).dataTable();
+        $(`#${sharedTableId}`).dataTable({
+            destroy: true, // Allows re-initialization
+            searching: false, // Remove the search bar
+            info: false, // Show entries count
+            pageLength: 10, // Number of rows per page
+            ordering: false,// Remove up and down arrows
+            lengthChange: false // Disable ability to change the number of rows
+            // dom: 't', // Just show the table (t) with no other controls
+        });
 
     } catch (error) {
         console.error("Failed to build day plan table:", error);
     }
 
+}
+
+
+//filters for dayplan tbl
+const applyDayTableFilter = () => {
+
+    const selectedDayType = document.getElementById('daytypeFilter').value;
+
+    let filteredDays = [];
+
+    //show and return all
+    if (selectedDayType === "All") {
+        filteredDays = dayplans;
+    } else {
+        //filter
+        filteredDays = dayplans.filter(day => {
+            const dayType = day.dayplancode.slice(0, 2);
+            return dayType === selectedDayType;
+        });
+    }
+
+    $(sharedTableId).empty();
+
+    if ($.fn.DataTable.isDataTable(sharedTableId)) {
+        $(sharedTableId).DataTable().clear().destroy();
+    }
+
+    const tableColumnInfo = [
+        { displayType: 'text', displayingPropertyOrFn: 'dayplancode', colHeadName: 'Code' },
+        { displayType: 'text', displayingPropertyOrFn: 'daytitle', colHeadName: 'Title' },
+        { displayType: 'function', displayingPropertyOrFn: showDayType, colHeadName: 'Type' },
+        { displayType: 'function', displayingPropertyOrFn: showDayPlanStatus, colHeadName: 'Status' }
+    ]
+
+    createTable(tableDayPlanHolderDiv,sharedTableId,filteredDays,tableColumnInfo);
+    
+    setTimeout(() => {
+        $(`#${sharedTableId}`).DataTable({
+            searching: false,
+            info: false,
+            pageLength: 10,
+            ordering: false,
+            lengthChange: false
+        });
+    }, 100);
+};
+
+//reset
+function resetDayPlanFilters() {
+    document.getElementById('daytypeFilter').value = 'All';
+    applyDayTableFilter();
 }
 
 //to support fill main table

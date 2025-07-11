@@ -41,10 +41,44 @@
 
         <!-- Tabs content -->
         <div class="tab-content mt-1" id="myTabContent">
+
             <!-- Table tab  -->
-            <div id="tableDayPlanHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3"
-                role="tabpanel" aria-labelledby="table-tab">
-                <!-- a table will be dynamically generated in here -->
+            <div class="tab-pane fade show active table-container p-4 rounded-3" role="tabpanel"
+                aria-labelledby="table-tab">
+
+                <!-- filters row -->
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label for="daytypeFilter" class="form-label fw-bold mb-0">Filter by Role</label>
+                        <select id="daytypeFilter" class="form-select" onchange="applyDayTableFilter();">
+                            <option value="" selected disabled>Please Select</option>
+                            <option value="All">All Days</option>
+                            <option value="TP">Template Days</option>
+                            <option value="FD">Starting Days</option>
+                            <option value="MD">Mid Days</option>
+                            <option value="LD">Final Days</option>
+                        </select>
+                    </div>
+
+                    <!--<div class="col-md-4">
+                        <label for="moduleFilter" class="form-label fw-bold mb-0">Filter by Module</label>
+                        <select id="moduleFilter" class="form-select" onchange="applyPrivilegeFilter();">
+                         
+                        </select>
+                    </div>-->
+
+                    <!-- reset btm -->
+                    <div class="col-md-4 text-end">
+                        <button onclick="resetDayPlanFilters()" class="btn btn-outline-warning mt-3">Reset
+                            Filters</button>
+                    </div>
+
+                </div>
+
+                <div id="tableDayPlanHolderDiv">
+                    <!-- a table will be dynamically generated in here -->
+                </div>
+
             </div>
 
             <!-- Form tab -->
@@ -947,7 +981,7 @@
             </div>
         </div>
 
-        
+
     </main>
 
 </body>

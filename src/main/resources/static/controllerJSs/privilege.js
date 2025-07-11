@@ -212,9 +212,9 @@ const buildPriviTable = async () => {
     } catch (error) {
         console.error("Failed to build privi table:", error);
         console.log("*****************");
-        console.error("jqXHR:", error.jqXHR);
-        console.error("Status:", error.textStatus);
-        console.error("Error Thrown:", error.errorThrown);
+        //console.error("jqXHR:", error.jqXHR);
+        //console.error("Status:", error.textStatus);
+        //console.error("Error Thrown:", error.errorThrown);
     }
 
 }
@@ -276,7 +276,7 @@ const applyPrivilegeFilter = () => {
 function resetPrivilegeFilters() {
     document.getElementById('roleFilter').value = '';
     document.getElementById('moduleFilter').value = '';
-    applyPrivilegeFilter(); // Will reload the full list
+    applyPrivilegeFilter(); 
 }
 
 
