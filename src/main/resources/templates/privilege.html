@@ -36,34 +36,38 @@
 
         <!-- Tabs content -->
         <div class="tab-content mt-1" id="myTabContent">
+
             <!-- Table tab  -->
-            <!-- filters -->
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label for="roleFilter" class="form-label fw-bold">Filter by Role</label>
-                    <select id="roleFilter" class="form-select" onchange="applyPrivilegeFilter();">
-                        <!-- options will be filled dynamically -->
-                    </select>
+            <div class="tab-pane fade show active table-container bg-opacity-25" role="tabpanel"
+                aria-labelledby="table-tab">
+
+                <!-- filters row -->
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label for="roleFilter" class="form-label fw-bold mb-0">Filter by Role</label>
+                        <select id="roleFilter" class="form-select" onchange="applyPrivilegeFilter();">
+                            <!-- options will be filled dynamically -->
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="moduleFilter" class="form-label fw-bold mb-0">Filter by Module</label>
+                        <select id="moduleFilter" class="form-select" onchange="applyPrivilegeFilter();">
+                            <!-- options will be filled dynamically -->
+                        </select>
+                    </div>
+
+                    <!-- reset btm -->
+                    <div class="col-md-4 text-end">
+                        <button onclick="resetPrivilegeFilters()" class="btn btn-outline-warning mt-3">Reset
+                            Filters</button>
+                    </div>
+
                 </div>
 
-                <div class="col-md-4">
-                    <label for="moduleFilter" class="form-label fw-bold">Filter by Module</label>
-                    <select id="moduleFilter" class="form-select" onchange="applyPrivilegeFilter();">
-                        <!-- options will be filled dynamically -->
-                    </select>
+                <div id="tablePriviHolderDiv"> <!-- a table will be dynamically generated in here -->
                 </div>
 
-                <!-- reset btm -->
-                <div class="col-md-4">
-                    <button onclick="resetPrivilegeFilters()" class="btn btn-secondary mt-3">Reset Filters</button>
-                </div>
-
-            </div>
-
-            <!-- table -->
-            <div id="tablePriviHolderDiv" class="tab-pane fade show active table-container bg-info bg-opacity-25"
-                role="tabpanel" aria-labelledby="table-tab">
-                <!-- a table will be dynamically generated in here -->
             </div>
 
             <!-- Form tab -->
@@ -207,7 +211,7 @@
                             <!-- 3 FORM buttons start -->
                             <div class="row m-2">
                                 <div class="col-4 text-start">
-                                    <button type="reset" class="btn-clear" onclick="refreshPrivilegeForm()">Reset
+                                    <button id="prvFormResetBtn" type="reset" class="btn-clear" onclick="refreshPrivilegeForm()">Reset
                                         Form</button>
                                 </div>
                                 <div class="col-8 text-end">

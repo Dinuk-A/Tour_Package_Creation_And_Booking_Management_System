@@ -219,7 +219,9 @@ const buildPriviTable = async () => {
 
 }
 
+//filters for privi tbl
 const applyPrivilegeFilter = () => {
+
     const selectedRoleRaw = document.getElementById('roleFilter').value;
     const selectedModuleRaw = document.getElementById('moduleFilter').value;
 
@@ -227,8 +229,8 @@ const applyPrivilegeFilter = () => {
     let selectedModule = null;
 
     try {
-        if (selectedRoleRaw) selectedRole = JSON.parse(selectedRoleRaw);
-        if (selectedModuleRaw) selectedModule = JSON.parse(selectedModuleRaw);
+        selectedRole = JSON.parse(selectedRoleRaw);
+        selectedModule = JSON.parse(selectedModuleRaw);
     } catch (e) {
         console.error("Error parsing selected filter options:", e);
     }
@@ -266,7 +268,7 @@ const applyPrivilegeFilter = () => {
             ordering: false,
             lengthChange: false
         });
-    }, 500);
+    }, 100);
 };
 
 
@@ -345,6 +347,8 @@ const refreshPrivilegeForm = async () => {
 
     priviAddBtn.disabled = false;
     priviAddBtn.style.cursor = "pointer";
+
+    prvFormResetBtn.classList.remove('d-none');
 };
 
 
@@ -473,11 +477,11 @@ const refillPriviForm = async (prvObj) => {
     try {
         roles = await ajaxGetReq("role/exceptadmin");
         fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name', prvObj.role_id.name);
-        selectRole.disabled = false;
+        selectRole.disabled = true;
 
         modules = await ajaxGetReq("module/all");
         fillDataIntoDynamicSelects(selectModule, 'Please Select The Module', modules, 'name', prvObj.module_id.name);
-        selectModule.disabled = false;
+        selectModule.disabled = true;
 
     } catch (error) {
         console.error("Error in refillPriviForm:", error);
@@ -512,6 +516,8 @@ const refillPriviForm = async (prvObj) => {
 
     priviAddBtn.disabled = true;
     priviAddBtn.style.cursor = "not-allowed";
+
+    prvFormResetBtn.classList.add('d-none');
 
     var myPrvFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myPrvFormTab.show();
@@ -629,7 +635,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const printPrivi = (prvObj) => { showAlertModal('inf', 'test print ') }
 
 //const adults = users.filter(user => user.age >= 18);
-//is same as 
+//is same as
 //const adults = users.filter(user => {
 //    return user.age >= 18;
 //});
