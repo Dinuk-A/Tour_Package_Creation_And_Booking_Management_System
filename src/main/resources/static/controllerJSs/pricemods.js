@@ -2,6 +2,11 @@ window.addEventListener('load', () => {
     refreshPriceConfigForm();
     refillForminputs();
     buildPMHistoryTable();
+
+    document.querySelectorAll('input.form-control').forEach(input => {
+        input.style.textAlign = 'center';
+    });
+
 });
 
 //global var to store id of the table
@@ -30,6 +35,16 @@ const refillForminputs = async () => {
         document.getElementById('intDriverDailyCost').value = parseFloat(pricemods.int_driver_daily_cost).toFixed(2);
         document.getElementById('intGuideDailyCost').value = parseFloat(pricemods.int_guide_daily_cost).toFixed(2);
         document.getElementById('lastModifiedDateInput').value = pricemods.updateddatetime.split('T')[0];
+
+        const promoActiveToggle = document.getElementById('promoActiveToggle');
+
+        if (pricemods.is_promo_active) {
+            promoActiveToggle.checked = true;
+        } else {
+            promoActiveToggle.checked = false;
+        }
+
+        handleTempPromoStatus();
 
     } catch (error) {
         console.error("Failed to build table:", error);
@@ -261,6 +276,26 @@ const enableInput = (inputId) => {
     }
 }
 
+//handle temporary promotional status
+const handleTempPromoStatus = () => {
+
+    const promoActiveToggle = document.getElementById('promoActiveToggle');
+    const promoActiveLabel = document.getElementById('promoActiveLabel');
+
+    if (promoActiveToggle.checked) {
+        promoActiveLabel.textContent = 'Active';
+        promoActiveLabel.classList.remove('text-danger');
+        promoActiveLabel.classList.add('text-success','fw-bold');
+        pricemod.is_promo_active = true;
+    } else {
+        promoActiveLabel.textContent = 'Inactive';
+        promoActiveLabel.classList.remove('text-success','fw-bold');
+        promoActiveLabel.classList.add('text-danger');
+        pricemod.is_promo_active = false;
+    }
+
+}
+
 // enable form update button when any input value changes
 const enableFormUpdateBtn = () => {
     const updateBtn = document.getElementById('pricemodsUpdateBtn');
@@ -394,9 +429,10 @@ const updatePriceMods = async () => {
                     if (putServiceResponse === "OK") {
                         showAlertModal('suc', 'Saved Successfully');
                         document.getElementById('formPriceMods').reset();
-                        refreshPriceConfigForm();
-                        refillForminputs();
-                        buildPMHistoryTable();
+                        window.location.reload();
+                        //refreshPriceConfigForm();
+                        //refillForminputs();
+                        //buildPMHistoryTable();
                     } else {
                         showAlertModal('err', "Update Failed\n" + putServiceResponse);
                     }
