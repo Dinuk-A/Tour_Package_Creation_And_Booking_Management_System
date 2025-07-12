@@ -239,8 +239,10 @@ const refreshTpkgForm = async () => {
     document.getElementById('totalGuideCostGroup').classList.remove('d-none');
     document.getElementById('totalGuideCostMsg').classList.add('d-none');
 
-
     document.getElementById('finalTotalCost').value = '';
+
+    document.getElementById('pkgSellingPrice').value = '';
+
     const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
 
     pkgFinalPriceShowInput.value = '';
@@ -381,6 +383,7 @@ const openModalTpkg = (tpkgObj) => {
     document.getElementById('modTpkgTotalStayCost').innerText = 'LKR ' + (tpkgObj.totalstaycost?.toFixed(2) || '0.00');
     document.getElementById('modTpkgAddCostTotal').innerText = 'LKR ' + (tpkgObj.totaladditionalcosts?.toFixed(2) || '0.00');
     document.getElementById('modTpkgPkgCostSum').innerText = 'LKR ' + (tpkgObj.pkgcostsum?.toFixed(2) || '0.00');
+    document.getElementById('modTpkgSellingPrice').innerText = 'LKR ' + (tpkgObj.pkgsellingprice?.toFixed(2) || '0.00');
     document.getElementById('modTpkgFinalPrice').innerText = 'LKR ' + (tpkgObj.pkgfinalprice?.toFixed(2) || '0.00');
 
     // Booleans
@@ -942,6 +945,7 @@ const printTpkgRecord = (tpkgObj) => {
         <li>Stay Cost: LKR ${tpkgObj.totalstaycost?.toFixed(2) || '0.00'}</li>
         <li>Additional Costs: LKR ${tpkgObj.totaladditionalcosts?.toFixed(2) || '0.00'}</li>
         <li><strong>Total Cost:</strong> LKR ${tpkgObj.pkgcostsum?.toFixed(2) || '0.00'}</li>
+        <li><strong>Selling Price:</strong> LKR ${tpkgObj.pkgsellingprice?.toFixed(2) || '0.00'}</li>
         <li><strong>Final Price:</strong> LKR ${tpkgObj.pkgfinalprice?.toFixed(2) || '0.00'}</li>
     `;
 
@@ -1236,7 +1240,8 @@ const changesTpkgCustomOrTemp = () => {
         tpkg.totalvehicost = null;
         tpkg.totalstaycost = null;
         tpkg.pkgcostsum = null;
-        tpkg.pkgfinalprice = null;
+        tpkg.pkgsellingprice = null;
+        tpkg.pkgfinalprice = null;  
         tpkg.is_guide_needed = null;
         tpkg.is_company_guide = null;
         tpkg.is_company_vehicle = null;
@@ -1542,6 +1547,23 @@ const refreshMainCostCard = () => {
     //and also show a hidden msg
 }
 
+//if no discount is given
+const handleDiscountNoneToggle = () => {
+    const noneCb = document.getElementById('discountNone');
+    const loyalityCb = document.getElementById('discountLoyality');
+    const offpeakCb = document.getElementById('discountOffpeak');
+
+    if (noneCb.checked) {
+        loyalityCb.checked = false;
+        loyalityCb.disabled = true;
+
+        offpeakCb.checked = false;
+        offpeakCb.disabled = true;
+    } else {
+        loyalityCb.disabled = false;
+        offpeakCb.disabled = false;
+    }
+};
 
 
 //to calculate the total costs of the tour package 
@@ -1553,6 +1575,7 @@ const calculateMainCosts = () => {
     calcTotalStayCost();
     calcVehicleCosts();
     calcTotalDriverCost();
+
     if (tpkg.is_guide_needed && guideYes.checked) {
         calcTotalGuideCost();
     }
@@ -1576,26 +1599,28 @@ const calcTotalCostSum = () => {
     tpkg.pkgcostsum = parseFloat(total.toFixed(2));
     document.getElementById('finalTotalCost').value = total.toFixed(2);
 
-    calcFinalPrice();
+    calcSellingPrice();
 }
 
-// calc final price of the tour package (profit margin added)
-const calcFinalPrice = () => {
+// calc selling price of the tour package (profit margin added)
+const calcSellingPrice = () => {
+
     const profitMargin = parseFloat(globalPriceMods.company_profit_margin) || 0;
 
     const cost = parseFloat(tpkg.pkgcostsum);
     const profit = cost * (profitMargin / 100);
-    const rawFinalPrice = cost + profit;
+    const rawSellingPrice = cost + profit;
 
-    const finalPrice = Math.ceil(rawFinalPrice / 100) * 100;
-    const finalPriceRounded = parseFloat(finalPrice.toFixed(2));
+    const sellingPrice = Math.ceil(rawSellingPrice / 100) * 100;
+    const sellingPriceRounded = parseFloat(sellingPrice.toFixed(2));
 
-    tpkg.pkgfinalprice = finalPriceRounded;
-    const finalPriceInput = document.getElementById('pkgFinalPrice');
-    finalPriceInput.value = finalPriceRounded.toFixed(2);
-    finalPriceInput.style.border = "2px solid lime";
+    tpkg.pkgsellingprice = sellingPriceRounded;
 
-    console.log("Final price calculated: " + finalPriceRounded);
+    const sellingPriceInput = document.getElementById('pkgSellingPrice');
+    sellingPriceInput.value = sellingPriceRounded.toFixed(2);
+    sellingPriceInput.style.border = "2px solid lime";
+
+    console.log("Selling price calculated: " + sellingPriceRounded);
 };
 
 // update total km count of the tour package
@@ -1678,7 +1703,7 @@ const calcTotalDriverCost = () => {
 }
 
 // calc total guide cost
-const calcTotalGuideCost = () => {
+const calcTotalGuideCost = () => { 
 
     if (!globalPriceMods) {
         console.warn("Price modifiers not loaded.");
@@ -1693,17 +1718,19 @@ const calcTotalGuideCost = () => {
     const costInput = document.getElementById('totalGuideCostInput');
     const guideCostLabel = document.querySelector('label[for="totalGuideCostInput"]');
     const guideCostGroup = document.getElementById('totalGuideCostGroup');
-    const totalGuideCostMsg = document.getElementById('totalGuideCostMsg');
 
-    guideCostGroup.classList.add("d-none");
-    totalGuideCostMsg.classList.remove("d-none");
-    costInput.value = "";
-    tpkg.totalguidecost = null;
+    const totalGuideCostMsg = document.getElementById('totalGuideCostMsg');
 
     if ((!yathraGuide.checked && !rentedGuide.checked) || totalDays <= 0) {
         totalGuideCostMsg.classList.remove("d-none");
+        guideCostGroup.classList.add("d-none");
         return;
     }
+  
+    //guideCostGroup.classList.add("d-none");
+    totalGuideCostMsg.classList.remove("d-none");
+    costInput.value = "";
+    tpkg.totalguidecost = null;  
 
     let guideDailyCharge = 0;
 
