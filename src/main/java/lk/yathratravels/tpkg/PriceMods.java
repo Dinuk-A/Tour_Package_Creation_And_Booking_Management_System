@@ -27,6 +27,18 @@ public class PriceMods {
     @Column(name = "company_profit_margin")
     private BigDecimal company_profit_margin;
 
+    @Column(name = "temp_promo_discount")
+    private BigDecimal temp_promo_discount;
+
+    @Column(name = "is_promo_active")
+    private Boolean is_promo_active;
+
+    @Column(name = "off_peak_discount")
+    private BigDecimal off_peak_discount;
+
+    @Column(name = "loyalty_discount")
+    private BigDecimal loyalty_discount;
+
     // @Column(name = "ext_driver_percentage")
     // private BigDecimal ext_driver_percentage;
     //

@@ -129,6 +129,9 @@ public class PriceModsController {
             history.setOld_eg_dc(existingPMRow.getExt_guide_daily_charge());
             history.setOld_id_dc(existingPMRow.getInt_driver_daily_cost());
             history.setOld_ig_dc(existingPMRow.getInt_guide_daily_cost());
+            history.setOld_loyd(existingPMRow.getLoyalty_discount());
+            history.setOld_offpd(existingPMRow.getOff_peak_discount());
+            history.setOld_promo(existingPMRow.getTemp_promo_discount());
             // history.setOld_evp(existingPMRow.getExt_vehicle_percentage());
 
             history.setOri_addeduserid(existingPMRow.getAddeduserid());

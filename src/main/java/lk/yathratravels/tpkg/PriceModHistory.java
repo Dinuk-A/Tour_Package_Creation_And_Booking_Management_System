@@ -54,6 +54,15 @@ public class PriceModHistory {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "old_promo")
+    private BigDecimal old_promo;
+
+    @Column(name = "old_offpd")
+    private BigDecimal old_offpd;
+    
+    @Column(name = "old_loyd")
+    private BigDecimal old_loyd;
+
     // @Column(name = "old_evp" )
     // private BigDecimal old_evp;
 
