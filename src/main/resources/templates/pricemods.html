@@ -15,7 +15,7 @@
     <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
     <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
 
-    <main id="mainAreaID" class="main">
+    <main id="mainAreaID" class="main mx-auto">
 
         <!-- Tabs navigation panel -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -51,11 +51,18 @@
                     <div class="card-body" style="background-color: ivory;">
                         <form id="formPriceMods" onsubmit="return false">
 
+                            <!-- General Pricing Strategy -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h6 class="text-primary fw-bold mb-0">General Pricing Strategy</h6>
+                                </div>
+                            </div>
+
                             <!-- Company Profit Margin -->
                             <div class="row mb-2">
                                 <div class="col-5 my-auto">
                                     <label for="companyProfitMargin" class="form-label fw-bold mb-0">Tour Package Profit
-                                        Margin (%) </label>
+                                        Margin(%) </label>
                                 </div>
                                 <div class="col-2">
                                     <input disabled type="number" class="form-control" id="companyProfitMargin"
@@ -68,6 +75,85 @@
                                     <button class="btn btn-outline-primary w-100" id="tpkgProfitPercBtn"
                                         onclick="enableInput('companyProfitMargin')">Edit <i
                                             class="bi bi-pencil-square"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Discount Configurations -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h6 class="text-primary fw-bold mb-0">Discount Configurations</h6>
+                                </div>
+                            </div>
+
+                            <!-- Off-Peak Discount -->
+                            <div class="row mb-2">
+                                <div class="col-5 my-auto">
+                                    <label for="offPeakDiscount" class="form-label fw-bold mb-0">Off-Peak Discount
+                                        Rate(%)</label>
+                                </div>
+                                <div class="col-2">
+                                    <input disabled type="number" class="form-control" id="offPeakDiscount"
+                                        name="off_peak_discount_rate"
+                                        onkeyup="inputValidatorText(this, '', 'pricemod', 'off_peak_discount'); enableFormUpdateBtn();"
+                                        required>
+                                </div>
+                                <div class="col-2"></div>
+                                <div class="col-3">
+                                    <button class="btn btn-outline-primary w-100" id="offPeakDiscountBtn"
+                                        onclick="enableInput('offPeakDiscount')">Edit <i
+                                            class="bi bi-pencil-square"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Loyalty Discount -->
+                            <div class="row mb-2">
+                                <div class="col-5 my-auto">
+                                    <label for="loyaltyDiscount" class="form-label fw-bold mb-0">Loyalty Discount
+                                        Rate(%)</label>
+                                </div>
+                                <div class="col-2">
+                                    <input disabled type="number" class="form-control" id="loyaltyDiscount"
+                                        name="loyalty_discount_rate"
+                                        onkeyup="inputValidatorText(this, '', 'pricemod', 'loyalty_discount'); enableFormUpdateBtn();"
+                                        required>
+                                </div>
+                                <div class="col-2"></div>
+                                <div class="col-3">
+                                    <button class="btn btn-outline-primary w-100" id="loyaltyDiscountBtn"
+                                        onclick="enableInput('loyaltyDiscount')">Edit <i
+                                            class="bi bi-pencil-square"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Promotional Discount -->
+                            <div class="row mb-2">
+                                <div class="col-5 my-auto">
+                                    <label for="promoDiscount" class="form-label fw-bold mb-0">Promotional Discount
+                                        Rate(%)</label>
+                                </div>
+                                <div class="col-2">
+                                    <input disabled type="number" class="form-control" id="promoDiscount"
+                                        name="promo_discount_rate"
+                                        onkeyup="inputValidatorText(this, '', 'pricemod', 'temp_promo_discount'); enableFormUpdateBtn();"
+                                        required>
+                                </div>
+                                <div class="col-2 d-flex align-items-center">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="promoActiveToggle" checked>
+                                        <label id="promoActiveLabel" class="form-check-label" for="promoActiveToggle">Active</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-outline-primary w-100" id="promoDiscountBtn"
+                                        onclick="enableInput('promoDiscount')">Edit <i
+                                            class="bi bi-pencil-square"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- External Resource Costs -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h6 class="text-primary fw-bold mb-0">External Resource Costs</h6>
                                 </div>
                             </div>
 
@@ -106,6 +192,13 @@
                                     <button onclick="enableInput('extGuideDailyCharge')"
                                         class="btn btn-outline-primary w-100" id="extGuideChargeBtn">Edit <i
                                             class="bi bi-pencil-square"></i></button>
+                                </div>
+                            </div>
+
+                            <!-- Internal Resource Costs -->
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <h6 class="text-primary fw-bold mb-0">Internal Resource Costs</h6>
                                 </div>
                             </div>
 

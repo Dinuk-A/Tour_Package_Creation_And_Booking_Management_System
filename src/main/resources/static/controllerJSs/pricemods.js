@@ -187,7 +187,7 @@ const showAllOldValues = (objPMHistory) => {
 //    }
 //}
 
-// fill table with updated params of previous price modifications
+// fill table with updated user and time of previous price modifications
 const showUpdatedUnT = async (objPMHistory) => {
 
     const dt = new Date(objPMHistory.ori_updateddatetime);
