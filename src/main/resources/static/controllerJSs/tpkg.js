@@ -203,6 +203,7 @@ const refreshTpkgForm = async () => {
         'guideNo',
         'yathraGuideCB',
         'rentalGuideCB'
+
     ];
 
     radioIdsToReset.forEach(id => {
@@ -242,6 +243,10 @@ const refreshTpkgForm = async () => {
     document.getElementById('finalTotalCost').value = '';
 
     document.getElementById('pkgSellingPrice').value = '';
+
+    const discNoneOpt = document.getElementById('discountNone');
+    discNoneOpt.disabled = false;
+    discNoneOpt.checked = true;
 
     const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
 
@@ -1241,7 +1246,7 @@ const changesTpkgCustomOrTemp = () => {
         tpkg.totalstaycost = null;
         tpkg.pkgcostsum = null;
         tpkg.pkgsellingprice = null;
-        tpkg.pkgfinalprice = null;  
+        tpkg.pkgfinalprice = null;
         tpkg.is_guide_needed = null;
         tpkg.is_company_guide = null;
         tpkg.is_company_vehicle = null;
@@ -1547,24 +1552,6 @@ const refreshMainCostCard = () => {
     //and also show a hidden msg
 }
 
-//if no discount is given
-const handleDiscountNoneToggle = () => {
-    const noneCb = document.getElementById('discountNone');
-    const loyalityCb = document.getElementById('discountLoyality');
-    const offpeakCb = document.getElementById('discountOffpeak');
-
-    if (noneCb.checked) {
-        loyalityCb.checked = false;
-        loyalityCb.disabled = true;
-
-        offpeakCb.checked = false;
-        offpeakCb.disabled = true;
-    } else {
-        loyalityCb.disabled = false;
-        offpeakCb.disabled = false;
-    }
-};
-
 
 //to calculate the total costs of the tour package 
 const calculateMainCosts = () => {
@@ -1614,14 +1601,70 @@ const calcSellingPrice = () => {
     const sellingPrice = Math.ceil(rawSellingPrice / 100) * 100;
     const sellingPriceRounded = parseFloat(sellingPrice.toFixed(2));
 
+    //selling price 
     tpkg.pkgsellingprice = sellingPriceRounded;
-
     const sellingPriceInput = document.getElementById('pkgSellingPrice');
     sellingPriceInput.value = sellingPriceRounded.toFixed(2);
-    sellingPriceInput.style.border = "2px solid lime";
 
-    console.log("Selling price calculated: " + sellingPriceRounded);
+    //update the same price to the final price by default (can be changed by the discount cbs later)    
+    tpkg.pkgfinalprice = sellingPriceRounded;
+    const finalPriceInput = document.getElementById('pkgFinalPrice');
+    finalPriceInput.value = sellingPriceRounded.toFixed(2);
+    finalPriceInput.style.border = "4px solid lime";
+
 };
+
+
+//if no discount is given
+const handleDiscountNoneToggle = () => {
+    const noneCb = document.getElementById('discountNone');
+    const loyalityCb = document.getElementById('discountLoyality');
+    const offpeakCb = document.getElementById('discountOffpeak');
+
+    if (noneCb.checked) {
+        loyalityCb.checked = false;
+        loyalityCb.disabled = true;
+
+        offpeakCb.checked = false;
+        offpeakCb.disabled = true;
+    } else {
+        loyalityCb.disabled = false;
+        offpeakCb.disabled = false;
+    }
+};
+
+//other discounts
+const handleDiscs = () => {
+
+    const loyalDiscCB = document.getElementById('discountLoyality');
+    const offpeakCbDiscCB = document.getElementById('discountOffpeak');
+    const finalPriceInput = document.getElementById('pkgFinalPrice');
+    const noneCb = document.getElementById('discountNone');
+
+    discount = 0.00;
+
+    if (loyalDiscCB.checked) {
+        const loyalDisc = parseFloat(globalPriceMods.loyalty_discount) || 0;
+        discount = discount + loyalDisc;
+        noneCb.checked = false;
+    }
+
+    if (offpeakCbDiscCB.checked) {
+        const offPeakDisc = parseFloat(globalPriceMods.off_peak_discount) || 0;
+        discount = discount + offPeakDisc;
+        noneCb.checked = false;
+    }
+
+    //calc final price
+    const sellingPrice = parseFloat(tpkg.pkgsellingprice);
+    const discountedePrice = sellingPrice * (discount / 100);
+    const finalPriceRaw = sellingPrice - discountedePrice;
+
+    const finalPrice = Math.ceil(finalPriceRaw / 100) * 100;
+    finalPriceInput.value = finalPrice.toFixed(2);
+    tpkg.pkgfinalprice = finalPriceInput.value;
+
+}
 
 // update total km count of the tour package
 const showTotalKmCount = () => {
@@ -1703,7 +1746,7 @@ const calcTotalDriverCost = () => {
 }
 
 // calc total guide cost
-const calcTotalGuideCost = () => { 
+const calcTotalGuideCost = () => {
 
     if (!globalPriceMods) {
         console.warn("Price modifiers not loaded.");
@@ -1726,11 +1769,11 @@ const calcTotalGuideCost = () => {
         guideCostGroup.classList.add("d-none");
         return;
     }
-  
+
     //guideCostGroup.classList.add("d-none");
     totalGuideCostMsg.classList.remove("d-none");
     costInput.value = "";
-    tpkg.totalguidecost = null;  
+    tpkg.totalguidecost = null;
 
     let guideDailyCharge = 0;
 

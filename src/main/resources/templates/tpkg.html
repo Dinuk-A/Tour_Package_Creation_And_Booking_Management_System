@@ -1087,15 +1087,19 @@
                                                         <!-- Final Total Cost -->
                                                         <div class="row my-3 align-items-center border-top pt-3">
                                                             <div class="col-4">
-                                                                <label for="finalTotalCost" class="form-label fw-bold mb-0 fs-6 text-dark">Total
+                                                                <label for="finalTotalCost"
+                                                                    class="form-label fw-bold mb-0 fs-6 text-dark">Total
                                                                     Package Cost:</label>
                                                             </div>
                                                             <div class="col-8">
                                                                 <div class="input-group shadow-sm">
-                                                                    <span class="input-group-text bg-infotext-white fw-semibold p-1 border border-warning">
+                                                                    <span
+                                                                        class="input-group-text bg-infotext-white fw-semibold p-1 border border-warning">
                                                                         LKR
                                                                     </span>
-                                                                    <input type="number" disabled="" placeholder="0.00" id="finalTotalCost" class="form-control text-center fw-semibold fs-6 text-dark bg-light border border-warning">
+                                                                    <input type="number" disabled="" placeholder="0.00"
+                                                                        id="finalTotalCost"
+                                                                        class="form-control text-center fw-semibold fs-6 text-dark bg-light border border-warning">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1103,15 +1107,19 @@
                                                         <!-- Final Selling Price Without Discounts -->
                                                         <div class="row mb-2 bg-whit align-items-center p-0">
                                                             <div class="col-4">
-                                                                <label for="pkgSellingPrice" class="form-label fw-bold mb-0 fs-5 text-primary ">Selling
+                                                                <label for="pkgSellingPrice"
+                                                                    class="form-label fw-bold mb-0 fs-5 text-primary ">Selling
                                                                     Price:</label>
                                                             </div>
                                                             <div class="col-8">
                                                                 <div class="input-group shadow">
-                                                                    <span class="input-group-text bg-primary text-white fw-bold px-3 py-2 border border-primary">
+                                                                    <span
+                                                                        class="input-group-text bg-primary text-white fw-bold px-3 py-2 border border-primary">
                                                                         LKR
                                                                     </span>
-                                                                    <input type="number" disabled="" placeholder="0.00" id="pkgSellingPrice" class="form-control text-center text-primary fw-bold fs-5 bg-white border border-primary">
+                                                                    <input type="number" disabled="" placeholder="0.00"
+                                                                        id="pkgSellingPrice"
+                                                                        class="form-control text-center text-primary fw-bold fs-5 bg-white border border-primary">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1134,14 +1142,14 @@
                                                                 <div class="form-check form-check-inline">
                                                                     <input class="form-check-input" type="checkbox"
                                                                         id="discountLoyality" value="Loyality"
-                                                                        onchange="inputValidatorCheckbox(this, 'tpkg', 'discounts')">
+                                                                        onchange="handleDiscs();">
                                                                     <label class="form-check-label"
                                                                         for="discountLoyality">Loyality</label>
                                                                 </div>
                                                                 <div class="form-check form-check-inline">
                                                                     <input class="form-check-input" type="checkbox"
                                                                         id="discountOffpeak" value="Off-peak"
-                                                                        onchange="inputValidatorCheckbox(this, 'tpkg', 'discounts')">
+                                                                        onchange="handleDiscs();">
                                                                     <label class="form-check-label"
                                                                         for="discountOffpeak">Off-peak</label>
                                                                 </div>
