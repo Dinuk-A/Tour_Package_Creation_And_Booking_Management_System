@@ -118,6 +118,12 @@ public class TourPkg {
     @Column(name = "pkgcostsum")
     private BigDecimal pkgcostsum;
 
+    @Column(name = "pkgsellingprice")
+    private BigDecimal pkgsellingprice;
+
+    @Column(name = "discountsused")
+    private String discountsused;
+
     @Column(name = "pkgfinalprice")
     private BigDecimal pkgfinalprice;
 

@@ -560,23 +560,25 @@ const refillTpkgForm = (tpkgObj) => {
         //created once per loop element
         generateNormalDayPlanSelectSections();
 
-        const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
-        const selectElement = document.getElementById(midDaySelectId);
+        setTimeout(() => {
+            const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
+            const selectElement = document.getElementById(midDaySelectId);
 
-        selectElement.disabled = false;
+            selectElement.disabled = false;
 
-        fillDataIntoDynamicSelects(
-            selectElement,
-            'Please Select',
-            onlyMidDays,
-            'daytitle',
-            dayPlan.daytitle
-        );
+            fillDataIntoDynamicSelects(
+                selectElement,
+                'Please Select',
+                onlyMidDays,
+                'daytitle',
+                dayPlan.daytitle
+            );
 
-        document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
-        document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
+            document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
+            document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
 
-        console.log("Processing mid day plan end:", i);
+            console.log("Processing mid day plan end:", i);
+        }, 150);
 
         midDayCounter++;
     }
@@ -598,6 +600,9 @@ const refillTpkgForm = (tpkgObj) => {
         'vehiclename',
         tpkgObj.pref_vehi_type
     );
+
+    //for discount cbs
+    refillDiscountSection(tpkgObj);
 
     // include guide
     if (tpkgObj.is_guide_needed === true) {
@@ -1614,7 +1619,6 @@ const calcSellingPrice = () => {
 
 };
 
-
 //if no discount is given
 const handleDiscountNoneToggle = () => {
     const noneCb = document.getElementById('discountNone');
@@ -1642,17 +1646,25 @@ const handleDiscs = () => {
     const noneCb = document.getElementById('discountNone');
 
     discount = 0.00;
+    let discountLabels = [];
 
     if (loyalDiscCB.checked) {
         const loyalDisc = parseFloat(globalPriceMods.loyalty_discount) || 0;
         discount = discount + loyalDisc;
         noneCb.checked = false;
+        discountLabels.push("loyality");
     }
 
     if (offpeakCbDiscCB.checked) {
         const offPeakDisc = parseFloat(globalPriceMods.off_peak_discount) || 0;
         discount = discount + offPeakDisc;
         noneCb.checked = false;
+        discountLabels.push("off-peak");
+    }
+
+    if (noneCb.checked) {
+        discountLabels = ["none"];
+        discount = 0.00;
     }
 
     //calc final price
@@ -1664,7 +1676,48 @@ const handleDiscs = () => {
     finalPriceInput.value = finalPrice.toFixed(2);
     tpkg.pkgfinalprice = finalPriceInput.value;
 
+    //save the discs used
+    tpkg.useddiscounts = discountLabels.join(',');
+
 }
+
+   //if (!tpkg.useddiscounts || tpkg.useddiscounts.trim() === '') {
+    //    return;
+    //}
+
+
+//this will be neede when refilling the form
+const refillDiscountSection = (obj) => {
+
+    const noneCb = document.getElementById('discountNone');
+    const loyalityCb = document.getElementById('discountLoyality');
+    const offpeakCb = document.getElementById('discountOffpeak');
+ 
+    if (!obj.discountsused || typeof obj.discountsused !== 'string') {
+       console.log("No used discounts found or invalid format.");
+        return;
+    }
+
+    const used = obj.discountsused.toLowerCase().split(',');
+    console.log("used array: ",used);
+
+    if (used.includes("none")) {
+        noneCb.checked = true;
+        loyalityCb.disabled = true;
+        offpeakCb.disabled = true;
+    }
+
+    if (used.includes("loyality")) {
+        loyalityCb.checked = true;
+        noneCb.checked = false;
+    }
+
+    if (used.includes("offpeak")) {
+        offpeakCb.checked = true;
+        noneCb.checked = false;
+    }
+};
+
 
 // update total km count of the tour package
 const showTotalKmCount = () => {
