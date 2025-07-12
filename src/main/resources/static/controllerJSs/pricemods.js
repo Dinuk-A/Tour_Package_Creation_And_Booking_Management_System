@@ -22,6 +22,9 @@ const refillForminputs = async () => {
         console.log("Old Price Modifications Object:", oldPriceModObj);
 
         document.getElementById('companyProfitMargin').value = parseFloat(pricemods.company_profit_margin).toFixed(2);
+        document.getElementById('promoDiscount').value = parseFloat(pricemods.temp_promo_discount).toFixed(2);
+        document.getElementById('offPeakDiscount').value = parseFloat(pricemods.off_peak_discount).toFixed(2);
+        document.getElementById('loyaltyDiscount').value = parseFloat(pricemods.loyalty_discount).toFixed(2);
         document.getElementById('extDriverDailyCharge').value = parseFloat(pricemods.ext_driver_daily_charge).toFixed(2);
         document.getElementById('extGuideDailyCharge').value = parseFloat(pricemods.ext_guide_daily_charge).toFixed(2);
         document.getElementById('intDriverDailyCost').value = parseFloat(pricemods.int_driver_daily_cost).toFixed(2);
@@ -33,7 +36,14 @@ const refillForminputs = async () => {
         return
     }
 
-    const inputIds = ['companyProfitMargin', 'extDriverDailyCharge', 'extGuideDailyCharge', 'intDriverDailyCost', 'intGuideDailyCost'];
+    const inputIds = ['companyProfitMargin',
+        'extDriverDailyCharge',
+        'extGuideDailyCharge',
+        'intDriverDailyCost',
+        'intGuideDailyCost',
+        'promoDiscount',
+        'offPeakDiscount',
+        'loyaltyDiscount'];
 
     inputIds.forEach(id => {
         const inputElement = document.getElementById(id);
@@ -100,26 +110,26 @@ const createPriceModsTableCustomFn = (dataContainer) => {
     // Populate tbody with data
     dataContainer.forEach(async (record, index) => {
         const row = document.createElement('tr');
-    
+
         // Index column
         const indexCell = document.createElement('td');
         indexCell.innerText = index + 1;
         indexCell.setAttribute('class', 'text-center justify-content-center');
         row.appendChild(indexCell);
-    
+
         // Data columns
         for (const columnObj of tableColumnInfoArray) {
             const cell = document.createElement('td');
             cell.setAttribute('class', 'text-center justify-content-center');
-    
+
             switch (columnObj.displayType) {
                 case "text":
                     cell.innerText = record[columnObj.displayingPropertyOrFn];
                     break;
-    
+
                 case "function":
                     const result = columnObj.displayingPropertyOrFn(record);
-    
+
                     if (result instanceof Promise) {
                         result.then(resolvedHtml => {
                             cell.innerHTML = resolvedHtml;
@@ -131,18 +141,18 @@ const createPriceModsTableCustomFn = (dataContainer) => {
                         cell.innerHTML = result;
                     }
                     break;
-    
+
                 default:
                     showAlertModal('err', "Error creating table");
                     break;
             }
-    
+
             row.appendChild(cell);
         }
-    
+
         tableBody.appendChild(row);
     });
-    
+
 
     // Append thead and tbody to the table
     tableTag.appendChild(tableHead);
@@ -167,6 +177,9 @@ const showAllOldValues = (objPMHistory) => {
     return `
         <div>
             <div class='text-start px-3'>Company Profit Margin: ${objPMHistory.old_cpm}%</div>
+            <div class='text-start px-3'>Promotional Discount Rate: ${objPMHistory.old_promo}%</div>
+            <div class='text-start px-3'>Off-peak Discount Rate: ${objPMHistory.old_offpd}%</div>
+            <div class='text-start px-3'>Loyalty Discount Rate: ${objPMHistory.old_loyd}%</div>
             <div class='text-start px-3'>External Driver Daily Charge: ${objPMHistory.old_ed_dc} LKR</div>
             <div class='text-start px-3'>External Guide Daily Charge: ${objPMHistory.old_eg_dc} LKR</div>
             <div class='text-start px-3'>Internal Driver Daily Cost: ${objPMHistory.old_id_dc} LKR</div>
@@ -258,6 +271,9 @@ const enableFormUpdateBtn = () => {
 // fn to hold the price modification current values
 const collectPriceModFormValues = () => {
     pricemod.company_profit_margin = document.getElementById('companyProfitMargin').value.trim();
+    pricemod.temp_promo_discount = document.getElementById('promoDiscount').value.trim();
+    pricemod.off_peak_discount = document.getElementById('offPeakDiscount').value.trim();
+    pricemod.loyalty_discount = document.getElementById('loyaltyDiscount').value.trim();
     pricemod.ext_driver_daily_charge = document.getElementById('extDriverDailyCharge').value.trim();
     pricemod.ext_guide_daily_charge = document.getElementById('extGuideDailyCharge').value.trim();
     pricemod.int_driver_daily_cost = document.getElementById('intDriverDailyCost').value.trim();
@@ -272,6 +288,18 @@ const checkPriceModsFormErrors = () => {
 
     if (pricemod.company_profit_margin == null || pricemod.company_profit_margin === "") {
         errors += "Company Profit Margin cannot be empty\n";
+    }
+
+    //if (pricemod.temp_promo_discount == null || pricemod.temp_promo_discount === "") {
+    //    errors += "Temporary Promotional Discount Rate cannot be empty\n";
+    //}
+
+    if (pricemod.off_peak_discount == null || pricemod.off_peak_discount === "") {
+        errors += "Off-Peak Discount Rate cannot be empty\n";
+    }
+
+    if (pricemod.loyalty_discount == null || pricemod.loyalty_discount === "") {
+        errors += "Loyalty Discount Rate cannot be empty\n";
     }
 
     if (pricemod.ext_driver_daily_charge == null || pricemod.ext_driver_daily_charge === "") {
@@ -305,6 +333,18 @@ const showPriceModValueChanges = () => {
 
     if (parseFloat(pricemod.company_profit_margin) !== parseFloat(oldPriceModObj.company_profit_margin)) {
         updates += `Company Profit Margin will be changed to "${pricemod.company_profit_margin}"\n`;
+    }
+
+    if (parseFloat(pricemod.temp_promo_discount) !== parseFloat(oldPriceModObj.temp_promo_discount)) {
+        updates += `Temporary Promotional Discount Rate will be changed to "${pricemod.temp_promo_discount}"\n`;
+    }
+
+    if (parseFloat(pricemod.off_peak_discount) !== parseFloat(oldPriceModObj.off_peak_discount)) {
+        updates += `Off-Peak Discount Rate will be changed to "${pricemod.off_peak_discount}"\n`;
+    }
+
+    if (parseFloat(pricemod.loyalty_discount) !== parseFloat(oldPriceModObj.loyalty_discount)) {
+        updates += `Loyalty Discount Rate will be changed to "${pricemod.loyalty_discount}"\n`;
     }
 
     if (parseFloat(pricemod.ext_driver_daily_charge) !== parseFloat(oldPriceModObj.ext_driver_daily_charge)) {
