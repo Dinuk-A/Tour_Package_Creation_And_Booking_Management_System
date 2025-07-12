@@ -203,7 +203,6 @@ const refreshTpkgForm = async () => {
         'guideNo',
         'yathraGuideCB',
         'rentalGuideCB'
-
     ];
 
     radioIdsToReset.forEach(id => {
@@ -244,10 +243,6 @@ const refreshTpkgForm = async () => {
 
     document.getElementById('pkgSellingPrice').value = '';
 
-    const discNoneOpt = document.getElementById('discountNone');
-    discNoneOpt.disabled = false;
-    discNoneOpt.checked = true;
-
     const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
 
     pkgFinalPriceShowInput.value = '';
@@ -259,6 +254,20 @@ const refreshTpkgForm = async () => {
     showDnGAvailabilityButtons();
 
     document.getElementById('forWebSite').disabled = true;
+
+    //discount section
+    const noneCb = document.getElementById('discountNone');
+    const loyalityCb = document.getElementById('discountLoyality');
+    const offpeakCb = document.getElementById('discountOffpeak');
+
+    noneCb.disabled = false;
+    noneCb.checked = true;
+
+    loyalityCb.checked = false;
+    offpeakCb.checked = false;
+
+    loyalityCb.disabled = true;
+    offpeakCb.disabled = true;
 
     //get logged user roles
     const rolesRaw = document.getElementById('userRolesArraySection').textContent;
@@ -1619,7 +1628,7 @@ const calcSellingPrice = () => {
 
 };
 
-//if no discount is given
+//if no discount is given (not used) 💥
 const handleDiscountNoneToggle = () => {
     const noneCb = document.getElementById('discountNone');
     const loyalityCb = document.getElementById('discountLoyality');
@@ -1631,6 +1640,7 @@ const handleDiscountNoneToggle = () => {
 
         offpeakCb.checked = false;
         offpeakCb.disabled = true;
+
     } else {
         loyalityCb.disabled = false;
         offpeakCb.disabled = false;
@@ -1638,7 +1648,7 @@ const handleDiscountNoneToggle = () => {
 };
 
 //other discounts
-const handleDiscs = () => {
+const handleDiscsOri = () => {
 
     const loyalDiscCB = document.getElementById('discountLoyality');
     const offpeakCbDiscCB = document.getElementById('discountOffpeak');
@@ -1663,8 +1673,17 @@ const handleDiscs = () => {
     }
 
     if (noneCb.checked) {
+        loyalDiscCB.checked = false;
+        loyalDiscCB.disabled = true;
+
+        offpeakCbDiscCB.checked = false;
+        offpeakCbDiscCB.disabled = true;
+
         discountLabels = ["none"];
         discount = 0.00;
+    } else {
+        loyalDiscCB.disabled = false;
+        offpeakCbDiscCB.disabled = false;
     }
 
     //calc final price
@@ -1681,9 +1700,56 @@ const handleDiscs = () => {
 
 }
 
-   //if (!tpkg.useddiscounts || tpkg.useddiscounts.trim() === '') {
-    //    return;
-    //}
+const handleDiscs = () => {
+
+    const noneCb = document.getElementById('discountNone');
+    const loyalDiscCB = document.getElementById('discountLoyality');
+    const offpeakCbDiscCB = document.getElementById('discountOffpeak');
+    const finalPriceInput = document.getElementById('pkgFinalPrice');
+
+    let discount = 0.00;
+    let discountLabels = [];
+
+    if (noneCb.checked) {
+        loyalDiscCB.checked = false;
+        loyalDiscCB.disabled = true;
+
+        offpeakCbDiscCB.checked = false;
+        offpeakCbDiscCB.disabled = true;
+
+        discountLabels = ["none"];
+        discount = 0.00;
+    } else {
+        loyalDiscCB.disabled = false;
+        offpeakCbDiscCB.disabled = false;
+
+        if (loyalDiscCB.checked) {
+            const loyalDisc = parseFloat(globalPriceMods.loyalty_discount) || 0;
+            discount += loyalDisc;
+            discountLabels.push("loyality");
+        }
+
+        if (offpeakCbDiscCB.checked) {
+            const offPeakDisc = parseFloat(globalPriceMods.off_peak_discount) || 0;
+            discount += offPeakDisc;
+            discountLabels.push("off-peak");
+        }
+
+        if (loyalDiscCB.checked || offpeakCbDiscCB.checked) {
+            noneCb.checked = false;
+        }
+    }
+
+    const sellingPrice = parseFloat(tpkg.pkgsellingprice);
+    const discountedPrice = sellingPrice * (discount / 100);
+    const finalPriceRaw = sellingPrice - discountedPrice;
+    const finalPrice = Math.ceil(finalPriceRaw / 100) * 100;
+
+    finalPriceInput.value = finalPrice.toFixed(2);
+    tpkg.pkgfinalprice = finalPriceInput.value;
+
+    tpkg.useddiscounts = discountLabels.join(',');
+};
 
 
 //this will be neede when refilling the form
@@ -1692,14 +1758,14 @@ const refillDiscountSection = (obj) => {
     const noneCb = document.getElementById('discountNone');
     const loyalityCb = document.getElementById('discountLoyality');
     const offpeakCb = document.getElementById('discountOffpeak');
- 
+
     if (!obj.discountsused || typeof obj.discountsused !== 'string') {
-       console.log("No used discounts found or invalid format.");
+        console.log("No used discounts found or invalid format.");
         return;
     }
 
     const used = obj.discountsused.toLowerCase().split(',');
-    console.log("used array: ",used);
+    console.log("used array: ", used);
 
     if (used.includes("none")) {
         noneCb.checked = true;
@@ -1717,7 +1783,6 @@ const refillDiscountSection = (obj) => {
         noneCb.checked = false;
     }
 };
-
 
 // update total km count of the tour package
 const showTotalKmCount = () => {
