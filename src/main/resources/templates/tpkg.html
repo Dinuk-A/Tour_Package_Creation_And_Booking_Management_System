@@ -1275,29 +1275,46 @@
                                         <legend class="float-none w-auto px-2 text-primary">Additional Details
                                         </legend>
 
+
+                                        <button onclick="calcStartingPricePerAdult();">calc</button>
+
                                         <div class="row mt-2">
 
                                             <!-- Note -->
-                                            <div class="col-md-8 mb-3">
+                                            <div class="col-md-7 mb-3">
                                                 <label for="tpNote" class="form-label fw-bold mb-0">Note:</label>
                                                 <textarea class="form-control" id="tpNote" style="height: 150px;"
                                                     placeholder=" "
                                                     onkeyup="inputValidatorText(this,'','tpkg','note')"></textarea>
                                             </div>
 
-                                            <!-- Package Status -->
-                                            <div class="col-md-4 mb-3">
-                                                <label for="tpSelectStatus" class="form-label fw-bold mb-0">Package
-                                                    Status
-                                                    :</label>
-                                                <select id="tpSelectStatus" class="form-control form-select"
-                                                    onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status')">
-                                                    <option value="" selected disabled> Select Status </option>
-                                                    <option value="Draft"> Draft </option>
-                                                    <option value="Completed"> Completed </option>
-                                                    <option value="Inactive"> Inactive </option>
-                                                    <option value="ifDeleted" class="d-none"> Deleted </option>
-                                                </select>
+
+                                            <div class="col-md-5 mb-2">
+
+                                                <!-- Starting Price (For Website Display Only) -->
+                                                <div class="row mb-2">
+                                                    <label class="form-label fw-bold mb-0 text-info">Starting Price (For
+                                                        Website):</label>
+                                                    <input type="text" id="pkgStartingPrice"
+                                                        class="form-control text-center fw-bold text-info bg-white border border-info"
+                                                        readonly value="Not Calculated" />
+                                                </div>
+
+                                                <!-- Package Status -->
+                                                <div class="row">
+                                                    <label for="tpSelectStatus" class="form-label fw-bold mb-0">Package
+                                                        Status
+                                                        :</label>
+                                                    <select id="tpSelectStatus" class="form-control form-select"
+                                                        onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status')">
+                                                        <option value="" selected disabled> Select Status </option>
+                                                        <option value="Draft"> Draft </option>
+                                                        <option value="Completed"> Completed </option>
+                                                        <option value="Inactive"> Inactive </option>
+                                                        <option value="ifDeleted" class="d-none"> Deleted </option>
+                                                    </select>
+                                                </div>
+
                                             </div>
 
                                         </div>

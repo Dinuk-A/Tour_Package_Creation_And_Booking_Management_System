@@ -1813,6 +1813,93 @@ const showTotalKmCount = () => {
 
 }
 
+//to show in website
+const calcStartingPricePerAdult = () => {
+
+    //vehi == van    
+    //guide, driver == external
+
+    //lunch == no
+
+    //traveller count == 1
+    //vehi parking == places in day 
+    //accos == in day
+    //tkt == places in day
+
+    //calc tkt cost + vehi parking cost + accos in once
+    let tktCostTotalForWeb = 0;
+    let stayCostTotalForWeb = 0;
+    let vehiParkCostForweb = 0;
+
+    if (document.getElementById('tpkgFirstDaySelect').value !== "" &&
+        tpkg.sd_dayplan_id != null) {
+
+        //tkt
+        tktCostTotalForWeb += tpkg.sd_dayplan_id.foreignadulttktcost || 0;
+        //stay
+        stayCostTotalForWeb += (tpkg.sd_dayplan_id.drop_stay_id?.base_price || 0) + (tpkg.sd_dayplan_id.drop_stay_id?.incremental_cost || 0);
+        //vehi park
+        vehiParkCostForweb += tpkg.sd_dayplan_id.totalvehiparkcost || 0;
+
+    }
+
+    if (tpkg.dayplans.length > 0) {
+        tpkg.dayplans.forEach(day => {
+
+            //tkt
+            tktCostTotalForWeb += day.foreignadulttktcost || 0;
+            //stay
+            stayCostTotalForWeb += (day.drop_stay_id?.base_price || 0) + (day.drop_stay_id?.incremental_cost || 0);
+            //vehi park
+            vehiParkCostForweb += day.totalvehiparkcost || 0;
+
+        });
+    }
+
+    if (document.getElementById('tpkgFinalDaySelect').value !== "" &&
+        tpkg.ed_dayplan_id != null) {
+
+        //tkt
+        tktCostTotalForWeb += tpkg.ed_dayplan_id.foreignadulttktcost || 0;
+        stayCostTotalForWeb += (tpkg.ed_dayplan_id.drop_stay_id?.base_price || 0) + (tpkg.ed_dayplan_id.drop_stay_id?.incremental_cost || 0);
+        //vehi park
+        vehiParkCostForweb += tpkg.ed_dayplan_id.totalvehiparkcost || 0;
+
+    }
+
+    //vehicle cost == for ext van
+    let vehiChargeForWeb = 0;
+    const kmCountForPkg = parseFloat(document.getElementById('showTotalKMCount').value) || 0;
+
+    //use vehiTypes global array
+    const van = vehiTypes.find(v => v.name.toLowerCase() === "van");
+    const vehiCharge = van.ext_avg_cpkm || 0;
+    vehiChargeForWeb = vehiCharge * kmCountForPkg;
+
+    //for guide and driver
+    const totalDays = parseInt(showTotalDaysCount.value) || 0;
+
+    //guide == ext
+    let guideCostForWeb = (globalPriceMods.ext_guide_daily_charge || 0) * totalDays;
+
+    //driver  == ext
+    let driverCostForWeb = (globalPriceMods.ext_driver_daily_charge || 0) * totalDays;
+
+    console.log("Ticket Cost Total (tktCostTotalForWeb):", tktCostTotalForWeb);
+    console.log("Stay Cost Total (stayCostTotalForWeb):", stayCostTotalForWeb);
+    console.log("Vehicle Parking Cost Total (vehiParkCostForweb):", vehiParkCostForweb);
+    console.log("Vehicle Charge (vehiChargeForWeb):", vehiChargeForWeb);
+    console.log("Guide Cost (guideCostForWeb):", guideCostForWeb);
+    console.log("Driver Cost (driverCostForWeb):", driverCostForWeb);
+
+    const finalStartingPrice = tktCostTotalForWeb + stayCostTotalForWeb + vehiParkCostForweb + vehiChargeForWeb + guideCostForWeb + driverCostForWeb;
+    console.log("Final starting price for website: " + finalStartingPrice);
+
+    const startingPriceInput = document.getElementById('pkgStartingPrice');
+    startingPriceInput.value = finalStartingPrice.toFixed(2);
+    tpkg.pkgstartingprice = parseFloat(finalStartingPrice.toFixed(2));
+}
+
 // calc total cost for driver
 const calcTotalDriverCost = () => {
 
