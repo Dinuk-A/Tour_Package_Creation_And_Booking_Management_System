@@ -1276,9 +1276,42 @@
                                         </legend>
 
 
-                                        <button onclick="calcStartingPricePerAdult();">calc</button>
+                                        <!-- Starting Price (For Website Display) -->
+                                        <div class="row mb-2 d-none" id="startingPriceSection">
+                                            <label class="form-label fw-bold mb-1 text-info">Starting Price (For
+                                                Website):</label>
 
-                                        <div class="row mt-2">
+                                            <!-- Input with LKR prefix -->
+                                            <div class="col-4">
+                                                <div class="input-group shadow-sm">
+                                                    <span
+                                                        class="input-group-text bg-info text-white fw-semibold p-1 border border-warning">
+                                                        LKR
+                                                    </span>
+                                                    <input type="text" id="pkgStartingPrice"
+                                                        class="form-control text-center fw-semibold fs-6 text-dark bg-light border border-warning"
+                                                        readonly placeholder="0.00" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Button -->
+                                            <div class="col-4">
+                                                <button class="btn btn-outline-info w-100"
+                                                    onclick="calcStartingPricePerAdult();">
+                                                    Calculate Price
+                                                </button>
+                                            </div>
+
+                                            <!-- Informative Message -->
+                                            <div class="col-4 d-flex align-items-center">
+                                                <small class="text-success fst-italic">
+                                                    Estimated for one adult based on selected places and stays.
+                                                </small>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row mb-2">
 
                                             <!-- Note -->
                                             <div class="col-md-7 mb-3">
@@ -1290,33 +1323,19 @@
 
 
                                             <div class="col-md-5 mb-2">
-
-                                                <!-- Starting Price (For Website Display Only) -->
-                                                <div class="row mb-2">
-                                                    <label class="form-label fw-bold mb-0 text-info">Starting Price (For
-                                                        Website):</label>
-                                                    <input type="text" id="pkgStartingPrice"
-                                                        class="form-control text-center fw-bold text-info bg-white border border-info"
-                                                        readonly value="Not Calculated" />
-                                                </div>
-
                                                 <!-- Package Status -->
-                                                <div class="row">
-                                                    <label for="tpSelectStatus" class="form-label fw-bold mb-0">Package
-                                                        Status
-                                                        :</label>
-                                                    <select id="tpSelectStatus" class="form-control form-select"
-                                                        onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status')">
-                                                        <option value="" selected disabled> Select Status </option>
-                                                        <option value="Draft"> Draft </option>
-                                                        <option value="Completed"> Completed </option>
-                                                        <option value="Inactive"> Inactive </option>
-                                                        <option value="ifDeleted" class="d-none"> Deleted </option>
-                                                    </select>
-                                                </div>
-
+                                                <label for="tpSelectStatus" class="form-label fw-bold mb-0">Package
+                                                    Status
+                                                    :</label>
+                                                <select id="tpSelectStatus" class="form-control form-select"
+                                                    onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status')">
+                                                    <option value="" selected disabled> Select Status </option>
+                                                    <option value="Draft"> Draft </option>
+                                                    <option value="Completed"> Completed </option>
+                                                    <option value="Inactive"> Inactive </option>
+                                                    <option value="ifDeleted" class="d-none"> Deleted </option>
+                                                </select>
                                             </div>
-
                                         </div>
 
                                     </fieldset>

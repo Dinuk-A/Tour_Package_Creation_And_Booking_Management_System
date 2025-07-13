@@ -131,7 +131,8 @@ const refreshTpkgForm = async () => {
         'totalDriverCostInput',
         'totalGuideCostInput',
         'totalAdditionalCosts',
-        'tpNote',
+        'pkgStartingPrice',
+        'tpNote',       
         'tpSelectStatus'
     ];
 
@@ -1222,6 +1223,11 @@ const changesTpkgCustomOrTemp = () => {
         //refresh border colours + remove frontend values
         tpDescription.style.border = "1px solid #ced4da";
 
+        //startingPriceSection
+        document.getElementById('startingPriceSection').classList.add('d-none');
+        document.getElementById('pkgStartingPrice').value = '';
+        tpkg.pkgstartingprice = null;
+
         //if a package is for show in website
     } else if (forWebSite.checked) {
 
@@ -1318,6 +1324,9 @@ const changesTpkgCustomOrTemp = () => {
         document.getElementById('showAvailableVehiCount').innerText = '';
         document.getElementById('showAvailableDriverCount').innerText = '';
         document.getElementById('showAvailableGuideCount').innerText = '';
+
+        document.getElementById('startingPriceSection').classList.remove('d-none');
+        
 
     }
 }
