@@ -6,11 +6,10 @@ window.addEventListener('load', () => {
 
 })
 
-let roles = [];
-let modules = [];
-
 //for filters
 const refreshPriviFilters = async () => {
+    let roles = [];
+let modules = [];
 
     //get roles
     try {
@@ -271,7 +270,6 @@ const applyPrivilegeFilter = () => {
     }, 100);
 };
 
-
 //clear out any filters
 function resetPrivilegeFilters() {
     document.getElementById('roleFilter').value = '';
@@ -279,15 +277,17 @@ function resetPrivilegeFilters() {
     applyPrivilegeFilter(); 
 }
 
-
+//for table
 const getRoles = (priviObj) => {
     return priviObj.role_id.name;
 }
 
+//for table
 const getModule = (priviObj) => {
     return priviObj.module_id.name;
 }
 
+//for table
 const getSelect = (priviObj) => {
     if (priviObj.prvselect) {
         return "✅"
@@ -296,6 +296,7 @@ const getSelect = (priviObj) => {
     }
 }
 
+//for table
 const getInsert = (priviObj) => {
     if (priviObj.prvinsert) {
         return "✅"
@@ -304,6 +305,7 @@ const getInsert = (priviObj) => {
     }
 }
 
+//for table
 const getUpdate = (priviObj) => {
     if (priviObj.prvupdate) {
         return "✅"
@@ -312,6 +314,7 @@ const getUpdate = (priviObj) => {
     }
 }
 
+//for table
 const getDelete = (priviObj) => {
     if (priviObj.prvdelete) {
         return "✅"
@@ -320,13 +323,18 @@ const getDelete = (priviObj) => {
     }
 }
 
-
-
 //fn for refresh privi form
 const refreshPrivilegeForm = async () => {
 
     privilege = new Object();
     document.getElementById('formPrivilege').reset();
+
+    try {
+        roles = await ajaxGetReq("role/exceptadmin");
+        modules = await ajaxGetReq("module/all");
+    } catch (error) {
+        console.error("Error fetching roles or modules:", error);
+    }
 
     fillDataIntoDynamicSelects(selectRole, 'Please Select The Role', roles, 'name');
     selectRole.disabled = false;

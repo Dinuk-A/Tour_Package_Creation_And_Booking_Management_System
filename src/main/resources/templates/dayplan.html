@@ -29,8 +29,8 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <!-- for table side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableDayPlanHolderDiv" role="tab"
-                    aria-controls="tableDayPlanHolderDiv" aria-selected="true">Table</a>
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableTabPane" role="tab"
+                    aria-controls="tableTabPane" aria-selected="true">Table</a>
             </li>
             <!-- for form side -->
             <li class="nav-item" role="presentation">
@@ -43,7 +43,7 @@
         <div class="tab-content mt-1" id="myTabContent">
 
             <!-- Table tab  -->
-            <div class="tab-pane fade show active table-container p-4 rounded-3" role="tabpanel"
+            <div class="tab-pane fade show active table-container p-4 rounded-3" id="tableTabPane" role="tabpanel"
                 aria-labelledby="table-tab">
 
                 <!-- filters row -->
@@ -59,13 +59,6 @@
                             <option value="LD">Final Days</option>
                         </select>
                     </div>
-
-                    <!--<div class="col-md-4">
-                        <label for="moduleFilter" class="form-label fw-bold mb-0">Filter by Module</label>
-                        <select id="moduleFilter" class="form-select" onchange="applyPrivilegeFilter();">
-                         
-                        </select>
-                    </div>-->
 
                     <!-- reset btm -->
                     <div class="col-md-4 text-end">
@@ -96,22 +89,22 @@
                                         aria-selected="true">Itinerary Type</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark" id="dayStep2-tab" data-bs-toggle="tab"
+                                    <a class="nav-link border border-dark disabled" id="dayStep2-tab" data-bs-toggle="tab"
                                         href="#dayStep2" role="tab" aria-controls="dayStep2"
                                         aria-selected="false">Pickup Location</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark" id="dayStep3-tab" data-bs-toggle="tab"
+                                    <a class="nav-link border border-dark disabled" id="dayStep3-tab" data-bs-toggle="tab"
                                         href="#dayStep3" role="tab" aria-controls="dayStep3"
                                         aria-selected="false">Attractions</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark" id="dayStep4-tab" data-bs-toggle="tab"
+                                    <a class="nav-link border border-dark disabled" id="dayStep4-tab" data-bs-toggle="tab"
                                         href="#dayStep4" role="tab" aria-controls="dayStep4"
                                         aria-selected="false">Accomodations</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark" id="dayStep5-tab" data-bs-toggle="tab"
+                                    <a class="nav-link border border-dark disabled" id="dayStep5-tab" data-bs-toggle="tab"
                                         href="#dayStep5" role="tab" aria-controls="dayStep5"
                                         aria-selected="false">Other</a>
                                 </li>
@@ -149,13 +142,13 @@
                                                     onchange="handleDayPlanTypeSelection();">
 
                                                 <label
-                                                    class="btn btn-outline-warning w-100 rounded-end fw-bold text-uppercase"
+                                                    class="btn btn-outline-primary w-100 rounded-end fw-bold text-uppercase"
                                                     for="dpNotTemplate">For a Custom Package</label>
                                             </div>
                                         </div>
 
                                         <!-- Day Type -->
-                                        <div class="row mb-0" id="DayTypeCBsRow">
+                                        <div class="row mb-3" id="DayTypeCBsRow">
                                             <label class="form-label fw-bold mb-1">Day Type <span
                                                     class="text-danger">*</span> :</label>
 
@@ -200,7 +193,7 @@
                                                     <span class="text-danger">*</span> :</label>
                                                 <input id="dpTitle" class="form-control"
                                                     placeholder="Enter The Itinerary Title"
-                                                    onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle')">
+                                                    onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle'); checkDPFirstTab();" disabled>
                                             </div>
 
                                             <!-- code hidden -->
@@ -782,10 +775,11 @@
                                                     class="form-label fw-bold mb-0">Status:</label>
                                                 <select id="dpSelectStatus" class="form-select"
                                                     onchange="staticSelectValidator(this , 'dayplan' , 'dp_status')">
-                                                    <option value="" selected disabled> Select Status </option>
-                                                    <option value="Draft">This Is A Draft </option>
-                                                    <option value="Confirmed"> Added To A Package </option>
-                                                    <option value="Completed"> Tour Completed </option>
+                                                    <option value="" selected disabled>Please Select Status </option>
+                                                    <option value="Draft"> Draft </option>
+                                                    <option value="Finalized"> Finalized </option>
+                                                    <option value="Confirmed">Included into a package </option>
+                                                    <option value="Completed"> Tour completed </option>
                                                     <option value="ifDeleted" class="d-none"> Deleted Record </option>
                                                 </select>
                                             </div>

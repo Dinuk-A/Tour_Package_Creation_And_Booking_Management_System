@@ -1496,7 +1496,7 @@ const handleFirstDayChange = (selectElement) => {
     showFirstDayBtn.disabled = false;
     const fdMsg = document.getElementById('firstDayMsg');
 
-    if (tpkg.sd_dayplan_id.is_template) {
+    if (tpkg.is_custompkg == true && tpkg.sd_dayplan_id.is_template ) {
         selectElement.style.border = "2px solid orange";
         fdMsg.classList.remove('d-none');
         tpkg.sd_dayplan_id = null;
@@ -1524,7 +1524,7 @@ const handleFinalDayChange = (selectElement) => {
 
     const finalDMsg = document.getElementById('finalDayMsg');
 
-    if (tpkg.ed_dayplan_id.is_template) {
+    if (tpkg.is_custompkg == true && tpkg.ed_dayplan_id.is_template) {
         selectElement.style.border = "2px solid orange";
         finalDMsg.classList.remove('d-none');
         tpkg.ed_dayplan_id = null;
@@ -3330,7 +3330,7 @@ const handleMidDaySelectChange = (selectElem, currentDay = null) => {
         selectElem.value = "";
         selectElem.style.border = "2px solid red";
     } else {
-        if (selectedValue.is_template) {
+        if (tpkg.is_custompkg == true && selectedValue.is_template) {
             selectElem.style.border = "2px solid orange";
             msgElement.classList.remove("d-none");
 
