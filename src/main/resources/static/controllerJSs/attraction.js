@@ -7,16 +7,21 @@ window.addEventListener('load', () => {
 
     //for attraction form
     refreshAttractionForm();
+
+    refreshDistrictFilter();
+
 })
 
 //global var to store id of the table
 let sharedTableId = "mainTableAttraction";
 
+let attractions = [];
+
 //fn for show data in table
 const buildAttractionTable = async () => {
 
     try {
-        const attractions = await ajaxGetReq("/attraction/all");
+        attractions = await ajaxGetReq("/attraction/all");
 
         const tableColumnInfo = [
 
@@ -31,13 +36,107 @@ const buildAttractionTable = async () => {
         createTable(tableAttractionHolderDiv, sharedTableId, attractions, tableColumnInfo);
 
         //call the new datatable format(from net)
-        $(`#${sharedTableId}`).dataTable();
+        $(`#${sharedTableId}`).dataTable({
+            destroy: true, // Allows re-initialization
+            searching: true, // Remove the search bar
+            info: false, // Show entries count
+            pageLength: 10, // Number of rows per page
+            ordering: false,// Remove up and down arrows
+            lengthChange: false // Disable ability to change the number of rows
+            // dom: 't', // Just show the table (t) with no other controls
+        });
 
     } catch (error) {
         console.error("Failed to build attraction table:", error);
     }
 
 }
+
+//fill the districts to filter
+const refreshDistrictFilter = async () => {
+
+    let districts = [];
+
+    try {
+        districts = await ajaxGetReq("/district/all");
+        let allDistrictsObj = {
+            id: -10,
+            name: "All Districts",
+            province_id: 99
+        };
+
+        districts.unshift(allDistrictsObj);
+        fillDataIntoDynamicSelects(attrDistrictFilter, 'Please Select The District', districts, 'name');
+
+    } catch (error) {
+        console.error("Error fetching districts for filter:", error);
+    }
+
+}
+
+//handle filters
+const applyAttrFilters = () => {
+    const selecteDistrictRaw = document.getElementById('attrDistrictFilter').value;
+    let selectedDistrict = null;
+
+        if (selecteDistrictRaw && selecteDistrictRaw !== '') {
+        try {
+            selectedDistrict = JSON.parse(selecteDistrictRaw);
+        } catch (e) {
+            console.warn("District filter is not a valid JSON. Ignoring it.");
+            selectedDistrict = null;
+        }
+    }
+
+    const selectedAttrStts = document.getElementById('attrStatusFilter').value;
+
+    const filteredAttractions = attractions.filter(attr => {
+        let isDistMatch = true;
+        let isStatusMatch = true;
+
+        if (selectedDistrict && selectedDistrict.id !== -10) {
+            isDistMatch = attr.district_id.id === selectedDistrict.id;
+        }
+
+        if (selectedAttrStts && selectedAttrStts !== "all") {
+            if (selectedAttrStts === "ifDeleted") {
+                isStatusMatch = attr.deleted_attr === true;
+            } else {
+                isStatusMatch = attr.attr_status === selectedAttrStts;
+            }
+        }
+
+        return isDistMatch && isStatusMatch;
+    });
+
+    console.log("Filtered attractions:", filteredAttractions);
+
+    $('#mainTableAttraction').empty();
+
+    if ($.fn.DataTable.isDataTable('#mainTableAttraction')) {
+        $('#mainTableAttraction').DataTable().clear().destroy();
+    }
+
+    const tableColumnInfo = [
+        { displayType: 'text', displayingPropertyOrFn: 'name', colHeadName: 'Name' },
+        { displayType: 'function', displayingPropertyOrFn: showDistNProvince, colHeadName: 'District' },
+        { displayType: 'function', displayingPropertyOrFn: showLocalFees, colHeadName: 'Local Fees <br class="my-0 py-0"> (LKR)' },
+        { displayType: 'function', displayingPropertyOrFn: showForeignFees, colHeadName: 'Foreign Fees <br class="my-0 py-0"> (LKR)' },
+        { displayType: 'function', displayingPropertyOrFn: showAttrStatus, colHeadName: 'Status' }
+    ];
+
+    createTable(tableAttractionHolderDiv, sharedTableId, filteredAttractions, tableColumnInfo);
+
+    setTimeout(() => {
+        $(`#${sharedTableId}`).DataTable({
+            searching: true,
+            info: false,
+            pageLength: 10,
+            ordering: false,
+            lengthChange: false
+        });
+    }, 100);
+};
 
 //fn for show district + province in table
 const showDistNProvince = (ob) => {

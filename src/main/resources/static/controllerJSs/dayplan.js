@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-
     document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
         if (event.target.id === 'table-tab') {
             console.log("Switching to table tab - clearing form");
@@ -171,7 +170,7 @@ const showDayPlanStatus = (dpObj) => {
         } else if (dpObj.dp_status == "Finalized") {
             return `
                     <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-                       style="background-color: #9b59b6; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                       style="background-color: #145A32; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                        Finalized
                     </p>`;
         }

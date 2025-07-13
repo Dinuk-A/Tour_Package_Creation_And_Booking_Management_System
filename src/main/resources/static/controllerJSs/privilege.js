@@ -9,7 +9,7 @@ window.addEventListener('load', () => {
 //for filters
 const refreshPriviFilters = async () => {
     let roles = [];
-let modules = [];
+    let modules = [];
 
     //get roles
     try {
@@ -274,7 +274,7 @@ const applyPrivilegeFilter = () => {
 function resetPrivilegeFilters() {
     document.getElementById('roleFilter').value = '';
     document.getElementById('moduleFilter').value = '';
-    applyPrivilegeFilter(); 
+    applyPrivilegeFilter();
 }
 
 //for table
