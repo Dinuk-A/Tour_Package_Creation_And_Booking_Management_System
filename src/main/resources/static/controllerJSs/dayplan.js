@@ -81,6 +81,12 @@ const buildDayPlanTable = async () => {
 //fill districts in filter
 const refreshDistrictFilter = async () => {
 
+      //this is added because we use the dayplan.js inside the tpkg.html too
+      const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
+      if (!tableDayPlanHolderDivElement) {
+          return;
+      }
+
     let districts = [];
 
     try {
@@ -102,6 +108,12 @@ const refreshDistrictFilter = async () => {
 
 //filter by both day type and district
 const applyDayTableFilter = () => {
+
+    //this is added because we use the dayplan.js inside the tpkg.html too
+    const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
+    if (!tableDayPlanHolderDivElement) {
+        return;
+    }
 
     const selectedDayType = document.getElementById('daytypeFilter').value;
 
@@ -850,7 +862,7 @@ const changesBasedDPType = () => {
 
         //remove border, remove input value, remove dp attribute value, global var
         dayplan.pickuppoint = null;
-        dayplan.totalkmcount = null;
+        //dayplan.totalkmcount = null;
         dayplan.is_takepackedlunch = null;
         dayplan.lunchplace_id = null;
 
@@ -1863,10 +1875,6 @@ const checkDPFormErrors = () => {
                 errors += "Drop-off location is required \n";
             }
 
-            if (dayplan.totalkmcount == null) {
-                errors += "Total KM count cannot be empty \n";
-            }
-
             if (dayplan.pickuppoint != null && dayplan.pick_manual_gcoords == null) {
                 errors += "Enter the Geo Coords of pickup point \n";
             }
@@ -2487,14 +2495,14 @@ const refillDayPlanForm = async (dpObj) => {
         dyPlanStatusSelectElement.style.border = '1px solid #ced4da';
 
         //handle lunch overall
-        if(dpObj.is_template) {
+        if (dpObj.is_template) {
             selectLPProv.disabled = true;
             packedLunchYes.checked = false;
             packedLunchNo.checked = false;
             packedLunchYes.disabled = true;
             packedLunchNo.disabled = true;
         }
-    
+
         $("#infoModalDayPlan").modal("hide");
 
         var myDPFormTab = new bootstrap.Tab(document.getElementById('form-tab'));

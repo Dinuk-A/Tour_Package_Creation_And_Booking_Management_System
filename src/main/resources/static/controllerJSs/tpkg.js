@@ -14,6 +14,7 @@ let onlyLastDays = [];
 let onlyMidDays = [];
 let allActiveInqs = [];
 let vehiTypes = [];
+
 const fetchDays = async () => {
 
     //get first days only
@@ -76,35 +77,18 @@ const buildTpkgTable = async () => {
 //to ready the main form   
 const refreshTpkgForm = async () => {
 
+    //general changes. no matter loggeduser role
+
+    //general changes for entire form
     tpkg = new Object();
     tpkg.dayplans = new Array();
     tpkg.addiCostList = new Array();
     document.getElementById('formTpkg').reset();
 
-    document.getElementById('tpkgStep3-tab').innerText = "Preferences"
-    startDateCol.classList.remove('d-none');
+    //general changes for tabs
+    document.getElementById('tpkgStep3-tab').innerText = "Preferences";
     preferencesFieldset.classList.remove('d-none');
     document.getElementById('tpkgStep4-tab').parentElement.classList.remove('d-none');
-
-    // vehicle types
-    try {
-        vehiTypes = await ajaxGetReq("/vehitypes/all");
-        fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'name');
-
-    } catch (error) {
-        console.error("Failed to fetch form data vehicles:", error);
-    }
-
-    const loggedEmpId = document.getElementById('loggedUserEmpIdSectionId').textContent;
-    console.log(loggedEmpId);
-
-    //active inquiries of the logged user
-    try {
-        allActiveInqs = await ajaxGetReq("/inq/personal/active?empid=" + loggedEmpId);
-        fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname')
-    } catch (error) {
-        console.error("Failed to fetch form data inquiries:", error);
-    }
 
     // Array of input field IDs to reset
     const inputTagsIds = [
@@ -132,7 +116,7 @@ const refreshTpkgForm = async () => {
         'totalGuideCostInput',
         'totalAdditionalCosts',
         'pkgStartingPrice',
-        'tpNote',       
+        'tpNote',
         'tpSelectStatus'
     ];
 
@@ -144,53 +128,6 @@ const refreshTpkgForm = async () => {
             field.value = '';
         }
     });
-
-    document.getElementById('startDateCol').classList.remove('d-none');
-    document.getElementById('tpDescRow').classList.add('d-none');
-
-    //first day
-    document.getElementById('tpkgFirstDaySelect').disabled = true;
-    document.getElementById('firstDayMsg').classList.add('d-none');
-    document.getElementById('showFirstDayBtn').disabled = true;
-
-    //mid days
-    document.getElementById('addNewDaysBtn').disabled = true;
-    document.getElementById('tpkgMidDaysSelectSection').innerHTML = '';
-    //template msg for each day 💥💥💥
-
-    //final day
-    document.getElementById('tpkgFinalDaySelect').disabled = true;
-    document.getElementById('finalDayMsg').classList.add('d-none');
-    document.getElementById('showFinalDayBtn').disabled = true;
-    document.getElementById('removeFinalDayBtn').disabled = true;
-    document.getElementById('finalDaySelectUseTempsBtn').disabled = true;
-    document.getElementById('finalDaySelectUseExistingBtn').disabled = true;
-
-    //show dayplan info section
-    document.getElementById('dayPlanInfoEditBtn').disabled = true;
-    resetDayPlanInfoSection();
-
-    const localChildInput = document.getElementById('tpkgLocalChildCount');
-    const foreignChildInput = document.getElementById('tpkgForeignChildCount');
-
-    localChildInput.disabled = true;
-    foreignChildInput.disabled = true;
-
-    document.getElementById('tourStartDateDisplay').innerText = 'Start Date Not Selected';
-    document.getElementById('tourEndDateDisplay').innerText = 'Please Add Day Plans';
-
-    document.getElementById('tpkgLocalAdultCount').value = 0;
-    document.getElementById('tpkgLocalChildCount').value = 0;
-    document.getElementById('tpkgForeignAdultCount').value = 0;
-    document.getElementById('tpkgForeignChildCount').value = 0;
-
-    document.getElementById('tpkgLocalAdultCount').value = 0;
-    localChildInput.value = 0;
-    document.getElementById('tpkgForeignAdultCount').value = 0;
-    foreignChildInput.value = 0;
-
-    //additional cost add btn
-    document.getElementById('addCostAddBtn').disabled = false;
 
     //radio tags to reset
     const radioIdsToReset = [
@@ -206,6 +143,7 @@ const refreshTpkgForm = async () => {
         'rentalGuideCB'
     ];
 
+    //clear out any previous styles
     radioIdsToReset.forEach(id => {
         const radio = document.getElementById(id);
         if (radio) {
@@ -214,11 +152,91 @@ const refreshTpkgForm = async () => {
         }
     });
 
-    //keep these 2 below the radioIdsToReset
+    //get the logged user's emp id to filter inquiries assigned to him
+    const loggedEmpId = document.getElementById('loggedUserEmpIdSectionId').textContent;
+    console.log(loggedEmpId);
+
+    // refresh based inq field active inquiries of the logged user
+    try {
+        allActiveInqs = await ajaxGetReq("/inq/personal/active?empid=" + loggedEmpId);
+        fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname')
+    } catch (error) {
+        console.error("Failed to fetch inquiries for assigned user:", error);
+    }
+
+    //date must be shown first and web desc must hidden
+    document.getElementById('startDateCol').classList.remove('d-none');
+    document.getElementById('tpDescRow').classList.add('d-none');
+
+    //changes to the first final days and its buttons
+    //first day
+    document.getElementById('tpkgFirstDaySelect').disabled = true;
+    document.getElementById('firstDayMsg').classList.add('d-none');
+    document.getElementById('showFirstDayBtn').disabled = true;
+
+    //final day
+    document.getElementById('tpkgFinalDaySelect').disabled = true;
+    document.getElementById('finalDayMsg').classList.add('d-none');
+    document.getElementById('showFinalDayBtn').disabled = true;
+    document.getElementById('removeFinalDayBtn').disabled = true;
+    document.getElementById('finalDaySelectUseTempsBtn').disabled = true;
+    document.getElementById('finalDaySelectUseExistingBtn').disabled = true;
+
+    //reset mid days selection section and its button
+    document.getElementById('addNewDaysBtn').disabled = true;
+    document.getElementById('tpkgMidDaysSelectSection').innerHTML = '';
+    //template msg for each day 💥💥💥
+
+    //reset dayplans info showing section and its button
+    resetDayPlanInfoSection();
+    document.getElementById('dayPlanInfoEditBtn').disabled = true;
+
+    //reset traveller grp count section
+    //all values must be 0 and child ones must disabled
+
+    const trvlrGrpLocalAdult = document.getElementById('tpkgLocalAdultCount');
+    const trvlrGrpLocalChild = document.getElementById('tpkgLocalChildCount');
+    const trvlrGrpForeignAdult = document.getElementById('tpkgForeignAdultCount');
+    const trvlrGrpForeignChild = document.getElementById('tpkgForeignChildCount');
+
+    trvlrGrpLocalAdult.value = 0;
+    trvlrGrpLocalChild.value = 0;
+    trvlrGrpForeignAdult.value = 0;
+    trvlrGrpForeignChild.value = 0;
+
+    trvlrGrpLocalChild.disabled = true;
+    trvlrGrpForeignChild.disabled = true;
+
+    // reset vehicle types selector
+    try {
+        vehiTypes = await ajaxGetReq("/vehitypes/all");
+        fillDataIntoDynamicSelects(tpkgVehitype, 'Select Vehicle Type', vehiTypes, 'name');
+    } catch (error) {
+        console.error("Failed to fetch form data vehicles:", error);
+    }
+
+    //reset sd and ed displaying (in preferences section, not inputs)
+    document.getElementById('tourStartDateDisplay').innerText = 'Start Date Not Selected';
+    document.getElementById('tourEndDateDisplay').innerText = 'Please Add Day Plans';
+
+    //reset the 3 fields that shows resources availability
+    showVehiAvailabilityButtons();
+    showDnGAvailabilityButtons();
+
+    //guide options initially disabled
     document.getElementById('yathraGuideCB').disabled = true;
     document.getElementById('rentalGuideCB').disabled = true;
 
-    //total costs section 
+    // reset additionalcost table 
+    document.getElementById("additionalCostTableBody").innerHTML = "";
+
+    //reset additionalCost inner form
+    refreshAddiCostForm();
+
+    //reset additional cost add btn
+    document.getElementById('addCostAddBtn').disabled = false;
+
+    //reset total costs section 
     document.getElementById('totalTktCostGroup').classList.remove('d-none');
     document.getElementById('totalTktCostMsg').classList.add('d-none');
 
@@ -241,20 +259,7 @@ const refreshTpkgForm = async () => {
     document.getElementById('totalGuideCostMsg').classList.add('d-none');
 
     document.getElementById('finalTotalCost').value = '';
-
     document.getElementById('pkgSellingPrice').value = '';
-
-    const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
-
-    pkgFinalPriceShowInput.value = '';
-    pkgFinalPriceShowInput.style.border = "1px solid #ced4da";
-
-    document.getElementById("additionalCostTableBody").innerHTML = "";
-
-    showVehiAvailabilityButtons();
-    showDnGAvailabilityButtons();
-
-    document.getElementById('forWebSite').disabled = true;
 
     //discount section
     const noneCb = document.getElementById('discountNone');
@@ -270,17 +275,47 @@ const refreshTpkgForm = async () => {
     loyalityCb.disabled = true;
     offpeakCb.disabled = true;
 
+    //reset final price section
+    const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
+    pkgFinalPriceShowInput.value = '';
+    pkgFinalPriceShowInput.style.border = "1px solid #ced4da";
+
+    //set status auto
+    const tpkgStatusSelectElement = document.getElementById('tpSelectStatus');
+    tpkg.tpkg_status = "Draft";
+    tpkgStatusSelectElement.value = "Draft";
+    tpkgStatusSelectElement.style.border = "2px solid lime";
+
     //get logged user roles
     const rolesRaw = document.getElementById('userRolesArraySection').textContent;
     console.log("Raw roles text:", rolesRaw);
-
     const roles = JSON.parse(rolesRaw);
     console.log("Parsed roles:", roles);
 
-    if (roles.includes("System_Admin") || roles.includes("Manager")) {
+    //changes for higher users
+    if (roles.includes("System_Admin") || roles.includes("Manager") || roles.includes("Assistant Manager")) {
+
+        //enable for website radio
         document.getElementById('forWebSite').disabled = false;
+
+        //only hide last child, 'if deleted' in status
+        tpkgStatusSelectElement.children[5].classList.add('d-none');
+
+    } else {
+
+         //disable for website radio
+        document.getElementById('forWebSite').disabled = true;
+
+        //hide options from 3 to 5 in status
+        for (let i = 3; i <= 5; i++) {
+            if (tpkgStatusSelectElement.children[i]) {
+                tpkgStatusSelectElement.children[i].classList.add('d-none');
+            }
+        }
+
     }
 
+    //disable update btn
     const updateBtn = document.getElementById('tpkgUpdateBtn');
     updateBtn.disabled = true;
     updateBtn.style.cursor = "not-allowed";
@@ -520,7 +555,7 @@ const resetDayPlanInfoSection = () => {
 };
 
 //refill the TPKG
-const refillTpkgForm = (tpkgObj) => {
+const refillTpkgFormOri = (tpkgObj) => {
 
     console.log("Refilling Template Package Form with data:", tpkgObj);
 
@@ -533,11 +568,13 @@ const refillTpkgForm = (tpkgObj) => {
     } else if (tpkgObj.is_custompkg === false) {
         document.getElementById("forWebSite").checked = true;
     }
-    //changesTpkgCustomOrTemp();
+    changesTpkgCustomOrTemp();
 
     //inq
-    fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', tpkg.basedinq.inqcode);
-    tpkgBasedInq.disabled = false;
+    if (tpkg.basedinq != null) {
+        fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', tpkg.basedinq.inqcode);
+        tpkgBasedInq.disabled = false;
+    }
 
     //title and code
     document.getElementById("inputPkgTitle").value = tpkgObj.pkgtitle || "";
@@ -550,10 +587,10 @@ const refillTpkgForm = (tpkgObj) => {
     document.getElementById("tpDescription").value = tpkgObj.web_description || "";
 
     //start date
-    fillDataIntoDynamicSelects(tpkgFirstDaySelect, 'please select', onlyFirstDays, 'daytitle', tpkg.sd_dayplan_id.daytitle);
+    fillDataIntoDynamicSelects(tpkgFirstDaySelect, 'please select first day plan', onlyFirstDays, 'daytitle', tpkg.sd_dayplan_id.daytitle);
 
     //last date
-    fillDataIntoDynamicSelects(tpkgFinalDaySelect, 'please select', onlyLastDays, 'daytitle', tpkg.ed_dayplan_id.daytitle);
+    fillDataIntoDynamicSelects(tpkgFinalDaySelect, 'please select final day plan', onlyLastDays, 'daytitle', tpkg.ed_dayplan_id.daytitle);
 
     //reset midday counter
     let midDayCounter = 1;
@@ -1169,12 +1206,13 @@ const setTpkgStatus = () => {
     tpkg.tpkg_status = "Draft";
     tpkgStatusSelectElement.value = "Draft";
     tpkgStatusSelectElement.style.border = "2px solid lime";
-    for (let i = 2; i <= 4; i++) {
+
+    //hide options from 3 to 5
+    for (let i = 3; i <= 5; i++) {
         if (tpkgStatusSelectElement.children[i]) {
             tpkgStatusSelectElement.children[i].classList.add('d-none');
         }
     }
-    //tpkgStatusSelectElement.children[5].classList.add('d-none');
 }
 
 //set the start date to 7 days future   
@@ -1326,7 +1364,7 @@ const changesTpkgCustomOrTemp = () => {
         document.getElementById('showAvailableGuideCount').innerText = '';
 
         document.getElementById('startingPriceSection').classList.remove('d-none');
-        
+
 
     }
 }
@@ -1496,7 +1534,7 @@ const handleFirstDayChange = (selectElement) => {
     showFirstDayBtn.disabled = false;
     const fdMsg = document.getElementById('firstDayMsg');
 
-    if (tpkg.is_custompkg == true && tpkg.sd_dayplan_id.is_template ) {
+    if (tpkg.is_custompkg == true && tpkg.sd_dayplan_id.is_template) {
         selectElement.style.border = "2px solid orange";
         fdMsg.classList.remove('d-none');
         tpkg.sd_dayplan_id = null;
@@ -1904,9 +1942,14 @@ const calcStartingPricePerAdult = () => {
     const finalStartingPrice = tktCostTotalForWeb + stayCostTotalForWeb + vehiParkCostForweb + vehiChargeForWeb + guideCostForWeb + driverCostForWeb;
     console.log("Final starting price for website: " + finalStartingPrice);
 
+    const roundedStartingPrice = Math.ceil(finalStartingPrice / 100) * 100;
+    console.log("Rounded starting price for website: " + roundedStartingPrice);
+
     const startingPriceInput = document.getElementById('pkgStartingPrice');
-    startingPriceInput.value = finalStartingPrice.toFixed(2);
-    tpkg.pkgstartingprice = parseFloat(finalStartingPrice.toFixed(2));
+    startingPriceInput.value = roundedStartingPrice.toFixed(2);
+
+    tpkg.pkgstartingprice = parseFloat(roundedStartingPrice.toFixed(2));
+    console.log(tpkg.pkgstartingprice);
 }
 
 // calc total cost for driver

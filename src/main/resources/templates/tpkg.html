@@ -1329,11 +1329,14 @@
                                                     :</label>
                                                 <select id="tpSelectStatus" class="form-control form-select"
                                                     onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status')">
+
                                                     <option value="" selected disabled> Select Status </option>
                                                     <option value="Draft"> Draft </option>
-                                                    <option value="Completed"> Completed </option>
+                                                    <option value="Completed"> Finalized </option>
+                                                    <option value="Active"> Display on Website </option>
                                                     <option value="Inactive"> Inactive </option>
                                                     <option value="ifDeleted" class="d-none"> Deleted </option>
+
                                                 </select>
                                             </div>
                                         </div>
@@ -1546,7 +1549,7 @@
                             <!-- Preview Image -->
                             <div id="modTpkgImagePreviewSection" class="mb-4 d-none text-center">
                                 <p class="fw-bold mb-2 text-primary">Preview Image:</p>
-                                <img id="modTpkgPreviewImg" src="images/tpkg-default.png" alt="Preview"
+                                <img id="modTpkgPreviewImg" src="images/sigiriya.jpg" alt="Preview"
                                     class="img-thumbnail rounded shadow-sm" style="max-height: 200px; width: auto;">
                             </div>
 
