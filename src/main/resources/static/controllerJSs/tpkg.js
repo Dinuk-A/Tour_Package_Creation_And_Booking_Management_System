@@ -13,6 +13,7 @@ window.addEventListener('load', () => {
 let onlyFirstDays = [];
 let onlyLastDays = [];
 let onlyMidDays = [];
+let onlyTemplates = [];
 let allActiveInqs = [];
 let vehiTypes = [];
 
@@ -38,6 +39,15 @@ const fetchDays = async () => {
     } catch (error) {
         console.error('Error fetching mid days:', error);
     }
+
+    //get template days only
+    try {
+        onlyTemplates = await ajaxGetReq("/dayplan/onlytemplatedays");
+    } catch (error) {
+        console.error('Error fetching mid days:', error);
+    }
+
+
 }
 
 // to fetch all price modifiers and store them globally 
@@ -1253,17 +1263,18 @@ const fillDataFromInq = async () => {
         if (tpkg.basedinq.intrstdpkgid != null) {
 
             const interestedTemplatePkg = await ajaxGetReq("/tpkg/byid?tpkgId=" + tpkg.basedinq.intrstdpkgid);
+            console.log(interestedTemplatePkg);
 
             //for first day
             const fdSelect = document.getElementById('tpkgFirstDaySelect');
             fdSelect.disabled = true;
-            fillDataIntoDynamicSelects(fdSelect, 'please select', onlyFirstDays, 'daytitle', interestedTemplatePkg.sd_dayplan_id.daytitle);
+            fillDataIntoDynamicSelects(fdSelect, 'Please select first day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.sd_dayplan_id.daytitle);
             handleFirstDayChange(tpkgFirstDaySelect);
 
             //for final day
             const ldSelect = document.getElementById('tpkgFinalDaySelect');
             ldSelect.disabled = true;
-            fillDataIntoDynamicSelects(ldSelect, 'please select', onlyLastDays, 'daytitle', interestedTemplatePkg.ed_dayplan_id.daytitle);
+            fillDataIntoDynamicSelects(ldSelect, 'Please select last day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.ed_dayplan_id.daytitle);
             //showFinalDayBtn.disabled = false;
             //finalDayMsg.classList.remove('d-none');
             handleFinalDayChange(tpkgFinalDaySelect);
@@ -1285,7 +1296,7 @@ const fillDataFromInq = async () => {
                 fillDataIntoDynamicSelects(
                     selectElement,
                     'Please Select',
-                    onlyMidDays,
+                    onlyTemplates,
                     'daytitle',
                     dayPlan.daytitle
                 );
@@ -3210,13 +3221,13 @@ const feedAndSelectNewlyAddedDp = async () => {
 
         try {
             tpkg.sd_dayplan_id = null;
-            const onlyFirstDays = await ajaxGetReq("/dayplan/onlyfirstdays");
+            const onlyFirstDaysNew = await ajaxGetReq("/dayplan/onlyfirstdays");
             const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
             console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
-            fillDataIntoDynamicSelects(tpkgFirstDaySelect, "Please Select First Day", onlyFirstDays, "daytitle", newlyAddedDayTitle);
+            fillDataIntoDynamicSelects(tpkgFirstDaySelect, "Please Select First Day", onlyFirstDaysNew, "daytitle", newlyAddedDayTitle);
             const selectedVal = tpkgFirstDaySelect.value;
             console.log("Selected value in tpkgFirstDaySelect:", selectedVal);
-            if (selectedVal) {
+            if (selectedVal != null) {
                 tpkg.sd_dayplan_id = JSON.parse(selectedVal);
                 handleFirstDayChange(tpkgFirstDaySelect);
             } else {
@@ -3233,10 +3244,10 @@ const feedAndSelectNewlyAddedDp = async () => {
 
         try {
             tpkg.ed_dayplan_id = null;
-            const onlyLastDays = await ajaxGetReq("/dayplan/onlylastdays");
+            const onlyLastDaysNew = await ajaxGetReq("/dayplan/onlylastdays");
             const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
             console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
-            fillDataIntoDynamicSelects(tpkgFinalDaySelect, "Please Select Final Day", onlyLastDays, "daytitle", newlyAddedDayTitle);
+            fillDataIntoDynamicSelects(tpkgFinalDaySelect, "Please Select Final Day", onlyLastDaysNew, "daytitle", newlyAddedDayTitle);
             const selectedVal = tpkgFinalDaySelect.value;
 
             if (selectedVal) {
@@ -3260,8 +3271,8 @@ const feedAndSelectNewlyAddedDp = async () => {
             try {
                 const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
                 console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
-                const onlyMidDays = await ajaxGetReq("/dayplan/onlymiddays");
-                fillDataIntoDynamicSelects(midDaySelect, "Please Select Middle Day", onlyMidDays, "daytitle", newlyAddedDayTitle);
+                const onlyMidDaysNew = await ajaxGetReq("/dayplan/onlymiddays");
+                fillDataIntoDynamicSelects(midDaySelect, "Please Select Middle Day", onlyMidDaysNew, "daytitle", newlyAddedDayTitle);
                 setTimeout(() => {
                     const selectedVal = midDaySelect.value;
                     console.log("Selected value in mid day select:", selectedVal);
@@ -3319,7 +3330,8 @@ const addNewDayPlanInTpkg = async () => {
                 if (postServerResponse && !postServerResponse.startsWith("save not completed")) {
                     window.newlyAddedDayTitleGlobal = postServerResponse;
                     showAlertModal('suc', 'Saved Successfully as ' + postServerResponse);
-                    feedAndSelectNewlyAddedDp();
+                    setTimeout(feedAndSelectNewlyAddedDp, 100);
+                    //feedAndSelectNewlyAddedDp();
                     document.getElementById('formDayPlanInTpkg').reset();
                     refreshDpFormInTpkg();
                     clearDpInfoShowSection();
