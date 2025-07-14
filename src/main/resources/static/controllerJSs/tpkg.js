@@ -547,7 +547,7 @@ const refillTpkgForm = (tpkgObj) => {
     document.getElementById("tpStartDateInput").value = tpkgObj.tourstartdate || "";
 
     //web description
-    document.getElementById("tpDescription").value = tpkgObj.web_discription || "";
+    document.getElementById("tpDescription").value = tpkgObj.web_description || "";
 
     //start date
     fillDataIntoDynamicSelects(tpkgFirstDaySelect, 'please select', onlyFirstDays, 'daytitle', tpkg.sd_dayplan_id.daytitle);
@@ -1215,7 +1215,7 @@ const changesTpkgCustomOrTemp = () => {
         document.getElementById('tpkgStep4-tab').parentElement.classList.remove('d-none');
 
         //unbind if previously binded values are exist
-        tpkg.web_discription = null;
+        tpkg.web_description = null;
         tpkg.img1 = null;
         tpkg.img2 = null;
         tpkg.img3 = null;
@@ -3701,7 +3701,7 @@ const checkTpkgFormErrors = () => {
     //for template packages
     if (tpkg.is_custompkg != null && tpkg.is_custompkg == false) {
 
-        if (!tpkg.web_discription || tpkg.web_discription.trim() === "") {
+        if (!tpkg.web_description || tpkg.web_description.trim() === "") {
             errors += "Please enter the description for the website \n";
         }
 

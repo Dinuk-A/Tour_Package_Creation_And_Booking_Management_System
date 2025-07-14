@@ -182,7 +182,7 @@ const handleCustName = (nameInputElement) => {
 
     nameInputElement.value = capitalized;
 
-    const namePattern = /^([A-Z][a-z]{3,30}\s)+([A-Z][a-z]{3,30})$/;
+    const namePattern = /^([A-Z][a-z]{2,30}\s)+([A-Z][a-z]{2,30})$/;
 
     if (namePattern.test(capitalized)) {
         nameInputElement.style.borderBottom = "4px solid lime";
@@ -271,6 +271,7 @@ const openReusableModalForCardsReadMore = (package) => {
     ForDPlansAccordions.innerHTML = "";
     pkgname.innerText = package.pkgtitle;
     pkgDescription.innerText = package.web_description;
+    pkgStartingPrice.innerHTML = `LKR ${package.pkgstartingprice}`;
 
     //for images
     //img1 will be the cover photo...populated in js
