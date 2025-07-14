@@ -5,6 +5,7 @@ window.addEventListener('load', () => {
     refreshAddiCostForm();
     fetchPriceMods();
     fetchDays();
+    fetchTemplateDaysForRefill();
 
 });
 
@@ -301,9 +302,13 @@ const refreshTpkgForm = async () => {
         //only hide last child, 'if deleted' in status
         tpkgStatusSelectElement.children[5].classList.add('d-none');
 
+        //show the 3rd and 4th childs
+        tpkgStatusSelectElement.children[3].classList.remove('d-none');
+        tpkgStatusSelectElement.children[4].classList.remove('d-none');
+
     } else {
 
-         //disable for website radio
+        //disable for website radio
         document.getElementById('forWebSite').disabled = true;
 
         //hide options from 3 to 5 in status
@@ -319,6 +324,11 @@ const refreshTpkgForm = async () => {
     const updateBtn = document.getElementById('tpkgUpdateBtn');
     updateBtn.disabled = true;
     updateBtn.style.cursor = "not-allowed";
+
+    //enable add button
+    const addBtn = document.getElementById('tpkgAddBtn');
+    addBtn.disabled = false;
+    addBtn.style.cursor = "pointer";
 
     //set the min start date to 7 days future
     setTpkgStartDateToFuture();
@@ -554,162 +564,261 @@ const resetDayPlanInfoSection = () => {
     document.getElementById('dayPlanInfoEditBtn').disabled = true;
 };
 
+//load templates and save globally just for refill
+let templateDaysForRefill = [];
+
+const fetchTemplateDaysForRefill = async () => {
+
+    try {
+        templateDaysForRefill = await ajaxGetReq("/dayplan/onlytemplatedays");
+    } catch (error) {
+        console.error("Error loading templates:", error);
+    }
+}
+
 //refill the TPKG
-const refillTpkgFormOri = (tpkgObj) => {
+const refillTpkgForm = (tpkgObj) => {
 
     console.log("Refilling Template Package Form with data:", tpkgObj);
 
     tpkg = JSON.parse(JSON.stringify(tpkgObj));
     oldTpkg = JSON.parse(JSON.stringify(tpkgObj));
 
-    //pkg type
-    if (tpkgObj.is_custompkg === true) {
-        document.getElementById("customTP").checked = true;
-    } else if (tpkgObj.is_custompkg === false) {
-        document.getElementById("forWebSite").checked = true;
-    }
-    changesTpkgCustomOrTemp();
-
-    //inq
-    if (tpkg.basedinq != null) {
-        fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', tpkg.basedinq.inqcode);
-        tpkgBasedInq.disabled = false;
-    }
-
+    //refill generally, doesnt matter the type (custom or template)
     //title and code
     document.getElementById("inputPkgTitle").value = tpkgObj.pkgtitle || "";
     document.getElementById("inputPkgCode").value = tpkgObj.pkgcode || "";
 
-    //start date
-    document.getElementById("tpStartDateInput").value = tpkgObj.tourstartdate || "";
-
-    //web description
-    document.getElementById("tpDescription").value = tpkgObj.web_description || "";
-
-    //start date
-    fillDataIntoDynamicSelects(tpkgFirstDaySelect, 'please select first day plan', onlyFirstDays, 'daytitle', tpkg.sd_dayplan_id.daytitle);
-
-    //last date
-    fillDataIntoDynamicSelects(tpkgFinalDaySelect, 'please select final day plan', onlyLastDays, 'daytitle', tpkg.ed_dayplan_id.daytitle);
-
-    //reset midday counter
-    let midDayCounter = 1;
-
-    //mid days    
-    for (let i = 0; i < tpkg.dayplans.length; i++) {
-
-        console.log("Processing mid day plan start:", i);
-
-        const dayPlan = tpkg.dayplans[i];
-
-        console.log(dayPlan);
-
-        //created once per loop element
-        generateNormalDayPlanSelectSections();
-
-        setTimeout(() => {
-            const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
-            const selectElement = document.getElementById(midDaySelectId);
-
-            selectElement.disabled = false;
-
-            fillDataIntoDynamicSelects(
-                selectElement,
-                'Please Select',
-                onlyMidDays,
-                'daytitle',
-                dayPlan.daytitle
-            );
-
-            document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
-            document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
-
-            console.log("Processing mid day plan end:", i);
-        }, 150);
-
-        midDayCounter++;
-    }
-
-    //traevellers counts
-    document.getElementById("tpkgLocalAdultCount").value = tpkgObj.localadultcount ?? 0;
-    document.getElementById("tpkgLocalChildCount").value = tpkgObj.localchildcount ?? 0;
-    document.getElementById("tpkgForeignAdultCount").value = tpkgObj.foreignadultcount ?? 0;
-    document.getElementById("tpkgForeignChildCount").value = tpkgObj.foreignchildcount ?? 0;
-
-    // update total travellers
-    updateTotalTravellers();
-
-    // preferred vehicle type
-    fillDataIntoDynamicSelects(
-        document.getElementById("tpkgVehitype"),
-        'Please Select Vehicle Type',
-        vehiTypes,
-        'vehiclename',
-        tpkgObj.pref_vehi_type
-    );
-
-    //for discount cbs
-    refillDiscountSection(tpkgObj);
-
-    // include guide
-    if (tpkgObj.is_guide_needed === true) {
-        document.getElementById("guideYes").checked = true;
-    } else if (tpkgObj.is_guide_needed === false) {
-        document.getElementById("guideNo").checked = true;
-    }
-    handleNeedGuideCB();
-
-    // vehicle source
-    if (tpkgObj.is_company_vehicle === true) {
-        document.getElementById("yathraVehiCB").checked = true;
-    } else if (tpkgObj.is_company_vehicle === false) {
-        document.getElementById("rentalVehiCB").checked = true;
-    }
-
-    // driver source
-    if (tpkgObj.is_company_driver === true) {
-        document.getElementById("yathraDriverCB").checked = true;
-    } else if (tpkgObj.is_company_driver === false) {
-        document.getElementById("rentalDriverCB").checked = true;
-    }
-
-    // guide source
-    if (tpkgObj.is_company_guide === true) {
-        document.getElementById("yathraGuideCB").checked = true;
-    } else if (tpkgObj.is_company_guide === false) {
-        document.getElementById("rentalGuideCB").checked = true;
-    }
-
-    const defaultImgPath = "images/sigiriya.jpg";
-
-    if (tpkgObj.img1 != null) {
-        imgPreview1.src = atob(tpkgObj.img1);
-    } else {
-        imgPreview1.src = defaultImgPath;
-    }
-
-    if (tpkgObj.img2 != null) {
-        imgPreview2.src = atob(tpkgObj.img2);
-    } else {
-        imgPreview2.src = defaultImgPath;
-    }
-
-    if (tpkgObj.img3 != null) {
-        imgPreview3.src = atob(tpkgObj.img3);
-    } else {
-        imgPreview3.src = defaultImgPath;
-    }
-
-    //additional cost table💥💥💥
+    //total days and km count
+    document.getElementById('showTotalKMCount').value = tpkgObj.totalkmcount;
+    document.getElementById('showTotalDaysCount').value = tpkgObj.totaldays;
 
     // note , status
     document.getElementById('tpNote').value = tpkgObj.note;
     document.getElementById('tpSelectStatus').value = tpkgObj.tpkg_status;
 
+    //type based changes   
+    //first setup UI for both types
+    if (tpkgObj.is_custompkg === true) {
+        document.getElementById("customTP").checked = true;
+    } else if (tpkgObj.is_custompkg === false) {
+        document.getElementById("forWebSite").checked = true;
+    }
+
+    changesTpkgCustomOrTemp();
+
+    //for custom pkgs
+    if (tpkgObj.is_custompkg === true) {
+
+        //based inquiry
+        if (tpkg.basedinq != null) {
+            fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', tpkgObj.basedinq.inqcode);
+            tpkgBasedInq.disabled = false;
+        }
+
+        //approx start date
+        document.getElementById("tpStartDateInput").value = tpkgObj.tourstartdate || "";
+
+        //start day plan
+        fillDataIntoDynamicSelects(tpkgFirstDaySelect, 'please select first day plan', onlyFirstDays, 'daytitle', tpkgObj.sd_dayplan_id.daytitle);
+
+        //last day plan 💥
+        fillDataIntoDynamicSelects(tpkgFinalDaySelect, 'please select final day plan', onlyLastDays, 'daytitle', tpkgObj.ed_dayplan_id.daytitle);
+
+        //reset midday counter
+        let midDayCounter = 1;
+
+        //mid days    
+        for (let i = 0; i < tpkgObj.dayplans.length; i++) {
+
+            console.log("Processing mid day plan start:", i);
+            const dayPlan = tpkgObj.dayplans[i];
+            console.log(dayPlan);
+
+            //created once per loop element
+            generateNormalDayPlanSelectSections();
+
+            setTimeout(() => {
+                const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
+                const selectElement = document.getElementById(midDaySelectId);
+
+                selectElement.disabled = false;
+
+                fillDataIntoDynamicSelects(
+                    selectElement,
+                    'Please Select',
+                    onlyMidDays,
+                    'daytitle',
+                    dayPlan.daytitle
+                );
+
+                document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
+                document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
+
+            }, 150);
+
+            midDayCounter++;
+        }
+
+        //traevellers counts
+        document.getElementById("tpkgLocalAdultCount").value = tpkgObj.localadultcount ?? 0;
+        document.getElementById("tpkgLocalChildCount").value = tpkgObj.localchildcount ?? 0;
+        document.getElementById("tpkgForeignAdultCount").value = tpkgObj.foreignadultcount ?? 0;
+        document.getElementById("tpkgForeignChildCount").value = tpkgObj.foreignchildcount ?? 0;
+
+        // update total travellers
+        updateTotalTravellers();
+
+        // preferred vehicle type
+        fillDataIntoDynamicSelects(
+            document.getElementById("tpkgVehitype"),
+            'Please Select Vehicle Type',
+            vehiTypes,
+            'vehiclename',
+            tpkgObj.pref_vehi_type
+        );
+
+        // include guide
+        if (tpkgObj.is_guide_needed === true) {
+            document.getElementById("guideYes").checked = true;
+        } else if (tpkgObj.is_guide_needed === false) {
+            document.getElementById("guideNo").checked = true;
+        }
+        handleNeedGuideCB();
+
+        // vehicle source (int or ext)
+        if (tpkgObj.is_company_vehicle === true) {
+            document.getElementById("yathraVehiCB").checked = true;
+        } else if (tpkgObj.is_company_vehicle === false) {
+            document.getElementById("rentalVehiCB").checked = true;
+        }
+
+        // driver source (int or ext)
+        if (tpkgObj.is_company_driver === true) {
+            document.getElementById("yathraDriverCB").checked = true;
+        } else if (tpkgObj.is_company_driver === false) {
+            document.getElementById("rentalDriverCB").checked = true;
+        }
+
+        // guide source (int or ext)
+        if (tpkgObj.is_company_guide === true) {
+            document.getElementById("yathraGuideCB").checked = true;
+        } else if (tpkgObj.is_company_guide === false) {
+            document.getElementById("rentalGuideCB").checked = true;
+        }
+
+        //additional cost entire table create again 💥💥💥
+
+        //refill all the related costs
+        document.getElementById('totalTktCostInput').value = tpkgObj.totaltktcost;
+        document.getElementById('totalVehicleParkingCost').value = tpkgObj.totalvehiparkingcost;
+        document.getElementById('totalLunchCostForAll').value = tpkgObj.totallunchcost;
+        document.getElementById('totalVehiCostInput').value = tpkgObj.totalvehicost;
+        document.getElementById('totalStayCostInput').value = tpkgObj.totalstaycost;
+        document.getElementById('totalDriverCostInput').value = tpkgObj.totaldrivercost;
+        document.getElementById('totalGuideCostInput').value = tpkgObj.totalguidecost;
+        document.getElementById('totalAdditionalCosts').value = tpkgObj.totaladditionalcosts;
+        document.getElementById('finalTotalCost').value = tpkgObj.pkgcostsum;
+        document.getElementById('pkgSellingPrice').value = tpkgObj.pkgsellingprice;
+        document.getElementById('pkgSellingPrice').value = tpkgObj.pkgsellingprice;
+
+        //discounts
+        refillDiscountSection(tpkgObj);
+
+        //final price cx will see
+        document.getElementById('pkgFinalPrice').value = tpkgObj.pkgfinalprice;
+
+    }
+
+    //for template pkgs
+    if (tpkgObj.is_custompkg === false) {
+
+        //web description
+        document.getElementById("tpDescription").value = tpkgObj.web_description || "";
+
+        //start day plan (with templates)
+        fillDataIntoDynamicSelects(tpkgFirstDaySelect, 'please select first day plan', templateDaysForRefill, 'daytitle', tpkgObj.sd_dayplan_id.daytitle);
+        tpkgFirstDaySelect.disabled = false;
+
+        //last day plan (with templates)
+        fillDataIntoDynamicSelects(tpkgFinalDaySelect, 'please select final day plan', templateDaysForRefill, 'daytitle', tpkgObj.ed_dayplan_id.daytitle);
+        tpkgFinalDaySelect.disabled = false;
+
+        //reset midday counter
+        let midDayCounter = 1;
+
+        //mid days (with templates)   
+        for (let i = 0; i < tpkgObj.dayplans.length; i++) {
+
+            console.log("Processing mid day plan start:", i);
+            const dayPlan = tpkgObj.dayplans[i];
+            console.log(dayPlan);
+
+            //created once per loop element
+            generateNormalDayPlanSelectSections();
+
+            setTimeout(() => {
+                const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
+                const selectElement = document.getElementById(midDaySelectId);
+
+                selectElement.disabled = false;
+
+                fillDataIntoDynamicSelects(
+                    selectElement,
+                    'Please Select',
+                    templateDaysForRefill,
+                    'daytitle',
+                    dayPlan.daytitle
+                );
+
+                document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
+                document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
+
+            }, 150);
+
+            midDayCounter++;
+        }
+
+        //refill all 3 images 
+        const defaultImgPath = "images/sigiriya.jpg";
+
+        if (tpkgObj.img1 != null) {
+            imgPreview1.src = atob(tpkgObj.img1);
+        } else {
+            imgPreview1.src = defaultImgPath;
+        }
+
+        if (tpkgObj.img2 != null) {
+            imgPreview2.src = atob(tpkgObj.img2);
+        } else {
+            imgPreview2.src = defaultImgPath;
+        }
+
+        if (tpkgObj.img3 != null) {
+            imgPreview3.src = atob(tpkgObj.img3);
+        } else {
+            imgPreview3.src = defaultImgPath;
+        }
+
+        //refill per person price
+        document.getElementById('pkgStartingPrice').value = tpkgObj.pkgstartingprice;
+
+    }
+
+    //reactive days related button
+    document.getElementById('showFirstDayBtn').disabled = false;
+    document.getElementById('addNewDaysBtn').disabled = false;
+    document.getElementById('showFinalDayBtn').disabled = false;
+    document.getElementById('removeFinalDayBtn').disabled = false;
+    document.getElementById('finalDaySelectUseTempsBtn').disabled = false;
+    document.getElementById('finalDaySelectUseExistingBtn').disabled = false;
+
+    //reactive update button
     const updateBtn = document.getElementById('tpkgUpdateBtn');
     updateBtn.disabled = false;
     updateBtn.style.cursor = "pointer";
 
+    //disable add button
     const addBtn = document.getElementById('tpkgAddBtn');
     addBtn.disabled = true;
     addBtn.style.cursor = "not-allowed";
@@ -722,6 +831,7 @@ const refillTpkgFormOri = (tpkgObj) => {
     var step1Tab = new bootstrap.Tab(document.getElementById('tpkgStep1-tab'));
     step1Tab.show();
 
+    //reset middle day counter for later use
     midDayCounter = 1;
 
 }
