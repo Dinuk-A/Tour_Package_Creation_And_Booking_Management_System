@@ -710,23 +710,23 @@ const refillTpkgForm = (tpkgObj) => {
         //additional cost entire table create again 💥💥💥
 
         //refill all the related costs
-        document.getElementById('totalTktCostInput').value = tpkgObj.totaltktcost;
-        document.getElementById('totalVehicleParkingCost').value = tpkgObj.totalvehiparkingcost;
-        document.getElementById('totalLunchCostForAll').value = tpkgObj.totallunchcost;
-        document.getElementById('totalVehiCostInput').value = tpkgObj.totalvehicost;
-        document.getElementById('totalStayCostInput').value = tpkgObj.totalstaycost;
-        document.getElementById('totalDriverCostInput').value = tpkgObj.totaldrivercost;
-        document.getElementById('totalGuideCostInput').value = tpkgObj.totalguidecost;
-        document.getElementById('totalAdditionalCosts').value = tpkgObj.totaladditionalcosts;
-        document.getElementById('finalTotalCost').value = tpkgObj.pkgcostsum;
-        document.getElementById('pkgSellingPrice').value = tpkgObj.pkgsellingprice;
-        document.getElementById('pkgSellingPrice').value = tpkgObj.pkgsellingprice;
+        document.getElementById('totalTktCostInput').value = tpkgObj.totaltktcost.toFixed(2);
+        document.getElementById('totalVehicleParkingCost').value = tpkgObj.totalvehiparkingcost.toFixed(2);
+        document.getElementById('totalLunchCostForAll').value = tpkgObj.totallunchcost.toFixed(2);
+        document.getElementById('totalVehiCostInput').value = tpkgObj.totalvehicost.toFixed(2);
+        document.getElementById('totalStayCostInput').value = tpkgObj.totalstaycost.toFixed(2);
+        document.getElementById('totalDriverCostInput').value = tpkgObj.totaldrivercost.toFixed(2);
+        document.getElementById('totalGuideCostInput').value = tpkgObj.totalguidecost.toFixed(2);
+        document.getElementById('totalAdditionalCosts').value = tpkgObj.totaladditionalcosts.toFixed(2);
+        document.getElementById('finalTotalCost').value = tpkgObj.pkgcostsum.toFixed(2);
+        document.getElementById('pkgSellingPrice').value = tpkgObj.pkgsellingprice.toFixed(2);
+        document.getElementById('pkgSellingPrice').value = tpkgObj.pkgsellingprice.toFixed(2);
 
         //discounts
         refillDiscountSection(tpkgObj);
 
         //final price cx will see
-        document.getElementById('pkgFinalPrice').value = tpkgObj.pkgfinalprice;
+        document.getElementById('pkgFinalPrice').value = tpkgObj.pkgfinalprice.toFixed(2);
 
     }
 
@@ -801,7 +801,7 @@ const refillTpkgForm = (tpkgObj) => {
         }
 
         //refill per person price
-        document.getElementById('pkgStartingPrice').value = tpkgObj.pkgstartingprice;
+        document.getElementById('pkgStartingPrice').value = tpkgObj.pkgstartingprice.toFixed(2);
 
     }
 
@@ -890,7 +890,7 @@ const showTpkgValueChanges = () => {
         updates += `End day plan will be changed to "${tpkg.ed_dayplan_id?.daytitle || 'N/A'}"\n`;
     }
 
-    // Mid days
+    // Mid days 💥
     if ((tpkg.dayplans?.length) !== (oldTpkg.dayplans?.length)) {
         updates += `Mid day plan count will be changed to "${tpkg.dayplans?.length}"\n`;
     }
@@ -973,7 +973,7 @@ const showTpkgValueChanges = () => {
 
     // Images
     if (tpkg.img1 !== oldTpkg.img1) {
-        updates += `Cover image 1 will be updated\n`;
+        updates += `Cover image will be updated\n`;
     }
 
     if (tpkg.img2 !== oldTpkg.img2) {
@@ -1222,17 +1222,21 @@ const printTpkgRecord = (tpkgObj) => {
 
 //handle refill tpkg data from inquiry
 const fillDataFromInq = async () => {
+
     if (tpkg.basedinq?.id != null) {
 
+        //approx start date
         if (tpkg.basedinq.inq_apprx_start_date != null && tpkg.basedinq.is_startdate_confirmed == true) {
             document.getElementById('tpStartDateInput').value = tpkg.basedinq.inq_apprx_start_date;
         }
 
+        //traveller grp
         document.getElementById('tpkgLocalAdultCount').value = tpkg.basedinq.inq_local_adults || 0;
         document.getElementById('tpkgLocalChildCount').value = tpkg.basedinq.inq_local_kids || 0;
         document.getElementById('tpkgForeignAdultCount').value = tpkg.basedinq.inq_foreign_adults || 0;
         document.getElementById('tpkgForeignChildCount').value = tpkg.basedinq.inq_foreign_kids || 0;
 
+        //guide
         if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == true) {
             document.getElementById('guideYes').checked = true;
             document.getElementById('yathraGuideCB').disabled = false;

@@ -471,7 +471,7 @@ const openModal = (inqObj) => {
     document.getElementById('inqRecievedTime').value = inqObj.recievedtime || "N/A";
     document.getElementById('inqRecievedContact').value = inqObj.recievedcontactoremail || "N/A";
     //💥💥💥
-    fillMultDataIntoDynamicSelects(inqInterestedPkg, 'Please Select Package', intrstdPkgList, 'pkgcode', 'pkgtitle', inqObj.intrstdpkgid?.pkgcode || "N/A");
+    fillMultDataIntoDynamicSelects(inqInterestedPkg, 'Please Select Package', intrstdPkgList, 'pkgcode', 'pkgtitle', inqObj.intrstdpkgid?.pkgtitle);
     document.getElementById('inqClientTitle').value = inqObj.clienttitle || "N/A";
     document.getElementById('inqClientName').value = inqObj.clientname || "N/A";
     document.getElementById('InqClientNationality').value = inqObj.nationality_id?.countryname || "N/A";
@@ -582,6 +582,22 @@ const openModal = (inqObj) => {
         }
     });
 
+    //radio tags to reset
+    const radioIdsToReset = [
+        'startDateConfirmed',
+        'startDateUnconfirmed',
+        'guideYes',
+        'guideNo'
+    ];
+
+    //clear out any previous styles
+    radioIdsToReset.forEach(id => {
+        const radio = document.getElementById(id);
+        if (radio) {
+            radio.disabled = true;
+        }
+    });
+
     //enable edit button
     const enableEditBtn = document.getElementById('inqEnableEditBtn');
     enableEditBtn.disabled = false;
@@ -625,13 +641,30 @@ const enableInqEditing = () => {
         "estdDropOffLocation",
         "guideYes",
         "guideNo",
-        "inputNoteInquiry"
+        "inputNoteInquiry",
+        "inqStatus"
     ];
 
     inputIds.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
             el.disabled = false;
+        }
+    });
+
+    //radio tags to reset
+    const radioIdsToReset = [
+        'startDateConfirmed',
+        'startDateUnconfirmed',
+        'guideYes',
+        'guideNo'
+    ];
+
+    //clear out any previous styles
+    radioIdsToReset.forEach(id => {
+        const radio = document.getElementById(id);
+        if (radio) {
+            radio.disabled = false;
         }
     });
 
@@ -753,11 +786,10 @@ const refreshInqFollowupSection = () => {
     addNewResponseRowBtn.style.cursor = "pointer";
 
 }
+//💥💥💥errors balannath onee
 
 //update a manual inq(after a followup)
-const updateSystemInq = async () => {
-
-    //💥💥💥errors balannath onee
+const updateSystemInqOri = async () => {
 
     const changesHappened = showInqValueChanges();
 
@@ -799,6 +831,55 @@ const updateSystemInq = async () => {
         } else {
             showAlertModal('inf', "User cancelled the task");
         }
+    }
+
+}
+
+const updateSystemInq = async () => {
+
+    const changesHappened = showInqValueChanges();
+
+    if (changesHappened == "") {
+
+        showAlertModal('war', "No changes detected to update");
+
+    } else {
+
+        let userComment = prompt("Add a short comment to describe this update:\n");
+
+        if (userComment === null || userComment.trim() === "") {
+            showAlertModal('inf', "No comment entered. Task cancelled.");
+            return;
+        }
+
+        let fullContent = `${changesHappened}\n---\nEmployee Comment: ${userComment}`;
+
+        //to remove general traveller grp counts, bcz they are now saved in local/foreign separately
+        inquiry.inq_adults = null;
+        inquiry.inq_kids = null;
+
+        //to followup
+        followup.content = fullContent;
+        followup.inquiry_id = inquiry;
+
+        console.log("Follow up object: ", followup);
+        try {
+            let putServiceResponse = await ajaxPPDRequest("/followupwithinq", "POST", followup);
+            if (putServiceResponse === "OK") {
+                showAlertModal('suc', "Successfully Updated");
+                //document.getElementById('formEmployee').reset();
+                //refreshEmployeeForm();
+                //buildEmployeeTable();
+                //var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                //myEmpTableTab.show();
+            } else {
+                showAlertModal('err', "Update Failed \n" + putServiceResponse);
+            }
+
+        } catch (error) {
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+
     }
 
 }
@@ -903,6 +984,10 @@ const checkManualFollowupErrors = () => {
 
     if (followup.followup_status == null) {
         errors = errors + " Please Select The Follow-up Status \n";
+    }
+
+    if (followup.followup_status == "quote_sent" && followup.last_sent_tpkg == null) {
+        errors = errors + " Please Select The Tour Package Sent \n";
     }
 
     return errors;

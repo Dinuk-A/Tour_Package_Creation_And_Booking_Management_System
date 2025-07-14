@@ -34,7 +34,7 @@
             <!-- for form side -->
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formSystemInqHolderDiv" role="tab"
-                    aria-controls="formSystemInqHolderDiv" aria-selected="false"  onclick="setInqStatusAuto()">Form</a>
+                    aria-controls="formSystemInqHolderDiv" aria-selected="false" onclick="setInqStatusAuto()">Form</a>
                 <!-- onclick="setEmpStatusAuto()" -->
             </li>
         </ul>
@@ -164,7 +164,6 @@
                                                 </select>
                                             </div>
 
-
                                         </div>
 
                                     </fieldset>
@@ -195,14 +194,12 @@
                                             </div>
 
                                             <!-- client name -->
-                                            <div class="col-6">
+                                            <div class="col-7">
                                                 <label for="inqClientName" class="form-label mb-0">Client
                                                     Name :</label>
                                                 <input id="inqClientName" class="form-control form-input"
                                                     onkeyup="inputValidatorText(this,'', 'inquiry' , 'clientname')">
                                             </div>
-
-                                            <div class="col-1"></div>
 
                                             <!-- nationality -->
                                             <div class="col-3">
@@ -219,7 +216,7 @@
                                         </div>
 
                                         <!-- client info 2 -->
-                                        <div class="row mt-2">
+                                        <div class="row mt-2 border-bottom border-secondary">
 
                                             <!-- contact #1 -->
                                             <div class="col-3">
@@ -230,15 +227,6 @@
                                                     onkeyup="inputValidatorText(this,'', 'inquiry' , 'contactnum')">
                                             </div>
 
-                                            <!-- additional contact -->
-                                            <div class="col-3 d-none">
-                                                <label for="inqAdditionalContact" class="form-label mb-0">Contact
-                                                    #2:</label>
-
-                                                <input id="inqAdditionalContact" class="form-control form-input"
-                                                    onkeyup="sameContactError(); ">
-                                            </div>
-
                                             <!-- email -->
                                             <div class="col-6">
                                                 <label for="inqClientEmail" class="form-label mb-0">Email:
@@ -247,12 +235,9 @@
                                                 <input id="inqClientEmail" class="form-control form-input"
                                                     onkeyup="inputValidatorText(this,'', 'inquiry' , 'email')">
                                             </div>
-                                        </div>
 
-
-                                        <div class="row mt-2">
                                             <!-- Preferred Contact Method -->
-                                            <div class="col-4">
+                                            <div class="col-3">
                                                 <label for="prefContMethodPkgRelForm"
                                                     class="fw-bold form-label mb-0">Preferred
                                                     Contact Method:</label>
@@ -265,9 +250,12 @@
                                                     <option value="Email">Email</option>
                                                 </select>
                                             </div>
+                                        </div>
+
+                                        <div class="row mt-2">
 
                                             <!-- passport OR nic num -->
-                                            <div class="col-3 d-none">
+                                            <div class="col-6 d-none">
                                                 <label id="lblForNICorPpt" for="inqClientPassportNumorNIC"
                                                     class="form-label mb-0">Passport
                                                     or NIC
@@ -275,6 +263,17 @@
 
                                                 <input id="inqClientPassportNumorNIC" class="form-control form-input"
                                                     onkeyup="filterClient();  inputValidatorText(this,'', 'inquiry' , 'passportnumornic')">
+                                            </div>
+
+                                            <div class="col-3"></div>
+
+                                            <!-- additional contact -->
+                                            <div class="col-3 d-none">
+                                                <label for="inqAdditionalContact" class="form-label mb-0">Contact
+                                                    #2:</label>
+
+                                                <input id="inqAdditionalContact" class="form-control form-input"
+                                                    onkeyup="sameContactError(); ">
                                             </div>
 
                                         </div>
@@ -687,7 +686,8 @@
                                                 </div>
                                                 <div class="col-md-8">
                                                     <select id="lastSentTourPackageSelect"
-                                                        class="form-select form-select"  onchange="dynamicSelectValidator(this, 'followup','last_sent_tpkg')">
+                                                        class="form-select form-select"
+                                                        onchange="dynamicSelectValidator(this, 'followup','last_sent_tpkg')">
                                                     </select>
                                                 </div>
                                             </div>
