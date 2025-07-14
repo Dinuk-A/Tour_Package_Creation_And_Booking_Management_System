@@ -48,6 +48,7 @@
 
                 <!-- filters row -->
                 <div class="row mb-2">
+                    <!-- by type -->
                     <div class="col-md-4">
                         <label for="daytypeFilter" class="form-label fw-bold mb-0">Filter by Day Type</label>
                         <select id="daytypeFilter" class="form-select" onchange="applyDayTableFilter();">
@@ -57,6 +58,14 @@
                             <option value="FD">Starting Days</option>
                             <option value="MD">Mid Days</option>
                             <option value="LD">Final Days</option>
+                        </select>
+                    </div>
+
+                    <!-- by district -->
+                    <div class="col-md-4">
+                        <label for="dayDistrictFilter" class="form-label fw-bold mb-0">Filter by Based District</label>
+                        <select id="dayDistrictFilter" class="form-select" onchange="applyDayTableFilter();">
+                            <!--will be dynamically filled by database -->
                         </select>
                     </div>
 
@@ -89,23 +98,23 @@
                                         aria-selected="true">Itinerary Type</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark disabled" id="dayStep2-tab" data-bs-toggle="tab"
-                                        href="#dayStep2" role="tab" aria-controls="dayStep2"
+                                    <a class="nav-link border border-dark disabled" id="dayStep2-tab"
+                                        data-bs-toggle="tab" href="#dayStep2" role="tab" aria-controls="dayStep2"
                                         aria-selected="false">Pickup Location</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark disabled" id="dayStep3-tab" data-bs-toggle="tab"
-                                        href="#dayStep3" role="tab" aria-controls="dayStep3"
+                                    <a class="nav-link border border-dark disabled" id="dayStep3-tab"
+                                        data-bs-toggle="tab" href="#dayStep3" role="tab" aria-controls="dayStep3"
                                         aria-selected="false">Attractions</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark disabled" id="dayStep4-tab" data-bs-toggle="tab"
-                                        href="#dayStep4" role="tab" aria-controls="dayStep4"
+                                    <a class="nav-link border border-dark disabled" id="dayStep4-tab"
+                                        data-bs-toggle="tab" href="#dayStep4" role="tab" aria-controls="dayStep4"
                                         aria-selected="false">Accomodations</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link border border-dark disabled" id="dayStep5-tab" data-bs-toggle="tab"
-                                        href="#dayStep5" role="tab" aria-controls="dayStep5"
+                                    <a class="nav-link border border-dark disabled" id="dayStep5-tab"
+                                        data-bs-toggle="tab" href="#dayStep5" role="tab" aria-controls="dayStep5"
                                         aria-selected="false">Other</a>
                                 </li>
                             </ul>
@@ -193,7 +202,8 @@
                                                     <span class="text-danger">*</span> :</label>
                                                 <input id="dpTitle" class="form-control"
                                                     placeholder="Enter The Itinerary Title"
-                                                    onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle'); checkDPFirstTab();" disabled>
+                                                    onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle'); checkDPFirstTab();"
+                                                    disabled>
                                             </div>
 
                                             <!-- code hidden -->

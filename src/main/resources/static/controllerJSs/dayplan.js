@@ -2,6 +2,7 @@ window.addEventListener('load', () => {
 
     buildDayPlanTable();
     refreshDayPlanForm();
+    refreshDistrictFilter();
 
 });
 
@@ -77,24 +78,62 @@ const buildDayPlanTable = async () => {
 
 }
 
+//fill districts in filter
+const refreshDistrictFilter = async () => {
 
-//filters for dayplan tbl
+    let districts = [];
+
+    try {
+        districts = await ajaxGetReq("/district/all");
+        let allDistrictsObj = {
+            id: -10,
+            name: "All Districts",
+            province_id: 99
+        };
+
+        districts.unshift(allDistrictsObj);
+        fillDataIntoDynamicSelects(dayDistrictFilter, 'Please Select The District', districts, 'name');
+
+    } catch (error) {
+        console.error("Error fetching districts for filter:", error);
+    }
+
+}
+
+//filter by both day type and district
 const applyDayTableFilter = () => {
 
     const selectedDayType = document.getElementById('daytypeFilter').value;
 
-    let filteredDays = [];
+    const selectedDistrictRaw = document.getElementById('dayDistrictFilter').value;
+    let selectedDistrict = null;
 
-    //show and return all
-    if (selectedDayType === "All") {
-        filteredDays = dayplans;
-    } else {
-        //filter
-        filteredDays = dayplans.filter(day => {
-            const dayType = day.dayplancode.slice(0, 2);
-            return dayType === selectedDayType;
-        });
+    if (selectedDistrictRaw && selectedDistrictRaw !== '') {
+        try {
+            selectedDistrict = JSON.parse(selectedDistrictRaw);
+        } catch (e) {
+            console.warn("Invalid district filter JSON. Ignoring district filter.");
+        }
     }
+
+    let filteredDays = dayplans.filter(day => {
+        let isTypeMatch = true;
+        let isDistrictMatch = true;
+
+        // Match by day type
+        if (selectedDayType && selectedDayType !== "All") {
+            const dayType = day.dayplancode.slice(0, 2);
+            //or dayplancode.substring(0,2)
+            isTypeMatch = dayType === selectedDayType;
+        }
+
+        // Match by district (if set)
+        if (selectedDistrict && selectedDistrict.id !== -10) {
+            isDistrictMatch = day.start_district_id?.id === selectedDistrict.id;
+        }
+
+        return isTypeMatch && isDistrictMatch;
+    });
 
     $(sharedTableId).empty();
 
@@ -107,7 +146,7 @@ const applyDayTableFilter = () => {
         { displayType: 'text', displayingPropertyOrFn: 'daytitle', colHeadName: 'Title' },
         { displayType: 'function', displayingPropertyOrFn: showDayType, colHeadName: 'Type' },
         { displayType: 'function', displayingPropertyOrFn: showDayPlanStatus, colHeadName: 'Status' }
-    ]
+    ];
 
     createTable(tableDayPlanHolderDiv, sharedTableId, filteredDays, tableColumnInfo);
 
@@ -122,9 +161,11 @@ const applyDayTableFilter = () => {
     }, 100);
 };
 
+
 //reset
 function resetDayPlanFilters() {
-    document.getElementById('daytypeFilter').value = 'All';
+    document.getElementById('daytypeFilter').value = '';
+    document.getElementById('dayDistrictFilter').value = '';
     applyDayTableFilter();
 }
 

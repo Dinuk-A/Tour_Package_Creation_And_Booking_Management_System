@@ -138,6 +138,13 @@ const applyAttrFilters = () => {
     }, 100);
 };
 
+//reset all filters 
+const resetAttrFilters =()=>{
+    document.getElementById('attrDistrictFilter').value = '';
+    document.getElementById('attrStatusFilter').value = '';
+    applyAttrFilters();
+}
+
 //fn for show district + province in table
 const showDistNProvince = (ob) => {
     return ob.district_id.name + " <br/> " + ob.district_id.province_id.name + " Province";
