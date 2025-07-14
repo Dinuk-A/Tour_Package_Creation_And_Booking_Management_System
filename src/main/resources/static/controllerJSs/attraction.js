@@ -802,10 +802,19 @@ const refillAttractionForm = async (obj) => {
 
         inputLocalAdultFee.disabled = true;
         inputLocalChildFee.disabled = true;
+
+        inputForeignAdultFee.disabled = false;
+        inputForeignChildFee.disabled = false;
+
     }
 
     if (obj.feetype === "All Paid") {
         allPaidCheckBox.checked = true;
+
+        inputForeignAdultFee.disabled = false;
+        inputLocalAdultFee.disabled = false;
+        inputForeignChildFee.disabled = false;
+        inputLocalChildFee.disabled = false;
     }
 
     inputForeignAdultFee.value = parseFloat(obj.feeforeignadult).toFixed(2);
