@@ -79,6 +79,7 @@ public class FollowupController {
 
             followupDao.save(flwup);
 
+            // update the inquiry with the newly got data by calls/e,mails
             inqDao.save(flwup.getInquiry_id());
 
             return "OK";
@@ -109,7 +110,13 @@ public class FollowupController {
 
             followupDao.save(flwup);
 
+            // if this is the first time giving a followup
             flwup.getInquiry_id().setInq_status("Working");
+
+            if (flwup.getFollowup_status().equals("good_to_book")) {
+                flwup.getInquiry_id().setInq_status("Confirmed");
+                System.out.println("this ran 1221212");
+            }
 
             inqDao.save(flwup.getInquiry_id());
 

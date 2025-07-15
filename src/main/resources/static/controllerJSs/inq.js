@@ -958,6 +958,10 @@ const checkManualFollowupErrors = () => {
     if (followup.followup_status == "quote_sent" && followup.last_sent_tpkg == null) {
         errors = errors + " Please Select The Tour Package Sent \n";
     }
+    
+    if (followup.followup_status == "good_to_book" && followup.last_sent_tpkg == null) {
+        errors = errors + " Please Select The Tour Package \n";
+    }
 
     return errors;
 }
