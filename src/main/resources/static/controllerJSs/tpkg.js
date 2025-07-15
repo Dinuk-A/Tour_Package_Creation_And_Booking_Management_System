@@ -1280,9 +1280,11 @@ const fillDataFromInq = async () => {
             handleFinalDayChange(tpkgFinalDaySelect);
 
             //for middays
-            const intrstdPkgMidDays = interestedTemplatePkg.dayplans
+            const intrstdPkgMidDays = interestedTemplatePkg.dayplans;
 
             for (let i = 0; i < intrstdPkgMidDays.length; i++) {
+
+                console.log("runs,", i);
                 const dayPlan = intrstdPkgMidDays[i];
 
                 //created once per loop element
@@ -1290,8 +1292,10 @@ const fillDataFromInq = async () => {
 
                 const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
                 const selectElement = document.getElementById(midDaySelectId);
+                //let msgElemetId = `midDayMsg${i + 1}`;
+                let msgElement = selectElement.parentNode.children[1];
 
-                selectElement.disabled = false;
+                //selectElement.disabled = false;
 
                 fillDataIntoDynamicSelects(
                     selectElement,
@@ -1307,9 +1311,20 @@ const fillDataFromInq = async () => {
                 document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
 
                 if (tpkg.dayplans[i].is_template) {
-                    console.log("a template");
-                }
+
+                    selectElement.style.border = "2px solid orange";
+
+                    msgElement.classList.remove("d-none"); 
+
+                    tpkg.dayplans[i] = null;
+
+                    addNewDaysBtn.disabled = true;
+                } 
+
             }
+
+            //updateTotalDaysCount();
+            //showTotalKmCount();
 
         }
     }
@@ -3283,9 +3298,12 @@ const feedAndSelectNewlyAddedDp = async () => {
                         tpkg.dayplans[index] = selectedDayPlan;
                         console.log("Updated tpkg.dayplans:", tpkg.dayplans);
 
-                        // manually trigger the onchange event to update UI
-                        const changeEvent = new Event('change');
-                        midDaySelect.dispatchEvent(changeEvent);
+                        // manually trigger the onchange event to update UI 💥💥💥
+                        //const changeEvent = new Event('change');
+                        //midDaySelect.dispatchEvent(changeEvent);
+
+                        handleMidDaySelectChange(midDaySelect);
+
 
                     } else {
                         console.warn("No value selected in mid day select");
@@ -3331,7 +3349,6 @@ const addNewDayPlanInTpkg = async () => {
                     window.newlyAddedDayTitleGlobal = postServerResponse;
                     showAlertModal('suc', 'Saved Successfully as ' + postServerResponse);
                     setTimeout(feedAndSelectNewlyAddedDp, 100);
-                    //feedAndSelectNewlyAddedDp();
                     document.getElementById('formDayPlanInTpkg').reset();
                     refreshDpFormInTpkg();
                     clearDpInfoShowSection();
@@ -3479,6 +3496,7 @@ const generateNormalDayPlanSelectSections = () => {
     midDayCounter++;
 }
 
+//handle midday changes
 const handleMidDaySelectChange = (selectElem, currentDay = null) => {
     const selectedValue = JSON.parse(selectElem.value);
     const msgId = `midDayMsg${currentDay}`;
@@ -3500,12 +3518,14 @@ const handleMidDaySelectChange = (selectElem, currentDay = null) => {
         selectElem.style.border = "2px solid red";
     } else {
         if (tpkg.is_custompkg == true && selectedValue.is_template) {
+
             selectElem.style.border = "2px solid orange";
             msgElement.classList.remove("d-none");
 
             tpkg.dayplans[index] = null;
 
             addNewDaysBtn.disabled = true;
+
         } else {
             selectElem.style.border = "2px solid lime";
             msgElement.classList.add("d-none");
