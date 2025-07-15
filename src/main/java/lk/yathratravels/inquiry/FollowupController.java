@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.transaction.Transactional;
 import lk.yathratravels.bookings.Booking;
 import lk.yathratravels.bookings.BookingDao;
+import lk.yathratravels.client.Client;
+import lk.yathratravels.client.ClientDao;
 import lk.yathratravels.employee.Employee;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
@@ -37,6 +39,9 @@ public class FollowupController {
 
     @Autowired
     private InqDao inqDao;
+
+    @Autowired
+    private ClientDao clientDao;
 
     @Autowired
     private BookingDao bookingDao;
@@ -116,21 +121,31 @@ public class FollowupController {
             followupDao.save(flwup);
 
             // if this is the first time giving a followup
-            flwup.getInquiry_id().setInq_status("Working");
+            if (flwup.getInquiry_id().getInq_status().equals("New") || flwup.getInquiry_id().getInq_status().equals("Assigned")) {
+                flwup.getInquiry_id().setInq_status("Working");
+            }
 
             // if cx agreed to book
             if (flwup.getFollowup_status().equals("good_to_book")) {
                 flwup.getInquiry_id().setInq_status("Confirmed");
             }
 
+            // save the inq with latest inq details
             inqDao.save(flwup.getInquiry_id());
 
-            Booking newBooking = new Booking();
-          //  newBooking.setTpk(followupDao.getTpkgOfLastSent(flwup.getInquiry_id().getId()).getLast_sent_tpkg());
-          newBooking.setTpkg(followupDao.getTpkgOfLastSent(flwup.getInquiry_id().getId()).getLast_sent_tpkg());
-          newBooking.setBookingcode("123");
-          bookingDao.save(newBooking);
+            
+            // Client create here ✅✅✅
+            Client newClient = new Client();
+            newClient.setFullname(flwup.getInquiry_id().getClientname());
+            clientDao.save(newClient);
 
+            // create booking here ✅✅✅
+            Booking newBooking = new Booking();
+            newBooking.setTpkg(followupDao.getTpkgOfLastSent(flwup.getInquiry_id().getId()).getLast_sent_tpkg());
+            newBooking.setBookingcode("123");
+            // add that client to booking
+
+            bookingDao.save(newBooking);
 
             return "OK";
 

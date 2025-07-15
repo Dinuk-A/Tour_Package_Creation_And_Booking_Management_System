@@ -20,6 +20,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lk.yathratravels.employee.Employee;
 import lk.yathratravels.tpkg.TourPkg;
+import lk.yathratravels.client.Client;
 import lk.yathratravels.vehicle.Vehicle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -54,6 +55,10 @@ public class Booking {
 
     @Column(name = "booking_status")
     private String booking_status;
+
+    @ManyToOne
+    @JoinColumn(name = "tpkg", referencedColumnName = "id")
+    private Client client;
 
     @ManyToOne
     @JoinColumn(name = "tpkg", referencedColumnName = "id")
