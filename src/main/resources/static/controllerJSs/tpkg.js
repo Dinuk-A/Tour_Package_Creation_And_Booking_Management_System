@@ -3938,6 +3938,9 @@ const addNewTpkg = async () => {
                 //bind addiCost array with the tpkg obj 💥💥💥
                 //console.log("tpkg.addiCostList:", tpkg.addiCostList);
 
+                //bind the based inq id only, not whole obj
+                tpkg.basedinq = tpkg.basedinq.id;
+
                 //remove null days from dayplans list
                 tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
 

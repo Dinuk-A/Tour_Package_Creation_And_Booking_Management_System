@@ -55,9 +55,13 @@ const submitUserAccChanges =async () => {
 
     if (updateServicesResponces == 'OK') {
         showAlertModal('suc','User Profile Changed Successfully! \n ');
-        window.location.assign("/logout");
+
+        setTimeout(() => {
+            window.location.assign("/logout");
+        }, 100);
+       
     } else {
-        alert('err','User Info Change Failed \n' +
+        showAlertModal('err','User Info Change Failed \n' +
             updateServicesResponces);
     }
     } catch (error) {

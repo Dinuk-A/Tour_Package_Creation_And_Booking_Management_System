@@ -356,13 +356,13 @@ const checkManualInqErrors = () => {
         errors = errors + " Please Select The Source Of Inquiry \n";
     }
 
-    // if (inquiry.recievedmethod == "Phone Call" && inquiry.recievedcontactoremail == null) {
-    //     errors = errors + " Please Enter The Source Phone Number \n";
-    // }
+    if (inquiry.recievedmethod == "Phone Call" && inquiry.recievedcontactoremail == null) {
+        errors = errors + " Please Enter The Source Phone Number \n";
+    }
 
-    // if (inquiry.recievedmethod == "Email" && inquiry.recievedcontactoremail == null) {
-    //     errors = errors + " Please Enter The Source Email Address \n";
-    // }
+    if (inquiry.recievedmethod == "Email" && inquiry.recievedcontactoremail == null) {
+        errors = errors + " Please Enter The Source Email Address \n";
+    }
 
     if (inquiry.recieveddate == null) {
         errors = errors + " Please Enter The Inquiry Recieved Date  \n";
@@ -380,9 +380,9 @@ const checkManualInqErrors = () => {
         errors = errors + " Please Enter The Client's Name  \n";
     }
 
-    //if (inquiry.nationality_id == null) {
-    //    errors = errors + " Please Select The Client's Nationality  \n";
-    //}
+    if (inquiry.nationality_id == null) {
+        errors = errors + " Please Select The Client's Nationality  \n";
+    }
 
     if (inquiry.contactnum == null && inquiry.email == null) {
         errors = errors + " Please Enter At Least One Contact Method (Phone or Email)  \n";
@@ -391,6 +391,11 @@ const checkManualInqErrors = () => {
     if (inquiry.prefcontactmethod == null) {
         errors = errors + " Please Select The Client's Preferred Contact Method  \n";
     }
+
+    //for success inq (must check traveller count, start date)
+    //if (inquiry.inq_status == "Confirmed") {
+    //    
+    //}
 
     return errors;
 }
@@ -470,8 +475,7 @@ const openModal = (inqObj) => {
     document.getElementById('inqRecievedDate').value = inqObj.recieveddate || "N/A";
     document.getElementById('inqRecievedTime').value = inqObj.recievedtime || "N/A";
     document.getElementById('inqRecievedContact').value = inqObj.recievedcontactoremail || "N/A";
-    //💥💥💥
-    fillMultDataIntoDynamicSelects(inqInterestedPkg, 'Please Select Package', intrstdPkgList, 'pkgcode', 'pkgtitle', inqObj.intrstdpkgid?.pkgtitle);
+    fillMultDataIntoDynamicSelectsInq(inqInterestedPkg, 'Please Select Package', intrstdPkgList, 'pkgcode', 'pkgtitle', inqObj.intrstdpkgid);
     document.getElementById('inqClientTitle').value = inqObj.clienttitle || "N/A";
     document.getElementById('inqClientName').value = inqObj.clientname || "N/A";
     document.getElementById('InqClientNationality').value = inqObj.nationality_id?.countryname || "N/A";
@@ -719,7 +723,7 @@ const showInqValueChanges = () => {
         updates += `Internal Note changed from ${oldInquiry.note?.trim() || "N/A"} to ${inquiry.note?.trim() || "N/A"}\n`;
     }
 
-
+    //for nationality
     const nationality = inquiry.nationality_id?.countryname;
 
     if (oldInquiry.inq_adults != null || oldInquiry.inq_kids != null) {
@@ -770,6 +774,11 @@ const showInqValueChanges = () => {
 
     }
 
+    //for status
+    if (inquiry.inq_status !== oldInquiry.inq_status) {
+        updates += `Internal Note changed from ${oldInquiry.inq_status || "N/A"} to ${inquiry.inq_status || "N/A"}\n`;
+    }
+
     return updates;
 
 }
@@ -786,29 +795,37 @@ const refreshInqFollowupSection = () => {
     addNewResponseRowBtn.style.cursor = "pointer";
 
 }
-//💥💥💥errors balannath onee
 
-//update a manual inq(after a followup)
-const updateSystemInqOri = async () => {
+//update a manual inq
+const updateSystemInq = async () => {
 
-    const changesHappened = showInqValueChanges();
+    const errors = checkManualInqErrors();
 
-    if (changesHappened == "") {
+    if (errors == "") {
 
-        showAlertModal('war', "No changes detected to update");
+        const changesHappened = showInqValueChanges();
 
-    } else {
+        if (changesHappened == "") {
 
-        let userConfirm = confirm("Are you sure to proceed ? \n \n" + changesHappened);
+            showAlertModal('war', "No changes detected to update");
 
-        if (userConfirm) {
+        } else {
+
+            let userComment = prompt("Add a short comment to describe this update:\n");
+
+            if (userComment === null || userComment.trim() === "") {
+                showAlertModal('inf', "No comment entered. Task cancelled.");
+                return;
+            }
+
+            let fullContent = `${changesHappened}\n---\nEmployee Comment: ${userComment}`;
 
             //to remove general traveller grp counts, bcz they are now saved in local/foreign separately
             inquiry.inq_adults = null;
             inquiry.inq_kids = null;
 
             //to followup
-            followup.content = changesHappened;
+            followup.content = fullContent;
             followup.inquiry_id = inquiry;
 
             console.log("Follow up object: ", followup);
@@ -828,58 +845,10 @@ const updateSystemInqOri = async () => {
             } catch (error) {
                 showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
             }
-        } else {
-            showAlertModal('inf', "User cancelled the task");
+
         }
-    }
-
-}
-
-const updateSystemInq = async () => {
-
-    const changesHappened = showInqValueChanges();
-
-    if (changesHappened == "") {
-
-        showAlertModal('war', "No changes detected to update");
-
     } else {
-
-        let userComment = prompt("Add a short comment to describe this update:\n");
-
-        if (userComment === null || userComment.trim() === "") {
-            showAlertModal('inf', "No comment entered. Task cancelled.");
-            return;
-        }
-
-        let fullContent = `${changesHappened}\n---\nEmployee Comment: ${userComment}`;
-
-        //to remove general traveller grp counts, bcz they are now saved in local/foreign separately
-        inquiry.inq_adults = null;
-        inquiry.inq_kids = null;
-
-        //to followup
-        followup.content = fullContent;
-        followup.inquiry_id = inquiry;
-
-        console.log("Follow up object: ", followup);
-        try {
-            let putServiceResponse = await ajaxPPDRequest("/followupwithinq", "POST", followup);
-            if (putServiceResponse === "OK") {
-                showAlertModal('suc', "Successfully Updated");
-                //document.getElementById('formEmployee').reset();
-                //refreshEmployeeForm();
-                //buildEmployeeTable();
-                //var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
-                //myEmpTableTab.show();
-            } else {
-                showAlertModal('err', "Update Failed \n" + putServiceResponse);
-            }
-
-        } catch (error) {
-            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
-        }
-
+        showAlertModal('err', errors);
     }
 
 }
@@ -1098,6 +1067,64 @@ const enableDateStatusRadios = () => {
         startDateSure.disabled = true;
         startDateUncertain.disabled = true;
     }
+}
+
+//update a manual inq(after a followup) (not used 💥💥💥)
+const updateSystemInqOri = async () => {
+
+    const errors = checkManualInqErrors();
+
+    if (errors == "") {
+        const changesHappened = showInqValueChanges();
+
+        if (changesHappened == "") {
+
+            showAlertModal('war', "No changes detected to update");
+
+        } else {
+
+            let userConfirm = confirm("Are you sure to proceed ? \n \n" + changesHappened);
+
+            if (userConfirm) {
+
+                //to remove general traveller grp counts, bcz they are now saved in local/foreign separately
+                inquiry.inq_adults = null;
+                inquiry.inq_kids = null;
+
+                //to followup
+                followup.content = changesHappened;
+                followup.inquiry_id = inquiry;
+
+                console.log("Follow up object: ", followup);
+
+                //if (inquiry.) {
+                //    
+                //}
+
+                try {
+                    let putServiceResponse = await ajaxPPDRequest("/followupwithinq", "POST", followup);
+                    if (putServiceResponse === "OK") {
+                        showAlertModal('suc', "Successfully Updated");
+                        //document.getElementById('formEmployee').reset();
+                        //refreshEmployeeForm();
+                        //buildEmployeeTable();
+                        //var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                        //myEmpTableTab.show();
+                    } else {
+                        showAlertModal('err', "Update Failed \n" + putServiceResponse);
+                    }
+
+                } catch (error) {
+                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+                }
+            } else {
+                showAlertModal('inf', "User cancelled the task");
+            }
+        }
+    } else {
+        showAlertModal('err', errors);
+    }
+
 }
 
 // for creating a new response record manually NOT USED 💥💥

@@ -107,6 +107,37 @@ const fillMultDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPro
 
 }
 
+//fill and display 2 values into the same <option>
+const fillMultDataIntoDynamicSelectsInq = (tagId, msg, dataContainer, displayingPropertyName1, displayingPropertyName2, selectedValue) => {
+
+    tagId.innerHTML = "";
+
+    if (msg != "") {
+        const firstOption = document.createElement('option');
+        firstOption.innerText = msg;
+        firstOption.value = "";
+        firstOption.selected = true;
+        firstOption.disabled = true;
+        tagId.appendChild(firstOption);
+    }
+
+    dataContainer.forEach((element) => {
+        const selectableOption = document.createElement('option');
+        selectableOption.innerText = element[displayingPropertyName1] + "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0" + element[displayingPropertyName2];
+        selectableOption.value = JSON.stringify(element);
+
+        if (selectedValue != "") {
+            if (selectedValue == element['id']) {
+                selectableOption.selected = true;
+            }
+        }
+
+        tagId.appendChild(selectableOption);
+
+    })
+
+}
+
 //fill data into a datalist
 const fillDataIntoDynamicDataList = (datalistId, dataContainer, displayingPropertyName) => {
 
