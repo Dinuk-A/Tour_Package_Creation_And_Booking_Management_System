@@ -14,10 +14,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import lk.yathratravels.employee.Employee;
+import lk.yathratravels.tpkg.TourPkg;
 import lk.yathratravels.vehicle.Vehicle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -52,6 +54,10 @@ public class Booking {
 
     @Column(name = "booking_status")
     private String booking_status;
+
+    @ManyToOne
+    @JoinColumn(name = "tpkg", referencedColumnName = "id")
+    private TourPkg tpkg;
 
     @ManyToMany
     @JoinTable(name = "booking_has_int_vehicles", joinColumns = @JoinColumn(name = "booking_id"), inverseJoinColumns = @JoinColumn(name = "vehicle_id"))

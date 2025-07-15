@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.transaction.Transactional;
+import lk.yathratravels.bookings.Booking;
+import lk.yathratravels.bookings.BookingDao;
 import lk.yathratravels.employee.Employee;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
@@ -35,6 +37,9 @@ public class FollowupController {
 
     @Autowired
     private InqDao inqDao;
+
+    @Autowired
+    private BookingDao bookingDao;
 
     // get all followups
     @GetMapping(value = "/followup/all", produces = "application/json")
@@ -113,12 +118,19 @@ public class FollowupController {
             // if this is the first time giving a followup
             flwup.getInquiry_id().setInq_status("Working");
 
+            // if cx agreed to book
             if (flwup.getFollowup_status().equals("good_to_book")) {
                 flwup.getInquiry_id().setInq_status("Confirmed");
-                System.out.println("this ran 1221212");
             }
 
             inqDao.save(flwup.getInquiry_id());
+
+            Booking newBooking = new Booking();
+          //  newBooking.setTpk(followupDao.getTpkgOfLastSent(flwup.getInquiry_id().getId()).getLast_sent_tpkg());
+          newBooking.setTpkg(followupDao.getTpkgOfLastSent(flwup.getInquiry_id().getId()).getLast_sent_tpkg());
+          newBooking.setBookingcode("123");
+          bookingDao.save(newBooking);
+
 
             return "OK";
 
