@@ -480,7 +480,7 @@
                                                                 class="form-label mb-0 fs-6">Local Adults</label>
                                                             <input type="number" value="0" class="form-control"
                                                                 id="tpkgLocalAdultCount"
-                                                                onkeyup="inputValidatorText(this, '^[0-9]{1,3}$', 'tpkg', 'localadultcount'); enableChildCountInputs(); "
+                                                                onkeyup="inputValidatorText(this, '^([0])|([1-9][0-9]{0,2})$', 'tpkg', 'localadultcount'); enableChildCountInputs(); "
                                                                 oninput="updateTotalTravellers()">
                                                         </div>
 

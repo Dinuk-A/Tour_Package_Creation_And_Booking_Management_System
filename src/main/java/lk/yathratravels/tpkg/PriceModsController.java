@@ -62,12 +62,12 @@ public class PriceModsController {
     @GetMapping(value = "/pricemods/all", produces = "application/json")
     public PriceMods getLatestPriceModifier() {
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
-
-        if (!privilegeLevelForLoggedUser.getPrvselect()) {
-            return null;
-        }
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
+//
+//        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+//            return null;
+//        }
 
         return priceModsDao.findLatestEntry();
     }

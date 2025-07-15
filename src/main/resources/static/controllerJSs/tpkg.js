@@ -88,6 +88,9 @@ const buildTpkgTable = async () => {
 //to ready the main form   
 const refreshTpkgForm = async () => {
 
+    midDayCounter = 1;
+    console.log("midDayCounter " , midDayCounter);
+
     //general changes. no matter loggeduser role
 
     //general changes for entire form
@@ -351,6 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.target.id === 'table-tab') {
             console.log("Switching to table tab - clearing form");
             refreshTpkgForm();
+          
         }
     });
 });
@@ -494,7 +498,6 @@ const openModalTpkg = (tpkgObj) => {
         recoverBtn.classList.remove('d-none');
     }
 
-
     // Show modal
     $('#infoModalTpkg').modal('show');
 };
@@ -611,8 +614,10 @@ const refillTpkgForm = (tpkgObj) => {
     //first setup UI for both types
     if (tpkgObj.is_custompkg === true) {
         document.getElementById("customTP").checked = true;
+        document.getElementById("forWebSite").disabled = true;
     } else if (tpkgObj.is_custompkg === false) {
         document.getElementById("forWebSite").checked = true;
+        document.getElementById("customTP").disabled = true;
     }
 
     changesTpkgCustomOrTemp();
@@ -822,6 +827,9 @@ const refillTpkgForm = (tpkgObj) => {
     document.getElementById('removeFinalDayBtn').disabled = false;
     document.getElementById('finalDaySelectUseTempsBtn').disabled = false;
     document.getElementById('finalDaySelectUseExistingBtn').disabled = false;
+
+    updateTotalDaysCount();
+    showTotalKmCount();
 
     //reactive update button
     const updateBtn = document.getElementById('tpkgUpdateBtn');
@@ -1282,7 +1290,9 @@ const fillDataFromInq = async () => {
             //for middays
             const intrstdPkgMidDays = interestedTemplatePkg.dayplans;
 
-            for (let i = 0; i < intrstdPkgMidDays.length; i++) {
+            let midDayCounter = 1;
+
+            for (let i = 0; i < intrstdPkgMidDays.length; i++) {              
 
                 console.log("runs,", i);
                 const dayPlan = intrstdPkgMidDays[i];
@@ -1314,21 +1324,24 @@ const fillDataFromInq = async () => {
 
                     selectElement.style.border = "2px solid orange";
 
-                    msgElement.classList.remove("d-none"); 
+                    msgElement.classList.remove("d-none");
 
                     tpkg.dayplans[i] = null;
 
                     addNewDaysBtn.disabled = true;
-                } 
+                }
+
+                midDayCounter++
 
             }
 
-            //updateTotalDaysCount();
-            //showTotalKmCount();
+            updateTotalDaysCount();
+            showTotalKmCount();
 
         }
     }
 }
+
 
 //to handle the reset button click in the form
 const handlePkgReset = () => {
@@ -3348,7 +3361,7 @@ const addNewDayPlanInTpkg = async () => {
                 if (postServerResponse && !postServerResponse.startsWith("save not completed")) {
                     window.newlyAddedDayTitleGlobal = postServerResponse;
                     showAlertModal('suc', 'Saved Successfully as ' + postServerResponse);
-                    setTimeout(feedAndSelectNewlyAddedDp, 100);
+                    feedAndSelectNewlyAddedDp();
                     document.getElementById('formDayPlanInTpkg').reset();
                     refreshDpFormInTpkg();
                     clearDpInfoShowSection();
@@ -3499,10 +3512,13 @@ const generateNormalDayPlanSelectSections = () => {
 //handle midday changes
 const handleMidDaySelectChange = (selectElem, currentDay = null) => {
     const selectedValue = JSON.parse(selectElem.value);
-    const msgId = `midDayMsg${currentDay}`;
-    const viewBtnId = `showMidDayBtn${currentDay}`;
+    //const msgId = `midDayMsg${currentDay}`;
+    //const viewBtnId = `showMidDayBtn${currentDay}`;
 
-    const msgElement = document.getElementById(msgId);
+    const viewBtn = selectElem.parentNode.parentNode.children[2].children[1];
+    const msgElement = selectElem.parentNode.children[1];
+
+    //const msgElement = document.getElementById(msgId);
 
     console.log("Selected DayPlan:", selectedValue);
     console.log("Selected Day Number:", currentDay);
@@ -3540,7 +3556,7 @@ const handleMidDaySelectChange = (selectElem, currentDay = null) => {
         updateTotalDaysCount();
         showTotalKmCount();
 
-        document.getElementById(viewBtnId).disabled = false;
+        document.getElementById(viewBtn).disabled = false;
         document.getElementById(`midDayDeleteBtn${currentDay}`).disabled = false;
 
         console.log("Updated tpkg.dayplans:", tpkg.dayplans);
