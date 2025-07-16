@@ -155,13 +155,13 @@ const applyInquiryStatusFilter = () => {
     const isAdminOrManager = roles.includes("System_Admin") || roles.includes("Manager") || roles.includes("Assistant Manager");
 
     if (isAdminOrManager) {
-        
+
         let filtered = allInqs;
 
         if (selectedStatus && selectedStatus !== "All") {
             filtered = filtered.filter(inq => inq.inq_status === selectedStatus);
         }
- 
+
         renderAllInqTableByFilters(filtered);
     } else {
         let filtered = assignedInqs;
@@ -393,6 +393,9 @@ const refreshInquiryForm = async () => {
     addNewResponseRowBtn.disabled = true;
     addNewResponseRowBtn.style.cursor = "not-allowed";
 
+    inqResetFormBtn.classList.remove("d-none");
+    inqPrintBtn.classList.add("d-none");
+
     //disable update button
     const updateBtn = document.getElementById('manualInqUpdateBtn');
     updateBtn.disabled = true;
@@ -404,6 +407,120 @@ const refreshInquiryForm = async () => {
     addBtn.style.cursor = "pointer";
 
 }
+
+//for print btn
+const printInquirySummary = (inqObj) => {
+
+    if (!inqObj) {
+        alert('No Inquiry data available to print.');
+        return;
+    }
+
+    const clientFullName = `${inqObj.clienttitle || ''} ${inqObj.clientname || ''}`.trim();
+    const contactNum = inqObj.contactnum || 'N/A';
+    const email = inqObj.email || 'N/A';
+    const nationality = inqObj.nationality_id?.countryname || 'N/A';
+    const nicOrPassport = inqObj.passportnumornic || 'N/A';
+
+    const receivedDate = new Date(inqObj.recieveddate || '').toLocaleDateString();
+    const receivedTime = (inqObj.recievedtime || '')
+    const startDate = inqObj.inq_apprx_start_date
+        ? new Date(inqObj.inq_apprx_start_date).toLocaleDateString()
+        : 'N/A';
+    const startConfirmed = inqObj.is_startdate_confirmed ? 'Yes' : 'No';
+
+    const printableContent = `
+    <div class="container-fluid my-3 p-1 border border-primary rounded shadow-sm" style="font-family: Arial, sans-serif;">
+        <h2 class="text-center text-primary mb-3">Inquiry Summary</h2>
+        <hr class="border border-primary border-2">
+
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Inquiry Code:</strong> ${inqObj.inqcode || 'N/A'}</div>
+            <div class="col-md-6"><strong>Received:</strong> ${receivedDate} ${receivedTime}</div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Client:</strong> ${clientFullName || 'N/A'}</div>
+            <div class="col-md-6"><strong>Contact No:</strong> ${contactNum}</div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Email:</strong> ${email}</div>
+            <div class="col-md-6"><strong>Nationality:</strong> ${nationality}</div>
+        </div>
+
+        <div class="mb-2"><strong>NIC / Passport No:</strong> ${nicOrPassport}</div>
+
+        <hr>
+
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Approx. Start Date:</strong> ${startDate}</div>
+            <div class="col-md-6"><strong>Start Date Confirmed:</strong> ${startConfirmed}</div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Local Adults:</strong> ${inqObj.inq_local_adults || 0}</div>
+            <div class="col-md-6"><strong>Local Children:</strong> ${inqObj.inq_local_kids || 0}</div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Foreign Adults:</strong> ${inqObj.inq_foreign_adults || 0}</div>
+            <div class="col-md-6"><strong>Foreign Children:</strong> ${inqObj.inq_foreign_kids || 0}</div>
+        </div>
+
+        <hr>
+        <div class="mb-2"><strong>Client Message:</strong> ${inqObj.main_inq_msg || 'N/A'}</div>
+        <hr>
+        <div class="mb-2"><strong>Pick-up Details:</strong> ${inqObj.inq_pick || 'N/A'}</div>
+        <div class="mb-2"><strong>Drop-off Details:</strong> ${inqObj.inq_drop || 'N/A'}</div>
+        <div class="mb-2"><strong>Vehicle Requirements:</strong> ${inqObj.inq_vehi || 'N/A'}</div>
+        <div class="mb-2"><strong>Guide Requirements:</strong> ${inqObj.inq_guideneed || 'N/A'}</div>
+        <div class="mb-2"><strong>Accommodation Preferences:</strong> ${inqObj.inq_accos || 'N/A'}</div>
+
+        <div class="mb-2"><strong>Places to Visit:</strong> ${inqObj.inq_vplaces || 'N/A'}</div>
+
+
+
+               <div class="mb-2"><strong>Internal Notes:</strong> ${inqObj.note || 'N/A'}</div>
+
+        <p class="text-center text-muted small mt-4">Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+    </div>`;
+
+    const printableTitle = `Inquiry_${(inqObj.inqcode || 'Summary').replace(/\s+/g, '_')}`;
+
+    const printWindow = window.open('', '', 'width=1000,height=700');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>${printableTitle}</title>
+            <link rel="stylesheet" href="../libs/bootstrap-5.2.3/css/bootstrap.min.css">
+            <style>
+                body {
+                    margin: 0;
+                    padding: 10px;
+                    background-color: #f8f9fa;
+                    font-family: Arial, sans-serif;
+                }
+                @media print {
+                    body {
+                        background-color: white;
+                        margin: 0; padding: 0;
+                    }
+                }
+            </style>
+        </head>
+        <body>${printableContent}</body>
+        </html>
+    `);
+    printWindow.document.close();
+
+    printWindow.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+        setTimeout(() => printWindow.close(), 1000);
+    };
+};
+
 
 //set status auto
 const setInqStatusAuto = () => {
@@ -771,6 +888,9 @@ const openModal = async (inqObj) => {
             radio.disabled = true;
         }
     });
+
+    inqResetFormBtn.classList.add("d-none");
+    inqPrintBtn.classList.remove("d-none");
 
     //enable edit button
     const enableEditBtn = document.getElementById('inqEnableEditBtn');

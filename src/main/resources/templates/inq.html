@@ -640,9 +640,12 @@
                                         <!-- Form Buttons -->
                                         <div class="row mt-4 mb-2">
                                             <div class="col-4">
-                                                <button type="reset" class="btn-clear fw-bold"
+                                                <button id="inqResetFormBtn" type="reset" class="btn-clear fw-bold"
                                                     onclick="refreshSystemInqForm()">Reset
                                                     Form</button>
+                                                <button id="inqPrintBtn" type="button" class="d-none btn-print fw-bold"
+                                                    onclick="printInquirySummary(window['currentObject'])">Print Inquiry Summary
+                                                </button>
                                             </div>
                                             <div class="col-8 text-end">
                                                 <button type="submit" id="manualInqUpdateBtn" class="btn-update fw-bold"
