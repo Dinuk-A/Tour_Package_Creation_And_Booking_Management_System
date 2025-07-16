@@ -101,10 +101,16 @@ public class TourPkgController {
         return daoTPkg.findAll(Sort.by(Direction.DESC, "id"));
     }
 
-    // get draft custom pkgs
-    @GetMapping(value = "/tpkg/custom/drafts", produces = "application/json")
+    // get custom completed pkgs 
+    @GetMapping(value = "/tpkg/custom/completed", produces = "application/json")
     public List<TourPkg> getCustomDraftTourPackages() {
-        return daoTPkg.findAllDraftCustomPackages();
+        return daoTPkg.getAllCompletedCustomPackages();
+    }
+
+    // get tpkgs by inq
+    @GetMapping(value = "/tpkg/custom/byinq", produces = "application/json")
+    public List<TourPkg> getCustomTourPackagesByInquiry(@RequestParam("inqid") String inqId) {
+        return daoTPkg.getCompletedCustomPackagesByInquiryId(inqId);
     }
 
     // get the tpkg by id

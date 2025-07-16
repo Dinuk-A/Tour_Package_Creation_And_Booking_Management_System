@@ -4,7 +4,7 @@ window.addEventListener('load', () => {
     refreshInqFollowupSection();
     handleTableCreation();
     handleDateFields();
-    recieveTpkgs();
+    //recieveTpkgs();
 
 });
 
@@ -944,20 +944,18 @@ const validateInquiryAdultCounts = () => {
     }
 }
 
+//let tpkgs =[];
 
-//global + this will be needed for last sent packages in response
-let tpkgs;
-
-//get tpkgs
-const recieveTpkgs = async () => {
-    ///tpkg/custom/drafts
-    try {
-        tpkgs = await ajaxGetReq("/tpkg/custom/drafts");
-    } catch (error) {
-        console.error("Failed to fetch tour packages:", error);
-    }
-
-}
+//get tpkgs by based inq
+//const recieveTpkgs = async () => {
+//
+//    try {
+//        tpkgs = await ajaxGetReq("/tpkg/custom/drafts");
+//    } catch (error) {
+//        console.error("Failed to fetch tour packages:", error);
+//    }
+//
+//}
 
 //show all the responses
 const refillAllPrevResponses = async () => {
@@ -1023,8 +1021,8 @@ const refillAllPrevResponses = async () => {
 
 }
 
-//re render the template USING ✅
-const createNewResponseInputSection = () => {
+//re render the template  ✅
+const createNewResponseInputSection = async () => {
     document.getElementById("createNewResponseRowBtn").disabled = true;
 
     const template = document.getElementById("response-input-template");
@@ -1032,7 +1030,14 @@ const createNewResponseInputSection = () => {
 
     document.getElementById("manualResponseAddingSection").appendChild(clone);
 
-    fillMultDataIntoDynamicSelects(lastSentTourPackageSelect, 'Please Select Package', tpkgs, 'pkgcode', 'pkgtitle');
+    try {
+        console.log(inquiry.id);
+        const tpkgs = await ajaxGetReq("/tpkg/custom/byinq?inqid=" + inquiry.id);
+        fillMultDataIntoDynamicSelects(lastSentTourPackageSelect, 'Please Select Package', tpkgs, 'pkgcode', 'pkgtitle');
+    } catch (error) {
+        console.error("Failed to fetch tour packages:", error);
+    }
+
 }
 
 //check manual followup errors
@@ -1165,151 +1170,8 @@ const enableDateStatusRadios = () => {
     }
 }
 
-
-
-// for creating a new response record manually NOT USED 💥💥
-/*
-const createNewResponseInputSectionOri = async () => {
-    document.getElementById("createNewResponseRowBtn").disabled = true;
-
-    const responseContainer = document.createElement("div");
-    responseContainer.classList.add("row", "mt-4");
-
-    const cardCol = document.createElement("div");
-    cardCol.classList.add("col-12");
-
-    const card = document.createElement("div");
-    card.classList.add("card", "shadow-sm", "border", "rounded", "p-4", "bg-light");
-
-    const cardBody = document.createElement("div");
-    cardBody.classList.add("card-body");
-
-    const innerRow = document.createElement("div");
-    innerRow.classList.add("row", "gx-4");
-
-    const col8 = document.createElement("div");
-    col8.classList.add("col-md-8", "mb-3");
-
-    const labelResponse = document.createElement("label");
-    labelResponse.setAttribute("for", "inputNewResponseTextField");
-    labelResponse.classList.add("form-label", "fw-semibold");
-    labelResponse.textContent = "Response:";
-
-    //for content
-    const textareaContent = document.createElement("textarea");
-    textareaContent.id = "inputNewResponseTextField";
-    textareaContent.classList.add("form-control");
-    textareaContent.style.height = "120px";
-    textareaContent.setAttribute("onkeyup", "inputValidatorText(this, '', 'followup', 'content')");
-
-    col8.appendChild(labelResponse);
-    col8.appendChild(textareaContent);
-
-    const col4 = document.createElement("div");
-    col4.classList.add("col-md-4", "mb-3");
-
-    const labelSelect = document.createElement("label");
-    labelSelect.setAttribute("for", "newInqResponseStatusSelect");
-    labelSelect.classList.add("form-label", "fw-semibold");
-    labelSelect.textContent = "Inquiry Response Status:";
-
-    //for status
-    const selectStatus = document.createElement("select");
-    selectStatus.id = "newInqResponseStatusSelect";
-    selectStatus.classList.add("form-select");
-    selectStatus.setAttribute("onchange", "staticSelectValidator(this, 'followup', 'followup_status')");
-
-    //default option
-    const optionPlaceholder = document.createElement("option");
-    optionPlaceholder.disabled = true;
-    optionPlaceholder.selected = true;
-    optionPlaceholder.textContent = "Please select status";
-    selectStatus.appendChild(optionPlaceholder);
-
-    //opt 1
-    const option1 = document.createElement("option");
-    option1.value = "gathering_info";
-    option1.textContent = "Gathering Info";
-    selectStatus.appendChild(option1);
-
-    //opt 2
-    const option2 = document.createElement("option");
-    option2.value = "quote_sent";
-    option2.textContent = "Quote Sent";
-    selectStatus.appendChild(option2);
-
-    //opt 3
-    const option3 = document.createElement("option");
-    option3.value = "no_response";
-    option3.textContent = "No Response";
-    selectStatus.appendChild(option3);
-
-    col4.appendChild(labelSelect);
-    col4.appendChild(selectStatus);
-
-    innerRow.appendChild(col8);
-    innerRow.appendChild(col4);
-    cardBody.appendChild(innerRow);
-
-    // Last Sent Package
-    const lastPackageRow = document.createElement("div");
-    lastPackageRow.classList.add("row", "mb-3");
-
-    const lastPackageLabelCol = document.createElement("div");
-    lastPackageLabelCol.classList.add("col-md-4", "d-flex", "align-items-center");
-
-    const lastPackageLabel = document.createElement("label");
-    lastPackageLabel.setAttribute("for", "lastSentTourPackageSelect");
-    lastPackageLabel.classList.add("mb-0", "fw-semibold");
-    lastPackageLabel.textContent = "Last Sent Tour Package:";
-
-    lastPackageLabelCol.appendChild(lastPackageLabel);
-
-    const lastPackageSelectCol = document.createElement("div");
-    lastPackageSelectCol.classList.add("col-md-8");
-
-    const lastPackageSelect = document.createElement("select");
-    lastPackageSelect.id = "lastSentTourPackageSelect";
-    lastPackageSelect.classList.add("form-select", "form-select");
-
-    fillMultDataIntoDynamicSelects(lastPackageSelect, 'Please Select Package', tpkgs, 'pkgcode', 'pkgtitle');
-
-    lastPackageSelectCol.appendChild(lastPackageSelect);
-
-    lastPackageRow.appendChild(lastPackageLabelCol);
-    lastPackageRow.appendChild(lastPackageSelectCol);
-    cardBody.appendChild(lastPackageRow);
-
-    const btnRow = document.createElement("div");
-    btnRow.classList.add("d-flex", "justify-content-end", "mt-3", "gap-2");
-
-    const submitBtn = document.createElement("button");
-    submitBtn.type = "button";
-    submitBtn.classList.add("btn", "btn-primary");
-    submitBtn.textContent = "Submit";
-    submitBtn.setAttribute("onclick", "submitManualFollowup()");
-
-    const resetBtn = document.createElement("button");
-    resetBtn.type = "reset";
-    resetBtn.classList.add("btn", "btn-secondary");
-    resetBtn.textContent = "Reset";
-    resetBtn.setAttribute("onclick", "refreshInqFollowupSection()");
-
-    btnRow.appendChild(resetBtn);
-    btnRow.appendChild(submitBtn);
-
-
-    cardBody.appendChild(btnRow);
-    card.appendChild(cardBody);
-    cardCol.appendChild(card);
-    responseContainer.appendChild(cardCol);
-
-    document.getElementById("manualResponseAddingSection").appendChild(responseContainer);
-}; */
-
 //childs are allowed only with adult of any type NOT USED 💥💥
 const enableChildCountInputsOri = () => {
-
 
     if (parseInt(inqLocalAdultCount.value) > 0 || parseInt(inqForeignAdultCount.value) > 0) {
         inqLocalChildCount.disabled = false;
@@ -1322,8 +1184,9 @@ const enableChildCountInputsOri = () => {
         inquiry.inq_foreign_kids = 0;
 
     }
-
 }
+
+
 
 
 
