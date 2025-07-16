@@ -26,7 +26,7 @@ public interface TourPkgDao extends JpaRepository<TourPkg, Integer> {
     // @Query(value = "select TourPkg(tp.id , tp.pkgtitle, tp.sd_dayplan_id ,
     // tp.ed_dayplan_id , tp.dayplans ) from TourPkg tp where tp.id = ?1")
 
-    @Query(value = "select  tp from TourPkg tp where tp.id = ?1")
+    @Query(value = "select tp from TourPkg tp where tp.id = ?1")
     public TourPkg findTpkgById(Integer tpkgId);
 
     // get tpkgs by based inq

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ import lk.yathratravels.client.ClientDao;
 import lk.yathratravels.employee.Employee;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.tpkg.TourPkg;
 import lk.yathratravels.user.UserDao;
 
 @RestController
@@ -106,19 +108,20 @@ public class FollowupController {
 
     }
 
+    //
+    // Privilege privilegeLevelForLoggedUser =
+    // privilegeService.getPrivileges(auth.getName(), "INQUIRY");
+
+    // if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+    // return "Update Not Completed; You Dont Have Permission";
+    // }
+
     // save just the followup
     @PostMapping(value = "/followup")
     @Transactional
     public String addNewFollowup(@RequestBody Followup flwup) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //
-        // Privilege privilegeLevelForLoggedUser =
-        // privilegeService.getPrivileges(auth.getName(), "INQUIRY");
-
-        // if (!privilegeLevelForLoggedUser.getPrvinsert()) {
-        // return "Update Not Completed; You Dont Have Permission";
-        // }
 
         try {
             flwup.setAddeddatetime(LocalDateTime.now());
@@ -135,23 +138,38 @@ public class FollowupController {
             // if cx agreed to book
             if (flwup.getFollowup_status().equals("good_to_book")) {
                 flwup.getInquiry_id().setInq_status("Confirmed");
+
+                Inq inq = flwup.getInquiry_id();
+                Optional<Client> clientOpt = clientDao.findByEmail(inq.getEmail());
+
+                Client finalClient;
+                if (clientOpt.isPresent()) {
+                    finalClient = clientOpt.get();
+                } else {
+                    Client newClient = new Client();
+                    newClient.setFullname(inq.getClientname());
+                    newClient.setPassportornic(inq.getPassportnumornic());
+                    newClient.setContactone(inq.getContactnum());
+                    newClient.setContacttwo(inq.getContactnumtwo());
+                    newClient.setEmail(inq.getEmail());
+                    newClient.setNote(inq.getNote());
+                    newClient.setCli_status("Active");
+                    newClient.setNationality_id(inq.getNationality_id());
+
+                    finalClient = clientDao.save(newClient);
+                }
+
+                Booking newBooking = new Booking();
+                newBooking.setClient(finalClient);
+
+                TourPkg lastSentPkg = followupDao.getTpkgOfLastSent(inq.getId()).getLast_sent_tpkg();
+                newBooking.setTpkg(lastSentPkg);
+
+                newBooking.setStartdate(inq.getInq_apprx_start_date());
+                newBooking.setBooking_status("Pending");
+
+                bookingDao.save(newBooking);
             }
-
-            // save the inq with latest inq details
-            inqDao.save(flwup.getInquiry_id());
-
-            // Client create here ✅✅✅
-            Client newClient = new Client();
-            newClient.setFullname(flwup.getInquiry_id().getClientname());
-            clientDao.save(newClient);
-
-            // create booking here ✅✅✅
-            Booking newBooking = new Booking();
-            newBooking.setTpkg(followupDao.getTpkgOfLastSent(flwup.getInquiry_id().getId()).getLast_sent_tpkg());
-            newBooking.setBookingcode("123");
-            // add that client to booking
-
-            bookingDao.save(newBooking);
 
             return "OK";
 

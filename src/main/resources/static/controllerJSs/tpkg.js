@@ -734,23 +734,22 @@ const refillTpkgForm = (tpkgObj) => {
         //additional cost entire table create again 💥💥💥
 
         //refill all the related costs
-        document.getElementById('totalTktCostInput').value = tpkgObj.totaltktcost.toFixed(2);
-        document.getElementById('totalVehicleParkingCost').value = tpkgObj.totalvehiparkingcost.toFixed(2);
-        document.getElementById('totalLunchCostForAll').value = tpkgObj.totallunchcost.toFixed(2);
-        document.getElementById('totalVehiCostInput').value = tpkgObj.totalvehicost.toFixed(2);
-        document.getElementById('totalStayCostInput').value = tpkgObj.totalstaycost.toFixed(2);
-        document.getElementById('totalDriverCostInput').value = tpkgObj.totaldrivercost.toFixed(2);
-        document.getElementById('totalGuideCostInput').value = tpkgObj.totalguidecost.toFixed(2);
-        document.getElementById('totalAdditionalCosts').value = tpkgObj.totaladditionalcosts.toFixed(2);
-        document.getElementById('finalTotalCost').value = tpkgObj.pkgcostsum.toFixed(2);
-        document.getElementById('pkgSellingPrice').value = tpkgObj.pkgsellingprice.toFixed(2);
-        document.getElementById('pkgSellingPrice').value = tpkgObj.pkgsellingprice.toFixed(2);
+        document.getElementById('totalTktCostInput').value = tpkgObj.totaltktcost?.toFixed(2) || '0.00';
+        document.getElementById('totalVehicleParkingCost').value = tpkgObj.totalvehiparkingcost?.toFixed(2) || '0.00';
+        document.getElementById('totalLunchCostForAll').value = tpkgObj.totallunchcost?.toFixed(2) || '0.00';
+        document.getElementById('totalVehiCostInput').value = tpkgObj.totalvehicost?.toFixed(2) || '0.00';
+        document.getElementById('totalStayCostInput').value = tpkgObj.totalstaycost?.toFixed(2) || '0.00';
+        document.getElementById('totalDriverCostInput').value = tpkgObj.totaldrivercost?.toFixed(2) || '0.00';
+        document.getElementById('totalGuideCostInput').value = tpkgObj.totalguidecost?.toFixed(2) || '0.00';
+        document.getElementById('totalAdditionalCosts').value = tpkgObj.totaladditionalcosts?.toFixed(2) || '0.00';
+        document.getElementById('finalTotalCost').value = tpkgObj.pkgcostsum?.toFixed(2) || '0.00';
+        document.getElementById('pkgSellingPrice').value = tpkgObj.pkgsellingprice?.toFixed(2) || '0.00';
 
         //discounts
         refillDiscountSection(tpkgObj);
 
         //final price cx will see
-        document.getElementById('pkgFinalPrice').value = tpkgObj.pkgfinalprice.toFixed(2);
+        document.getElementById('pkgFinalPrice').value = tpkgObj.pkgfinalprice?.toFixed(2) || '0.00';
 
     }
 
@@ -1263,13 +1262,12 @@ const printTpkgRecord = (tpkgObj) => {
 };
 
 //handle adult counts
-const validateAdultTravellerCounts=()=> {
+const validateAdultTravellerCounts = () => {
     const localAdultInput = document.getElementById('tpkgLocalAdultCount');
     const foreignAdultInput = document.getElementById('tpkgForeignAdultCount');
 
     const localAdults = parseInt(localAdultInput.value) || 0;
     const foreignAdults = parseInt(foreignAdultInput.value) || 0;
-
 
     if (localAdults === 0 && foreignAdults === 0) {
         showAlertModal('war', 'At least one adult traveller is required (local or foreign).');
@@ -1277,7 +1275,6 @@ const validateAdultTravellerCounts=()=> {
         foreignAdultInput.style.border = '2px solid red';
     }
 }
-
 
 //handle refill tpkg data from inquiry
 const fillDataFromInq = async () => {
@@ -1314,20 +1311,15 @@ const fillDataFromInq = async () => {
             const interestedTemplatePkg = await ajaxGetReq("/tpkg/byid?tpkgId=" + tpkg.basedinq.intrstdpkgid);
             console.log(interestedTemplatePkg);
 
+            tpkg.sd_dayplan_id = interestedTemplatePkg.sd_dayplan_id;
+            tpkg.ed_dayplan_id = interestedTemplatePkg.ed_dayplan_id;
+
             //for first day
             const fdSelect = document.getElementById('tpkgFirstDaySelect');
-            fdSelect.disabled = true;
             fillDataIntoDynamicSelects(fdSelect, 'Please select first day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.sd_dayplan_id.daytitle);
             handleFirstDayChange(tpkgFirstDaySelect);
-
-            //for final day
-            const ldSelect = document.getElementById('tpkgFinalDaySelect');
-            ldSelect.disabled = true;
-            fillDataIntoDynamicSelects(ldSelect, 'Please select last day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.ed_dayplan_id.daytitle);
-            //showFinalDayBtn.disabled = false;
-            //finalDayMsg.classList.remove('d-none');
-            handleFinalDayChange(tpkgFinalDaySelect);
-
+            //fdSelect.disabled = true;
+          
             //for middays
             const intrstdPkgMidDays = interestedTemplatePkg.dayplans;
 
@@ -1375,6 +1367,15 @@ const fillDataFromInq = async () => {
                 midDayCounter++
 
             }
+
+             //for final day
+             const ldSelect = document.getElementById('tpkgFinalDaySelect');
+             fillDataIntoDynamicSelects(ldSelect, 'Please select last day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.ed_dayplan_id.daytitle);
+             handleFinalDayChange(tpkgFinalDaySelect);
+ 
+             //ldSelect.disabled = true;
+             //showFinalDayBtn.disabled = false;
+             //finalDayMsg.classList.remove('d-none');
 
             updateTotalDaysCount();
             showTotalKmCount();
@@ -1728,18 +1729,21 @@ const handleFirstDayChange = (selectElement) => {
     showFirstDayBtn.disabled = false;
     const fdMsg = document.getElementById('firstDayMsg');
 
-    if (tpkg.is_custompkg == true && tpkg.sd_dayplan_id.is_template) {
-        selectElement.style.border = "2px solid orange";
-        fdMsg.classList.remove('d-none');
-        tpkg.sd_dayplan_id = null;
-        addNewDaysBtn.disabled = true;
-    } else {
-        selectElement.style.border = "2px solid lime";
-        fdMsg.classList.add('d-none');
-        addNewDaysBtn.disabled = false;
-        finalDaySelectUseTempsBtn.disabled = false;
-        finalDaySelectUseExistingBtn.disabled = false;
-        updateTotalDaysCount();
+    if (tpkg.is_custompkg == true) {
+
+        if (tpkg.sd_dayplan_id.is_template == true) {
+            selectElement.style.border = "2px solid orange";
+            fdMsg.classList.remove('d-none');
+            tpkg.sd_dayplan_id = null;
+            addNewDaysBtn.disabled = true;
+        } else {
+            selectElement.style.border = "2px solid lime";
+            fdMsg.classList.add('d-none');
+            addNewDaysBtn.disabled = false;
+            finalDaySelectUseTempsBtn.disabled = false;
+            finalDaySelectUseExistingBtn.disabled = false;
+            updateTotalDaysCount();
+        }
     }
 
     showTotalKmCount();
@@ -1752,25 +1756,38 @@ const handleFinalDayChange = (selectElement) => {
     dynamicSelectValidator(selectElement, 'tpkg', 'ed_dayplan_id');
     showFinalDayBtn.disabled = false;
     removeFinalDayBtn.disabled = false;
-    showTotalKmCount();
 
     const finalDMsg = document.getElementById('finalDayMsg');
 
-    if (tpkg.is_custompkg == true && tpkg.ed_dayplan_id.is_template) {
-        selectElement.style.border = "2px solid orange";
-        finalDMsg.classList.remove('d-none');
-        tpkg.ed_dayplan_id = null;
-    } else {
-        selectElement.style.border = "2px solid lime";
-        finalDMsg.classList.add('d-none');
-        finalDaySelectUseTempsBtn.disabled = false;
-        finalDaySelectUseExistingBtn.disabled = false;
-        updateTotalDaysCount();
+    console.log('tpkg.ed_dayplan_id:', tpkg.ed_dayplan_id);
+
+    if (tpkg.is_custompkg == true) {
+
+        if (tpkg.ed_dayplan_id.is_template == true) {
+
+            console.log('Final day is a template. Applying warning styling and nulling it.');
+
+            selectElement.style.border = "2px solid orange";
+            finalDMsg.classList.remove('d-none');
+            tpkg.ed_dayplan_id = null;
+        } else {
+
+            console.log('Final day is a valid custom day.');
+
+            selectElement.style.border = "2px solid lime";
+            finalDMsg.classList.add('d-none');
+            finalDaySelectUseTempsBtn.disabled = false;
+            finalDaySelectUseExistingBtn.disabled = false;
+            updateTotalDaysCount();
+        }
     }
 
-    // 💥💥💥
-    // refreshMainCostCard();
+    showTotalKmCount();
+
 };
+
+// 💥💥💥
+// refreshMainCostCard();
 
 // fn to calculate the total days count of the tour package 
 const updateTotalDaysCount = () => {
@@ -3490,7 +3507,7 @@ const generateNormalDayPlanSelectSections = () => {
     viewBtn.type = 'button';
     viewBtn.id = viewBtnId;
     viewBtn.disabled = true;
-    viewBtn.className = 'btn btn-all';
+    viewBtn.className = 'btn btn-outline-primary';
     viewBtn.textContent = 'View';
     viewBtn.onclick = () => {
         showDayPlanDetails(selectId);

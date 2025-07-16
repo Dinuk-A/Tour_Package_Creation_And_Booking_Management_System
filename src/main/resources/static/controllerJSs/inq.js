@@ -947,20 +947,31 @@ const openModal = async (inqObj) => {
     inqResetFormBtn.classList.add("d-none");
     inqPrintBtn.classList.remove("d-none");
 
-    //enable edit button
+    //'enable edit' button 
     const enableEditBtn = document.getElementById('inqEnableEditBtn');
-    enableEditBtn.disabled = false;
-    enableEditBtn.style.cursor = "pointer";
+
+    //'add new response' button
+    const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
+
+    //if inq is completed, cant edit anymore
+    if (inqObj.inq_status == "Confirmed" || inqObj.inq_status == "Dropped" || inqObj.deleted_inq == true) {
+        enableEditBtn.disabled = true;
+        enableEditBtn.style.cursor = "not-allowed";
+
+        addNewResponseRowBtn.disabled = true;
+        addNewResponseRowBtn.style.cursor = "not-allowed";
+    } else {
+        enableEditBtn.disabled = false;
+        enableEditBtn.style.cursor = "pointer";
+
+        addNewResponseRowBtn.disabled = false;
+        addNewResponseRowBtn.style.cursor = "pointer";
+    }
 
     //disable add new button
     const addBtn = document.getElementById('manualInqAddBtn');
     addBtn.disabled = true;
     addBtn.style.cursor = "not-allowed";
-
-    //enable add new response button
-    const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
-    addNewResponseRowBtn.disabled = false;
-    addNewResponseRowBtn.style.cursor = "pointer";
 
     document.getElementById('assignedUserRow').classList.remove('d-none');
     fillMultDataIntoDynamicSelects(assignedUserSelect, 'Select Employee', emps, 'emp_code', 'fullname', inqObj.assigned_empid.fullname);
@@ -1239,18 +1250,6 @@ const validateInquiryAdultCounts = () => {
     }
 }
 
-//let tpkgs =[];
-
-//get tpkgs by based inq
-//const recieveTpkgs = async () => {
-//
-//    try {
-//        tpkgs = await ajaxGetReq("/tpkg/custom/drafts");
-//    } catch (error) {
-//        console.error("Failed to fetch tour packages:", error);
-//    }
-//
-//}
 
 //show all the responses
 const refillAllPrevResponses = async () => {

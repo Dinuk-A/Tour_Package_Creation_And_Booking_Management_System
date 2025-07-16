@@ -44,9 +44,6 @@ public class Inq {
     @Column(name = "inq_apprx_start_date")
     private LocalDate inq_apprx_start_date;
 
-    // @Column(name = "inq_grp_text")
-    // private String inq_grp_text;
-
     // general traveller count
     @Column(name = "inq_kids")
     private Integer inq_kids;

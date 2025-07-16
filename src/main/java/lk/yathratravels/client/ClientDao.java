@@ -1,6 +1,7 @@
 package lk.yathratravels.client;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,6 @@ public interface ClientDao extends JpaRepository<Client, Integer> {
     List<Client> findClientsByEmail(String email);
 
     // if email is unique
-    // Optional<Client> findByEmail(String email);
+     Optional<Client> findByEmail(String email);
 
 }
