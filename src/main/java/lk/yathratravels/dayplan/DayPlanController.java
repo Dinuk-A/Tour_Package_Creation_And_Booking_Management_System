@@ -216,8 +216,8 @@ public class DayPlanController {
         }
 
         try {
-            dplan.setAddeddatetime(LocalDateTime.now());
-            dplan.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+            dplan.setLastmodifieddatetime(LocalDateTime.now());
+            dplan.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
             daoDP.save(dplan);
             return "OK";
         } catch (Exception e) {

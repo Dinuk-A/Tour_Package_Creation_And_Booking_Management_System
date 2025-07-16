@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,7 +17,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
-
+import lk.yathratravels.inquiry.Nationality;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -60,7 +59,10 @@ public class Client {
     @Column(name = "cli_status")
     private String cli_status;
 
-    
+    @ManyToOne
+    @JoinColumn(name = "nationality_id", referencedColumnName = "id")
+    private Nationality nationality_id;
+
     // common 6
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
@@ -82,18 +84,20 @@ public class Client {
 
 }
 
-/*id int AI PK 
-fullname varchar(45) 
-clientcode varchar(45) 
-passportornic varchar(45) 
-contactone varchar(45) 
-contacttwo varchar(45) 
-email varchar(45) 
-note text 
-cli_status varchar(45) 
-addeddatetime datetime 
-lastmodifieddatetime datetime 
-deleteddatetime datetime 
-addeduserid int 
-lastmodifieduserid int 
-deleteduserid int */
+/*
+ * id int AI PK
+ * fullname varchar(45)
+ * clientcode varchar(45)
+ * passportornic varchar(45)
+ * contactone varchar(45)
+ * contacttwo varchar(45)
+ * email varchar(45)
+ * note text
+ * cli_status varchar(45)
+ * addeddatetime datetime
+ * lastmodifieddatetime datetime
+ * deleteddatetime datetime
+ * addeduserid int
+ * lastmodifieduserid int
+ * deleteduserid int
+ */

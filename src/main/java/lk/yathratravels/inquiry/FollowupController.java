@@ -89,6 +89,12 @@ public class FollowupController {
 
             followupDao.save(flwup);
 
+            // if this is the first time giving a followup
+            if (flwup.getInquiry_id().getInq_status().equals("New")
+                    || flwup.getInquiry_id().getInq_status().equals("Assigned")) {
+                flwup.getInquiry_id().setInq_status("Working");
+            }
+
             // update the inquiry with the newly got data by calls/e,mails
             inqDao.save(flwup.getInquiry_id());
 
@@ -121,7 +127,8 @@ public class FollowupController {
             followupDao.save(flwup);
 
             // if this is the first time giving a followup
-            if (flwup.getInquiry_id().getInq_status().equals("New") || flwup.getInquiry_id().getInq_status().equals("Assigned")) {
+            if (flwup.getInquiry_id().getInq_status().equals("New")
+                    || flwup.getInquiry_id().getInq_status().equals("Assigned")) {
                 flwup.getInquiry_id().setInq_status("Working");
             }
 
@@ -133,7 +140,6 @@ public class FollowupController {
             // save the inq with latest inq details
             inqDao.save(flwup.getInquiry_id());
 
-            
             // Client create here ✅✅✅
             Client newClient = new Client();
             newClient.setFullname(flwup.getInquiry_id().getClientname());

@@ -368,10 +368,6 @@ const checkManualInqErrors = () => {
         errors = errors + " Please Enter The Inquiry Recieved Date  \n";
     }
 
-    // if (inquiry.recievedtime == null) {
-    //     errors = errors + " Please Enter The Inquiry Recieved Time  \n";
-    // }
-
     if (inquiry.main_inq_msg == null) {
         errors = errors + " Please Enter The Main Enquiry Details  \n";
     }
@@ -393,9 +389,29 @@ const checkManualInqErrors = () => {
     }
 
     //for success inq (must check traveller count, start date)
-    //if (inquiry.inq_status == "Confirmed") {
-    //    
-    //}
+    if (inquiry.inq_status == "Confirmed") {
+        if (inquiry.inq_apprx_start_date == null || inquiry.is_startdate_confirmed !== true) {
+            errors += " Please Set the Start Date and Confirm It  \n";
+        }
+
+        const localAdults = parseInt(inquiry.inq_local_adults) || 0;
+        const foreignAdults = parseInt(inquiry.inq_foreign_adults) || 0;
+
+        if (localAdults === 0 && foreignAdults === 0) {
+            errors += " Please Enter At Least One Adult Traveller Count (Local or Foreign)  \n";
+        }
+
+        if (inquiry.inq_guideneed == null) {
+            errors += " Please Select Whether A Guide Is Needed  \n";
+        }
+
+    }
+
+    if (inquiry.inq_status === "Working" || inquiry.inq_status === "Confirmed") {
+        if (inquiry.assigned_empid == null) {
+            errors += " Please Assign An Employee To Handle This Inquiry  \n";
+        }
+    }
 
     return errors;
 }
@@ -424,9 +440,9 @@ const addNewInquiry = async () => {
                     showAlertModal('suc', 'Saved Successfully');
                     document.getElementById('formSystemInq').reset();
                     refreshInquiryForm();
-                    //buildEmployeeTable();
-                    //var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
-                    //myEmpTableTab.show();
+                    handleTableCreation();
+                    var myTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    myTableTab.show();
                 } else {
                     showAlertModal('err', 'Submit Failed ' + postServerResponse);
                 }
@@ -456,19 +472,53 @@ const handleRecievedAddr = (methodElement) => {
     }
 }
 
-//fn to view button, REFILL the data in form 💥💥💥💥💥💥
-const openModal = (inqObj) => {
+//const email = encodeURIComponent(inqObj.email || '');
+// const custsByEmail = await ajaxGetReq(`/client/byemail?email=${email}`);
 
-    //email and phone number deken ekakin customer base eka filter wena url ekak run wenawa
-    //results thiyanawa nam e customer previous cx kenek kiyala me section eke pennnawa + passport, additional contacts penawa
-    //naththan e 3ma hidden 💥💥💥💥💥💥
+//fn to view button, REFILL the data in form 💥💥💥💥💥💥
+const openModal = async (inqObj) => {
 
     inquiry = JSON.parse(JSON.stringify(inqObj));
     oldInquiry = JSON.parse(JSON.stringify(inqObj));
 
-    const addBtn = document.getElementById('manualInqAddBtn');
-    addBtn.disabled = true;
-    addBtn.style.cursor = "not-allowed";
+    //call cx filter by email
+    let custsByEmail = null;
+
+    try {
+        custsByEmail = await ajaxGetReq("/client/byemail?email=" + inqObj.email);
+        console.log("Clients fetched by email:", custsByEmail);
+    } catch (error) {
+        console.error("Error fetching clients by email:", error);
+    }
+
+    const existingClientNotice = document.getElementById('existingClientNotice');
+    const existingClientRegId = document.getElementById('existingClientRegId');
+
+    if (custsByEmail && custsByEmail.length > 0) {
+        existingClientNotice.classList.remove('d-none');
+        existingClientRegId.classList.remove('d-none');
+        existingClientRegId.textContent = `Customer ID: CUST-${custsByEmail[0].clientcode || 'N/A'}`;
+
+        const passportInputWrapper = document.querySelector('#inqClientPassportNumorNIC').closest('.col-6');
+        passportInputWrapper.classList.remove('d-none');
+        document.getElementById('inqClientPassportNumorNIC').value = custsByEmail[0].passportornic || '';
+
+        const additionalContactWrapper = document.querySelector('#inqAdditionalContact').closest('.col-3');
+        additionalContactWrapper.classList.remove('d-none');
+        document.getElementById('inqAdditionalContact').value = custsByEmail[0].contacttwo || '';
+
+    } else {
+        existingClientNotice.classList.add('d-none');
+        existingClientRegId.classList.add('d-none');
+
+        const passportInputWrapper = document.querySelector('#inqClientPassportNumorNIC').closest('.col-6');
+        passportInputWrapper.classList.add('d-none');
+        document.getElementById('inqClientPassportNumorNIC').value = '';
+
+        const additionalContactWrapper = document.querySelector('#inqAdditionalContact').closest('.col-3');
+        additionalContactWrapper.classList.add('d-none');
+        document.getElementById('inqAdditionalContact').value = '';
+    }
 
     document.getElementById('inqCodeInput').value = inqObj.inqcode || "N/A";
     document.getElementById('inqRecievedMethod').value = inqObj.inqsrc || "N/A";
@@ -607,6 +657,11 @@ const openModal = (inqObj) => {
     enableEditBtn.disabled = false;
     enableEditBtn.style.cursor = "pointer";
 
+    //disable add new button
+    const addBtn = document.getElementById('manualInqAddBtn');
+    addBtn.disabled = true;
+    addBtn.style.cursor = "not-allowed";
+
     //enable add new response button
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
     addNewResponseRowBtn.disabled = false;
@@ -630,14 +685,14 @@ const enableInqEditing = () => {
 
     document.getElementById('inqEnableEditBtn').disabled = true;
 
+    //   "inqForeignChildCount",
+    // "inqLocalChildCount",
     const inputIds = [
         "inqMainEnquiry",
         "prefContMethodPkgRelForm",
         "inqApproxStartDate",
         "inqLocalAdultCount",
-        "inqLocalChildCount",
         "inqForeignAdultCount",
-        "inqForeignChildCount",
         "inqAccommodationNote",
         "inqPlacesPreferences",
         "inqTransportNote",
@@ -672,6 +727,15 @@ const enableInqEditing = () => {
         }
     });
 
+    //hide new and assigned options
+    const statusSelectElem = document.getElementById('inqStatus');
+    for (let i = 1; i <= 2; i++) {
+        if (statusSelectElem.options[i]) {
+            statusSelectElem.options[i].style.display = 'none';
+        }
+    }
+
+
     const updateBtn = document.getElementById('manualInqUpdateBtn');
     updateBtn.disabled = false;
     updateBtn.style.cursor = "pointer";
@@ -685,6 +749,10 @@ const showInqValueChanges = () => {
 
     if (inquiry.main_inq_msg != oldInquiry.main_inq_msg) {
         updates = updates + "Main Enquiry Message changed from " + oldInquiry.main_inq_msg.trim() + " to " + inquiry.main_inq_msg.trim() + "\n";
+    }
+
+    if (inquiry.prefcontactmethod !== oldInquiry.prefcontactmethod) {
+        updates += `Preferred Contact Method changed from ${oldInquiry.prefcontactmethod || 'N/A'} to ${inquiry.prefcontactmethod || 'N/A'}\n`;
     }
 
     if (inquiry.inq_apprx_start_date != oldInquiry.inq_apprx_start_date) {
@@ -751,21 +819,22 @@ const showInqValueChanges = () => {
         //when chainging for the 2nd time and after, when this happens there is no value in inq_adults or inq_kids
     } else {
 
-        if (inquiry.inq_local_adults !== oldInquiry.inq_local_adults) {
+        if (inquiry.inq_local_adults !== oldInquiry.inq_local_adults && !(inquiry.inq_local_adults == 0 && oldInquiry.inq_local_adults == 0)) {
             updates += `Traveller Group: Local Adult Count changed from ${oldInquiry.inq_local_adults || 0} to ${inquiry.inq_local_adults}\n`;
         }
 
-        if (inquiry.inq_local_kids !== oldInquiry.inq_local_kids) {
+        if (inquiry.inq_local_kids !== oldInquiry.inq_local_kids && !(inquiry.inq_local_kids == 0 && oldInquiry.inq_local_kids == 0)) {
             updates += `Traveller Group: Local Child Count changed from ${oldInquiry.inq_local_kids || 0} to ${inquiry.inq_local_kids}\n`;
         }
 
-        if (inquiry.inq_foreign_adults !== oldInquiry.inq_foreign_adults) {
+        if (inquiry.inq_foreign_adults !== oldInquiry.inq_foreign_adults && !(inquiry.inq_foreign_adults == 0 && oldInquiry.inq_foreign_adults == 0)) {
             updates += `Traveller Group: Foreign Adult Count changed from ${oldInquiry.inq_foreign_adults || 0} to ${inquiry.inq_foreign_adults}\n`;
         }
 
-        if (inquiry.inq_foreign_kids !== oldInquiry.inq_foreign_kids) {
+        if (inquiry.inq_foreign_kids !== oldInquiry.inq_foreign_kids && !(inquiry.inq_foreign_kids == 0 && oldInquiry.inq_foreign_kids == 0)) {
             updates += `Traveller Group: Foreign Child Count changed from ${oldInquiry.inq_foreign_kids || 0} to ${inquiry.inq_foreign_kids}\n`;
         }
+
     }
 
     //assigned_empid
@@ -811,7 +880,7 @@ const updateSystemInq = async () => {
 
         } else {
 
-            let userComment = prompt("Add a short comment to describe this update:\n");
+            let userComment = prompt("Add a short comment to describe this update:\n\n" + changesHappened);
 
             if (userComment === null || userComment.trim() === "") {
                 showAlertModal('inf', "No comment entered. Task cancelled.");
@@ -833,11 +902,12 @@ const updateSystemInq = async () => {
                 let putServiceResponse = await ajaxPPDRequest("/followupwithinq", "POST", followup);
                 if (putServiceResponse === "OK") {
                     showAlertModal('suc', "Successfully Updated");
-                    //document.getElementById('formEmployee').reset();
-                    //refreshEmployeeForm();
-                    //buildEmployeeTable();
-                    //var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
-                    //myEmpTableTab.show();
+                    document.getElementById('formSystemInq').reset();
+                    refreshInquiryForm();
+                    handleTableCreation();
+                    refillAllPrevResponses();
+                    var followupTab = new bootstrap.Tab(document.getElementById('inqStep4-tab'));
+                    followupTab.show();
                 } else {
                     showAlertModal('err', "Update Failed \n" + putServiceResponse);
                 }
@@ -852,6 +922,28 @@ const updateSystemInq = async () => {
     }
 
 }
+
+//handle adult counts
+const validateInquiryAdultCounts = () => {
+    const localAdult = document.getElementById('inqLocalAdultCount');
+    const foreignAdult = document.getElementById('inqForeignAdultCount');
+
+    const localVal = parseInt(localAdult.value) || 0;
+    const foreignVal = parseInt(foreignAdult.value) || 0;
+
+    if (localVal === 0 && foreignVal === 0) {
+        localAdult.style.border = "2px solid red";
+        foreignAdult.style.border = "2px solid red";
+        inquiry.inq_foreign_adults = null;
+        inquiry.inq_local_adults = null;
+    } else {
+
+        inputValidatorText(localAdult, ' ^([0]|[1-9][0-9]{0,1})$', 'inquiry', 'inq_local_adults');
+        inputValidatorText(foreignAdult, ' ^([0]|[1-9][0-9]{0,1})$', 'inquiry', 'inq_foreign_adults');
+
+    }
+}
+
 
 //global + this will be needed for last sent packages in response
 let tpkgs;
@@ -958,7 +1050,7 @@ const checkManualFollowupErrors = () => {
     if (followup.followup_status == "quote_sent" && followup.last_sent_tpkg == null) {
         errors = errors + " Please Select The Tour Package Sent \n";
     }
-    
+
     if (followup.followup_status == "good_to_book" && followup.last_sent_tpkg == null) {
         errors = errors + " Please Select The Tour Package \n";
     }
@@ -1073,63 +1165,7 @@ const enableDateStatusRadios = () => {
     }
 }
 
-//update a manual inq(after a followup) (not used 💥💥💥)
-const updateSystemInqOri = async () => {
 
-    const errors = checkManualInqErrors();
-
-    if (errors == "") {
-        const changesHappened = showInqValueChanges();
-
-        if (changesHappened == "") {
-
-            showAlertModal('war', "No changes detected to update");
-
-        } else {
-
-            let userConfirm = confirm("Are you sure to proceed ? \n \n" + changesHappened);
-
-            if (userConfirm) {
-
-                //to remove general traveller grp counts, bcz they are now saved in local/foreign separately
-                inquiry.inq_adults = null;
-                inquiry.inq_kids = null;
-
-                //to followup
-                followup.content = changesHappened;
-                followup.inquiry_id = inquiry;
-
-                console.log("Follow up object: ", followup);
-
-                //if (inquiry.) {
-                //    
-                //}
-
-                try {
-                    let putServiceResponse = await ajaxPPDRequest("/followupwithinq", "POST", followup);
-                    if (putServiceResponse === "OK") {
-                        showAlertModal('suc', "Successfully Updated");
-                        //document.getElementById('formEmployee').reset();
-                        //refreshEmployeeForm();
-                        //buildEmployeeTable();
-                        //var myEmpTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
-                        //myEmpTableTab.show();
-                    } else {
-                        showAlertModal('err', "Update Failed \n" + putServiceResponse);
-                    }
-
-                } catch (error) {
-                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
-                }
-            } else {
-                showAlertModal('inf', "User cancelled the task");
-            }
-        }
-    } else {
-        showAlertModal('err', errors);
-    }
-
-}
 
 // for creating a new response record manually NOT USED 💥💥
 /*

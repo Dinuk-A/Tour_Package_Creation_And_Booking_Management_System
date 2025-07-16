@@ -1262,6 +1262,23 @@ const printTpkgRecord = (tpkgObj) => {
     };
 };
 
+//handle adult counts
+const validateAdultTravellerCounts=()=> {
+    const localAdultInput = document.getElementById('tpkgLocalAdultCount');
+    const foreignAdultInput = document.getElementById('tpkgForeignAdultCount');
+
+    const localAdults = parseInt(localAdultInput.value) || 0;
+    const foreignAdults = parseInt(foreignAdultInput.value) || 0;
+
+
+    if (localAdults === 0 && foreignAdults === 0) {
+        showAlertModal('war', 'At least one adult traveller is required (local or foreign).');
+        localAdultInput.style.border = '2px solid red';
+        foreignAdultInput.style.border = '2px solid red';
+    }
+}
+
+
 //handle refill tpkg data from inquiry
 const fillDataFromInq = async () => {
 
