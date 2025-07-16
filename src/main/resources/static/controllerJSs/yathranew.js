@@ -657,7 +657,7 @@ const pkgRelInqAddBtn = async () => {
                 console.log("submitted inq: ", inquiry);
                 showAlertModal("suc", "Thank you! Your inquiry has been submitted and we will get back to you soon");
                 formPkgRelateInqForm.reset();
-                refreshPkgRelInqForm();
+                window.location.reload();
                 $("#modalForPkgRelatedInqs").modal("hide");
             } else {
                 showAlertModal("err", "Sorry, we couldn't process your request at the moment. Please try again in a few minutes.");

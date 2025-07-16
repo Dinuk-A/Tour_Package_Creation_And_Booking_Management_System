@@ -1912,6 +1912,7 @@ const addNewDayPlan = async () => {
                     document.getElementById('formDayPlan').reset();
                     refreshDayPlanForm();
                     buildDayPlanTable();
+                    resetDayPlanFilters();
                     var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                     myDPTableTab.show();
                     //window.location.reload();
@@ -2624,6 +2625,7 @@ const updateDayPlan = async () => {
                         showAlertModal('suc', 'Saved Successfully');
                         document.getElementById('formDayPlan').reset();
                         refreshDayPlanForm();
+                        resetDayPlanFilters();
                         buildDayPlanTable();
                         var myDPTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         myDPTableTab.show();

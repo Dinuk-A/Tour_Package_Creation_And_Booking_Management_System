@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,9 +18,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
-import lk.yathratravels.employee.Employee;
-import lk.yathratravels.tpkg.TourPkg;
-import lk.yathratravels.vehicle.Vehicle;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,4 +42,58 @@ public class Client {
     @Column(name = "fullname")
     private String fullname;
 
+    @Column(name = "passportornic")
+    private String passportornic;
+
+    @Column(name = "contactone")
+    private String contactone;
+
+    @Column(name = "contacttwo")
+    private String contacttwo;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "note")
+    private String note;
+
+    @Column(name = "cli_status")
+    private String cli_status;
+
+    
+    // common 6
+    @Column(name = "addeddatetime")
+    private LocalDateTime addeddatetime;
+
+    @Column(name = "lastmodifieddatetime")
+    private LocalDateTime lastmodifieddatetime;
+
+    @Column(name = "deleteddatetime")
+    private LocalDateTime deleteddatetime;
+
+    @Column(name = "addeduserid")
+    private Integer addeduserid;
+
+    @Column(name = "lastmodifieduserid")
+    private Integer lastmodifieduserid;
+
+    @Column(name = "deleteduserid")
+    private Integer deleteduserid;
+
 }
+
+/*id int AI PK 
+fullname varchar(45) 
+clientcode varchar(45) 
+passportornic varchar(45) 
+contactone varchar(45) 
+contacttwo varchar(45) 
+email varchar(45) 
+note text 
+cli_status varchar(45) 
+addeddatetime datetime 
+lastmodifieddatetime datetime 
+deleteddatetime datetime 
+addeduserid int 
+lastmodifieduserid int 
+deleteduserid int */

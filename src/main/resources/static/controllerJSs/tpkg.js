@@ -70,8 +70,8 @@ const buildTpkgTable = async () => {
         const tpkgs = await ajaxGetReq("/tpkg/all");
 
         const tableColumnInfo = [
-            { displayType: 'function', displayingPropertyOrFn: showTpkgType, colHeadName: 'Type' },
             { displayType: 'text', displayingPropertyOrFn: 'pkgcode', colHeadName: 'Code' },
+            { displayType: 'function', displayingPropertyOrFn: showTpkgType, colHeadName: 'Type' },
             { displayType: 'text', displayingPropertyOrFn: 'pkgtitle', colHeadName: 'Title' },
             { displayType: 'function', displayingPropertyOrFn: showTpkgStatus, colHeadName: 'Status' }
         ]
@@ -89,7 +89,7 @@ const buildTpkgTable = async () => {
 const refreshTpkgForm = async () => {
 
     midDayCounter = 1;
-    console.log("midDayCounter " , midDayCounter);
+    console.log("midDayCounter ", midDayCounter);
 
     //general changes. no matter loggeduser role
 
@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (event.target.id === 'table-tab') {
             console.log("Switching to table tab - clearing form");
             refreshTpkgForm();
-          
+
         }
     });
 });
@@ -507,17 +507,18 @@ const showTpkgType = (tpkgObj) => {
     if (!tpkgObj.is_custompkg) {
         return `
             <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-               style="background-color: #007bff; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               style="background-color: #6f42c1; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                Template Package
             </p>`;
     } else {
         return `
             <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-               style="background-color: #17a2b8; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               style="background-color: #20c997; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                Custom Package
             </p>`;
     }
 }
+
 
 //to support fill main table  
 const showTpkgStatus = (tpkgObj) => {
@@ -536,8 +537,16 @@ const showTpkgStatus = (tpkgObj) => {
             return `
             <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
             style="background-color: #28a745; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            Completed
+            Finalized
          </p>`;
+        }
+
+        else if (tpkgObj.tpkg_status === "Active") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #007bff; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Live on website
+                </p>`;
         }
 
         else if (tpkgObj.tpkg_status === "Inactive") {
@@ -1023,6 +1032,21 @@ const updateTpkg = async () => {
             let userConfirm = confirm("Are you sure to proceed?\n\n" + updates);
 
             if (userConfirm) {
+
+                // Clean dayplans before submitting
+                if (tpkg.dayplans) {
+                    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+                } else {
+                    tpkg.dayplans = [];
+                }
+
+                // Only send the ID of basedinq
+                if (tpkg.basedinq && tpkg.basedinq.id) {
+                    tpkg.basedinq = tpkg.basedinq.id;
+                } else {
+                    tpkg.basedinq = null;
+                }
+
                 try {
                     let putServiceResponse = await ajaxPPDRequest("/tpkg", "PUT", tpkg);
 
@@ -1292,7 +1316,7 @@ const fillDataFromInq = async () => {
 
             let midDayCounter = 1;
 
-            for (let i = 0; i < intrstdPkgMidDays.length; i++) {              
+            for (let i = 0; i < intrstdPkgMidDays.length; i++) {
 
                 console.log("runs,", i);
                 const dayPlan = intrstdPkgMidDays[i];
@@ -3509,16 +3533,20 @@ const generateNormalDayPlanSelectSections = () => {
     midDayCounter++;
 }
 
+//const msgElement = document.getElementById(msgId);
+//const msgId = `midDayMsg${currentDay}`;
+//const viewBtnId = `showMidDayBtn${currentDay}`;
 //handle midday changes
 const handleMidDaySelectChange = (selectElem, currentDay = null) => {
     const selectedValue = JSON.parse(selectElem.value);
-    //const msgId = `midDayMsg${currentDay}`;
-    //const viewBtnId = `showMidDayBtn${currentDay}`;
 
-    const viewBtn = selectElem.parentNode.parentNode.children[2].children[1];
+    const viewBtn = selectElem.parentNode.parentNode.children[2].children[0];
+    //const dataId = viewBtn.getAttribute("data-id");
+    //const classes = viewBtn.className; // returns a string
+    //const id = viewBtn.id;
+
+    console.log(viewBtn);
     const msgElement = selectElem.parentNode.children[1];
-
-    //const msgElement = document.getElementById(msgId);
 
     console.log("Selected DayPlan:", selectedValue);
     console.log("Selected Day Number:", currentDay);
@@ -3556,7 +3584,7 @@ const handleMidDaySelectChange = (selectElem, currentDay = null) => {
         updateTotalDaysCount();
         showTotalKmCount();
 
-        document.getElementById(viewBtn).disabled = false;
+        viewBtn.disabled = false;
         document.getElementById(`midDayDeleteBtn${currentDay}`).disabled = false;
 
         console.log("Updated tpkg.dayplans:", tpkg.dayplans);
@@ -3939,10 +3967,21 @@ const addNewTpkg = async () => {
                 //console.log("tpkg.addiCostList:", tpkg.addiCostList);
 
                 //bind the based inq id only, not whole obj
-                tpkg.basedinq = tpkg.basedinq.id;
+                if (tpkg.basedinq && tpkg.basedinq.id) {
+                    tpkg.basedinq = tpkg.basedinq.id;
+                } else {
+                    tpkg.basedinq = null; // or handle as needed
+                }
 
                 //remove null days from dayplans list
-                tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+                //tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+
+                if (tpkg.dayplans) {
+                    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+                } else {
+                    tpkg.dayplans = [];
+                }
+
 
                 const postServerResponse = await ajaxPPDRequest("/tpkg", "POST", tpkg);
                 if (postServerResponse === 'OK') {

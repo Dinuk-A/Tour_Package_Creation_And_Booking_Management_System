@@ -61,7 +61,7 @@ public class Booking {
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "tpkg", referencedColumnName = "id")
+    @JoinColumn(name = "client", referencedColumnName = "id")
     private TourPkg tpkg;
 
     @ManyToMany
