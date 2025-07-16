@@ -46,7 +46,11 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
     @Query(value = "select emp from Employee emp where emp.designation_id.name <> 'Admin'")
     public List<Employee> getAllEmployeesExceptAdmin();
 
-    //get emps to assign to inquiries
+    // not used
+    @Query("SELECT e FROM Employee e WHERE (e.deleted_emp = false OR e.deleted_emp IS NULL) AND e.designation_id.name <> 'Admin'")
+    public List<Employee> getAllNonDeletedEmployeesExceptAdmin();
+
+    // get emps to assign to inquiries
     @Query("SELECT e FROM Employee e WHERE (e.deleted_emp = false OR e.deleted_emp IS NULL) AND e.designation_id.name IN ('Manager', 'Assistant Manager', 'Executive')")
     public List<Employee> getNonDeletedManagersAndAssistantsAndExecutives();
 

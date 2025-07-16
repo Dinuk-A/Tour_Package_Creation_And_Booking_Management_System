@@ -4,18 +4,8 @@ window.addEventListener('load', () => {
     refreshInqFollowupSection();
     handleTableCreation();
     handleDateFields();
-    //recieveTpkgs();
-
+    refillFilterExecutives();
 });
-
-//to minmize the api calls, get all emps at once, then collect and show the empid and name from that list
-let allEmployeesMap = {};
-const loadAllEmployees = async () => {
-    const allEmps = await ajaxGetReq("/emp/allbasic");
-    allEmps.forEach(emp => {
-        allEmployeesMap[emp.id] = emp;
-    });
-};
 
 //clear out the form everytime a user switches to table tab
 document.addEventListener("DOMContentLoaded", () => {
@@ -44,6 +34,38 @@ const handleDateFields = () => {
 
 }
 
+//to minmize the api calls, get all emps at once, then collect and show the empid and name from that list
+let allEmployeesMap = {};
+const loadAllEmployees = async () => {
+
+    const allEmps = await ajaxGetReq("/emp/allbasic");
+
+    allEmps.forEach(emp => {
+        allEmployeesMap[emp.id] = emp;
+    });
+};
+
+// refill the filter select element
+const refillFilterExecutives = async () => {
+
+    let inqOperators = [];
+
+    try {
+        inqOperators = await ajaxGetReq("/emp/active/inqoperators");
+
+        const allOption = {
+            id: -10,
+            fullname: "All Users"
+        };
+        inqOperators.unshift(allOption);
+
+        fillDataIntoDynamicSelects(assignedUserFilter, 'Please Select an Executive', inqOperators, 'fullname');
+
+    } catch (error) {
+        console.error("Error fetching inquiry operators for filter:", error);
+    }
+};
+
 //handle tables type
 const handleTableCreation = () => {
     const rolesRaw = document.getElementById('userRolesArraySection').textContent;
@@ -53,9 +75,11 @@ const handleTableCreation = () => {
     console.log("Parsed roles:", roles);
 
     if (roles.includes("System_Admin") || roles.includes("Manager") || roles.includes("Assistant Manager")) {
+        //document.getElementById('assignedUserFilterDiv').style.display = "block";
         buildAllInqTable();
     } else if (roles.includes("Executive")) {
         console.log("else running");
+        //document.getElementById('assignedUserFilterDiv').style.display = "none";
         buildPersonalInqTable();
     }
 }
@@ -126,20 +150,18 @@ const buildPersonalInqTable = async () => {
 
 //filter by inq status , common fn for both tABLES
 const applyInquiryStatusFilter = () => {
-
     const selectedStatus = document.getElementById('inqStatusFilter').value;
     const roles = JSON.parse(document.getElementById('userRolesArraySection').textContent);
-
     const isAdminOrManager = roles.includes("System_Admin") || roles.includes("Manager") || roles.includes("Assistant Manager");
 
     if (isAdminOrManager) {
-
+        
         let filtered = allInqs;
 
         if (selectedStatus && selectedStatus !== "All") {
-            filtered = allInqs.filter(inq => inq.inq_status === selectedStatus);
+            filtered = filtered.filter(inq => inq.inq_status === selectedStatus);
         }
-
+ 
         renderAllInqTableByFilters(filtered);
     } else {
         let filtered = assignedInqs;
@@ -151,7 +173,6 @@ const applyInquiryStatusFilter = () => {
         renderPersonalInquiryTableByFilters(filtered);
     }
 };
-
 
 // fn to render he personal tbl with filtered data
 const renderPersonalInquiryTableByFilters = (filteredInquiries) => {

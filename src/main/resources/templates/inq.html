@@ -28,8 +28,8 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <!-- for table side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableHolderDiv" role="tab"
-                    aria-controls="tableHolderDiv" aria-selected="true">Table</a>
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableTabPane" role="tab"
+                    aria-controls="tableTabPane" aria-selected="true">Table</a>
             </li>
             <!-- for form side -->
             <li class="nav-item" role="presentation">
@@ -48,6 +48,8 @@
 
                 <!-- Inquiry Filters Row -->
                 <div class="row mb-2">
+
+                    <!-- by status -->
                     <div class="col-md-4">
                         <label for="inqStatusFilter" class="form-label fw-bold mb-0">Filter by Status</label>
                         <select id="inqStatusFilter" class="form-select" onchange="applyInquiryStatusFilter();">
@@ -59,6 +61,15 @@
                             <option value="Dropped">Dropped</option>
                         </select>
                     </div>
+
+                    <!-- by assigned emps (this will only display to managers adn admins) -->
+                    <div class="col-md-4" id="assignedUserFilterDiv" style="display: none;">
+                        <label for="assignedUserFilter" class="form-label fw-bold mb-0">Filter by Assigned User</label>
+                        <select id="assignedUserFilter" class="form-select" onchange="applyInquiryStatusFilter();">
+                            <!-- dynamically filled -->
+                        </select>
+                    </div>
+
                 </div>
 
                 <div id="tableHolderDiv">
