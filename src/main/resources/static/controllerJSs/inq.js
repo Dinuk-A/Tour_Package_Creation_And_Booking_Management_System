@@ -409,12 +409,13 @@ const refreshInquiryForm = async () => {
 }
 
 //for print btn
-const printInquirySummary = (inqObj) => {
+const printInquirySummary = async (inqObj) => {
 
     if (!inqObj) {
         alert('No Inquiry data available to print.');
         return;
     }
+
 
     const clientFullName = `${inqObj.clienttitle || ''} ${inqObj.clientname || ''}`.trim();
     const contactNum = inqObj.contactnum || 'N/A';
@@ -428,6 +429,60 @@ const printInquirySummary = (inqObj) => {
         ? new Date(inqObj.inq_apprx_start_date).toLocaleDateString()
         : 'N/A';
     const startConfirmed = inqObj.is_startdate_confirmed ? 'Yes' : 'No';
+
+
+    // Fetch followups
+    let followupsSection = '';
+    try {
+        const prevResponses = await ajaxGetReq("/followup/byinqid/" + inqObj.id);
+        console.log(prevResponses);
+
+        const followupsSize = prevResponses.length;
+
+        if (prevResponses && prevResponses.length > 0) {
+            followupsSection = `
+                <hr>
+                <h5 class="text-primary mb-3">Follow-ups History</h5>
+                <div class="followups-section">
+            `;
+
+            prevResponses.forEach((followup, index) => {
+                const followupDate = new Date(followup.addeddatetime).toLocaleDateString();
+                const followupTime = new Date(followup.addeddatetime).toLocaleTimeString();
+
+                // Format status for display
+                const statusDisplay = followup.followup_status
+                    ? followup.followup_status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+                    : 'N/A';
+
+                followupsSection += `
+                    <div class="followup-item mb-3 p-2 border border-secondary rounded">
+                        <div class="row mb-2">
+                            <div class="col-md-6"><strong>Follow-up #${followupsSize - index}</strong></div>
+                            <div class="col-md-6"><strong>Date:</strong> ${followupDate} ${followupTime}</div>
+                        </div>
+                        <div class="mb-2"><strong>Status:</strong> ${statusDisplay}</div>
+                        <div class="mb-2"><strong>Content:</strong> ${followup.content || 'N/A'}</div>
+                    </div>
+                `;
+            });
+
+            followupsSection += `</div>`;
+        } else {
+            followupsSection = `
+                <hr>
+                <h5 class="text-primary mb-3">Follow-ups History</h5>
+                <p class="text-muted">No follow-ups recorded for this inquiry.</p>
+            `;
+        }
+    } catch (error) {
+        console.error('Error fetching followups:', error);
+        followupsSection = `
+            <hr>
+            <h5 class="text-primary mb-3">Follow-ups History</h5>
+            <p class="text-danger">Error loading follow-ups data.</p>
+        `;
+    }
 
     const printableContent = `
     <div class="container-fluid my-3 p-1 border border-primary rounded shadow-sm" style="font-family: Arial, sans-serif;">
@@ -479,9 +534,9 @@ const printInquirySummary = (inqObj) => {
 
         <div class="mb-2"><strong>Places to Visit:</strong> ${inqObj.inq_vplaces || 'N/A'}</div>
 
+         <div class="mb-2"><strong>Internal Notes:</strong> ${inqObj.note || 'N/A'}</div>
 
-
-               <div class="mb-2"><strong>Internal Notes:</strong> ${inqObj.note || 'N/A'}</div>
+         ${followupsSection}
 
         <p class="text-center text-muted small mt-4">Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
     </div>`;
