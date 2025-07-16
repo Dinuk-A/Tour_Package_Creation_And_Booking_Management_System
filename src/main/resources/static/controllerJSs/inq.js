@@ -64,12 +64,15 @@ const handleTableCreation = () => {
 let sharedTableIdMainTbl = "mainTableInquiry";
 let sharedTableIdPersonalTbl = "personalTableInquiry";
 
+let assignedInqs = [];
+let allInqs = [];
+
 //this table will show all the inquiries,all statuses, all assigned users
 const buildAllInqTable = async () => {
 
     try {
         await loadAllEmployees();
-        const allInqs = await ajaxGetReq("/inq/all");
+        allInqs = await ajaxGetReq("/inq/all");
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
@@ -95,7 +98,7 @@ const buildPersonalInqTable = async () => {
     console.log(userEmpId);
 
     try {
-        const assignedInqs = await ajaxGetReq("/inq/personal?empid=" + userEmpId);
+        assignedInqs = await ajaxGetReq("/inq/personal?empid=" + userEmpId);
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
@@ -106,12 +109,108 @@ const buildPersonalInqTable = async () => {
 
         createTable(tableHolderDiv, sharedTableIdPersonalTbl, assignedInqs, tableColumnInfo);
 
-        $(`#${sharedTableIdPersonalTbl}`).dataTable();
+        $(`#${sharedTableIdPersonalTbl}`).dataTable({
+            destroy: true, // Allows re-initialization
+            searching: false, // Remove the search bar
+            info: false, // Show entries count
+            pageLength: 10, // Number of rows per page
+            ordering: false,// Remove up and down arrows
+            lengthChange: false // Disable ability to change the number of rows
+            // dom: 't', // Just show the table (t) with no other controls
+        });
 
     } catch (error) {
         console.error("Failed to build personal inq table:", error);
     }
 }
+
+//filter by inq status , common fn for both tABLES
+const applyInquiryStatusFilter = () => {
+
+    const selectedStatus = document.getElementById('inqStatusFilter').value;
+    const roles = JSON.parse(document.getElementById('userRolesArraySection').textContent);
+
+    const isAdminOrManager = roles.includes("System_Admin") || roles.includes("Manager") || roles.includes("Assistant Manager");
+
+    if (isAdminOrManager) {
+
+        let filtered = allInqs;
+
+        if (selectedStatus && selectedStatus !== "All") {
+            filtered = allInqs.filter(inq => inq.inq_status === selectedStatus);
+        }
+
+        renderAllInqTableByFilters(filtered);
+    } else {
+        let filtered = assignedInqs;
+
+        if (selectedStatus && selectedStatus !== "All") {
+            filtered = assignedInqs.filter(inq => inq.inq_status === selectedStatus);
+        }
+
+        renderPersonalInquiryTableByFilters(filtered);
+    }
+};
+
+
+// fn to render he personal tbl with filtered data
+const renderPersonalInquiryTableByFilters = (filteredInquiries) => {
+    const tableColumnInfo = [
+        { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
+        { displayType: 'text', displayingPropertyOrFn: 'inqsrc', colHeadName: 'Source' },
+        { displayType: 'function', displayingPropertyOrFn: showRecievedTimeStamp, colHeadName: 'Recieved Time' },
+        { displayType: 'text', displayingPropertyOrFn: 'inq_status', colHeadName: 'Status' }
+    ];
+
+    $(sharedTableIdPersonalTbl).empty();
+
+    if ($.fn.DataTable.isDataTable(sharedTableIdPersonalTbl)) {
+        $(sharedTableIdPersonalTbl).DataTable().clear().destroy();
+    }
+
+    createTable(tableHolderDiv, sharedTableIdPersonalTbl, filteredInquiries, tableColumnInfo);
+
+    setTimeout(() => {
+        $(`#${sharedTableIdPersonalTbl}`).DataTable({
+            destroy: true,
+            searching: false,
+            info: false,
+            pageLength: 10,
+            ordering: false,
+            lengthChange: false
+        });
+    }, 100);
+};
+
+//for ALL inquiries
+const renderAllInqTableByFilters = (filteredInquiries) => {
+    const tableColumnInfo = [
+        { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
+        { displayType: 'text', displayingPropertyOrFn: 'inqsrc', colHeadName: 'Source' },
+        { displayType: 'function', displayingPropertyOrFn: showRecievedTimeStamp, colHeadName: 'Recieved Time' },
+        { displayType: 'text', displayingPropertyOrFn: 'inq_status', colHeadName: 'Status' },
+        { displayType: 'function', displayingPropertyOrFn: showAssignedEmployee, colHeadName: 'Assigned to' }
+    ];
+
+    $(sharedTableIdMainTbl).empty();
+
+    if ($.fn.DataTable.isDataTable(sharedTableIdMainTbl)) {
+        $(sharedTableIdMainTbl).DataTable().clear().destroy();
+    }
+
+    createTable(tableHolderDiv, sharedTableIdMainTbl, filteredInquiries, tableColumnInfo);
+
+    setTimeout(() => {
+        $(`#${sharedTableIdMainTbl}`).DataTable({
+            destroy: true,
+            searching: false,
+            info: false,
+            pageLength: 10,
+            ordering: false,
+            lengthChange: false
+        });
+    }, 100);
+};
 
 //show time stamp on table
 const showRecievedTimeStamp = (ob) => {

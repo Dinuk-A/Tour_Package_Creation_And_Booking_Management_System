@@ -41,10 +41,30 @@
 
         <!-- Tabs content -->
         <div class="tab-content mt-1" id="myTabContent">
+
             <!-- Table tab  -->
-            <div id="tableHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3" role="tabpanel"
+            <div id="tableTabPane" class="tab-pane fade show active table-container p-4 rounded-3" role="tabpanel"
                 aria-labelledby="table-tab">
-                <!-- a table will be dynamically generated in here -->
+
+                <!-- Inquiry Filters Row -->
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label for="inqStatusFilter" class="form-label fw-bold mb-0">Filter by Status</label>
+                        <select id="inqStatusFilter" class="form-select" onchange="applyInquiryStatusFilter();">
+                            <option value="All" selected>All</option>
+                            <option value="New">New</option>
+                            <option value="Assigned">Assigned</option>
+                            <option value="Working">In-Progress</option>
+                            <option value="Confirmed">Success</option>
+                            <option value="Dropped">Dropped</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="tableHolderDiv">
+                    <!-- a table will be dynamically generated in here -->
+                </div>
+
             </div>
 
             <!-- Form tab -->
@@ -397,8 +417,7 @@
                                                                 class="form-label mb-0 fs-6">Local Adults</label>
                                                             <input type="number" value="0" class="w-75 form-control"
                                                                 id="inqLocalAdultCount"
-                                                                onkeyup=" validateInquiryAdultCounts(); handleChildInputAvailability();"
-                                                                >
+                                                                onkeyup=" validateInquiryAdultCounts(); handleChildInputAvailability();">
                                                         </div>
 
                                                         <!-- Local Children -->
@@ -416,8 +435,7 @@
                                                                 class="form-label mb-0 fs-6">Foreign Adults</label>
                                                             <input type="number" value="0" class="w-75 form-control"
                                                                 id="inqForeignAdultCount"
-                                                                onkeyup=" validateInquiryAdultCounts(); handleChildInputAvailability();"
-                                                                >
+                                                                onkeyup=" validateInquiryAdultCounts(); handleChildInputAvailability();">
                                                         </div>
 
                                                         <!-- Foreign Children -->
