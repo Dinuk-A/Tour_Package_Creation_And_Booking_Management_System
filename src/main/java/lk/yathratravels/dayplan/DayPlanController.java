@@ -211,7 +211,7 @@ public class DayPlanController {
 
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "DAYPLAN");
 
-        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+        if (!privilegeLevelForLoggedUser.getPrvupdate()) {
             return "Day Plan Update Not Completed; You Dont Have Permission";
         }
 

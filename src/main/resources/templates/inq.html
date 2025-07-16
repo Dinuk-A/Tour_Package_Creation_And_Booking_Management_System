@@ -172,6 +172,22 @@
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary">Client Information</legend>
 
+                                        <!-- Existing Client Notice -->
+                                        <div id="existingClientNotice" class="alert alert-warning mt-3 d-none"
+                                            role="alert">
+                                            <strong>Note:</strong> This client is already registered in our system.
+                                            <br>
+                                            <span id="existingClientRegId" class="fw-bold d-none">Customer ID:
+                                                CUST-XXXX</span>
+                                        </div>
+
+                                        <!-- Loyalty Discount Eligibility Notice -->
+                                        <div id="loyaltyDiscountNotice" class="alert alert-success mt-3 d-none"
+                                            role="alert">
+                                            <strong>Good news!</strong> This customer is eligible for a loyalty
+                                            discount.
+                                        </div>
+
                                         <div class="row">
 
                                             <!-- title -->
@@ -238,8 +254,7 @@
 
                                             <!-- Preferred Contact Method -->
                                             <div class="col-3">
-                                                <label for="prefContMethodPkgRelForm"
-                                                    class="form-label mb-0">Preferred
+                                                <label for="prefContMethodPkgRelForm" class="form-label mb-0">Preferred
                                                     Contact Method:</label>
                                                 <select class="form-select rounded" aria-label="Default select example"
                                                     onchange="staticSelectValidator(this, 'inquiry' , 'prefcontactmethod')"
