@@ -56,551 +56,668 @@
                         <!-- form starts -->
                         <form id="formBooking" class="" onsubmit="return false">
 
-                            <!-- Basic Info -->
-                            <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Booking Information</legend>
+                            <!-- Tabs Navigation -->
+                            <ul class="nav nav-tabs" id="bookingTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active border border-dark" id="bookingStep1-tab"
+                                        data-bs-toggle="tab" href="#bookingStep1" role="tab"
+                                        aria-controls="bookingStep1" aria-selected="true">Basics</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link border border-dark" id="bookingStep2-tab" data-bs-toggle="tab"
+                                        href="#bookingStep2" role="tab" aria-controls="bookingStep2"
+                                        aria-selected="false">Resources Allocation</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link border border-dark" id="bookingStep3-tab" data-bs-toggle="tab"
+                                        href="#bookingStep3" role="tab" aria-controls="bookingStep3"
+                                        aria-selected="false">Additional Info</a>
+                                </li>
+                            </ul>
 
-                                <div class="row">
+                            <!-- Tabs Content -->
+                            <div class="tab-content" id="bookingTabsContent">
 
-                                    <div class="col-md-12">
+                                <!-- Step 1 -->
+                                <div class="tab-pane fade show active" id="bookingStep1" role="tabpanel"
+                                    aria-labelledby="bookingStep1-tab">
+                                    <!-- Basic Info -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Booking Information</legend>
 
-                                        <div class="row mb-2">
+                                        <div class="row">
 
-                                            <div class="col-md-3">
-                                                <label for="inputBookingCode" class="fw-bold form-label mb-0">Booking
-                                                    ID<span class="text-danger"> * </span> :</label>
-                                                <input id="inputBookingCode" type="text"
-                                                    class="  form-control form-input" disabled
-                                                    onkeyup="inputValidatorText(this,'','booking','bookingcode')"
-                                                    required>
-                                            </div>
+                                            <div class="col-md-12">
 
-                                            <div class="col-6">
-                                                <label for="selectBookedPackage" class="fw-bold">Booked Package <span
-                                                        class="text-danger"> * </span>: </label>
-                                                <select id="selectBookedPackage" class="form-control form-select"
-                                                    disabled
-                                                    onchange="dynamicSelectValidator(this , 'booking','bookedpackage_id')"
-                                                    required>
-                                                </select>
-                                            </div>
+                                                <div class="row mb-2">
 
-                                            <div class="col-3">
-                                                <label for="selectBasedInquiry" class="fw-bold">Based Inquiry <span
-                                                        class="text-danger"> * </span>: </label>
-                                                <select id="selectBasedInquiry" class="form-control form-select"
-                                                    disabled
-                                                    onchange="dynamicSelectValidator(this , 'booking','basedinquiry_id')"
-                                                    required>
-                                                </select>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="row mb-2">
-                                            <div class="col-6">
-                                                <label for="inputClientName" class="fw-bold form-label mb-0"> Client
-                                                    Name <span class="text-danger"> * </span>
-                                                    :</label>
-                                                <input id="inputClientName" type="text" class="form-control form-input"
-                                                    disabled
-                                                    onkeyup="inputValidatorText(this,'','booking','clientname')"
-                                                    required>
-                                            </div>
-
-                                            <div class="col-6">
-                                                <label class="fw-bold mb-0" for="inputClientPassport">Passport No <span
-                                                        class="text-danger"> * </span>:</label>
-                                                <input id="inputClientPassport" type="text"
-                                                    class="form-control form-input" disabled
-                                                    onkeyup="inputValidatorText(this,'','booking','clientpassport')"
-                                                    required>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="row mb-2">
-
-                                            <div class="col-6">
-                                                <label class="fw-bold  mb-0" for="inputClientEmail">Email <span
-                                                        class="text-danger"> * </span>:</label>
-                                                <input id="inputClientEmail" type="email"
-                                                    class="form-control form-input" disabled
-                                                    onkeyup="inputValidatorText(this,'','booking','clientemail')"
-                                                    required>
-                                            </div>
-
-                                            <div class="col-3">
-                                                <label class="fw-bold  mb-0" for="inputClientContact">Contact <span
-                                                        class="text-danger"> * </span>:</label>
-                                                <input id="inputClientContact" type="text"
-                                                    class="form-control form-input" disabled
-                                                    onkeyup="inputValidatorText(this,'','booking','clientcontact')"
-                                                    required>
-                                            </div>
-
-                                            <div class="col-3">
-                                                <label class="fw-bold mb-0" for="inputClientContact2">Contact 2:</label>
-                                                <input id="inputClientContact2" type="text"
-                                                    class="form-control form-input" disabled
-                                                    onkeyup="inputValidatorText(this,'','booking','clientcontact2')">
-                                            </div>                                           
-
-
-                                        </div>
-
-
-                                    </div>
-
-                            </fieldset>
-
-                            <!-- financial Info -->
-                            <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Financial Information</legend>
-
-                                <div class="row">
-
-                                    <div class="col-md-12">
-                                        <div class="row mb-2">
-
-                                            <div class="col-3">
-                                                <label class="fw-bold  mb-0" for="inputPackagePrice">Package Price <span
-                                                        class="text-danger"> * </span>:</label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6 class="my-auto">LKR</h6>
-                                                    </span>
-                                                    <input type="text" id="inputPackagePrice"
-                                                        class="form-control form-input w-85 p-1 text-center" disabled
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','booking','packageprice')"
-                                                        onblur="insertDecimals(this);">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-3">
-                                                <label class="fw-bold  mb-0" for="inputAdvancementAmount">Advancement
-                                                    Amount <span class="text-danger"> * </span>:</label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6 class="my-auto">LKR</h6>
-                                                    </span>
-                                                    <input type="text" id="inputAdvancementAmount"
-                                                        class="form-control form-input w-85 p-1 text-center" disabled
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','booking','advancementamount')"
-                                                        onblur="insertDecimals(this);">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-3">
-                                                <label class="fw-bold  mb-0" for="inputTotalPaidAmount">Total Paid
-                                                    Amount <span class="text-danger"> * </span>:</label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6 class="my-auto">LKR</h6>
-                                                    </span>
-                                                    <input type="text" id="inputTotalPaidAmount"
-                                                        class="form-control form-input w-85 p-1 text-center" disabled
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','booking','totalpaidamount')"
-                                                        onblur="insertDecimals(this);">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-3">
-                                                <label class="fw-bold  mb-0" for="inputBalance">Balance <span
-                                                        class="text-danger"> * </span>:</label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6 class="my-auto">LKR</h6>
-                                                    </span>
-                                                    <input type="text" id="inputBalance"
-                                                        class="form-control form-input w-85 p-1 text-center" disabled
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','booking','balance')"
-                                                        onblur="insertDecimals(this);">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                            </fieldset>
-
-                            <!-- Booking Timeline -->
-                            <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Booking Timeline</legend>
-
-                                <div class="row">
-
-                                    <div class="col-md-12">
-                                        <div class="row mb-2">
-
-                                            <div class="col-4">
-                                                <label for="bookingStartDate" class="fw-bold form-label mb-0">Start Date
-                                                    <span class="text-danger"> * </span> : </label>
-                                                <input id="bookingStartDate" type="date"
-                                                    class="  form-control form-input" disabled
-                                                    onchange="inputValidatorText(this, '' ,'booking' , 'starrtdate');"
-                                                    onkeydown="return false">
-                                            </div>
-
-                                            <div class="col-4">
-                                                <label for="bookingEndDate" class="fw-bold form-label mb-0">End Date
-                                                    <span class="text-danger"> * </span> : </label>
-                                                <input id="bookingEndDate" type="date" class="  form-control form-input"
-                                                    disabled onkeydown="return false"
-                                                    oninput="inputValidatorText(this, '' ,'booking' , 'enddate'); getAvailableCompanyDrivers();">
-                                            </div>
-
-                                            <div class="col-1"></div>
-
-                                            <div class="col-3">
-                                                <button type="button" class="btn btn-primary mt-4"
-                                                    onclick="getAvailableCompanyDrivers(); getAvailableGuideList();">
-                                                    Get Available Resources
-                                                </button>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                            </fieldset>
-
-                            <!-- resources assign rows -->
-                            <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Assign Vehicle/Driver/Guide</legend>
-
-                                <div class="row">
-
-                                    <div class="col-md-12">
-                                        <div class="row mt-0 mx-auto" id="checkAvailabilitySection">
-
-                                            <div class="row mt-2">
-                                                <div class="col-4 text-center text-primary fw-bold" style="width:33.3%">
-                                                    Vehicle
-                                                </div>
-                                                <div class="col-4 text-center text-primary fw-bold" style="width:32.3%">
-                                                    Driver
-                                                </div>
-                                                <div class="col-4 text-center text-primary fw-bold" style="width:33.3%">
-                                                    Guide
-                                                </div>
-                                            </div>
-
-                                            <!-- vehicle -->
-                                            <div class="col-4 border border-success px-2 pb-2" style="width:33.3%">
-
-                                                <!-- 2 checkboxes -->
-                                                <div class="row mt-1">
-                                                    <div class="input-group my-auto" id="vehicleSourceRadioSection">
-                                                        <!-- CB 1 -->
-                                                        <input type="radio" checked class="btn-check"
-                                                            id="companyOwnVehiRadio" autocomplete="off"
-                                                            name="bookingVehiSource"
-                                                            onchange="changesBasedOnVehicleSource(); ">
-
-                                                        <label
-                                                            class="btn btn-outline-btn btn-outline-success rounded-start"
-                                                            for="companyOwnVehiRadio" style="width:45%">
-                                                            Company Vehicles
-                                                        </label>
-
-                                                        <!--CB 2  -->
-                                                        <input type="radio" class="btn-check" id="rentalVehiRadio"
-                                                            autocomplete="off" name="bookingVehiSource"
-                                                            onchange="changesBasedOnVehicleSource();">
-
-                                                        <label class="ms-1 btn btn- btn btn-outline-warning "
-                                                            for="rentalVehiRadio" style="width:45%">Rental Service's
-                                                            Vehicles
-                                                        </label>
+                                                    <div class="col-md-3">
+                                                        <label for="inputBookingCode"
+                                                            class="fw-bold form-label mb-0">Booking
+                                                            ID<span class="text-danger"> * </span> :</label>
+                                                        <input id="inputBookingCode" type="text"
+                                                            class="  form-control form-input" disabled
+                                                            onkeyup="inputValidatorText(this,'','booking','bookingcode')"
+                                                            required>
                                                     </div>
 
-                                                </div>
-
-                                                <!-- if from company -->
-                                                <div class="" id="companyVehicleSection">
-                                                    <div class="row mt-1 ">
-                                                        <!-- preferred vehi type -->
-                                                        <div class="col-4 my-auto">
-                                                            <label for="bookingVehitype" class="form-label mb-0">Type
-                                                                :</label>
-                                                        </div>
-                                                        <!-- available vehi select karana query eka run wenna one meke onchange ekedi 💥💥💥 -->
-                                                        <div class="col-8 my-auto">
-                                                            <select id="bookingVehitype"
-                                                                class="form-control form-select mb-2"
-                                                                onchange=" getAvailableCompVehicles(); availableVehicleSelect.disabled=false;"></select>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- available vehicles -->
-                                                    <div class="row mt-2">
-                                                        <div class="col-12">
-                                                            <label for="availableVehicleSelect"
-                                                                class="form-label mb-0">Select
-                                                                Vehicle
-                                                                :</label>
-
-                                                            <select id="availableVehicleSelect"
-                                                                class="form-control form-select mb-2"
-                                                                onchange="selectDynamicVal(this, '' , 'booking' , 'vehicle_id');"></select>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- if rental -->
-                                                <div class="row mt-1 pb-2 d-none" id="rentedVehicleSection">
-
-                                                    <div class="row mt-1 ">
-                                                        <!-- rental vehi type -->
-                                                        <div class="col-4 my-auto">
-                                                            <label for="rentalVehitype" class="form-label mb-0">Type
-                                                                :</label>
-                                                        </div>
-                                                        <div class="col-8 my-auto">
-                                                            <select id="rentalVehitype"
-                                                                class="form-control form-select mb-2"></select>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- select previously rented vehicles -->
-                                                    <div class="col-12 mt-1">
-                                                        <label for="rentalVehiSelect" class="form-label mb-0">Rented
-                                                            Vehicles
-                                                            :</label>
-
-                                                        <select id="rentalVehiSelect"
-                                                            class="form-control form-select mb-2"
-                                                            onkeyup="inputFieldValidator(this, '', booking, 'vehicle_id');"></select>
-                                                    </div>
-
-                                                    <!-- button to add new rented vehis -->
-                                                    <div class="row mt-2" id="rented">
-                                                        <div class="col-8 mx-auto">
-                                                            <button type="button" id="addNewRentalVehiModalBtn"
-                                                                class="btn btn-outline-primary"
-                                                                style="pointer-events: all;" data-bs-toggle="modal"
-                                                                data-bs-target="#newRentelVehiModal">Add
-                                                                New Rented
-                                                                Vehicle</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                            <!-- vehicle col ends-->
-
-                                            <!-- driver -->
-                                            <div class="col-4 border border-success ms-1 me-1" style="width:32.3%">
-
-                                                <!-- 2 checkboxes -->
-                                                <div class="row mt-1">
-                                                    <div class="input-group my-auto">
-                                                        <!-- CB 1 -->
-                                                        <input type="radio" checked class="btn-check"
-                                                            id="companyOwnDriver" autocomplete="off"
-                                                            name="bookingDriverSource"
-                                                            onchange="changesBasedOnDriverSource();">
-
-                                                        <label
-                                                            class="btn btn-outline-btn btn-outline-success rounded-start"
-                                                            for="companyOwnDriver" style="width:45%">
-                                                            Use Company Driver
-                                                        </label>
-
-                                                        <!--CB 2  -->
-                                                        <input type="radio" class="btn-check" id="rentalDriver"
-                                                            autocomplete="off" name="bookingDriverSource"
-                                                            onchange="changesBasedOnDriverSource();">
-
-                                                        <label class="ms-1 btn btn- btn btn-outline-warning "
-                                                            for="rentalDriver" style="width:45%">Use External Driver
-                                                        </label>
-                                                    </div>
-
-                                                </div>
-
-                                                <!-- if from company -->
-                                                <!-- available drivers -->
-                                                <div class="row mt-1" id="companyDriverSection">
-                                                    <div class="col-12">
-                                                        <label for="availableDriverSelect"
-                                                            class="form-label mb-0">Select Driver
-                                                            :</label>
-
-                                                        <select id="availableDriverSelect"
-                                                            class="form-control form-select mb-2"
-                                                            onkeyup="inputFieldValidator(this, '', booking, 'driver');"></select>
+                                                    <div class="col-6">
+                                                        <label for="selectBookedPackage" class="fw-bold">Booked Package
+                                                            <span class="text-danger"> * </span>: </label>
+                                                        <select id="selectBookedPackage"
+                                                            class="form-control form-select" disabled
+                                                            onchange="dynamicSelectValidator(this , 'booking','bookedpackage_id')"
+                                                            required>
                                                         </select>
-
-                                                    </div>
-                                                </div>
-
-                                                <!-- if rented -->
-                                                <!-- external driver name -->
-                                                <div class="row mt-1 d-none" id="externalDriverSection">
-                                                    <div class="col-12 mt-1">
-                                                        <label for="externalDriverSelect"
-                                                            class="form-label mb-0">Previous
-                                                            External Drivers
-                                                            :</label>
-
-                                                        <select id="externalDriverSelect"
-                                                            class="form-control form-select mb-2"
-                                                            onchange="selectDynamicVal(this, '', booking, 'external_driver');"></select>
                                                     </div>
 
-                                                    <!-- add new driver modal button -->
-                                                    <div class="col-8 mt-2 mx-auto">
-                                                        <button type="button" id="addNewExternalDriverModalBtn"
-                                                            class="btn btn-outline-primary" style="pointer-events: all;"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#newExternalDriverOrGuideModal">Add
-                                                            New External
-                                                            Driver</button>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                            <!-- driver col ends-->
-
-                                            <!-- guide -->
-                                            <div class="col-4 border border-success" style="width:33.3%">
-                                                <!-- 2 checkboxes -->
-                                                <div class="row mt-1">
-                                                    <div class="input-group my-auto">
-                                                        <!-- CB 1 -->
-                                                        <input type="radio" checked class="btn-check"
-                                                            id="companyOwnGuide" autocomplete="off"
-                                                            name="bookingGuideSource"
-                                                            onchange="changesBasedOnGuideSource();">
-
-                                                        <label
-                                                            class="btn btn-outline-btn btn-outline-success rounded-start"
-                                                            for="companyOwnGuide" style="width:45%">
-                                                            Use Company Guide
-                                                        </label>
-
-                                                        <!--CB 2  -->
-                                                        <input type="radio" class="btn-check" id="rentalGuides"
-                                                            autocomplete="off" name="bookingGuideSource"
-                                                            onchange="changesBasedOnGuideSource();">
-
-                                                        <label class="ms-1 btn btn- btn btn-outline-warning "
-                                                            for="rentalGuides" style="width:45%">Use External Driver
-                                                        </label>
-                                                    </div>
-
-                                                </div>
-
-                                                <!-- if from company -->
-                                                <!-- available guides -->
-                                                <div class="row mt-1" id="companyGuideSection">
-                                                    <div class="col-12">
-                                                        <label for="availableGuideSelect" class="form-label mb-0">Select
-                                                            Guide
-                                                            :</label>
-
-                                                        <select id="availableGuideSelect"
-                                                            class="form-control form-select mb-2"
-                                                            onkeyup="inputFieldValidator(this, '', booking, 'guide');"></select>
+                                                    <div class="col-3">
+                                                        <label for="selectBasedInquiry" class="fw-bold">Based Inquiry
+                                                            <span class="text-danger"> * </span>: </label>
+                                                        <select id="selectBasedInquiry" class="form-control form-select"
+                                                            disabled
+                                                            onchange="dynamicSelectValidator(this , 'booking','basedinquiry_id')"
+                                                            required>
                                                         </select>
+                                                    </div>
 
+                                                </div>
+
+                                                <div class="row mb-2">
+                                                    <div class="col-6">
+                                                        <label for="inputClientName" class="fw-bold form-label mb-0">
+                                                            Client
+                                                            Name <span class="text-danger"> * </span>
+                                                            :</label>
+                                                        <input id="inputClientName" type="text"
+                                                            class="form-control form-input" disabled
+                                                            onkeyup="inputValidatorText(this,'','booking','clientname')"
+                                                            required>
+                                                    </div>
+
+                                                    <div class="col-6">
+                                                        <label class="fw-bold mb-0" for="inputClientPassport">Passport
+                                                            No <span class="text-danger"> * </span>:</label>
+                                                        <input id="inputClientPassport" type="text"
+                                                            class="form-control form-input" disabled
+                                                            onkeyup="inputValidatorText(this,'','booking','clientpassport')"
+                                                            required>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row mb-2">
+
+                                                    <div class="col-6">
+                                                        <label class="fw-bold  mb-0" for="inputClientEmail">Email <span
+                                                                class="text-danger"> * </span>:</label>
+                                                        <input id="inputClientEmail" type="email"
+                                                            class="form-control form-input" disabled
+                                                            onkeyup="inputValidatorText(this,'','booking','clientemail')"
+                                                            required>
+                                                    </div>
+
+                                                    <div class="col-3">
+                                                        <label class="fw-bold  mb-0" for="inputClientContact">Contact
+                                                            <span class="text-danger"> * </span>:</label>
+                                                        <input id="inputClientContact" type="text"
+                                                            class="form-control form-input" disabled
+                                                            onkeyup="inputValidatorText(this,'','booking','clientcontact')"
+                                                            required>
+                                                    </div>
+
+                                                    <div class="col-3">
+                                                        <label class="fw-bold mb-0" for="inputClientContact2">Contact
+                                                            2:</label>
+                                                        <input id="inputClientContact2" type="text"
+                                                            class="form-control form-input" disabled
+                                                            onkeyup="inputValidatorText(this,'','booking','clientcontact2')">
+                                                    </div>
+
+
+                                                </div>
+
+
+                                            </div>
+
+                                    </fieldset>
+
+                                    <!-- financial Info -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Financial Information
+                                        </legend>
+
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <div class="row mb-2">
+
+                                                    <div class="col-3">
+                                                        <label class="fw-bold  mb-0" for="inputPackagePrice">Package
+                                                            Price <span class="text-danger"> * </span>:</label>
+
+                                                        <div class="input-group">
+                                                            <span class="input-group-text p-1 pb-0">
+                                                                <h6 class="my-auto">LKR</h6>
+                                                            </span>
+                                                            <input type="text" id="inputPackagePrice"
+                                                                class="form-control form-input w-85 p-1 text-center"
+                                                                disabled
+                                                                onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','booking','packageprice')"
+                                                                onblur="insertDecimals(this);">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-3">
+                                                        <label class="fw-bold  mb-0"
+                                                            for="inputAdvancementAmount">Advancement
+                                                            Amount <span class="text-danger"> * </span>:</label>
+
+                                                        <div class="input-group">
+                                                            <span class="input-group-text p-1 pb-0">
+                                                                <h6 class="my-auto">LKR</h6>
+                                                            </span>
+                                                            <input type="text" id="inputAdvancementAmount"
+                                                                class="form-control form-input w-85 p-1 text-center"
+                                                                disabled
+                                                                onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','booking','advancementamount')"
+                                                                onblur="insertDecimals(this);">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-3">
+                                                        <label class="fw-bold  mb-0" for="inputTotalPaidAmount">Total
+                                                            Paid
+                                                            Amount <span class="text-danger"> * </span>:</label>
+
+                                                        <div class="input-group">
+                                                            <span class="input-group-text p-1 pb-0">
+                                                                <h6 class="my-auto">LKR</h6>
+                                                            </span>
+                                                            <input type="text" id="inputTotalPaidAmount"
+                                                                class="form-control form-input w-85 p-1 text-center"
+                                                                disabled
+                                                                onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','booking','totalpaidamount')"
+                                                                onblur="insertDecimals(this);">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-3">
+                                                        <label class="fw-bold  mb-0" for="inputBalance">Balance <span
+                                                                class="text-danger"> * </span>:</label>
+
+                                                        <div class="input-group">
+                                                            <span class="input-group-text p-1 pb-0">
+                                                                <h6 class="my-auto">LKR</h6>
+                                                            </span>
+                                                            <input type="text" id="inputBalance"
+                                                                class="form-control form-input w-85 p-1 text-center"
+                                                                disabled
+                                                                onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','booking','balance')"
+                                                                onblur="insertDecimals(this);">
+                                                        </div>
                                                     </div>
                                                 </div>
 
-                                                <!-- if rented -->
-                                                <!-- external Guide name -->
-                                                <div class="row mt-1 d-none" id="externalGuideSection">
-                                                    <div class="col-12 mt-1">
-                                                        <label for="externalGuideSelect"
-                                                            class="form-label mb-0">Previous
-                                                            External Guides
+                                            </div>
+
+                                    </fieldset>
+
+                                    <!-- Booking Timeline -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Booking Timeline</legend>
+
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <div class="row mb-2">
+
+                                                    <div class="col-4">
+                                                        <label for="bookingStartDate"
+                                                            class="fw-bold form-label mb-0">Start
+                                                            Date
+                                                            <span class="text-danger"> * </span> : </label>
+                                                        <input id="bookingStartDate" type="date"
+                                                            class="  form-control form-input" disabled
+                                                            onchange="inputValidatorText(this, '' ,'booking' , 'starrtdate');"
+                                                            onkeydown="return false">
+                                                    </div>
+
+                                                    <div class="col-4">
+                                                        <label for="bookingEndDate" class="fw-bold form-label mb-0">End
+                                                            Date
+                                                            <span class="text-danger"> * </span> : </label>
+                                                        <input id="bookingEndDate" type="date"
+                                                            class="  form-control form-input" disabled
+                                                            onkeydown="return false"
+                                                            oninput="inputValidatorText(this, '' ,'booking' , 'enddate'); getAvailableCompanyDrivers();">
+                                                    </div>
+
+                                                    <div class="col-1"></div>
+
+                                                    <div class="col-3">
+                                                        <button type="button" class="btn btn-primary mt-4"
+                                                            onclick="getAvailableCompanyDrivers(); getAvailableGuideList();">
+                                                            Get Available Resources
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                    </fieldset>
+
+                                </div>
+
+                                <!-- Step 2 -->
+                                <div class="tab-pane fade" id="bookingStep2" role="tabpanel"
+                                    aria-labelledby="bookingStep2-tab">
+
+                                    <!-- resources assign rows -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+
+                                        <legend class="float-none w-auto px-2 text-primary">Assign Vehicle/Driver/Guide
+                                        </legend>
+
+                                        <!--//vehicle-->
+                                        <h5 class="text-center text-dark fw-bold mb-0">Vehicle Assignment</h5>
+                                        <div class="card col-12 mx-auto p-3 mb-3 mt-0">
+                                            <div class="row">
+                                                <!-- Left Section: Available Vehicles -->
+                                                <div class="col-6 border-end">
+                                                    <div class="row mb-3">
+                                                        <!-- Internal Radio -->
+                                                        <div class="col-6">
+                                                            <input type="radio" class="btn-check" name="vehicleType"
+                                                                id="internalVehicleRB" autocomplete="off" checked
+                                                                onchange="handleVehicleTypeChange('internal'); resetExtVehicleInputs();">
+                                                            <label
+                                                                class="btn btn-outline-primary w-100 fw-bold text-uppercase"
+                                                                for="internalVehicleRB">Internal</label>
+                                                        </div>
+                                                        <!-- External Radio -->
+                                                        <div class="col-6">
+                                                            <input type="radio" class="btn-check" name="vehicleType"
+                                                                id="externalVehicleRB" autocomplete="off"
+                                                                onchange="handleVehicleTypeChange('external')">
+                                                            <label
+                                                                class="btn btn-outline-secondary w-100 fw-bold text-uppercase"
+                                                                for="externalVehicleRB">External</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Available Vehicles -->
+                                                    <div id="availableVehiclesContainer">
+                                                        <label for="availableVehicles"
+                                                            class="form-label fw-bold mb-0">Available Vehicles</label>
+                                                        <select class="form-select mb-3" size="8"
+                                                            id="availableVehicles"></select>
+                                                        <button type="button" class="btn btn-outline-primary w-100">Add
+                                                            Selected Vehicle</button>
+                                                    </div>
+
+                                                    <!-- External Vehicle Form (hidden by default) -->
+                                                    <div id="externalVehicleFormContainer" class="d-none">
+                                                        <div class="row">
+                                                            <div class="col-12 mb-3">
+                                                                <label for="extVehName"
+                                                                    class="form-label fw-bold mb-0">Vehicle Name <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extVehName" type="text" class="form-control"
+                                                                    placeholder="Enter Vehicle Name" required
+                                                                    onkeyup="inputValidatorText(this,'.+','externalVehicle','vehiname')">
+                                                            </div>
+
+                                                            <div class="col-12 mb-3">
+                                                                <label for="extVehPlate"
+                                                                    class="form-label fw-bold mb-0">Number Plate <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extVehPlate" type="text" class="form-control"
+                                                                    placeholder="Enter Number Plate" required
+                                                                    onkeyup="inputValidatorText(this,'.+','externalVehicle','numberplate')">
+                                                            </div>
+
+                                                            <div class="col-12 mb-3">
+                                                                <label for="extVehProviderName"
+                                                                    class="form-label fw-bold mb-0">Provider Name <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extVehProviderName" type="text"
+                                                                    class="form-control"
+                                                                    placeholder="Enter Provider Full Name"
+                                                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','externalVehicle','providername')"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extVehProviderContact"
+                                                                    class="form-label fw-bold mb-0">Provider Contact
+                                                                    <span class="text-danger">*</span> :</label>
+                                                                <input id="extVehProviderContact" type="text"
+                                                                    class="form-control" placeholder="Enter Contact"
+                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalVehicle','providercontactone')"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extVehProviderEmail"
+                                                                    class="form-label fw-bold mb-0">Provider Email <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extVehProviderEmail" type="text"
+                                                                    class="form-control"
+                                                                    placeholder="Enter Email Address"
+                                                                    onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','externalVehicle','providercontactemail')"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="col-12 mt-2">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-success w-100"
+                                                                    onclick="addExternalVehicle();">Add External
+                                                                    Vehicle</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Right Section: Assigned Vehicles -->
+                                                <div class="col-6" id="assignedVehicles">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- //driver-->
+                                        <h5 class="text-center text-dark fw-bold mb-0">Driver Assignment</h5>
+                                        <div class="card col-12 mx-auto p-3 mb-3 mt-0">
+                                            <div class="row">
+                                                <!-- Left Section: Available Drivers -->
+                                                <div class="col-6 border-end">
+                                                    <div class="row mb-3">
+                                                        <!-- Internal Radio -->
+                                                        <div class="col-6">
+                                                            <input type="radio" class="btn-check" name="driverType"
+                                                                id="internalDriverRB" autocomplete="off" checked
+                                                                onchange="handleDriverTypeChange('internal'); resetExtDriverInputs();">
+                                                            <label
+                                                                class="btn btn-outline-primary w-100 fw-bold text-uppercase"
+                                                                for="internalDriverRB">Internal</label>
+                                                        </div>
+                                                        <!-- External Radio -->
+                                                        <div class="col-6">
+                                                            <input type="radio" class="btn-check" name="driverType"
+                                                                id="externalDriverRB" autocomplete="off"
+                                                                onchange="handleDriverTypeChange('external')">
+                                                            <label
+                                                                class="btn btn-outline-secondary w-100 fw-bold text-uppercase"
+                                                                for="externalDriverRB">External</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Available Drivers -->
+                                                    <div id="availableDriversContainer">
+                                                        <label for="availableDrivers"
+                                                            class="form-label fw-bold mb-0">Available Drivers</label>
+                                                        <select class="form-select mb-3" size="8"
+                                                            id="availableDrivers"></select>
+                                                        <button type="button" class="btn btn-outline-primary w-100">Add
+                                                            Selected Driver</button>
+                                                    </div>
+
+                                                    <!-- External Driver Form (hidden by default) -->
+                                                    <div id="externalDriverFormContainer" class="d-none">
+                                                        <div class="row">
+                                                            <div class="col-12 mb-3">
+                                                                <label for="extDriverFullName"
+                                                                    class="form-label fw-bold mb-0">Full Name <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extDriverFullName" type="text"
+                                                                    class="form-control"
+                                                                    placeholder="Enter The Full Name"
+                                                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','externalPersonnel','fullname')"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extDriverNIC"
+                                                                    class="form-label fw-bold mb-0">NIC <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extDriverNIC" type="text"
+                                                                    class="form-control" required
+                                                                    placeholder="Enter The NIC Number"
+                                                                    onkeyup="inputValidatorText(this,'^[0-9Vv]{10}$','externalPersonnel','nic')">
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extDriverEmail"
+                                                                    class="form-label fw-bold mb-0">Personal Email <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extDriverEmail" type="text" required
+                                                                    class="form-control"
+                                                                    placeholder="Enter The Personal Email Address"
+                                                                    onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','externalPersonnel','email')">
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extDriverMobile"
+                                                                    class="form-label fw-bold mb-0">Mobile Number <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extDriverMobile" type="text" required
+                                                                    placeholder="Enter The Mobile Number"
+                                                                    class="form-control"
+                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnel','contactone')">
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extDriverMobile2"
+                                                                    class="form-label fw-bold mb-0">Contact #2
+                                                                    (Optional):</label>
+                                                                <input id="extDriverMobile2" type="text"
+                                                                    placeholder="Enter Additional Contact"
+                                                                    class="form-control"
+                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnel','contacttwo')">
+                                                            </div>
+
+                                                            <!--<div class="col-12 mb-3">
+                                                                <label for="extDriverAssignedVehicle"
+                                                                    class="form-label fw-bold mb-0">
+                                                                    Assigned Vehicle <span class="text-danger">*</span>
+                                                                    :
+                                                                </label>
+                                                                <select id="extDriverAssignedVehicle"
+                                                                    class="form-select" required></select>
+                                                            </div>-->
+
+
+                                                            <div class="col-12 mt-2">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-success w-100"
+                                                                    onclick="addExternalDriver();">Add External
+                                                                    Driver</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <!-- Right Section -->
+                                                <div class="col-6" id="assignedDrivers">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- //guide -->
+                                        <h5 class="text-center text-dark fw-bold mb-0">Guide Assignment</h5>
+                                        <div class="card col-12 mx-auto p-3 mb-3 mt-0">
+                                            <div class="row">
+                                                <!-- Left Section: Available Guides -->
+                                                <div class="col-6 border-end">
+                                                    <div class="row mb-3">
+                                                        <!-- Internal Radio -->
+                                                        <div class="col-6">
+                                                            <input type="radio" class="btn-check" name="guideType"
+                                                                id="internalGuideRB" autocomplete="off" checked
+                                                                onchange="handleGuideTypeChange('internal'); resetExtGuideInputs();">
+                                                            <label
+                                                                class="btn btn-outline-primary w-100 fw-bold text-uppercase"
+                                                                for="internalGuideRB">Internal</label>
+                                                        </div>
+                                                        <!-- External Radio -->
+                                                        <div class="col-6">
+                                                            <input type="radio" class="btn-check" name="guideType"
+                                                                id="externalGuideRB" autocomplete="off"
+                                                                onchange="handleGuideTypeChange('external')">
+                                                            <label
+                                                                class="btn btn-outline-secondary w-100 fw-bold text-uppercase"
+                                                                for="externalGuideRB">External</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Available Guides -->
+                                                    <div id="availableGuidesContainer">
+                                                        <label for="availableGuides"
+                                                            class="form-label fw-bold mb-0">Available Guides</label>
+                                                        <select class="form-select mb-3" size="8"
+                                                            id="availableGuides"></select>
+                                                        <button type="button" class="btn btn-outline-primary w-100">Add
+                                                            Selected Guide</button>
+                                                    </div>
+
+                                                    <!-- External Guide Form (hidden by default) -->
+                                                    <div id="externalGuideFormContainer" class="d-none">
+                                                        <div class="row">
+                                                            <div class="col-12 mb-3">
+                                                                <label for="extGuideFullName"
+                                                                    class="form-label fw-bold mb-0">Full Name <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extGuideFullName" type="text"
+                                                                    class="form-control"
+                                                                    placeholder="Enter The Full Name"
+                                                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','externalPersonnel','fullname')"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extGuideNIC"
+                                                                    class="form-label fw-bold mb-0">NIC <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extGuideNIC" type="text" class="form-control"
+                                                                    required placeholder="Enter The NIC Number"
+                                                                    onkeyup="inputValidatorText(this,'^[0-9Vv]{10}$','externalPersonnel','nic')">
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extGuideEmail"
+                                                                    class="form-label fw-bold mb-0">Personal Email <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extGuideEmail" type="text" required
+                                                                    class="form-control"
+                                                                    placeholder="Enter The Personal Email Address"
+                                                                    onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','externalPersonnel','email')">
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extGuideMobile"
+                                                                    class="form-label fw-bold mb-0">Mobile Number <span
+                                                                        class="text-danger">*</span> :</label>
+                                                                <input id="extGuideMobile" type="text" required
+                                                                    placeholder="Enter The Mobile Number"
+                                                                    class="form-control"
+                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnel','contactone')">
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extGuideMobile2"
+                                                                    class="form-label fw-bold mb-0">Contact #2
+                                                                    (Optional):</label>
+                                                                <input id="extGuideMobile2" type="text"
+                                                                    placeholder="Enter Additional Contact"
+                                                                    class="form-control"
+                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnel','contacttwo')">
+                                                            </div>
+
+                                                            <div class="col-12 mt-2">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-success w-100"
+                                                                    onclick="addExternalGuide();">Add External
+                                                                    Guide</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Right Section -->
+                                                <div class="col-6" id="assignedGuides">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </fieldset>
+
+
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="tab-pane fade" id="bookingStep3" role="tabpanel"
+                                    aria-labelledby="bookingStep3-tab">
+                                    <!--  Additional Info -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Status & Note</legend>
+                                        <div class="row">
+
+                                            <div class="col-6">
+                                                <div class="row mb-1">
+                                                    <div class="col-12">
+                                                        <label for="selectBookingStatus"
+                                                            class="fw-bold form-label mb-0">
+                                                            Status <span class="text-danger"> * </span>
                                                             :</label>
 
-                                                        <select id="externalGuideSelect"
-                                                            class="form-control form-select mb-2"
-                                                            onchange="selectDynamicVal(this, '', booking, 'external_guide');"></select>
-                                                    </div>
-
-                                                    <!-- add new Gudie modal button -->
-                                                    <div class="col-8 mt-2 mx-auto">
-                                                        <button type="button" id="addNewExternalGuideModalBtn"
-                                                            class="btn btn-outline-primary" style="pointer-events: all;"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#newExternalDriverOrGuideModal">Add
-                                                            New External
-                                                            Guide</button>
+                                                        <select id="selectBookingStatus"
+                                                            class="form-control form-select" required
+                                                            onchange="staticSelectValidator(this , 'booking' , 'booking_status')">
+                                                            <option value="" selected disabled>Please Select Status
+                                                            </option>
+                                                            <option value="ifDeleted" class="d-none"> Deleted </option>
+                                                        </select>
                                                     </div>
                                                 </div>
 
-
                                             </div>
-                                            <!-- guide col ends-->
+
+                                            <div class="col-6">
+                                                <label for="inputNote" class="fw-bold">Additional Information</label>
+                                                <textarea id="inputNote" class="form-control" rows="5"
+                                                    placeholder="Enter Any Additional Information"
+                                                    onkeyup="inputValidatorText(this,'','booking','note')"></textarea>
+                                            </div>
+
+
                                         </div>
-                                    </div>
+                                    </fieldset>
 
-                            </fieldset>
+                                    <!-- Form Buttons -->
+                                    <div class="row mt-3 mb-2">
 
-                            <!--  Additional Info -->
-                            <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Status & Note</legend>
-                                <div class="row">
-
-                                    <div class="col-6">
-                                        <div class="row mb-1">
-                                            <div class="col-12">
-                                                <label for="selectBookingStatus" class="fw-bold form-label mb-0">
-                                                    Status <span class="text-danger"> * </span>
-                                                    :</label>
-
-                                                <select id="selectBookingStatus" class="form-control form-select"
-                                                    required
-                                                    onchange="staticSelectValidator(this , 'booking' , 'booking_status')">
-                                                    <option value="" selected disabled>Please Select Status </option>
-                                                    <option value="ifDeleted" class="d-none"> Deleted </option>
-                                                </select>
-                                            </div>
+                                        <div class="col-4">
+                                            <button type="reset" class="btn-clear fw-bold"
+                                                onclick="refreshPaymentForm();">Reset
+                                                Form</button>
                                         </div>
 
+                                        <div class="col-8 text-end">
+                                            <button type="button" id="bookingUpdateBtn" class=" btn-update fw-bold "
+                                                onclick="updatePayment()">Update Entry</button>
+
+                                            <button type="submit" id="bookingAddBtn" class="btn-add fw-bold"
+                                                onclick="addNewPayment()">Add Entry</button>
+                                        </div>
                                     </div>
-
-                                    <div class="col-6">
-                                        <label for="inputNote" class="fw-bold">Additional Information</label>
-                                        <textarea id="inputNote" class="form-control" rows="5"
-                                            placeholder="Enter Any Additional Information"
-                                            onkeyup="inputValidatorText(this,'','booking','note')"></textarea>
-                                    </div>
-
-
-                                </div>
-                            </fieldset>
-
-
-                            <!-- Form Buttons -->
-                            <div class="row mt-3 mb-2">
-
-                                <div class="col-4">
-                                    <button type="reset" class="btn-clear fw-bold" onclick="refreshPaymentForm();">Reset
-                                        Form</button>
                                 </div>
 
-                                <div class="col-8 text-end">
-                                    <button type="button" id="bookingUpdateBtn" class=" btn-update fw-bold "
-                                        onclick="updatePayment()">Update Entry</button>
-
-                                    <button type="submit" id="bookingAddBtn" class="btn-add fw-bold"
-                                        onclick="addNewPayment()">Add Entry</button>
-                                </div>
                             </div>
+
                         </form>
 
                     </div>
