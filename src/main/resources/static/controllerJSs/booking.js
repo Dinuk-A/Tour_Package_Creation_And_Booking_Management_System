@@ -5,6 +5,74 @@ window.addEventListener('load', () => {
 
 });
 
+//main refresh fn
+const refreshBookingForm = () => {
+
+    booking = new Object;
+    externalPersonnels = new Object;
+    externalVehicles = new Object;
+    booking.externalPersonnels = [];
+    booking.externalVehicles = [];
+
+    document.getElementById('formBooking').reset();
+
+    //to fill select elements
+    const emptyArray = [];
+
+    // Array of input field IDs to reset
+    const inputTagsIds = [
+        'inputBookingCode',
+        'inputClientName',
+        'inputClientPassport',
+        'inputClientEmail',
+        'inputClientContact',
+        'inputClientContact2',
+        'inputPackagePrice',
+        'inputAdvancementAmount',
+        'inputTotalPaidAmount',
+        'inputBalance',
+        'bookingStartDate',
+        'bookingEndDate',
+    ];
+
+    //clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    const radiosToReset = [
+        'internalVehicleRB',
+        'externalVehicleRB',
+        'internalDriverRB',
+        'externalDriverRB',
+        'internalGuideRB',
+        'externalGuideRB'
+    ]
+
+    radiosToReset.forEach(id => {
+        const radio = document.getElementById(id);
+        if (radio) {
+            radio.checked = false;
+        }
+    });
+
+    //selectBookedPackage
+    //selectBasedInquiry
+    //availableVehicles
+    //availableDrivers
+    //availableGuides
+
+
+    document.getElementById('assignedVehicles').innerHTML = '';
+    document.getElementById('assignedDrivers').innerHTML = '';
+    document.getElementById('assignedGuides').innerHTML = '';
+
+}
+
 //global var to store id of the table
 let sharedTableId = "mainTableBooking";
 
@@ -16,8 +84,8 @@ const buildBookingTable = async () => {
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'bookingcode', colHeadName: 'Code' },
-            { displayType: 'function', displayingPropertyOrFn: showClientInfo, colHeadName: 'Client' },
-            { displayType: 'function', displayingPropertyOrFn: showClientContacts, colHeadName: 'Contact' },
+            //{ displayType: 'function', displayingPropertyOrFn: showClientInfo, colHeadName: 'Client' },
+            //{ displayType: 'function', displayingPropertyOrFn: showClientContacts, colHeadName: 'Contact' },
             { displayType: 'function', displayingPropertyOrFn: showBookedPkg, colHeadName: 'Package' },
             { displayType: 'function', displayingPropertyOrFn: showBookingStatus, colHeadName: 'Status' }
         ]
@@ -111,73 +179,32 @@ const showBookedPkg = (bookingObj) => {
     return `${bookingObj.tpkg.pkgcode} <br> ${bookingObj.tpkg.pkgtitle}`;
 }
 
-//refresh fn
-const refreshBookingForm = () => {
+//refill function
+const openModal = async (bookingObj) => {
 
-    booking = new Object;
-    externalPersonnels = new Object;
-    externalVehicles = new Object;
-    booking.externalPersonnels = [];
-    booking.externalVehicles = [];
+    booking = JSON.parse(JSON.stringify(bookingObj));
+    oldBooking = JSON.parse(JSON.stringify(bookingObj));
 
-    document.getElementById('formBooking').reset();
+    const tourStartDate = bookingObj.startdate;
+    const tourEndDate = bookingObj.enddate;
+    //const tourStartDate = bookingObj.tpkg.tourstartdate;
+    //const tourEndDate = bookingObj.tpkg.tourenddate;
 
-    //to fill select elements
-    const emptyArray = [];
+    try {
+        const availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + tourStartDate + "/" + tourEndDate);
+        fillMultDataIntoDynamicSelectsInq(availableDrivers,"Please Choose A Driver",availabledriversByDates,'emp_code','fullname');
+    } catch (error) {
+        console.error("Error fetching available drivers:", error);
+    }
 
-    // Array of input field IDs to reset
-    const inputTagsIds = [
-        'inputBookingCode',
-        'inputClientName',
-        'inputClientPassport',
-        'inputClientEmail',
-        'inputClientContact',
-        'inputClientContact2',
-        'inputPackagePrice',
-        'inputAdvancementAmount',
-        'inputTotalPaidAmount',
-        'inputBalance',
-        'bookingStartDate',
-        'bookingEndDate',
-    ];
+    let myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+    myInqFormTab.show();
 
-    //clear out any previous styles
-    inputTagsIds.forEach((fieldID) => {
-        const field = document.getElementById(fieldID);
-        if (field) {
-            field.style.border = "1px solid #ced4da";
-            field.value = '';
-        }
-    });
-
-    const radiosToReset = [
-        'internalVehicleRB',
-        'externalVehicleRB',
-        'internalDriverRB',
-        'externalDriverRB',
-        'internalGuideRB',
-        'externalGuideRB'
-    ]
-
-    radiosToReset.forEach(id => {
-        const radio = document.getElementById(id);
-        if (radio) {
-            radio.checked = false;
-        }
-    });
-
-    //selectBookedPackage
-    //selectBasedInquiry
-    //availableVehicles
-    //availableDrivers
-    //availableGuides
-
-
-    document.getElementById('assignedVehicles').innerHTML = '';
-    document.getElementById('assignedDrivers').innerHTML = '';
-    document.getElementById('assignedGuides').innerHTML = '';
+    let resourcesTab = new bootstrap.Tab(document.getElementById('bookingStep2-tab'));
+    resourcesTab.show();
 
 }
+
 
 //+++++++++++++++++for vehicle handling+++++++++++++++++++++
 // handle radio changes vehicle
@@ -224,7 +251,19 @@ const checkExtVehicleFormErrors = () => {
 
 //add
 const addExternalVehicle = () => {
-    checkExtVehicleFormErrors();
+    const errors = checkExtVehicleFormErrors();
+    if (errors == "") {
+        const userConfirm = confirm("Are you sure to add ?");
+        if (userConfirm) {
+
+            booking.externalVehicles.push(externalVehicles);
+            console.log(booking);
+
+            resetExtVehicleInputs();
+        }
+    } else {
+        showAlertModal("err", "Form has some errors \n " + errors);
+    }
 }
 
 // Reset external vehicle add form
@@ -296,60 +335,22 @@ const checkExtDriverFormErrors = () => {
 
 //for add ext driver btn
 const addExternalDriver = () => {
-
     const errors = checkExtDriverFormErrors();
     if (errors == "") {
+        const userConfirm = confirm("Are you sure to add ? \n  " + externalPersonnels.fullname);
+        if (userConfirm) {
+            externalPersonnels.role = "Driver";
+            booking.externalPersonnels.push({ ...externalPersonnels });
+            console.log(booking);
 
-        const clone = JSON.parse(JSON.stringify(externalPersonnels));
-
-        // Add to booking
-        booking.externalPersonnels.push(clone);
-
-        // Get current index of the new entry
-        const index = booking.externalPersonnels.length - 1;
-
-        // Create a container div for the entry
-        const driverDiv = document.createElement("div");
-        driverDiv.className = "d-flex justify-content-between align-items-center mb-2 p-2 border rounded bg-light";
-        driverDiv.id = `driver_${index}`;
-
-        // Create label for the name
-        const nameLabel = document.createElement("span");
-        nameLabel.textContent = clone.fullname;
-
-        // Create remove button
-        const removeBtn = document.createElement("button");
-        removeBtn.className = "btn btn-sm btn-danger";
-        removeBtn.textContent = "Remove";
-
-        // Remove logic
-        removeBtn.onclick = () => {
-            // Remove from array
-            booking.externalPersonnels.splice(index, 1);
-            // Remove from DOM
-            driverDiv.remove();
-            // Optional: console log updated booking
-            console.log("Updated Booking Object after removal:", booking);
-        };
-
-        // Append both to the driver div
-        driverDiv.appendChild(nameLabel);
-        driverDiv.appendChild(removeBtn);
-
-        // Append to the right side section
-        document.getElementById("assignedDrivers").appendChild(driverDiv);
-
-        // Reset input fields and temp object
-        resetExtDriverInputs();
-        externalPersonnels = {};
-
-        // Show full object
-        console.log("Updated Booking Object:", booking);
-
-    } else{
-        showAlertModal("err","form has some errors \n " , errors);
+            resetExtDriverInputs();
+            externalPersonnels = {};
+            renderAssignedDrivers();
+        }
+    } else {
+        showAlertModal("err", "Form has some errors \n " + errors);
     }
-};
+}
 
 //reset ext driver add form
 const resetExtDriverInputs = () => {
@@ -367,6 +368,56 @@ const resetExtDriverInputs = () => {
             el.value = "";
             el.style.border = "1px solid #ced4da";
         }
+    });
+}
+
+//fill the selected drivers section
+const renderAssignedDrivers = () => {
+    const container = document.getElementById('assignedDrivers');
+    container.innerHTML = "";
+
+    // Filter only drivers
+    const drivers = booking.externalPersonnels.filter(person => person.role === "Driver");
+
+    drivers.forEach((driver, index) => {
+        const driverRow = document.createElement("div");
+        driverRow.className = "row mb-2 align-items-center";
+        driverRow.setAttribute("data-nic", driver.nic);
+
+        // Full Name
+        const nameCol = document.createElement("div");
+        nameCol.className = "col";
+        nameCol.innerText = driver.fullname;
+
+        // Contact
+        const contactCol = document.createElement("div");
+        contactCol.className = "col";
+        contactCol.innerText = driver.contactone;
+
+        // Remove button
+        const btnCol = document.createElement("div");
+        btnCol.className = "col-auto";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-sm btn-danger";
+        removeBtn.innerText = "Remove";
+
+        removeBtn.addEventListener("click", () => {
+
+            booking.externalPersonnels = booking.externalPersonnels.filter(p => p.nic !== driver.nic);
+            driverRow.remove();
+
+        });
+
+        btnCol.appendChild(removeBtn);
+
+        // Append all to row
+        driverRow.appendChild(nameCol);
+        driverRow.appendChild(contactCol);
+        driverRow.appendChild(btnCol);
+
+        // Append row to container
+        container.appendChild(driverRow);
     });
 }
 
@@ -417,8 +468,22 @@ const checkExtGuideFormErrors = () => {
 };
 
 //add
-const addExternalGuide =()=>{
-    checkExtGuideFormErrors();
+const addExternalGuide = () => {
+    const errors = checkExtGuideFormErrors();
+    if (errors == "") {
+        const userConfirm = confirm("Are you sure to add ? \n " + externalPersonnels.fullname);
+        if (userConfirm) {
+            externalPersonnels.role = "Guide";
+            booking.externalPersonnels.push({ ...externalPersonnels });
+            console.log(booking);
+
+            resetExtGuideInputs();
+            externalPersonnels = {};
+            renderAssignedGuides();
+        }
+    } else {
+        showAlertModal("err", "Form has some errors \n " + errors);
+    }
 }
 
 // Reset external guide add form
@@ -437,6 +502,57 @@ const resetExtGuideInputs = () => {
             el.value = "";
             el.style.border = "1px solid #ced4da";
         }
+    });
+};
+
+//fill the selected guides section
+const renderAssignedGuides = () => {
+    const container = document.getElementById('assignedGuides');
+    container.innerHTML = "";
+
+    // Filter only guides
+    const guides = booking.externalPersonnels.filter(person => person.role === "Guide");
+
+    guides.forEach((guide) => {
+        const guideRow = document.createElement("div");
+        guideRow.className = "row mb-2 align-items-center";
+        guideRow.setAttribute("data-nic", guide.nic);
+
+        // Full Name
+        const nameCol = document.createElement("div");
+        nameCol.className = "col";
+        nameCol.innerText = guide.fullname;
+
+        // Contact
+        const contactCol = document.createElement("div");
+        contactCol.className = "col";
+        contactCol.innerText = guide.contactone;
+
+        // Remove button
+        const btnCol = document.createElement("div");
+        btnCol.className = "col-auto";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-sm btn-danger";
+        removeBtn.innerText = "Remove";
+
+        removeBtn.addEventListener("click", () => {
+            // Remove from array
+            booking.externalPersonnels = booking.externalPersonnels.filter(p => p.nic !== guide.nic);
+
+            // Remove from DOM
+            guideRow.remove();
+        });
+
+        btnCol.appendChild(removeBtn);
+
+        // Append all to row
+        guideRow.appendChild(nameCol);
+        guideRow.appendChild(contactCol);
+        guideRow.appendChild(btnCol);
+
+        // Append row to container
+        container.appendChild(guideRow);
     });
 };
 
