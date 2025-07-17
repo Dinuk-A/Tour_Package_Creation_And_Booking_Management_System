@@ -81,13 +81,13 @@
                                 <!-- Step 1 -->
                                 <div class="tab-pane fade show active" id="bookingStep1" role="tabpanel"
                                     aria-labelledby="bookingStep1-tab">
+
                                     <!-- Basic Info -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary">Booking Information</legend>
 
                                         <div class="row">
-
-                                            <div class="col-md-12">
+                                            <div class=" col-md-12">
 
                                                 <div class="row mb-2">
 
@@ -179,6 +179,7 @@
 
 
                                             </div>
+                                        </div>
 
                                     </fieldset>
 
@@ -295,12 +296,12 @@
 
                                                     <div class="col-1"></div>
 
-                                                    <div class="col-3">
+                                                    <!--<div class="col-3">
                                                         <button type="button" class="btn btn-primary mt-4"
                                                             onclick="getAvailableCompanyDrivers(); getAvailableGuideList();">
                                                             Get Available Resources
                                                         </button>
-                                                    </div>
+                                                    </div>-->
 
                                                 </div>
                                             </div>
@@ -321,8 +322,9 @@
 
                                         <!--//vehicle-->
                                         <h5 class="text-center text-dark fw-bold mb-0">Vehicle Assignment</h5>
-                                        <div class="card col-12 mx-auto p-3 mb-3 mt-0">
+                                        <div class="card col-12 mx-auto p-3 mb-3 mt-0 border border-primary">
                                             <div class="row">
+                                                
                                                 <!-- Left Section: Available Vehicles -->
                                                 <div class="col-6 border-end">
                                                     <div class="row mb-3">
@@ -365,7 +367,7 @@
                                                                         class="text-danger">*</span> :</label>
                                                                 <input id="extVehName" type="text" class="form-control"
                                                                     placeholder="Enter Vehicle Name" required
-                                                                    onkeyup="inputValidatorText(this,'.+','externalVehicle','vehiname')">
+                                                                    onkeyup="inputValidatorText(this,'.+','externalVehicles','vehiname')">
                                                             </div>
 
                                                             <div class="col-12 mb-3">
@@ -374,7 +376,7 @@
                                                                         class="text-danger">*</span> :</label>
                                                                 <input id="extVehPlate" type="text" class="form-control"
                                                                     placeholder="Enter Number Plate" required
-                                                                    onkeyup="inputValidatorText(this,'.+','externalVehicle','numberplate')">
+                                                                    onkeyup="inputValidatorText(this,'.+','externalVehicles','numberplate')">
                                                             </div>
 
                                                             <div class="col-12 mb-3">
@@ -384,7 +386,7 @@
                                                                 <input id="extVehProviderName" type="text"
                                                                     class="form-control"
                                                                     placeholder="Enter Provider Full Name"
-                                                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','externalVehicle','providername')"
+                                                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','externalVehicles','providername')"
                                                                     required>
                                                             </div>
 
@@ -394,7 +396,7 @@
                                                                     <span class="text-danger">*</span> :</label>
                                                                 <input id="extVehProviderContact" type="text"
                                                                     class="form-control" placeholder="Enter Contact"
-                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalVehicle','providercontactone')"
+                                                                    onkeyup="inputValidatorText(this,'','externalVehicles','providercontactone')"
                                                                     required>
                                                             </div>
 
@@ -405,7 +407,7 @@
                                                                 <input id="extVehProviderEmail" type="text"
                                                                     class="form-control"
                                                                     placeholder="Enter Email Address"
-                                                                    onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','externalVehicle','providercontactemail')"
+                                                                    onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','externalVehicles','providercontactemail')"
                                                                     required>
                                                             </div>
 
@@ -428,7 +430,7 @@
 
                                         <!-- //driver-->
                                         <h5 class="text-center text-dark fw-bold mb-0">Driver Assignment</h5>
-                                        <div class="card col-12 mx-auto p-3 mb-3 mt-0">
+                                        <div class="card col-12 mx-auto p-3 mb-3 mt-0 border border-primary">
                                             <div class="row">
                                                 <!-- Left Section: Available Drivers -->
                                                 <div class="col-6 border-end">
@@ -473,7 +475,7 @@
                                                                 <input id="extDriverFullName" type="text"
                                                                     class="form-control"
                                                                     placeholder="Enter The Full Name"
-                                                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','externalPersonnel','fullname')"
+                                                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','externalPersonnels','fullname')"
                                                                     required>
                                                             </div>
 
@@ -484,7 +486,7 @@
                                                                 <input id="extDriverNIC" type="text"
                                                                     class="form-control" required
                                                                     placeholder="Enter The NIC Number"
-                                                                    onkeyup="inputValidatorText(this,'^[0-9Vv]{10}$','externalPersonnel','nic')">
+                                                                    onkeyup="inputValidatorText(this,'^[0-9Vv]{10}$','externalPersonnels','nic')">
                                                             </div>
 
                                                             <div class="col-6 mb-3">
@@ -494,7 +496,7 @@
                                                                 <input id="extDriverEmail" type="text" required
                                                                     class="form-control"
                                                                     placeholder="Enter The Personal Email Address"
-                                                                    onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','externalPersonnel','email')">
+                                                                    onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','externalPersonnels','email')">
                                                             </div>
 
                                                             <div class="col-6 mb-3">
@@ -504,7 +506,7 @@
                                                                 <input id="extDriverMobile" type="text" required
                                                                     placeholder="Enter The Mobile Number"
                                                                     class="form-control"
-                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnel','contactone')">
+                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnels','contactone')">
                                                             </div>
 
                                                             <div class="col-6 mb-3">
@@ -514,7 +516,7 @@
                                                                 <input id="extDriverMobile2" type="text"
                                                                     placeholder="Enter Additional Contact"
                                                                     class="form-control"
-                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnel','contacttwo')">
+                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnels','contacttwo')">
                                                             </div>
 
                                                             <!--<div class="col-12 mb-3">
@@ -548,7 +550,7 @@
 
                                         <!-- //guide -->
                                         <h5 class="text-center text-dark fw-bold mb-0">Guide Assignment</h5>
-                                        <div class="card col-12 mx-auto p-3 mb-3 mt-0">
+                                        <div class="card col-12 mx-auto p-3 mb-3 mt-0 border border-primary">
                                             <div class="row">
                                                 <!-- Left Section: Available Guides -->
                                                 <div class="col-6 border-end">
@@ -593,7 +595,7 @@
                                                                 <input id="extGuideFullName" type="text"
                                                                     class="form-control"
                                                                     placeholder="Enter The Full Name"
-                                                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','externalPersonnel','fullname')"
+                                                                    onkeyup="inputValidatorText(this,'^([A-Z][a-z]{2,20}[\\s])+([A-Z][a-z]{2,20})$','externalPersonnels','fullname')"
                                                                     required>
                                                             </div>
 
@@ -603,7 +605,7 @@
                                                                         class="text-danger">*</span> :</label>
                                                                 <input id="extGuideNIC" type="text" class="form-control"
                                                                     required placeholder="Enter The NIC Number"
-                                                                    onkeyup="inputValidatorText(this,'^[0-9Vv]{10}$','externalPersonnel','nic')">
+                                                                    onkeyup="inputValidatorText(this,'^[0-9Vv]{10}$','externalPersonnels','nic')">
                                                             </div>
 
                                                             <div class="col-6 mb-3">
@@ -613,7 +615,7 @@
                                                                 <input id="extGuideEmail" type="text" required
                                                                     class="form-control"
                                                                     placeholder="Enter The Personal Email Address"
-                                                                    onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','externalPersonnel','email')">
+                                                                    onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','externalPersonnels','email')">
                                                             </div>
 
                                                             <div class="col-6 mb-3">
@@ -623,7 +625,7 @@
                                                                 <input id="extGuideMobile" type="text" required
                                                                     placeholder="Enter The Mobile Number"
                                                                     class="form-control"
-                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnel','contactone')">
+                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnels','contactone')">
                                                             </div>
 
                                                             <div class="col-6 mb-3">
@@ -633,7 +635,7 @@
                                                                 <input id="extGuideMobile2" type="text"
                                                                     placeholder="Enter Additional Contact"
                                                                     class="form-control"
-                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnel','contacttwo')">
+                                                                    onkeyup="inputValidatorText(this,'^[0][7][01245678][0-9]{7}$','externalPersonnels','contacttwo')">
                                                             </div>
 
                                                             <div class="col-12 mt-2">
@@ -655,12 +657,12 @@
 
                                     </fieldset>
 
-
                                 </div>
 
                                 <!-- Step 3 -->
                                 <div class="tab-pane fade" id="bookingStep3" role="tabpanel"
                                     aria-labelledby="bookingStep3-tab">
+
                                     <!--  Additional Info -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary">Status & Note</legend>
@@ -679,6 +681,12 @@
                                                             onchange="staticSelectValidator(this , 'booking' , 'booking_status')">
                                                             <option value="" selected disabled>Please Select Status
                                                             </option>
+                                                            <option value="Pending Payment">Pending Payment</option>
+                                                            <option value="Confirmed">Confirmed</option>
+                                                            <option value="Cancelled">Cancelled</option>
+                                                            <option value="Completed">Completed</option>
+                                                            <option value="Rescheduled">Rescheduled</option>
+                                                            <option value="Refunded">Refunded</option>
                                                             <option value="ifDeleted" class="d-none"> Deleted </option>
                                                         </select>
                                                     </div>
@@ -701,19 +709,20 @@
                                     <div class="row mt-3 mb-2">
 
                                         <div class="col-4">
-                                            <button type="reset" class="btn-clear fw-bold"
+                                            <button type="reset" class="d-none btn-clear fw-bold"
                                                 onclick="refreshPaymentForm();">Reset
                                                 Form</button>
                                         </div>
 
                                         <div class="col-8 text-end">
                                             <button type="button" id="bookingUpdateBtn" class=" btn-update fw-bold "
-                                                onclick="updatePayment()">Update Entry</button>
+                                                onclick="updateBooking()">Update Booking</button>
 
-                                            <button type="submit" id="bookingAddBtn" class="btn-add fw-bold"
-                                                onclick="addNewPayment()">Add Entry</button>
+                                            <button type="submit" id="bookingAddBtn" class="d-none btn-add fw-bold"
+                                                onclick="addNewBooking()">Add Entry</button>
                                         </div>
                                     </div>
+
                                 </div>
 
                             </div>

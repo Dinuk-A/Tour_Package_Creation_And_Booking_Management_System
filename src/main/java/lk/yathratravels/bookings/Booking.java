@@ -57,11 +57,11 @@ public class Booking {
     private String booking_status;
 
     @ManyToOne
-    @JoinColumn(name = "tpkg", referencedColumnName = "id")
+    @JoinColumn(name = "client", referencedColumnName = "id")
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "client", referencedColumnName = "id")
+    @JoinColumn(name = "tpkg", referencedColumnName = "id")
     private TourPkg tpkg;
 
     @ManyToMany
@@ -78,7 +78,7 @@ public class Booking {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "booking_id") 
-    private List<ExtPersonnel> externalPersonnel;
+    private List<ExtPersonnel> externalPersonnels;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "booking_id") 

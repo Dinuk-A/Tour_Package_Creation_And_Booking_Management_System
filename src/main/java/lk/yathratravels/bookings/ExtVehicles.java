@@ -30,8 +30,8 @@ public class ExtVehicles {
     @Column(name = "providercontactone")
     private String providercontactone;
 
-    @Column(name = "providercontacttwo")
-    private String providercontacttwo;
+    //@Column(name = "providercontacttwo")
+    //private String providercontacttwo;
 
     @Column(name = "providercontactemail")
     private String providercontactemail;
@@ -39,8 +39,8 @@ public class ExtVehicles {
     @Column(name = "notes")
     private String notes;
 
-    @Column(name = "price_agreed")
-    private BigDecimal price_agreed;
+    //@Column(name = "price_agreed")
+    //private BigDecimal price_agreed;
 
     @Column(name = "addeddatetime")
     private String addeddatetime; 
