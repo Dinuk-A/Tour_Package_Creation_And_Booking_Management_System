@@ -43,8 +43,8 @@ public class BookingController {
             ModelAndView bookingView = new ModelAndView();
             bookingView.setViewName("booking.html");
             bookingView.addObject("loggedUserUN", auth.getName());
-            bookingView.addObject("title", "Yathra Attraction");
-            bookingView.addObject("moduleName", "Attraction Management");
+            bookingView.addObject("title", "Yathra Booking");
+            bookingView.addObject("moduleName", "Booking Management");
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
             bookingView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
