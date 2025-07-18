@@ -1,6 +1,7 @@
 package lk.yathratravels.bookings;
 
 import jakarta.persistence.*;
+import lk.yathratravels.vehicle.VehicleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,8 +31,8 @@ public class ExtVehicles {
     @Column(name = "providercontactone")
     private String providercontactone;
 
-    //@Column(name = "providercontacttwo")
-    //private String providercontacttwo;
+    // @Column(name = "providercontacttwo")
+    // private String providercontacttwo;
 
     @Column(name = "providercontactemail")
     private String providercontactemail;
@@ -39,11 +40,18 @@ public class ExtVehicles {
     @Column(name = "notes")
     private String notes;
 
-    //@Column(name = "price_agreed")
-    //private BigDecimal price_agreed;
+    @ManyToOne
+    @JoinColumn(name = "vehicletype_id", referencedColumnName = "id")
+    private VehicleType vehicletype_id;
+
+    //@Column(name = "vehi_type")
+    //private String vehi_type;
+
+    // @Column(name = "price_agreed")
+    // private BigDecimal price_agreed;
 
     @Column(name = "addeddatetime")
-    private String addeddatetime; 
+    private String addeddatetime;
 
     @Column(name = "addeduserid")
     private String addeduserid;

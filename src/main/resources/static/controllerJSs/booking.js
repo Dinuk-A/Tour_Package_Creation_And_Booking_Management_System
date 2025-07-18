@@ -6,7 +6,7 @@ window.addEventListener('load', () => {
 });
 
 //main refresh fn
-const refreshBookingForm = () => {
+const refreshBookingForm = async () => {
 
     booking = new Object;
     externalPersonnels = new Object;
@@ -66,7 +66,21 @@ const refreshBookingForm = () => {
     //availableDrivers
     //availableGuides
 
+    //get vehicle types 
+    let vehiTypes = [];
+    try {
+        vehiTypes = await ajaxGetReq('/vehitypes/all');
+    } catch (error) {
+        console.error('fetch failed for vehicle types')
+    }
 
+    //for internal side
+    fillDataIntoDynamicSelects(vehicleTypesAll, 'Please Select Type', vehiTypes, 'name');
+
+    //for external side
+    fillDataIntoDynamicSelects(extVehitype, 'Please Select Type', vehiTypes, 'name');
+
+    //reset selected section
     document.getElementById('assignedVehicles').innerHTML = '';
     document.getElementById('assignedDrivers').innerHTML = '';
     document.getElementById('assignedGuides').innerHTML = '';
@@ -193,7 +207,7 @@ const openModal = async (bookingObj) => {
     //fill drivers
     try {
         const availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + tourStartDate + "/" + tourEndDate);
-        fillMultDataIntoDynamicSelectsInq(availableDrivers,"Please Choose A Driver",availabledriversByDates,'emp_code','fullname');
+        fillMultDataIntoDynamicSelectsInq(availableDrivers, "Please Choose A Driver", availabledriversByDates, 'emp_code', 'fullname');
     } catch (error) {
         console.error("Error fetching available drivers:", error);
     }
@@ -201,18 +215,18 @@ const openModal = async (bookingObj) => {
     //fill guides
     try {
         const availableGuidesByDates = await ajaxGetReq("emp/availableguidesbydates/" + tourStartDate + "/" + tourEndDate);
-        fillMultDataIntoDynamicSelectsInq(availableGuides,"Please Choose A Driver",availableGuidesByDates,'emp_code','fullname');
-    } catch (error) {        
+        fillMultDataIntoDynamicSelectsInq(availableGuides, "Please Choose A Driver", availableGuidesByDates, 'emp_code', 'fullname');
+    } catch (error) {
         console.error("Error fetching available guides:", error);
     }
 
     //need to define new or use the vehi type before this
-    //try {
-    //    const availableVehiclesByDates = await ajaxGetReq("emp/availablevehiclesbyvehitype/" + tourStartDate + "/" + tourEndDate);
-    //    fillMultDataIntoDynamicSelectsInq(availableVehicles,"Please Choose A Driver",availabledriversByDates,'emp_code','fullname');
-    //} catch (error) {
-    //    console.error("Error fetching available drivers:", error);
-    //}
+    try {
+        const availableVehiclesByDates = await ajaxGetReq("vehi/availablevehiclesbydatesonly/" + tourStartDate + "/" + tourEndDate);
+        fillMultDataIntoDynamicSelectsInq(availableVehicles, "Please Choose A Vehicle", availableVehiclesByDates, 'numberplate', 'vehiclename');
+    } catch (error) {
+        console.error("Error fetching available vehicles:", error);
+    }
 
     let myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myInqFormTab.show();
@@ -265,6 +279,23 @@ const checkExtVehicleFormErrors = () => {
 
     return errors;
 };
+
+//filter vehicles by type
+const filterVehisByTypeToo = async (selectElement, bookingObj) => {
+    const selectedVehiTypeRaw = selectElement.value;
+    const selectedVehitypeObjid = JSON.parse(selectedVehiTypeRaw).id;
+
+    const tourStartDate = bookingObj.startdate;
+    const tourEndDate = bookingObj.enddate;
+
+    try {
+        const availablevehiListByTypeAndDates = await ajaxGetReq("vehi/availablevehiclesbyvehitype/" + tourStartDate + "/" + tourEndDate + "/" + selectedVehitypeObjid);
+        fillMultDataIntoDynamicSelectsInq(availableVehicles, "Please Choose A Vehicle", availablevehiListByTypeAndDates, 'numberplate', 'vehiclename');
+    } catch (error) {
+        console.error('fetch vehicles by type failed')
+    }
+
+}
 
 //add
 const addExternalVehicle = () => {

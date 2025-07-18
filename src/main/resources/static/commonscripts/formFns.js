@@ -164,13 +164,14 @@ const disableFutureDate = (calenderTagId) => {
 // ++++++++++++++ fns to validate user inputted data ++++++++++++
 
 //validate text inputs
-const inputValidatorText = (inputTagId, pattern, object, property) => {
+const inputValidatorTextOri = (inputTagId, pattern, object, property) => {
 
     //define a pattern
     const regXP = new RegExp(pattern);
 
     //get the current value of the input field
-    const currentValue = inputTagId.value
+    const currentValue = inputTagId.value;
+
 
     //run all this only if there is a value entered
     if (currentValue != "") {
@@ -178,6 +179,39 @@ const inputValidatorText = (inputTagId, pattern, object, property) => {
         if (regXP.test(currentValue)) {
             inputTagId.style.border = "2px solid lime";
             window[object][property] = currentValue;
+        } else {
+            inputTagId.style.border = "2px solid red";
+            window[object][property] = null;
+        }
+
+        //run this if no value is entered
+    } else {
+        window[object][property] = null;
+
+        //if this field is marked as required turn to red, else default colour
+        if (inputTagId.required) {
+            inputTagId.style.border = "2px solid red";
+        } else {
+            inputTagId.style.border = "2px solid #ced4da";
+        }
+    }
+}
+
+//validate text inputs
+const inputValidatorText = (inputTagId, pattern, object, property) => {
+
+    //define a pattern
+    const regXP = new RegExp(pattern);
+
+    //get the current value of the input field
+    const currentValue = inputTagId.value;
+
+    //run all this only if there is a value entered
+    if (currentValue != "") {
+
+        if (regXP.test(currentValue)) {
+            inputTagId.style.border = "2px solid lime";
+            window[object][property] = currentValue.trim();
         } else {
             inputTagId.style.border = "2px solid red";
             window[object][property] = null;

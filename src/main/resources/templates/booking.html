@@ -31,7 +31,7 @@
             </li>
             <!-- for form side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formBookingHolderDiv" role="tab"
+                <a class="disabled nav-link" id="form-tab" data-bs-toggle="tab" href="#formBookingHolderDiv" role="tab"
                     aria-controls="formBookingHolderDiv" aria-selected="false" onclick="setBookingStatusAuto()">Form</a>
             </li>
         </ul>
@@ -324,7 +324,7 @@
                                         <h5 class="text-center text-dark fw-bold mb-0">Vehicle Assignment</h5>
                                         <div class="card col-12 mx-auto p-3 mb-3 mt-0 border border-primary">
                                             <div class="row">
-                                                
+
                                                 <!-- Left Section: Available Vehicles -->
                                                 <div class="col-6 border-end">
                                                     <div class="row mb-3">
@@ -350,6 +350,14 @@
 
                                                     <!-- Available Vehicles -->
                                                     <div id="availableVehiclesContainer">
+
+                                                        <div class="mt-2 mb-2">
+                                                            <label for="vehicleTypesAll"
+                                                                class="form-label fw-bold mb-0">Vehicle Types</label>
+                                                            <select class="form-select" id="vehicleTypesAll"
+                                                                onchange="filterVehisByTypeToo(this,window['currentObject']);"></select>
+                                                        </div>
+
                                                         <label for="availableVehicles"
                                                             class="form-label fw-bold mb-0">Available Vehicles</label>
                                                         <select class="form-select mb-3" size="8"
@@ -370,13 +378,22 @@
                                                                     onkeyup="inputValidatorText(this,'.+','externalVehicles','vehiname')">
                                                             </div>
 
-                                                            <div class="col-12 mb-3">
+                                                            <div class="col-6 mb-3">
                                                                 <label for="extVehPlate"
                                                                     class="form-label fw-bold mb-0">Number Plate <span
                                                                         class="text-danger">*</span> :</label>
                                                                 <input id="extVehPlate" type="text" class="form-control"
                                                                     placeholder="Enter Number Plate" required
                                                                     onkeyup="inputValidatorText(this,'.+','externalVehicles','numberplate')">
+                                                            </div>
+
+                                                            <div class="col-6 mb-3">
+                                                                <label for="extVehitype"
+                                                                    class="form-label mb-0 fw-bold">
+                                                                    Vehicle Type</label>
+                                                                <select id="extVehitype" class="form-select"
+                                                                    onchange=" dynamicSelectValidator(this, 'externalVehicles','vehicletype_id'); ;">
+                                                                </select>
                                                             </div>
 
                                                             <div class="col-12 mb-3">
@@ -422,9 +439,18 @@
                                                 </div>
 
                                                 <!-- Right Section: Assigned Vehicles -->
-                                                <div class="col-6" id="assignedVehicles">
+                                                <div class="col-6" >
+                                                    <!-- show selected vehicles -->
+                                                    <div class="row mb-3" id="assignedVehicles">
 
+                                                    </div>
+
+                                                    <!-- vehicle preference msg -->
+                                                    <div class="row my-0" id="vehiclePreferenceMsg">
+
+                                                    </div>
                                                 </div>
+
                                             </div>
                                         </div>
 

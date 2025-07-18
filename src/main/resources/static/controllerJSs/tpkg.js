@@ -1319,7 +1319,7 @@ const fillDataFromInq = async () => {
             fillDataIntoDynamicSelects(fdSelect, 'Please select first day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.sd_dayplan_id.daytitle);
             handleFirstDayChange(tpkgFirstDaySelect);
             //fdSelect.disabled = true;
-          
+
             //for middays
             const intrstdPkgMidDays = interestedTemplatePkg.dayplans;
 
@@ -1368,14 +1368,14 @@ const fillDataFromInq = async () => {
 
             }
 
-             //for final day
-             const ldSelect = document.getElementById('tpkgFinalDaySelect');
-             fillDataIntoDynamicSelects(ldSelect, 'Please select last day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.ed_dayplan_id.daytitle);
-             handleFinalDayChange(tpkgFinalDaySelect);
- 
-             //ldSelect.disabled = true;
-             //showFinalDayBtn.disabled = false;
-             //finalDayMsg.classList.remove('d-none');
+            //for final day
+            const ldSelect = document.getElementById('tpkgFinalDaySelect');
+            fillDataIntoDynamicSelects(ldSelect, 'Please select last day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.ed_dayplan_id.daytitle);
+            handleFinalDayChange(tpkgFinalDaySelect);
+
+            //ldSelect.disabled = true;
+            //showFinalDayBtn.disabled = false;
+            //finalDayMsg.classList.remove('d-none');
 
             updateTotalDaysCount();
             showTotalKmCount();
@@ -1729,21 +1729,18 @@ const handleFirstDayChange = (selectElement) => {
     showFirstDayBtn.disabled = false;
     const fdMsg = document.getElementById('firstDayMsg');
 
-    if (tpkg.is_custompkg == true) {
-
-        if (tpkg.sd_dayplan_id.is_template == true) {
-            selectElement.style.border = "2px solid orange";
-            fdMsg.classList.remove('d-none');
-            tpkg.sd_dayplan_id = null;
-            addNewDaysBtn.disabled = true;
-        } else {
-            selectElement.style.border = "2px solid lime";
-            fdMsg.classList.add('d-none');
-            addNewDaysBtn.disabled = false;
-            finalDaySelectUseTempsBtn.disabled = false;
-            finalDaySelectUseExistingBtn.disabled = false;
-            updateTotalDaysCount();
-        }
+    if (tpkg.is_custompkg == true && tpkg.sd_dayplan_id.is_template == true) {
+        selectElement.style.border = "2px solid orange";
+        fdMsg.classList.remove('d-none');
+        tpkg.sd_dayplan_id = null;
+        addNewDaysBtn.disabled = true;
+    } else {
+        selectElement.style.border = "2px solid lime";
+        fdMsg.classList.add('d-none');
+        addNewDaysBtn.disabled = false;
+        finalDaySelectUseTempsBtn.disabled = false;
+        finalDaySelectUseExistingBtn.disabled = false;
+        updateTotalDaysCount();
     }
 
     showTotalKmCount();
@@ -1761,25 +1758,23 @@ const handleFinalDayChange = (selectElement) => {
 
     console.log('tpkg.ed_dayplan_id:', tpkg.ed_dayplan_id);
 
-    if (tpkg.is_custompkg == true) {
+    if (tpkg.is_custompkg == true && tpkg.ed_dayplan_id.is_template == true) {
 
-        if (tpkg.ed_dayplan_id.is_template == true) {
+        console.log('Final day is a template. Applying warning styling and nulling it.');
 
-            console.log('Final day is a template. Applying warning styling and nulling it.');
+        selectElement.style.border = "2px solid orange";
+        finalDMsg.classList.remove('d-none');
+        tpkg.ed_dayplan_id = null;
+    } else {
 
-            selectElement.style.border = "2px solid orange";
-            finalDMsg.classList.remove('d-none');
-            tpkg.ed_dayplan_id = null;
-        } else {
+        console.log('Final day is a valid custom day.');
 
-            console.log('Final day is a valid custom day.');
+        selectElement.style.border = "2px solid lime";
+        finalDMsg.classList.add('d-none');
+        finalDaySelectUseTempsBtn.disabled = false;
+        finalDaySelectUseExistingBtn.disabled = false;
+        updateTotalDaysCount();
 
-            selectElement.style.border = "2px solid lime";
-            finalDMsg.classList.add('d-none');
-            finalDaySelectUseTempsBtn.disabled = false;
-            finalDaySelectUseExistingBtn.disabled = false;
-            updateTotalDaysCount();
-        }
     }
 
     showTotalKmCount();

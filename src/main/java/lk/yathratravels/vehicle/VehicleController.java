@@ -88,13 +88,21 @@ public class VehicleController {
         return vehiDao.findVehicleTypeNamesByMinSeats(seats);
     }
 
-    // mapping for get vehicle by availability
+    // mapping for get vehicle by availability + type
     @GetMapping(value = "vehi/availablevehiclesbyvehitype/{startDate}/{endDate}/{vehitype}", produces = "application/JSON")
     public List<Vehicle> getAvailableVehicles(@PathVariable("startDate") String startDate,
             @PathVariable("endDate") String endDate, @PathVariable("vehitype") Integer vehitype) {
 
         return vehiDao.getAvailableVehicleListByVehiType(LocalDate.parse(startDate), LocalDate.parse(endDate),
                 vehitype);
+    }
+
+    // mapping for get vehicle by availability dates only
+    @GetMapping(value = "vehi/availablevehiclesbydatesonly/{startDate}/{endDate}", produces = "application/JSON")
+    public List<Vehicle> getAvailableVehicles(@PathVariable("startDate") String startDate,
+            @PathVariable("endDate") String endDate) {
+
+        return vehiDao.getAvailableVehiclesByDatesOnly(LocalDate.parse(startDate), LocalDate.parse(endDate));
     }
 
     // POST mapping for add

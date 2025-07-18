@@ -16,25 +16,44 @@ public interface VehicleDao extends JpaRepository<Vehicle, Integer> {
     @Query("select v.vehicletype_id from Vehicle v where v.passengerseats >= ?1")
     List<VehicleType> findVehicleTypeNamesByMinSeats(Integer seatCount);
 
-        // same butalso filtered by vehi type✅
+    // same butalso filtered by vehi type✅
     @Query(value = "SELECT * FROM vehicle vehi WHERE vehi.vehi_status='Available' and vehi.vehicletype_id=?3 AND vehi.id NOT IN (SELECT b.vehicle_id FROM booking b WHERE (b.startdate BETWEEN ?1 AND ?2 OR b.enddate BETWEEN ?1 AND ?2) AND (b.booking_status != 'Deleted' OR b.booking_status != 'Cancelled'))", nativeQuery = true)
-    public List<Vehicle> getAvailableVehicleListByVehiTypeOri(LocalDate startDate, LocalDate endDate,Integer vehiTypeId);
+    public List<Vehicle> getAvailableVehicleListByVehiTypeOri(LocalDate startDate, LocalDate endDate,
+            Integer vehiTypeId);
 
+    // same but in diff lines
     @Query(value = """
-    SELECT * FROM vehicle vehi 
-    WHERE vehi.vehi_status = 'Available'
-      AND vehi.vehicletype_id = ?3 
-      AND vehi.id NOT IN (
-          SELECT bhv.vehicle_id 
-          FROM booking_has_int_vehicles bhv
-          JOIN booking b ON bhv.booking_id = b.id
-          WHERE (
-              (b.startdate BETWEEN ?1 AND ?2) 
-              OR (b.enddate BETWEEN ?1 AND ?2)
-          )
-          AND b.booking_status NOT IN ('Deleted', 'Cancelled')
-      )
-    """, nativeQuery = true)
-List<Vehicle> getAvailableVehicleListByVehiType(LocalDate startDate, LocalDate endDate, Integer vehiTypeId);
+            SELECT * FROM vehicle vehi
+            WHERE vehi.vehi_status = 'Available'
+              AND vehi.vehicletype_id = ?3
+              AND vehi.id NOT IN (
+                  SELECT bhv.vehicle_id
+                  FROM booking_has_int_vehicles bhv
+                  JOIN booking b ON bhv.booking_id = b.id
+                  WHERE (
+                      (b.startdate BETWEEN ?1 AND ?2)
+                      OR (b.enddate BETWEEN ?1 AND ?2)
+                  )
+                  AND b.booking_status NOT IN ('Deleted', 'Cancelled')
+              )
+            """, nativeQuery = true)
+    List<Vehicle> getAvailableVehicleListByVehiType(LocalDate startDate, LocalDate endDate, Integer vehiTypeId);
+
+    // get available vehicles by dates only
+    @Query(value = """
+            SELECT * FROM vehicle vehi
+            WHERE vehi.vehi_status = 'Available'
+                  AND vehi.id NOT IN (
+                  SELECT bhv.vehicle_id
+                  FROM booking_has_int_vehicles bhv
+                  JOIN booking b ON bhv.booking_id = b.id
+                  WHERE (
+                      (b.startdate BETWEEN ?1 AND ?2)
+                      OR (b.enddate BETWEEN ?1 AND ?2)
+                  )
+                  AND b.booking_status NOT IN ('Deleted', 'Cancelled')
+              )
+            """, nativeQuery = true)
+    List<Vehicle> getAvailableVehiclesByDatesOnly(LocalDate startDate, LocalDate endDate);
 
 }
