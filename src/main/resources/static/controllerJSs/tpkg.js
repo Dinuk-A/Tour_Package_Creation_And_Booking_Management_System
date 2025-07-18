@@ -1279,6 +1279,9 @@ const validateAdultTravellerCounts = () => {
 //handle refill tpkg data from inquiry
 const fillDataFromInq = async () => {
 
+    //reset the previous midday section
+    //document.getElementById('tpkgMidDaysSelectSection').innerHTML = '';
+
     if (tpkg.basedinq?.id != null) {
 
         //approx start date
@@ -1302,10 +1305,6 @@ const fillDataFromInq = async () => {
 
         }
 
-        //if needed to show the result in an empty array
-        //const emptyArray = [];
-        //emptyArray.push(interestedTemplatePkg.sd_dayplan_id); 
-
         if (tpkg.basedinq.intrstdpkgid != null) {
 
             const interestedTemplatePkg = await ajaxGetReq("/tpkg/byid?tpkgId=" + tpkg.basedinq.intrstdpkgid);
@@ -1323,6 +1322,7 @@ const fillDataFromInq = async () => {
             //for middays
             const intrstdPkgMidDays = interestedTemplatePkg.dayplans;
 
+            //reset the midday count
             let midDayCounter = 1;
 
             for (let i = 0; i < intrstdPkgMidDays.length; i++) {
@@ -3346,8 +3346,7 @@ const feedAndSelectNewlyAddedDp = async () => {
 
         const midDaySelect = document.getElementById(editingDPsSelectElementIdVal);
         if (midDaySelect) {
-            resetSelectElements(midDaySelect, "Please Select The Itinerary");
-            console.log("midDaySelect:", midDaySelect);
+            //resetSelectElements(midDaySelect, "Please Select The Itinerary");
 
             try {
                 const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
@@ -3361,15 +3360,16 @@ const feedAndSelectNewlyAddedDp = async () => {
                     if (selectedVal) {
                         const selectedDayPlan = JSON.parse(selectedVal);
                         const index = getDayNumberFromLabel(editingDPsSelectElementIdVal) - 1;
+                        console.log("index: ",  index);
                         tpkg.dayplans[index] = selectedDayPlan;
                         console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+
+                        //mehema nokara manually bind karanna 💥💥💥
+                        handleMidDaySelectChange(midDaySelect, index + 1);
 
                         // manually trigger the onchange event to update UI 💥💥💥
                         //const changeEvent = new Event('change');
                         //midDaySelect.dispatchEvent(changeEvent);
-
-                        handleMidDaySelectChange(midDaySelect);
-
 
                     } else {
                         console.warn("No value selected in mid day select");
@@ -3433,12 +3433,8 @@ const addNewDayPlanInTpkg = async () => {
     }
 }
 
-//💥💥💥💥
-//check errors for DP in TPKG
 
-//######################################################
-
-
+//###################################################### mid day handle +++++++++++++++++++++++++++++++++++
 //this will be needed for create dyamic IDs in mid days
 let midDayCounter = 1;
 
@@ -3565,10 +3561,13 @@ const generateNormalDayPlanSelectSections = () => {
 //const msgElement = document.getElementById(msgId);
 //const msgId = `midDayMsg${currentDay}`;
 //const viewBtnId = `showMidDayBtn${currentDay}`;
+
 //handle midday changes
 const handleMidDaySelectChange = (selectElem, currentDay = null) => {
-    const selectedValue = JSON.parse(selectElem.value);
 
+    console.log("midDayCounter: ",midDayCounter);
+
+    const selectedValue = JSON.parse(selectElem.value);
     const viewBtn = selectElem.parentNode.parentNode.children[2].children[0];
     //const dataId = viewBtn.getAttribute("data-id");
     //const classes = viewBtn.className; // returns a string
@@ -3580,7 +3579,7 @@ const handleMidDaySelectChange = (selectElem, currentDay = null) => {
     console.log("Selected DayPlan:", selectedValue);
     console.log("Selected Day Number:", currentDay);
 
-    const index = currentDay - 1;  // zero-based index in tpkg.dayplans
+    const index = currentDay - 1;  
     console.log("Target index in dayplans:", index);
 
     let isDuplicate = tpkg.dayplans.some(dp => dp && dp.id === selectedValue.id);

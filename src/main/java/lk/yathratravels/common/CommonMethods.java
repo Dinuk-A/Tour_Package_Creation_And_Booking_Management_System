@@ -64,6 +64,9 @@ public class CommonMethods {
     // UI for login page
     @GetMapping(value = "/login")
     public ModelAndView loginUI() {
+
+        //kalin session eka clean wenawa
+        SecurityContextHolder.clearContext();
         ModelAndView loginView = new ModelAndView();
         loginView.setViewName("login.html");
         return loginView;
