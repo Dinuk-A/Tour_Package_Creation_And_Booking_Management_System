@@ -66,7 +66,7 @@ public class Booking {
 
     @ManyToMany
     @JoinTable(name = "booking_has_int_vehicles", joinColumns = @JoinColumn(name = "booking_id"), inverseJoinColumns = @JoinColumn(name = "vehicle_id"))
-    private Set<Vehicle> vehicles;
+    private Set<Vehicle> int_vehicles;
 
     @ManyToMany
     @JoinTable(name = "booking_has_int_drivers", joinColumns = @JoinColumn(name = "booking_id"), inverseJoinColumns = @JoinColumn(name = "employee_id"))

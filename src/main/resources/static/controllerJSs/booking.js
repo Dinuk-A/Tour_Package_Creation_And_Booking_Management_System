@@ -14,6 +14,14 @@ const refreshBookingForm = async () => {
     booking.externalPersonnels = [];
     booking.externalVehicles = [];
 
+    booking.int_vehicles = [];
+    booking.int_drivers = [];
+    booking.int_guides = [];
+
+    booking.allVehis = [];
+    booking.allGuides = [];
+    booking.allDrivers = [];
+
     document.getElementById('formBooking').reset();
 
     //to fill select elements
@@ -81,9 +89,9 @@ const refreshBookingForm = async () => {
     fillDataIntoDynamicSelects(extVehitype, 'Please Select Type', vehiTypes, 'name');
 
     //reset selected section
-    document.getElementById('assignedVehicles').innerHTML = '';
-    document.getElementById('assignedDrivers').innerHTML = '';
-    document.getElementById('assignedGuides').innerHTML = '';
+    //document.getElementById('assignedVehicles').innerHTML = '';
+    //document.getElementById('assignedDrivers').innerHTML = '';
+    //document.getElementById('assignedGuides').innerHTML = '';
 
 }
 
@@ -297,18 +305,80 @@ const filterVehisByTypeToo = async (selectElement, bookingObj) => {
 
 }
 
-//add
-const addExternalVehicle = () => {
-    const errors = checkExtVehicleFormErrors();
-    if (errors == "") {
-        const userConfirm = confirm("Are you sure to add ?");
-        if (userConfirm) {
+//add int vehi
+const addIntVehi = () => {
 
-            booking.externalVehicles.push(externalVehicles);
-            console.log(booking);
+    const selectedValue = document.getElementById('availableVehicles').value;
+    const selectedVehi = JSON.parse(selectedValue);
 
-            resetExtVehicleInputs();
+    let isAlreadySelected = false;
+
+    booking.int_vehicles.forEach((vehi) => {
+        if (vehi.id == selectedVehi.id) {
+            isAlreadySelected = true;
         }
+    })
+
+    if (isAlreadySelected) {
+        showAlertModal('err', 'This vehicle is already selected')
+    } else {
+        booking.int_vehicles.push(selectedVehi);
+        renderAssignedInternalVehicles();
+    }
+
+}
+
+//check ext vehi duplications
+const checkExtVehiDuplications = () => {
+
+    let isAlreadySelected = false;
+
+    const extVehiNumberPlateValue = document.getElementById('extVehPlate').value.trim();
+
+    if (booking.externalVehicles.length === 0) {
+        isAlreadySelected = false;
+    }
+
+    else {
+        booking.externalVehicles.forEach((vehi) => {
+            if (vehi) {
+                console.log(vehi);
+                if (extVehiNumberPlateValue == vehi.numberplate.trim()) {
+                    isAlreadySelected = true;
+                    //break;
+                }
+            }
+        })
+    }
+
+    console.log( booking.externalVehicles);
+
+    return isAlreadySelected;
+}
+
+//add ext vehi
+const addExternalVehicle = () => {
+
+    const errors = checkExtVehicleFormErrors();
+    const duplicationExtVehi = checkExtVehiDuplications();
+
+    if (errors == "") {
+
+        if (!duplicationExtVehi) {
+
+            const userConfirm = confirm("Are you sure to add ?");
+            if (userConfirm) {
+
+                booking.externalVehicles.push(externalVehicles);
+                renderAssignedExternalVehicles();
+
+                resetExtVehicleInputs();
+            }
+
+        }else{
+            showAlertModal("err", "This vehicle is already added "); 
+        }
+
     } else {
         showAlertModal("err", "Form has some errors \n " + errors);
     }
@@ -316,12 +386,16 @@ const addExternalVehicle = () => {
 
 // Reset external vehicle add form
 const resetExtVehicleInputs = () => {
+
+    externalVehicles = new Object;
+
     const fieldIds = [
         "extVehName",
         "extVehPlate",
         "extVehProviderName",
         "extVehProviderContact",
-        "extVehProviderEmail"
+        "extVehProviderEmail",
+        "extVehitype"
     ];
 
     fieldIds.forEach(id => {
@@ -332,6 +406,108 @@ const resetExtVehicleInputs = () => {
         }
     });
 };
+
+//render int vehicles in right side
+const renderAssignedInternalVehicles = () => {
+
+    const container = document.getElementById('selectedIntVehis');
+    container.innerHTML = "";
+
+    booking.int_vehicles.forEach((vehicle, index) => {
+        const vehiRow = document.createElement("div");
+        vehiRow.className = "row mb-2 align-items-center";
+        vehiRow.setAttribute("data-numberplate", vehicle.numberplate);
+
+        // vehiname
+        const nameCol = document.createElement("div");
+        nameCol.className = "col";
+        nameCol.innerText = vehicle.vehiclename;
+
+        // numberplate
+        const contactCol = document.createElement("div");
+        contactCol.className = "col";
+        contactCol.innerText = vehicle.numberplate;
+
+        // Remove button
+        const btnCol = document.createElement("div");
+        btnCol.className = "col-auto";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-sm btn-danger";
+        removeBtn.innerText = "Remove";
+
+        removeBtn.addEventListener("click", () => {
+
+            booking.int_vehicles = booking.int_vehicles.filter(v => v.numberplate !== vehicle.numberplate);
+            vehiRow.remove();
+            console.log("internal vehis: ", booking.int_vehicles);
+
+        });
+
+        btnCol.appendChild(removeBtn);
+
+        // Append all to row
+        vehiRow.appendChild(nameCol);
+        vehiRow.appendChild(contactCol);
+        vehiRow.appendChild(btnCol);
+
+        // Append row to container
+        container.appendChild(vehiRow);
+    });
+
+    console.log("internal vehis: ", booking.int_vehicles);
+}
+
+//render int vehicles in right side
+const renderAssignedExternalVehicles = () => {
+
+    const container = document.getElementById('selectedExtVehis');
+    container.innerHTML = "";
+
+    booking.externalVehicles.forEach((vehicle, index) => {
+        const vehiRow = document.createElement("div");
+        vehiRow.className = "row mb-2 align-items-center";
+        vehiRow.setAttribute("data-numberplate", vehicle.numberplate);
+
+        // vehiname
+        const nameCol = document.createElement("div");
+        nameCol.className = "col";
+        nameCol.innerText = vehicle.vehiname;
+
+        // provider contact
+        const contactCol = document.createElement("div");
+        contactCol.className = "col";
+        contactCol.innerText = vehicle.providercontactone;
+
+        // Remove button
+        const btnCol = document.createElement("div");
+        btnCol.className = "col-auto";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-sm btn-danger";
+        removeBtn.innerText = "Remove";
+
+        removeBtn.addEventListener("click", () => {
+
+            booking.externalVehicles = booking.externalVehicles.filter(v => v.numberplate !== vehicle.numberplate);
+            vehiRow.remove();
+            console.log("externalVehicles vehis: ", booking.externalVehicles);
+
+        });
+
+        btnCol.appendChild(removeBtn);
+
+        // Append all to row
+        vehiRow.appendChild(nameCol);
+        vehiRow.appendChild(contactCol);
+        vehiRow.appendChild(btnCol);
+
+        // Append row to container
+        container.appendChild(vehiRow);
+    });
+
+    console.log("internal vehis: ", booking.int_vehicles);
+}
 
 
 

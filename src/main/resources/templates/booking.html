@@ -362,7 +362,8 @@
                                                             class="form-label fw-bold mb-0">Available Vehicles</label>
                                                         <select class="form-select mb-3" size="8"
                                                             id="availableVehicles"></select>
-                                                        <button type="button" class="btn btn-outline-primary w-100">Add
+                                                        <button type="button" id="addIntVehiBtn" onclick="addIntVehi();"
+                                                            class="btn btn-outline-primary w-100">Add
                                                             Selected Vehicle</button>
                                                     </div>
 
@@ -439,9 +440,21 @@
                                                 </div>
 
                                                 <!-- Right Section: Assigned Vehicles -->
-                                                <div class="col-6" >
+                                                <div class="col-6">
                                                     <!-- show selected vehicles -->
-                                                    <div class="row mb-3" id="assignedVehicles">
+                                                    <div class="mb-3" id="assignedVehicles">
+
+                                                        <!-- selected internal vehis -->
+                                                        <label for="selectedIntVehis">Assigned Company Vehicles</label>
+                                                        <div class="row col-12 mb-2" id="selectedIntVehis">
+
+                                                        </div>
+
+                                                        <!-- selected external vehis -->
+                                                        <label for="selectedExtVehis">Assigned Rented Vehicles</label>
+                                                        <div class="row col-12 mb-2" id="selectedExtVehis">
+
+                                                        </div>
 
                                                     </div>
 
@@ -449,6 +462,7 @@
                                                     <div class="row my-0" id="vehiclePreferenceMsg">
 
                                                     </div>
+                                                    
                                                 </div>
 
                                             </div>
@@ -487,7 +501,8 @@
                                                             class="form-label fw-bold mb-0">Available Drivers</label>
                                                         <select class="form-select mb-3" size="8"
                                                             id="availableDrivers"></select>
-                                                        <button type="button" class="btn btn-outline-primary w-100">Add
+                                                        <button type="button" class="btn btn-outline-primary w-100"
+                                                            id="addIntDriverBtn" onclick="addIntDrv();">Add
                                                             Selected Driver</button>
                                                     </div>
 
@@ -568,8 +583,10 @@
                                                 </div>
 
                                                 <!-- Right Section -->
-                                                <div class="col-6" id="assignedDrivers">
+                                                <div class="col-6">
+                                                    <div class="row" id="assignedDrivers">
 
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -607,7 +624,9 @@
                                                             class="form-label fw-bold mb-0">Available Guides</label>
                                                         <select class="form-select mb-3" size="8"
                                                             id="availableGuides"></select>
-                                                        <button type="button" class="btn btn-outline-primary w-100">Add
+                                                        <button type="button" id="addIntGuideBtn"
+                                                            class="btn btn-outline-primary w-100"
+                                                            onclick="addIntGuide();">Add
                                                             Selected Guide</button>
                                                     </div>
 
