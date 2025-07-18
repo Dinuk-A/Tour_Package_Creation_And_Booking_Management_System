@@ -190,12 +190,29 @@ const openModal = async (bookingObj) => {
     //const tourStartDate = bookingObj.tpkg.tourstartdate;
     //const tourEndDate = bookingObj.tpkg.tourenddate;
 
+    //fill drivers
     try {
         const availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + tourStartDate + "/" + tourEndDate);
         fillMultDataIntoDynamicSelectsInq(availableDrivers,"Please Choose A Driver",availabledriversByDates,'emp_code','fullname');
     } catch (error) {
         console.error("Error fetching available drivers:", error);
     }
+
+    //fill guides
+    try {
+        const availableGuidesByDates = await ajaxGetReq("emp/availableguidesbydates/" + tourStartDate + "/" + tourEndDate);
+        fillMultDataIntoDynamicSelectsInq(availableGuides,"Please Choose A Driver",availableGuidesByDates,'emp_code','fullname');
+    } catch (error) {        
+        console.error("Error fetching available guides:", error);
+    }
+
+    //need to define new or use the vehi type before this
+    //try {
+    //    const availableVehiclesByDates = await ajaxGetReq("emp/availablevehiclesbyvehitype/" + tourStartDate + "/" + tourEndDate);
+    //    fillMultDataIntoDynamicSelectsInq(availableVehicles,"Please Choose A Driver",availabledriversByDates,'emp_code','fullname');
+    //} catch (error) {
+    //    console.error("Error fetching available drivers:", error);
+    //}
 
     let myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myInqFormTab.show();
