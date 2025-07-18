@@ -1,5 +1,6 @@
 package lk.yathratravels.bookings;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,10 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
@@ -59,7 +65,7 @@ public class BookingController {
         }
     }
 
-     // get all booking list from DB
+    // get all booking list from DB
     @GetMapping(value = "/booking/all", produces = "application/json")
     public List<Booking> getAllBookings() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -72,5 +78,38 @@ public class BookingController {
 
         return bookingDao.findAll(Sort.by(Direction.DESC, "id"));
     }
-    
+
+    @PutMapping(value = "/booking")
+    @Transactional
+    public String updateBooking(@RequestBody Booking booking) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "BOOKING");
+
+        if (!privilegeLevelForLoggedUser.getPrvupdate()) {
+            return "Update Not Completed; You Dont Have Permission";
+        }
+
+        try {
+            booking.setLastmodifieddatetime(LocalDateTime.now());
+            booking.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+            for (ExtVehicles vehi : booking.getExternalVehicles()) {
+                vehi.setBooking(booking);
+            }
+
+            for (ExtPersonnel personnel : booking.getExternalPersonnels()) {
+                personnel.setBooking(booking);
+            }
+
+            bookingDao.save(booking);           
+
+            return "OK";
+        } catch (Exception e) {
+            return "Update Not Completed Because :" + e.getMessage();
+        }
+
+    }
+
 }

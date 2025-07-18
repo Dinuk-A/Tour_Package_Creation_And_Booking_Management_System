@@ -244,6 +244,24 @@ const openModal = async (bookingObj) => {
 
 }
 
+//update a booking record
+const updateBooking = async () => {
+    //booking
+    console.log("before update ",booking);
+    try {
+        let putServiceResponse = await ajaxPPDRequest("/booking", "PUT", booking);
+        if (putServiceResponse === "OK") {
+            showAlertModal('suc', 'Saved Successfully');
+            console.log("after update ",booking);
+        } else {
+            showAlertModal('err', "Update Failed \n" + putServiceResponse);
+        }
+
+    } catch (error) {
+        showAlertModal('err', 'An error occurred: ' + error.responseText);
+    }
+}
+
 
 //+++++++++++++++++for vehicle handling+++++++++++++++++++++
 // handle radio changes vehicle
@@ -351,7 +369,7 @@ const checkExtVehiDuplications = () => {
         })
     }
 
-    console.log( booking.externalVehicles);
+    console.log(booking.externalVehicles);
 
     return isAlreadySelected;
 }
@@ -375,8 +393,8 @@ const addExternalVehicle = () => {
                 resetExtVehicleInputs();
             }
 
-        }else{
-            showAlertModal("err", "This vehicle is already added "); 
+        } else {
+            showAlertModal("err", "This vehicle is already added ");
         }
 
     } else {
@@ -531,6 +549,28 @@ const handleDriverTypeChange = (selectedType) => {
     //    availableDrivers.selectedIndex = -1;
     //}
 };
+
+//add int driver
+const addIntDrv = () => {
+    const selectedValue = document.getElementById('availableDrivers').value;
+    const selectedDriver = JSON.parse(selectedValue);
+
+    let isAlreadySelected = false;
+
+    booking.int_drivers.forEach((driver) => {
+        if (driver.id == selectedDriver.id) {
+            isAlreadySelected = true;
+        }
+    })
+
+    if (isAlreadySelected) {
+        showAlertModal('err', 'This driver is already selected')
+    } else {
+        booking.int_drivers.push(selectedDriver);
+        //renderAssignedInternalVehicles();
+        console.log("drivers ", booking.int_drivers);
+    }
+}
 
 //for ext driver
 const checkExtDriverFormErrors = () => {
