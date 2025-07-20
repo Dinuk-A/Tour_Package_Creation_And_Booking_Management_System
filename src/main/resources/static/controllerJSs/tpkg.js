@@ -2865,13 +2865,21 @@ const getDayTypeFromLabel = (selectId) => {
 //💥💥💥 new
 // to get the day number from the label of the select element 
 const getDayNumberFromLabel = (selectId) => {
-    const label = document.querySelector(`label[for="${selectId}"]`);
-    if (label) {
-        const text = label.innerText.trim().replace(':', '');
-        const match = text.match(/\d+/); // Finds the first number in the string
-        return match ? parseInt(match[0]) : null;
-    }
-    return null;
+
+    const selectElement = document.getElementById(selectId);
+    console.log("selectElement in getDayNumberFromLabel: ", selectElement);
+    const label = selectElement.parentNode.parentNode.children[0].children[0].innerText;
+    const currentInteger = parseInt(label.split(" ")[2]);
+    return currentInteger;
+
+
+    //const label = document.querySelector(`label[for="${selectId}"]`);
+    //if (label) {
+    //    const text = label.innerText.trim().replace(':', '');
+    //    const match = text.match(/\d+/); 
+    //    return match ? parseInt(match[0]) : null;
+    //}
+    //return null;
 };
 
 //💥💥💥
@@ -3030,6 +3038,8 @@ const refillSelectedDayPlan = async (dpObj) => {
     //if this dp is chosen from first day select box
     if (selectedDayTypeToEdit === "first") {
 
+        console.log("selectedDayTypeToEdit first: " + selectedDayTypeToEdit);
+
         firstDayCbVar.checked = true;
         dayplan.dayplancode = 'FD';
 
@@ -3046,6 +3056,8 @@ const refillSelectedDayPlan = async (dpObj) => {
 
         //if this dp is chosen from a mid day select box
     } else if (selectedDayTypeToEdit === "middle") {
+
+        console.log("selectedDayTypeToEdit mid: " + selectedDayTypeToEdit);
 
         midDayCbVar.checked = true;
         dayplan.dayplancode = 'MD';
@@ -3064,6 +3076,8 @@ const refillSelectedDayPlan = async (dpObj) => {
         //if this dp is chosen from final day select box
     } else if (selectedDayTypeToEdit === "final") {
 
+        console.log("selectedDayTypeToEdit final: " + selectedDayTypeToEdit);
+
         lastDayCbVar.checked = true;
         dayplan.dayplancode = 'LD';
 
@@ -3080,7 +3094,6 @@ const refillSelectedDayPlan = async (dpObj) => {
 
     } else {
         console.log("selectedDayTypeToEdit: " + selectedDayTypeToEdit);
-        console.log("else");
     }
 
     //enable these select elements
@@ -3342,55 +3355,59 @@ const feedAndSelectNewlyAddedDp = async () => {
         }
 
         //for mid days
-   
+
     } else {
 
         const midDaySelect = document.getElementById(editingDPsSelectElementIdVal);
         if (midDaySelect) {
             //resetSelectElements(midDaySelect, "Please Select The Itinerary");
+            console.log("editingDPsSelectElementIdVal in mid: ", editingDPsSelectElementIdVal);
 
             try {
                 const newlyAddedDayTitle = window.newlyAddedDayTitleGlobal;
                 console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
                 const onlyMidDaysNew = await ajaxGetReq("/dayplan/onlymiddays");
                 fillDataIntoDynamicSelects(midDaySelect, "Please Select Middle Day", onlyMidDaysNew, "daytitle", newlyAddedDayTitle);
-                setTimeout(() => {
-                    const selectedVal = midDaySelect.value;
-                    console.log("Selected value in mid day select:", selectedVal);
 
-                    if (selectedVal) {
-                        const selectedDayPlan = JSON.parse(selectedVal);
-                        const index = getDayNumberFromLabel(editingDPsSelectElementIdVal) - 1;
-                        console.log("index: ",  index);
-                        tpkg.dayplans[index] = selectedDayPlan;
-                        console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+                //get the message element
+                const msgElement = midDaySelect.parentNode.children[1];
 
-                        //mehema nokara manually bind karanna 💥💥💥
-                        handleMidDaySelectChange(midDaySelect, index + 1);
+                const selectedVal = midDaySelect.value;
 
-                        // manually trigger the onchange event to update UI 💥💥💥
-                        //const changeEvent = new Event('change');
-                        //midDaySelect.dispatchEvent(changeEvent);
+                if (selectedVal) {
+                    const selectedDayPlan = JSON.parse(selectedVal);
+                    const index = parseInt(getDayNumberFromLabel(midDaySelect.id)) - 1;
+                    console.log("index: ", index);
 
+                    let isDuplicate = tpkg.dayplans.some(dp => dp && dp.id === selectedDayPlan.id);
+
+                    if (isDuplicate) {
+                        showAlertModal('war', 'This DayPlan has already been selected!');
+                        midDaySelect.value = "";
+                        midDaySelect.style.border = "2px solid red";
+                        tpkg.dayplans[index] = {};
+                        msgElement.classList.add('d-none');
                     } else {
-                        console.warn("No value selected in mid day select");
-                        // If no value is selected, try to find and select the newly added day name
-                        const options = midDaySelect.querySelectorAll('option');
-                        for (let option of options) {
-                            if (option.textContent.includes(newlyAddedDayTitle)) {
-                                midDaySelect.value = option.value;
-                                const selectedDayPlan = JSON.parse(option.value);
-                                const index = getDayNumberFromLabel(editingDPsSelectElementIdVal) - 1;
-                                tpkg.dayplans[index] = selectedDayPlan;
-
-                                // manually trigger onchange event
-                                const changeEvent = new Event('change');
-                                midDaySelect.dispatchEvent(changeEvent);
-                                break;
-                            }
-                        }
+                        tpkg.dayplans[index] = selectedDayPlan;
+                        midDaySelect.style.border = "2px solid lime";
+                        console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+                        msgElement.classList.add('d-none');
                     }
-                }, 100);
+
+
+
+
+
+
+
+
+                } else {
+                    // If no value is selected, try to find and select the newly added day name
+
+                    console.warn("No value selected in mid day select");
+
+                }
+
             } catch (error) {
                 console.error("mid day fetch failed " + error)
             }
@@ -3398,6 +3415,20 @@ const feedAndSelectNewlyAddedDp = async () => {
     }
 
 }
+
+//                        const options = midDaySelect.querySelectorAll('option');
+//                        for (let option of options) {
+//                            if (option.textContent.includes(newlyAddedDayTitle)) {
+//                                midDaySelect.value = option.value;
+//                                const selectedDayPlan = JSON.parse(option.value);
+//                                const index = getDayNumberFromLabel(editingDPsSelectElementIdVal) - 1;
+//                                tpkg.dayplans[index] = selectedDayPlan;
+//   manually trigger the onchange event to update UI 💥💥💥
+//                                const changeEvent = new Event('change');
+//                                midDaySelect.dispatchEvent(changeEvent);
+//                                break;
+//                            }
+//                        }
 
 // add new day plan in the tpkg module
 const addNewDayPlanInTpkg = async () => {
@@ -3566,7 +3597,7 @@ const generateNormalDayPlanSelectSections = () => {
 //handle midday changes
 const handleMidDaySelectChange = (selectElem, currentDay = null) => {
 
-    console.log("midDayCounter: ",midDayCounter);
+    console.log("midDayCounter: ", midDayCounter);
 
     const selectedValue = JSON.parse(selectElem.value);
     const viewBtn = selectElem.parentNode.parentNode.children[2].children[0];
@@ -3580,7 +3611,7 @@ const handleMidDaySelectChange = (selectElem, currentDay = null) => {
     console.log("Selected DayPlan:", selectedValue);
     console.log("Selected Day Number:", currentDay);
 
-    const index = currentDay - 1;  
+    const index = currentDay - 1;
     console.log("Target index in dayplans:", index);
 
     let isDuplicate = tpkg.dayplans.some(dp => dp && dp.id === selectedValue.id);
@@ -3595,7 +3626,8 @@ const handleMidDaySelectChange = (selectElem, currentDay = null) => {
             selectElem.style.border = "2px solid orange";
             msgElement.classList.remove("d-none");
 
-            tpkg.dayplans[index] = null;
+            tpkg.dayplans[index] = {};
+            //tpkg.dayplans[index] = null;
 
             addNewDaysBtn.disabled = true;
 
