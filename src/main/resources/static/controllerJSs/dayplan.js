@@ -1134,7 +1134,7 @@ const calcTotalVehiParkingfee = () => {
     });
 
     const roundedCost = Math.ceil(cost / 10) * 10;
-    dpTotalVehiParkingCost.value = roundedCost;
+    dpTotalVehiParkingCost.value = roundedCost.toFixed(2);
     dayplan.totalvehiparkcost = roundedCost;
 
 }
@@ -1228,9 +1228,9 @@ const takePackedLunchNo = () => {
     lunchDist.disabled = true;
     lunchHotel.disabled = true;
 
-    lunchProv.style.border = "1px solid ced4da";
-    lunchDist.style.border = "1px solid ced4da";
-    lunchHotel.style.border = "1px solid ced4da";
+    lunchProv.style.border = "1px solid #ced4da";
+    lunchDist.style.border = "1px solid #ced4da";
+    lunchHotel.style.border = "1px solid #ced4da";
 
     dayplan.is_takepackedlunch = false;
 
@@ -1240,6 +1240,21 @@ const takePackedLunchNo = () => {
 const getLunchAndHotelAuto = async () => {
 
     if (dayplan.vplaces.length > 0) {
+
+        //reset previous styles and values
+        dayplan.alt_stay_1_id = null;
+        dayplan.alt_stay_2_id = null;
+        dayplan.drop_stay_id = null;
+        dayplan.lunchplace_id = null;
+        dayplan.is_takepackedlunch = null;
+
+        dropOffAccommodationSelect.style.border = "1px solid #ced4da";
+        altStay1Select.style.border = "1px solid #ced4da";
+        altStay2Select.style.border = "1px solid #ced4da";
+        selectDPLunch.style.border = "1px solid #ced4da";
+
+        packedLunchYes.checked = false;
+        packedLunchNo.checked = false;
 
         //for custom pkgs (lunch is a must need)
         if (!dayplan.is_template) {

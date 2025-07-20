@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -104,7 +105,23 @@ public class DayPlanController {
         return daoDP.getOnlyTemplateDays();
     }
 
-    // NEED TO CREATE 3 MORE, FILTER ALSO BY THE BASED INQUIRY💥💥💥
+     // and by the given inquiry
+    @GetMapping(value = "/dayplan/onlyfirstdays/bydpbasedinq/{basedInqDP}", produces = "application/json")
+    public List<DayPlan> getFDsByInquiry(@PathVariable("basedInqDP") String basedInqDP) {
+        return daoDP.getOnlyFirstDaysAlsoBelongsToGivenInquiry(basedInqDP);
+    }
+
+    // and by the given inquiry
+    @GetMapping(value = "/dayplan/onlymiddays/bydpbasedinq/{basedInqDP}", produces = "application/json")
+    public List<DayPlan> getMDsByInquiry(@PathVariable("basedInqDP") String basedInqDP) {
+        return daoDP.getOnlyMidDaysAlsoBelongsToGivenInquiry(basedInqDP);
+    }
+
+    // and by the given inquiry
+    @GetMapping(value = "/dayplan/onlylastdays/bydpbasedinq/{basedInqDP}", produces = "application/json")
+    public List<DayPlan> getLDsByInquiry(@PathVariable("basedInqDP") String basedInqDP) {
+        return daoDP.getOnlyLastDaysAlsoBelongsToGivenInquiry(basedInqDP);
+    }
 
     @PostMapping(value = "/dayplan")
     public String saveDayPlan(@RequestBody DayPlan dplan) {

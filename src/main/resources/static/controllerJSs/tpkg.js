@@ -3381,18 +3381,18 @@ const feedAndSelectNewlyAddedDp = async () => {
 
                     const selectedVplaceIds = selectedDayPlan.vplaces?.map(vp => vp.id).sort().join(",");
                     console.log("Selected VPlace IDs:", selectedVplaceIds);
-                
+
                     const hasSameVplaces = tpkg.dayplans.some(dp => {
                         if (!dp || !dp.vplaces) return false;
                         const dpVplaceIds = dp.vplaces.map(vp => vp.id).sort().join(",");
                         return dpVplaceIds === selectedVplaceIds;
                     });
-                
+
                     if (hasSameVplaces) {
                         showAlertModal('war', 'A DayPlan with the same visiting places is already selected!');
                         selectElem.value = "";
                         selectElem.style.border = "2px solid red";
-                    }                
+                    }
 
                     let isDuplicate = tpkg.dayplans.some(dp => dp && dp.id === selectedDayPlan.id);
 
@@ -3785,18 +3785,31 @@ const loadExistingFDs = async (selectElementId) => {
         showFirstDayBtn.disabled = true;
     }
 
-    try {
-        // onlyFirstDays = await ajaxGetReq("/dayplan/onlyfirstdays");
-        resetSelectElements(selectElementId, "Please Select");
-        fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyFirstDays, "daytitle");
+    //using existing days are for custom pkgs only
+    if (tpkg.is_template == false && tpkg.basedinq != null) {
+
+        const selectedInquiry = tpkg.basedinq.inqcode;
+
+        try {
+            onlyFirstDaysByInq = await ajaxGetReq("/dayplan/onlyfirstdays/bydpbasedinq/" + selectedInquiry);
+            resetSelectElements(selectElementId, "Please Select First Day Plan");
+            fillDataIntoDynamicSelects(selectElementId, "Please Select First Day Plan", onlyFirstDaysByInq, "daytitle");
+        } catch (error) {
+            console.error("Error loading existing days:", error);
+        }
+
         const editBtn = document.getElementById('dayPlanInfoEditBtn');
         editBtn.disabled = true;
         document.getElementById('firstDayMsg').classList.add('d-none');
-    } catch (error) {
-        console.error("Error loading existing days:", error);
+
+        updateTotalDaysCount();
+
+    } else {
+        showAlertModal("err", "To load existing day plans, choose a based inquiry")
     }
 
-    updateTotalDaysCount();
+
+
 };
 
 // to load existing mid days  
@@ -3926,19 +3939,19 @@ const deleteMidDay = (index) => {
 
             const selectedVplaceIds = selectedValue.vplaces?.map(vp => vp.id).sort().join(",");
             console.log("Selected VPlace IDs:", selectedVplaceIds);
-        
+
             const hasSameVplaces = tpkg.dayplans.some(dp => {
                 if (!dp || !dp.vplaces) return false;
                 const dpVplaceIds = dp.vplaces.map(vp => vp.id).sort().join(",");
                 return dpVplaceIds === selectedVplaceIds;
             });
-        
+
             if (hasSameVplaces) {
                 showAlertModal('war', 'A DayPlan with the same visiting places is already selected!');
                 selectElem.value = "";
                 selectElem.style.border = "2px solid red";
             }
-        
+
             let isDuplicate = tpkg.dayplans.some(dp => dp && dp.id === selectedValue.id);
 
             if (isDuplicate) {
