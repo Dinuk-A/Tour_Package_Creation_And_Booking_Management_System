@@ -968,29 +968,6 @@
                                                             </div>
                                                         </div>
 
-                                                        <!-- Total Vehicle Cost -->
-                                                        <div class="row mb-2 align-items-center">
-                                                            <div class="col-5">
-                                                                <label for="totalVehiCostInput"
-                                                                    class="form-label fw-bold mb-0">For Vehicle:</label>
-                                                            </div>
-                                                            <div class="col-7">
-                                                                <div class="input-group  " id="totalVehiCostGroup">
-                                                                    <span class="input-group-text p-1">
-                                                                        <h6 class="my-auto">LKR</h6>
-                                                                    </span>
-                                                                    <input disabled placeholder="0.00" type="number"
-                                                                        id="totalVehiCostInput"
-                                                                        class="form-control form-input my-auto text-center p-1"
-                                                                        onchange="inputValidatorText(this,'','tpkg','totalvehicost');">
-                                                                </div>
-                                                                <div class="text-warning bg-dark d-none"
-                                                                    id="totalVehicleCostMsg">
-                                                                    Please choose vehicle type and select itineraries
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
                                                         <!-- Total Accommodation Cost -->
                                                         <div class="row mb-2 align-items-center">
                                                             <div class="col-5">
@@ -1014,6 +991,46 @@
                                                                     enter number of travellers and select itineraries
                                                                 </div>
                                                             </div>
+                                                        </div>
+
+                                                        <!-- Total Vehicle Cost -->
+                                                        <div class="row mb-2 align-items-center">
+                                                            <div class="col-5">
+                                                                <label for="totalVehiCostInput"
+                                                                    class="form-label fw-bold mb-0">For Vehicle:</label>
+                                                            </div>
+
+                                                            <div class="col-7">
+                                                                <div class="d-flex align-items-center"
+                                                                    id="vehiCostContainer">
+
+                                                                    <div class="input-group flex-grow-1 me-2"
+                                                                        id="totalVehiCostGroup">
+                                                                        <span class="input-group-text p-1">
+                                                                            <h6 class="my-auto">LKR</h6>
+                                                                        </span>
+                                                                        <input disabled placeholder="0.00" type="number"
+                                                                            id="totalVehiCostInput"
+                                                                            class="form-control form-input my-auto text-center p-1"
+                                                                            onchange="inputValidatorText(this,'','tpkg','totalvehicost');">
+                                                                    </div>
+
+                                                                    <!-- Hidden Button -->
+                                                                    <button type="button" class="btn btn-warning d-none"
+                                                                        id="enableVehiCostEditBtn"
+                                                                        style="white-space: nowrap;">
+                                                                        Edit
+                                                                    </button>
+
+                                                                </div>
+
+                                                                <div class="text-warning bg-dark d-none"
+                                                                    id="totalVehicleCostMsg">
+                                                                    Please choose vehicle type and select itineraries
+                                                                </div>
+                                                            </div>
+
+
                                                         </div>
 
                                                         <!-- Driver Cost -->

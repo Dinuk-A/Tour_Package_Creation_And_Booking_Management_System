@@ -81,11 +81,11 @@ const buildDayPlanTable = async () => {
 //fill districts in filter
 const refreshDistrictFilter = async () => {
 
-      //this is added because we use the dayplan.js inside the tpkg.html too
-      const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
-      if (!tableDayPlanHolderDivElement) {
-          return;
-      }
+    //this is added because we use the dayplan.js inside the tpkg.html too
+    const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
+    if (!tableDayPlanHolderDivElement) {
+        return;
+    }
 
     let districts = [];
 
@@ -1001,6 +1001,8 @@ const airportSelectionPickup = () => {
     console.log("G: " + airportGeocoords);
     console.log("Global Var pickupPointGCoords: " + pickupPointGCoords);
 
+    //dayplan.pick_manual_gcoords = airportGeocoords;
+
     dayplan.pickup_stay_id = null;
 
     dayplan.pickuppoint = data.name;
@@ -1063,11 +1065,11 @@ const passManualGeoCoords = () => {
     const input = document.getElementById("geoCoords");
     const value = input.value.trim();
 
-    // Basic regex pattern (format only)
+    //[optional -][1-2 digits][optional decimal], [optional -][1-3 digits][optional decimal]
     const regex = /^-?\d{1,2}(\.\d+)?,\s*-?\d{1,3}(\.\d+)?$/;
 
     if (regex.test(value)) {
-        // Optional: further split and range check
+       
         const [latStr, lngStr] = value.split(',').map(s => s.trim());
         const lat = parseFloat(latStr);
         const lng = parseFloat(lngStr);

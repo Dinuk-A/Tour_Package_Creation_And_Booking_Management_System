@@ -1379,6 +1379,7 @@ const fillDataFromInq = async () => {
 
             updateTotalDaysCount();
             showTotalKmCount();
+            updateTotalTravellers();
 
         }
     }
@@ -1760,8 +1761,6 @@ const handleFinalDayChange = (selectElement) => {
 
     if (tpkg.is_custompkg == true && tpkg.ed_dayplan_id.is_template == true) {
 
-        console.log('Final day is a template. Applying warning styling and nulling it.');
-
         selectElement.style.border = "2px solid orange";
         finalDMsg.classList.remove('d-none');
         tpkg.ed_dayplan_id = null;
@@ -1877,7 +1876,11 @@ const calcSellingPrice = () => {
     tpkg.pkgfinalprice = sellingPriceRounded;
     const finalPriceInput = document.getElementById('pkgFinalPrice');
     finalPriceInput.value = sellingPriceRounded.toFixed(2);
-    finalPriceInput.style.border = "4px solid lime";
+    if (finalPriceInput.value !== 0.00) {
+        finalPriceInput.style.border = "4px solid lime";
+    } else {
+        finalPriceInput.style.border = "1px solid #ced4da";
+    }
 
 };
 
@@ -2989,9 +2992,6 @@ const refreshDpFormInTpkg = async () => {
     //show EMPTY selected visiting places selects
     fillDataIntoDynamicSelects(selectedVPs, 'Selected Places', emptyArray, 'name');
 
-    //status eka auto set karanna one kohomada kiyalath hithanna 💥💥💥
-    //document.getElementById('dpSelectStatus ').children[2].removeAttribute('class', 'd-none');
-
 }
 
 // to refill the selected day plan in order to prepare for edit
@@ -3280,7 +3280,9 @@ const refillSelectedDayPlan = async (dpObj) => {
     fillDataIntoDynamicSelects(selectVPProv, 'Please Select The Province', allProvinces, 'name');
 
     //other input fields
-    document.getElementById('dpTitle').value = dpObj.daytitle;
+    const dayPlanTitle = document.getElementById('dpTitle');
+    dayPlanTitle.value = dpObj.daytitle;
+    dayPlanTitle.disabled = true;
     document.getElementById('dpTotalKMcount').value = dpObj.totalkmcount;
     document.getElementById('dpCode').value = dpObj.dayplancode;
     document.getElementById('dpTotalVehiParkingCost').innerText = 'LKR ' + dpObj.totalvehiparkcost.toFixed(2);
@@ -3319,7 +3321,6 @@ const feedAndSelectNewlyAddedDp = async () => {
             console.log("newlyAddedDayTitle:", newlyAddedDayTitle);
             fillDataIntoDynamicSelects(tpkgFirstDaySelect, "Please Select First Day", onlyFirstDaysNew, "daytitle", newlyAddedDayTitle);
             const selectedVal = tpkgFirstDaySelect.value;
-            console.log("Selected value in tpkgFirstDaySelect:", selectedVal);
             if (selectedVal != null) {
                 tpkg.sd_dayplan_id = JSON.parse(selectedVal);
                 handleFirstDayChange(tpkgFirstDaySelect);
@@ -3378,6 +3379,21 @@ const feedAndSelectNewlyAddedDp = async () => {
                     const index = parseInt(getDayNumberFromLabel(midDaySelect.id)) - 1;
                     console.log("index: ", index);
 
+                    const selectedVplaceIds = selectedDayPlan.vplaces?.map(vp => vp.id).sort().join(",");
+                    console.log("Selected VPlace IDs:", selectedVplaceIds);
+                
+                    const hasSameVplaces = tpkg.dayplans.some(dp => {
+                        if (!dp || !dp.vplaces) return false;
+                        const dpVplaceIds = dp.vplaces.map(vp => vp.id).sort().join(",");
+                        return dpVplaceIds === selectedVplaceIds;
+                    });
+                
+                    if (hasSameVplaces) {
+                        showAlertModal('war', 'A DayPlan with the same visiting places is already selected!');
+                        selectElem.value = "";
+                        selectElem.style.border = "2px solid red";
+                    }                
+
                     let isDuplicate = tpkg.dayplans.some(dp => dp && dp.id === selectedDayPlan.id);
 
                     if (isDuplicate) {
@@ -3393,18 +3409,9 @@ const feedAndSelectNewlyAddedDp = async () => {
                         msgElement.classList.add('d-none');
                     }
 
-
-
-
-
-
-
-
                 } else {
                     // If no value is selected, try to find and select the newly added day name
-
                     console.warn("No value selected in mid day select");
-
                 }
 
             } catch (error) {
@@ -3456,13 +3463,13 @@ const checkDPFormErrorsInTpkg = () => {
         errors += "Drop-off location is required \n";
     }
 
-    if (dayplan.pickuppoint != null && dayplan.pick_manual_gcoords == null) {
-        errors += "Enter the Geo Coords of pickup point \n";
-    }
-
-    if (dayplan.droppoint != null && dayplan.drop_manual_gcoords == null) {
-        errors += "Enter the Geo Coords of pickup point \n";
-    }
+    //if (dayplan.pickuppoint != null && dayplan.pick_manual_gcoords == null) {
+    //    errors += "Enter the Geo Coords of pickup point \n";
+    //}
+    //
+    //    if (dayplan.droppoint != null && dayplan.drop_manual_gcoords == null) {
+    //        errors += "Enter the Geo Coords of pickup point \n";
+    //    }
 
     if (dayplan.totalkmcount == null) {
         errors += "Total KM count is required \n";;
@@ -3484,8 +3491,11 @@ const addNewDayPlanInTpkg = async () => {
 
         if (userConfirm) {
             try {
+
                 dayplan.id = null;
                 dayplan.is_template = false;
+                dayplan.dp_basedinq = tpkg.basedinq.inqcode;
+
                 const postServerResponse = await ajaxPPDRequest("/dayplan/saveasnew", "POST", dayplan);
 
                 if (postServerResponse && !postServerResponse.startsWith("save not completed")) {
@@ -3658,6 +3668,21 @@ const handleMidDaySelectChange = (selectElem, currentDay = null) => {
 
     const index = currentDay - 1;
     console.log("Target index in dayplans:", index);
+
+    const selectedVplaceIds = selectedValue.vplaces?.map(vp => vp.id).sort().join(",");
+    console.log("Selected VPlace IDs:", selectedVplaceIds);
+
+    const hasSameVplaces = tpkg.dayplans.some(dp => {
+        if (!dp || !dp.vplaces) return false;
+        const dpVplaceIds = dp.vplaces.map(vp => vp.id).sort().join(",");
+        return dpVplaceIds === selectedVplaceIds;
+    });
+
+    if (hasSameVplaces) {
+        showAlertModal('war', 'A DayPlan with the same visiting places is already selected!');
+        selectElem.value = "";
+        selectElem.style.border = "2px solid red";
+    }
 
     let isDuplicate = tpkg.dayplans.some(dp => dp && dp.id === selectedValue.id);
 
@@ -3899,6 +3924,21 @@ const deleteMidDay = (index) => {
 
             const msgElement = document.getElementById(`midDayMsg${newIndex}`);
 
+            const selectedVplaceIds = selectedValue.vplaces?.map(vp => vp.id).sort().join(",");
+            console.log("Selected VPlace IDs:", selectedVplaceIds);
+        
+            const hasSameVplaces = tpkg.dayplans.some(dp => {
+                if (!dp || !dp.vplaces) return false;
+                const dpVplaceIds = dp.vplaces.map(vp => vp.id).sort().join(",");
+                return dpVplaceIds === selectedVplaceIds;
+            });
+        
+            if (hasSameVplaces) {
+                showAlertModal('war', 'A DayPlan with the same visiting places is already selected!');
+                selectElem.value = "";
+                selectElem.style.border = "2px solid red";
+            }
+        
             let isDuplicate = tpkg.dayplans.some(dp => dp && dp.id === selectedValue.id);
 
             if (isDuplicate) {
@@ -4035,6 +4075,16 @@ const checkTpkgFormErrors = () => {
         if (!tpkg.pref_vehi_type) {
             errors += "Preferred vehicle type is required \n";
         }
+
+        if (tpkg.pkgcostsum == null || tpkg.pkgcostsum <= 0) {
+            errors += "Please calculate the total cost for the package \n";
+        }
+
+        if (tpkg.pkgfinalprice == null || tpkg.pkgfinalprice <= 0) {
+            errors += "Please calculate the final price for the package \n";
+        }
+
+
     }
 
     //for template packages
@@ -4151,8 +4201,8 @@ const updateTourEndDate = () => {
     const endDateDisplay = document.getElementById('tourEndDateDisplay');
 
     //check if bothnecessary values are present
-    if (!startDateInputValue || !totalDaysCounterDisplay) {
-        endDateDisplay.innerText = "Please enter a start date and total days.";
+    if (!startDateInputValue || totalDaysCounterDisplay <= 0) {
+        endDateDisplay.innerText = "Please enter a start date and choose day plans.";
         return;
     }
 

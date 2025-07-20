@@ -47,6 +47,9 @@ public class DayPlan {
     @Column(name = "dp_status")
     private String dp_status;
 
+    @Column(name = "dp_basedinq")
+    private String dp_basedinq;
+
     @Column(name = "deleted_dp")
     private Boolean deleted_dp;
 
