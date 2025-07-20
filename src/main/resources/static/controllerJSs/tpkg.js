@@ -634,6 +634,8 @@ const refillTpkgForm = (tpkgObj) => {
     //for custom pkgs
     if (tpkgObj.is_custompkg === true) {
 
+        document.getElementById('finalDaySelectUseExistingBtn').disabled = false;
+
         //based inquiry
         if (tpkg.basedinq != null) {
             fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', tpkgObj.basedinq.inqcode);
@@ -834,7 +836,7 @@ const refillTpkgForm = (tpkgObj) => {
     document.getElementById('showFinalDayBtn').disabled = false;
     document.getElementById('removeFinalDayBtn').disabled = false;
     document.getElementById('finalDaySelectUseTempsBtn').disabled = false;
-    document.getElementById('finalDaySelectUseExistingBtn').disabled = false;
+    document.getElementById('finalDaySelectUseExistingBtn').disabled = true;
 
     updateTotalDaysCount();
     showTotalKmCount();
@@ -1564,7 +1566,7 @@ const changesTpkgCustomOrTemp = () => {
         //disable the use existing buttons in sd and ld 
         document.getElementById('loadExistingFDsBtn').disabled = true;
         document.getElementById('finalDaySelectUseExistingBtn').disabled = true;
-        
+
         //mds will be disabled also in by generate... fn
         document.querySelectorAll(".use-existing-mid-btn").forEach(btn => {
             btn.disabled = true;

@@ -445,24 +445,38 @@
                                                     <div class="mb-3" id="assignedVehicles">
 
                                                         <!-- selected internal vehis -->
-                                                        <label for="selectedIntVehis">Assigned Company Vehicles</label>
-                                                        <div class="row col-12 mb-2" id="selectedIntVehis">
-
+                                                        <div class="p-3 mb-3 border border-primary rounded bg-light">
+                                                            <label for="selectedIntVehis"
+                                                                class="form-label fw-bold text-primary">Assigned Company
+                                                                Vehicles</label>
+                                                            <div class="row g-2" id="selectedIntVehis">
+                                                                <!-- internal vehicles will be inserted here -->
+                                                            </div>
                                                         </div>
 
                                                         <!-- selected external vehis -->
-                                                        <label for="selectedExtVehis">Assigned Rented Vehicles</label>
-                                                        <div class="row col-12 mb-2" id="selectedExtVehis">
-
+                                                        <div class="p-3 border border-success rounded bg-light">
+                                                            <label for="selectedExtVehis"
+                                                                class="form-label fw-bold text-success">Assigned Rented
+                                                                Vehicles</label>
+                                                            <div class="row g-2" id="selectedExtVehis">
+                                                                <!-- external vehicles will be inserted here -->
+                                                            </div>
                                                         </div>
 
                                                     </div>
 
                                                     <!-- vehicle preference msg -->
-                                                    <div class="row my-0" id="vehiclePreferenceMsg">
-
+                                                    <div class="row my-2" id="vehiclePreferenceMsg d-none">
+                                                        <div class="col-12">
+                                                            <div class="alert alert-info mb-0 py-2 px-3">
+                                                                <strong>Transport method preferred by customer:</strong>
+                                                                <span id="preferredTransportMethod">${}</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    
+
+
                                                 </div>
 
                                             </div>
@@ -586,8 +600,30 @@
                                                 <div class="col-6">
                                                     <div class="row" id="assignedDrivers">
 
+                                                        <!-- Assigned Internal Drivers -->
+                                                        <div
+                                                            class="p-3 mb-3 border border-primary rounded bg-light w-100">
+                                                            <label for="selectedIntDrivers"
+                                                                class="form-label fw-bold text-primary">Assigned Company
+                                                                Drivers</label>
+                                                            <div class="row g-2" id="selectedIntDrivers">
+                                                                <!-- internal drivers will be inserted here -->
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Assigned External Drivers -->
+                                                        <div class="p-3 border border-success rounded bg-light w-100">
+                                                            <label for="selectedExtDrivers"
+                                                                class="form-label fw-bold text-success">Assigned Rented
+                                                                Drivers</label>
+                                                            <div class="row g-2" id="selectedExtDrivers">
+                                                                <!-- external drivers will be inserted here -->
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </div>
 
@@ -696,7 +732,30 @@
                                                 <!-- Right Section -->
                                                 <div class="col-6" id="assignedGuides">
 
+                                                    <!-- Assigned Internal Guides -->
+                                                    <div class="p-3 mb-3 border border-primary rounded bg-light w-100">
+                                                        <label for="selectedIntGuides"
+                                                            class="form-label fw-bold text-primary">
+                                                            Assigned Company Guides
+                                                        </label>
+                                                        <div class="row g-2" id="selectedIntGuides">
+                                                            <!-- internal guides will be inserted here -->
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Assigned External Guides -->
+                                                    <div class="p-3 border border-success rounded bg-light w-100">
+                                                        <label for="selectedExtGuides"
+                                                            class="form-label fw-bold text-success">
+                                                            Assigned Freelance Guides
+                                                        </label>
+                                                        <div class="row g-2" id="selectedExtGuides">
+                                                            <!-- external guides will be inserted here -->
+                                                        </div>
+                                                    </div>
+
                                                 </div>
+
                                             </div>
                                         </div>
 

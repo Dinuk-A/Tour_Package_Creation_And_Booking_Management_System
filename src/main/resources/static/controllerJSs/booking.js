@@ -389,7 +389,6 @@ const addExternalVehicle = () => {
 
                 booking.externalVehicles.push(externalVehicles);
                 renderAssignedExternalVehicles();
-
                 resetExtVehicleInputs();
             }
 
@@ -476,7 +475,7 @@ const renderAssignedInternalVehicles = () => {
     console.log("internal vehis: ", booking.int_vehicles);
 }
 
-//render int vehicles in right side
+//render ext vehicles in right side
 const renderAssignedExternalVehicles = () => {
 
     const container = document.getElementById('selectedExtVehis');
@@ -567,10 +566,59 @@ const addIntDrv = () => {
         showAlertModal('err', 'This driver is already selected')
     } else {
         booking.int_drivers.push(selectedDriver);
-        //renderAssignedInternalVehicles();
+        renderAssignedInternalDrivers();
         console.log("drivers ", booking.int_drivers);
     }
 }
+
+// render internal drivers in right side
+const renderAssignedInternalDrivers = () => {
+    const container = document.getElementById('selectedIntDrivers');
+    container.innerHTML = "";
+
+    booking.int_drivers.forEach((driver) => {
+        const driverRow = document.createElement("div");
+        driverRow.className = "row mb-2 align-items-center";
+        driverRow.setAttribute("data-empcode", driver.emp_code);
+
+        // emp_code
+        const codeCol = document.createElement("div");
+        codeCol.className = "col";
+        codeCol.innerText = driver.emp_code;
+
+        // fullname
+        const nameCol = document.createElement("div");
+        nameCol.className = "col";
+        nameCol.innerText = driver.fullname;
+
+        // Remove button
+        const btnCol = document.createElement("div");
+        btnCol.className = "col-auto";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-sm btn-danger";
+        removeBtn.innerText = "Remove";
+
+        removeBtn.addEventListener("click", () => {
+            booking.int_drivers = booking.int_drivers.filter(d => d.emp_code !== driver.emp_code);
+            driverRow.remove();
+            console.log("internal drivers: ", booking.int_drivers);
+        });
+
+        btnCol.appendChild(removeBtn);
+
+        // Append all to row
+        driverRow.appendChild(codeCol);
+        driverRow.appendChild(nameCol);
+        driverRow.appendChild(btnCol);
+
+        // Append row to container
+        container.appendChild(driverRow);
+    });
+
+    console.log("internal drivers: ", booking.int_drivers);
+};
+
 
 //for ext driver
 const checkExtDriverFormErrors = () => {
@@ -609,7 +657,7 @@ const addExternalDriver = () => {
 
             resetExtDriverInputs();
             externalPersonnels = {};
-            renderAssignedDrivers();
+            renderAssignedExtDrivers();
         }
     } else {
         showAlertModal("err", "Form has some errors \n " + errors);
@@ -636,8 +684,8 @@ const resetExtDriverInputs = () => {
 }
 
 //fill the selected drivers section
-const renderAssignedDrivers = () => {
-    const container = document.getElementById('assignedDrivers');
+const renderAssignedExtDrivers = () => {
+    const container = document.getElementById('selectedExtDrivers');
     container.innerHTML = "";
 
     // Filter only drivers
@@ -708,6 +756,76 @@ const handleGuideTypeChange = (selectedType) => {
     //}
 };
 
+// add internal guide
+const addIntGuide = () => {
+    const selectedValue = document.getElementById('availableGuides').value;
+    const selectedGuide = JSON.parse(selectedValue);
+
+    let isAlreadySelected = false;
+
+    booking.int_guides.forEach((guide) => {
+        if (guide.id == selectedGuide.id) {
+            isAlreadySelected = true;
+        }
+    });
+
+    if (isAlreadySelected) {
+        showAlertModal('err', 'This guide is already selected');
+    } else {
+        booking.int_guides.push(selectedGuide);
+        renderAssignedInternalGuides(); 
+        console.log("guides: ", booking.int_guides);
+    }
+};
+
+// render internal guides in right side
+const renderAssignedInternalGuides = () => {
+    const container = document.getElementById('selectedIntGuides');
+    container.innerHTML = "";
+
+    booking.int_guides.forEach((guide) => {
+        const guideRow = document.createElement("div");
+        guideRow.className = "row mb-2 align-items-center";
+        guideRow.setAttribute("data-empcode", guide.emp_code);
+
+        // emp_code
+        const codeCol = document.createElement("div");
+        codeCol.className = "col";
+        codeCol.innerText = guide.emp_code;
+
+        // fullname
+        const nameCol = document.createElement("div");
+        nameCol.className = "col";
+        nameCol.innerText = guide.fullname;
+
+        // Remove button
+        const btnCol = document.createElement("div");
+        btnCol.className = "col-auto";
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn btn-sm btn-danger";
+        removeBtn.innerText = "Remove";
+
+        removeBtn.addEventListener("click", () => {
+            booking.int_guides = booking.int_guides.filter(g => g.emp_code !== guide.emp_code);
+            guideRow.remove();
+            console.log("internal guides: ", booking.int_guides);
+        });
+
+        btnCol.appendChild(removeBtn);
+
+        // Append all to row
+        guideRow.appendChild(codeCol);
+        guideRow.appendChild(nameCol);
+        guideRow.appendChild(btnCol);
+
+        // Append row to container
+        container.appendChild(guideRow);
+    });
+
+    console.log("internal guides: ", booking.int_guides);
+};
+
 //for ext guide form
 const checkExtGuideFormErrors = () => {
     let errors = "";
@@ -743,7 +861,7 @@ const addExternalGuide = () => {
 
             resetExtGuideInputs();
             externalPersonnels = {};
-            renderAssignedGuides();
+            renderAssignedExtGuides();
         }
     } else {
         showAlertModal("err", "Form has some errors \n " + errors);
@@ -769,9 +887,9 @@ const resetExtGuideInputs = () => {
     });
 };
 
-//fill the selected guides section
-const renderAssignedGuides = () => {
-    const container = document.getElementById('assignedGuides');
+//fill the selected ext guides section
+const renderAssignedExtGuides = () => {
+    const container = document.getElementById('selectedExtGuides');
     container.innerHTML = "";
 
     // Filter only guides
