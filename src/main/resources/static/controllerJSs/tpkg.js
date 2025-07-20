@@ -3265,14 +3265,10 @@ const refillSelectedDayPlan = async (dpObj) => {
 
     //if lunch taken from a restaurent
     if (dpObj.lunchplace_id?.id != null) {
-
         fillDataIntoDynamicSelects(selectLPProv, 'Select Province', allProvinces, 'name', dpObj.lunchplace_id.district_id.province_id.name);
         fillDataIntoDynamicSelects(selectLPDist, 'Select District', allDists, 'name', dpObj.lunchplace_id.district_id.name);
-
         try {
-
             await getLunchHotelByDistrict(selectLPDist, selectDPLunch, dpObj.lunchplace_id.name);
-
         } catch (error) {
             console.error('error fetching previous lunch place info')
         }
@@ -3287,17 +3283,20 @@ const refillSelectedDayPlan = async (dpObj) => {
     document.getElementById('dpTitle').value = dpObj.daytitle;
     document.getElementById('dpTotalKMcount').value = dpObj.totalkmcount;
     document.getElementById('dpCode').value = dpObj.dayplancode;
-    document.getElementById('dpNote').value = dpObj.note;
     document.getElementById('dpTotalVehiParkingCost').innerText = 'LKR ' + dpObj.totalvehiparkcost.toFixed(2);
     document.getElementById('dpTotalForeignChildTktCost').innerText = 'LKR ' + dpObj.foreignchildtktcost.toFixed(2);
     document.getElementById('dpTotalForeignAdultTktCost').innerText = 'LKR ' + dpObj.foreignadulttktcost.toFixed(2);
     document.getElementById('dpTotalLocalChildTktCost').innerText = 'LKR ' + dpObj.localchildtktcost.toFixed(2);
     document.getElementById('dpTotalLocalAdultTktCost').innerText = 'LKR ' + dpObj.localadulttktcost.toFixed(2);
+    document.getElementById('dpNote').value = dpObj.note;
 
-    //give another value 💥💥💥
     const dpSelectStatusElement = document.getElementById('dpSelectStatus');
-    dpSelectStatusElement.value = dpObj.dp_status;
-    dpSelectStatusElement.style.border = '1px solid #ced4da';
+    dpSelectStatusElement.value = "Finalized";
+    dpSelectStatusElement.children[1].classList.add('d-none');
+    dpSelectStatusElement.children[3].classList.add('d-none');
+    dpSelectStatusElement.children[4].classList.add('d-none');
+    dpSelectStatusElement.children[5].classList.add('d-none');
+    dpSelectStatusElement.style.border = '1px solid lime';
 
     var step1Tab = new bootstrap.Tab(document.getElementById('dayStep1-tab'));
     step1Tab.show();
@@ -3430,10 +3429,56 @@ const feedAndSelectNewlyAddedDp = async () => {
 //                            }
 //                        }
 
+//check errors in newly adding dp
+const checkDPFormErrorsInTpkg = () => {
+    let errors = "";
+
+    if (dayplan.daytitle == null) {
+        errors += "Day Plan Name cannot be empty \n";
+    }
+
+    if (!dayplan.vplaces || dayplan.vplaces.length === 0) {
+        errors += "At least select one visiing place \n";
+    }
+
+    //  either pickup_stay_id or pickuppoint
+    if (!dayplan.pickup_stay_id && (!dayplan.pickuppoint)) {
+        errors += "Pickup location is required \n";
+    }
+
+    // either lunchplace_id or is_takepackedlunch == true
+    if (!dayplan.lunchplace_id && dayplan.is_takepackedlunch !== true) {
+        errors += "Lunch place info is required unless taking packed lunch \n";
+    }
+
+    // either drop_stay_id or droppoint
+    if (!dayplan.drop_stay_id && (!dayplan.droppoint)) {
+        errors += "Drop-off location is required \n";
+    }
+
+    if (dayplan.pickuppoint != null && dayplan.pick_manual_gcoords == null) {
+        errors += "Enter the Geo Coords of pickup point \n";
+    }
+
+    if (dayplan.droppoint != null && dayplan.drop_manual_gcoords == null) {
+        errors += "Enter the Geo Coords of pickup point \n";
+    }
+
+    if (dayplan.totalkmcount == null) {
+        errors += "Total KM count is required \n";;
+    }
+
+    if (dayplan.dp_status == null) {
+        errors += "Status cannot be empty \n";
+    }
+
+    return errors;
+}
+
 // add new day plan in the tpkg module
 const addNewDayPlanInTpkg = async () => {
 
-    const errors = checkDPFormErrors();
+    const errors = checkDPFormErrorsInTpkg();
     if (errors == '') {
         const userConfirm = confirm('Are you sure to add?');
 
