@@ -646,7 +646,7 @@ const refillTpkgForm = (tpkgObj) => {
         //start day plan
         fillDataIntoDynamicSelects(tpkgFirstDaySelect, 'please select first day plan', onlyFirstDays, 'daytitle', tpkgObj.sd_dayplan_id.daytitle);
 
-        //last day plan 💥
+        //last day plan 
         fillDataIntoDynamicSelects(tpkgFinalDaySelect, 'please select final day plan', onlyLastDays, 'daytitle', tpkgObj.ed_dayplan_id.daytitle);
 
         //reset midday counter
@@ -1561,6 +1561,14 @@ const changesTpkgCustomOrTemp = () => {
 
         document.getElementById('startingPriceSection').classList.remove('d-none');
 
+        //disable the use existing buttons in sd and ld 
+        document.getElementById('loadExistingFDsBtn').disabled = true;
+        document.getElementById('finalDaySelectUseExistingBtn').disabled = true;
+        
+        //mds will be disabled also in by generate... fn
+        document.querySelectorAll(".use-existing-mid-btn").forEach(btn => {
+            btn.disabled = true;
+        });
 
     }
 }
@@ -3309,6 +3317,8 @@ const refillSelectedDayPlan = async (dpObj) => {
 //auto select the newly added dp into the correct select element
 const feedAndSelectNewlyAddedDp = async () => {
 
+    console.log("based inquiry: ", tpkg.basedinq.inqcode);
+
     //for first days
     if (editingDPsSelectElementIdVal === "tpkgFirstDaySelect") {
 
@@ -3625,10 +3635,18 @@ const generateNormalDayPlanSelectSections = () => {
 
     const existingBtn = document.createElement('button');
     existingBtn.className = 'btn btn-outline-secondary btn-sm';
+    existingBtn.id = `useExistingBtn${currentDay}`;
+    existingBtn.classList.add("use-existing-mid-btn");
     existingBtn.onclick = () => {
         loadExistingMDs(select, currentDay);
     };
     existingBtn.innerHTML = `<i class="bi bi-archive me-1"></i> Use Existing`;
+
+    if (tpkg.is_custompkg) {
+        existingBtn.disabled = false;
+    } else {
+        existingBtn.disabled = true;
+    }
 
     // Assemble buttons
     btnGroup.appendChild(templateBtn);
@@ -3786,12 +3804,12 @@ const loadExistingFDs = async (selectElementId) => {
     }
 
     //using existing days are for custom pkgs only
-    if (tpkg.is_template == false && tpkg.basedinq != null) {
+    if (tpkg.is_custompkg == true && tpkg.basedinq != null) {
 
         const selectedInquiry = tpkg.basedinq.inqcode;
 
         try {
-            onlyFirstDaysByInq = await ajaxGetReq("/dayplan/onlyfirstdays/bydpbasedinq/" + selectedInquiry);
+            const onlyFirstDaysByInq = await ajaxGetReq("/dayplan/onlyfirstdays/bydpbasedinq/" + selectedInquiry);
             resetSelectElements(selectElementId, "Please Select First Day Plan");
             fillDataIntoDynamicSelects(selectElementId, "Please Select First Day Plan", onlyFirstDaysByInq, "daytitle");
         } catch (error) {
@@ -3829,18 +3847,28 @@ const loadExistingMDs = async (selectElement) => {
 
     }
 
-    try {
-        resetSelectElements(selectElement, "Please Select");
-        fillDataIntoDynamicSelects(selectElement, "Please Select", onlyMidDays, "daytitle");
-        const editBtn = document.getElementById('dayPlanInfoEditBtn');
-        editBtn.disabled = true;
-    } catch (error) {
-        console.error("Error loading existing days:", error);
+    if (tpkg.is_custompkg == true && tpkg.basedinq != null) {
+
+        resetSelectElements(selectElement, "Please Select Mid Day Plans");
+        const selectedInquiry = tpkg.basedinq.inqcode;
+
+        try {
+            const onlyMidDaysByBasedInq = await ajaxGetReq("/dayplan/onlymiddays/bydpbasedinq/" + selectedInquiry);
+            fillDataIntoDynamicSelects(selectElement, "Please Select", onlyMidDaysByBasedInq, "daytitle");
+            const editBtn = document.getElementById('dayPlanInfoEditBtn');
+            editBtn.disabled = true;
+        } catch (error) {
+            console.error("Error loading existing days:", error);
+        }
+
+        updateTotalDaysCount();
+
+        console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+
     }
-
-    updateTotalDaysCount();
-
-    console.log("Updated tpkg.dayplans:", tpkg.dayplans);
+    else {
+        showAlertModal("err", "To load existing day plans, choose a based inquiry")
+    }
 };
 
 // to load existing last days  
@@ -3855,17 +3883,26 @@ const loadExistingLDs = async (selectElementId) => {
         showFinalDayBtn.disabled = true;
     }
 
-    try {
-        resetSelectElements(selectElementId, "Please Select");
-        fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyLastDays, "daytitle");
-        const editBtn = document.getElementById('dayPlanInfoEditBtn');
-        editBtn.disabled = true;
-        document.getElementById('finalDayMsg').classList.add('d-none');
-    } catch (error) {
-        console.error("Error loading existing days:", error);
-    }
+    if (tpkg.is_custompkg == true && tpkg.basedinq != null) {
 
-    updateTotalDaysCount();
+        const selectedInquiry = tpkg.basedinq.inqcode;
+
+        try {
+            resetSelectElements(selectElementId, "Please Select");
+            const onlyMidDaysByBasedInq = await ajaxGetReq("/dayplan/onlylastdays/bydpbasedinq/" + selectedInquiry);
+            fillDataIntoDynamicSelects(selectElementId, "Please Select", onlyMidDaysByBasedInq, "daytitle");
+            const editBtn = document.getElementById('dayPlanInfoEditBtn');
+            editBtn.disabled = true;
+            document.getElementById('finalDayMsg').classList.add('d-none');
+        } catch (error) {
+            console.error("Error loading existing days:", error);
+        }
+
+        updateTotalDaysCount();
+    }
+    else {
+        showAlertModal("err", "To load existing day plans, choose a based inquiry")
+    }
 };
 
 //handle midday delete
