@@ -350,39 +350,11 @@ const addIntVehi = () => {
 }
 
 //check ext vehi duplications
-const checkExtVehiDuplicationsOri = () => {
-
-    let isAlreadySelected = false;
-
-    const extVehiNumberPlateValue = document.getElementById('extVehPlate').value.trim();
-
-    if (booking.externalVehicles.length === 0) {
-        isAlreadySelected = false;
-    }
-
-    else {
-        booking.externalVehicles.forEach((vehi) => {
-            if (vehi) {
-                console.log(vehi);
-                if (extVehiNumberPlateValue == vehi.numberplate.trim()) {
-                    isAlreadySelected = true;
-                    //break;
-                }
-            }
-        })
-    }
-
-    console.log(booking.externalVehicles);
-
-    return isAlreadySelected;
-}
-
-//check ext vehi duplications
 const checkExtVehiDuplications = () => {
     let isAlreadySelected = false;
-    
+
     const extVehiNumberPlateValue = document.getElementById('extVehPlate').value.trim();
-    
+
     if (booking.externalVehicles.length === 0) {
         isAlreadySelected = false;
     } else {
@@ -391,20 +363,19 @@ const checkExtVehiDuplications = () => {
 
                 // skip the vehicle currently editing
                 if (extVehiBeingEdited && vehi.numberplate === extVehiBeingEdited.numberplate) {
-                    return; 
+                    return;
                 }
-                
+
                 if (extVehiNumberPlateValue == vehi.numberplate.trim()) {
                     isAlreadySelected = true;
                 }
             }
         });
     }
-    
+
     console.log(booking.externalVehicles);
     return isAlreadySelected;
 }
-
 
 //add ext vehi
 const addExternalVehicle = () => {
@@ -583,16 +554,6 @@ const refillExtVehiForm = (extVehiObj) => {
     externalVehicles = extVehiObj;
 }
 
-//set the current data before update
-const updateExtVehicleObjectFromInputs = () => {
-    externalVehicles.vehiname = document.getElementById("extVehName").value.trim();
-    externalVehicles.numberplate = document.getElementById("extVehPlate").value.trim();
-    externalVehicles.providername = document.getElementById("extVehProviderName").value.trim();
-    externalVehicles.vehicletype_id = document.getElementById("extVehitype").value.trim();
-    externalVehicles.providercontactone = document.getElementById("extVehProviderContact").value.trim();
-    externalVehicles.providercontactemail = document.getElementById("extVehProviderEmail").value.trim();
-};
-
 //updateExternalVehicle
 const updateExternalVehicle = () => {
     const errors = checkExtVehicleFormErrors();
@@ -630,6 +591,8 @@ const updateExternalVehicle = () => {
         showAlertModal("err", "Form has some errors \n " + errors);
     }
 }
+
+
 
 
 
@@ -725,7 +688,6 @@ const renderAssignedInternalDrivers = () => {
     console.log("internal drivers: ", booking.int_drivers);
 };
 
-
 //for ext driver
 const checkExtDriverFormErrors = () => {
     let errors = "";
@@ -789,6 +751,9 @@ const resetExtDriverInputs = () => {
     });
 }
 
+// global variable to store the external driver being edited
+let extDriverBeingEdited = null;
+
 //fill the selected drivers section
 const renderAssignedExtDrivers = () => {
     const container = document.getElementById('selectedExtDrivers');
@@ -812,21 +777,28 @@ const renderAssignedExtDrivers = () => {
         contactCol.className = "col";
         contactCol.innerText = driver.contactone;
 
-        // Remove button
+        // Action buttons (edit + remove)
         const btnCol = document.createElement("div");
-        btnCol.className = "col-auto";
+        btnCol.className = "col-auto d-flex gap-2";
 
+        // Edit button
+        const editBtn = document.createElement("button");
+        editBtn.className = "btn btn-sm btn-warning";
+        editBtn.innerText = "Edit";
+        editBtn.onclick = () => refillExtDriverForm(driver);
+
+        // Remove button
         const removeBtn = document.createElement("button");
         removeBtn.className = "btn btn-sm btn-danger";
         removeBtn.innerText = "Remove";
 
         removeBtn.addEventListener("click", () => {
-
             booking.externalPersonnels = booking.externalPersonnels.filter(p => p.nic !== driver.nic);
             driverRow.remove();
-
         });
 
+        // Append buttons
+        btnCol.appendChild(editBtn);
         btnCol.appendChild(removeBtn);
 
         // Append all to row
@@ -837,6 +809,87 @@ const renderAssignedExtDrivers = () => {
         // Append row to container
         container.appendChild(driverRow);
     });
+}
+
+// refill the external driver form with editing data
+const refillExtDriverForm = (driverObj) => {
+    document.getElementById("extDriverFullName").value = driverObj.fullname || "";
+    document.getElementById("extDriverNIC").value = driverObj.nic || "";
+    document.getElementById("extDriverEmail").value = driverObj.email || "";
+    document.getElementById("extDriverMobile").value = driverObj.contactone || "";
+    document.getElementById("extDriverMobile2").value = driverObj.contacttwo || "";
+
+    document.getElementById("btnAddExtDriverBtnContainer").classList.add("d-none");
+    document.getElementById("btnUpdateExtDriverBtnContainer").classList.remove("d-none");
+
+    document.getElementById("externalDriverFormContainer").classList.remove("d-none");
+
+    extDriverBeingEdited = driverObj;
+    externalPersonnels = driverObj;
+}
+
+// check ext driver duplications
+const checkExtDriverDuplications = () => {
+    let isAlreadySelected = false;
+
+    const extDriverNICValue = document.getElementById('extDriverNIC').value.trim();
+
+    if (booking.externalPersonnels.length === 0) {
+        isAlreadySelected = false;
+    } else {
+        booking.externalPersonnels.forEach((person) => {
+            if (person && person.role === "Driver") {
+
+                // skip the driver currently being edited
+                if (extDriverBeingEdited && person.nic === extDriverBeingEdited.nic) {
+                    return;
+                }
+
+                if (extDriverNICValue === person.nic.trim()) {
+                    isAlreadySelected = true;
+                }
+            }
+        });
+    }
+
+    console.log(booking.externalPersonnels);
+    return isAlreadySelected;
+}
+
+const updateExternalDriver = () => {
+    const errors = checkExtDriverFormErrors();
+    const duplicationExtDriver = checkExtDriverDuplications();
+
+    if (errors == "") {
+
+        if (!duplicationExtDriver) {
+
+            const userConfirm = confirm("Are you sure to update ?");
+            if (userConfirm) {
+
+                const index = booking.externalPersonnels.findIndex(p => p === extDriverBeingEdited);
+
+                if (index !== -1) {
+                    booking.externalPersonnels[index] = { ...externalPersonnels };
+                    showAlertModal('suc', "Successfully Updated");
+                    renderAssignedExtDrivers();
+                    resetExtDriverInputs();
+                    document.getElementById("btnAddExtDriverBtnContainer").classList.remove("d-none");
+                    document.getElementById("btnUpdateExtDriverBtnContainer").classList.add("d-none");
+                } else {
+                    showAlertModal('err', 'Driver not found for update');
+                }
+
+                extDriverBeingEdited = null;
+            }
+
+        } else {
+            showAlertModal("err", "This driver is already added");
+        }
+
+    } else {
+        showAlertModal("err", "Form has some errors \n " + errors);
+    }
 }
 
 
