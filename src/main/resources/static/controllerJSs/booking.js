@@ -596,11 +596,6 @@ const updateExternalVehicle = () => {
 }
 
 
-
-
-
-
-
 //+++++++++++++++++for driver handling+++++++++++++++++++++
 //handle radio changes driver
 const handleDriverTypeChange = (selectedType) => {
@@ -691,6 +686,7 @@ const renderAssignedInternalDrivers = () => {
     console.log("internal drivers: ", booking.int_drivers);
 };
 
+
 //for ext driver
 const checkExtDriverFormErrors = () => {
     let errors = "";
@@ -739,7 +735,7 @@ const addExternalDriver = () => {
 const resetExtDriverInputs = () => {
 
     externalPersonnels = new Object;
-    
+
     const fields = [
         "extDriverFullName",
         "extDriverNIC",
@@ -866,6 +862,7 @@ const checkExtDriverDuplications = () => {
     return isAlreadySelected;
 }
 
+//update ext driver
 const updateExternalDriver = () => {
     const errors = checkExtDriverFormErrors();
     const duplicationExtDriver = checkExtDriverDuplications();
@@ -899,8 +896,6 @@ const updateExternalDriver = () => {
         showAlertModal("err", "Form has some errors \n " + errors);
     }
 }
-
-
 
 
 //+++++++++++++++++for guide handling+++++++++++++++++++++
@@ -993,6 +988,7 @@ const renderAssignedInternalGuides = () => {
     console.log("internal guides: ", booking.int_guides);
 };
 
+
 //for ext guide form
 const checkExtGuideFormErrors = () => {
     let errors = "";
@@ -1035,8 +1031,15 @@ const addExternalGuide = () => {
     }
 }
 
+
+// global variable to store the external driver being edited
+let extGuideBeingEdited = null;
+
 // Reset external guide add form
 const resetExtGuideInputs = () => {
+
+    externalPersonnels = new Object;
+
     const fields = [
         "extGuideFullName",
         "extGuideNIC",
@@ -1052,6 +1055,10 @@ const resetExtGuideInputs = () => {
             el.style.border = "1px solid #ced4da";
         }
     });
+
+    document.getElementById("btnAddExtGuideContainer").classList.remove("d-none");
+    document.getElementById("btnUpdateExtGuideContainer").classList.add("d-none");
+
 };
 
 //fill the selected ext guides section
@@ -1077,22 +1084,30 @@ const renderAssignedExtGuides = () => {
         contactCol.className = "col";
         contactCol.innerText = guide.contactone;
 
-        // Remove button
+        // Action buttons (edit + remove)
         const btnCol = document.createElement("div");
-        btnCol.className = "col-auto";
+        btnCol.className = "col-auto d-flex gap-2";
 
+        // Edit button
+        const editBtn = document.createElement("button");
+        editBtn.className = "btn btn-sm btn-warning";
+        editBtn.innerText = "Edit";
+        editBtn.onclick = () => refillExtGuideForm(guide);
+
+        // Remove button
         const removeBtn = document.createElement("button");
         removeBtn.className = "btn btn-sm btn-danger";
         removeBtn.innerText = "Remove";
 
         removeBtn.addEventListener("click", () => {
-            // Remove from array
+           
             booking.externalPersonnels = booking.externalPersonnels.filter(p => p.nic !== guide.nic);
-
-            // Remove from DOM
+            resetExtGuideInputs();
             guideRow.remove();
+
         });
 
+        btnCol.appendChild(editBtn);
         btnCol.appendChild(removeBtn);
 
         // Append all to row
@@ -1104,6 +1119,87 @@ const renderAssignedExtGuides = () => {
         container.appendChild(guideRow);
     });
 };
+
+//refill the same section when edotong
+const refillExtGuideForm =(guideObj)=>{
+    document.getElementById("extGuideFullName").value = guideObj.fullname || "";
+    document.getElementById("extGuideNIC").value = guideObj.nic || "";
+    document.getElementById("extGuideEmail").value = guideObj.email || "";
+    document.getElementById("extGuideMobile").value = guideObj.contactone || "";
+    document.getElementById("extGuideMobile2").value = guideObj.contacttwo || "";
+
+    document.getElementById("btnAddExtGuideContainer").classList.add("d-none");
+    document.getElementById("btnUpdateExtGuideContainer").classList.remove("d-none");
+
+    document.getElementById("externalGuideFormContainer").classList.remove("d-none");
+
+    extDriverBeingEdited = guideObj;
+    externalPersonnels = guideObj;
+}
+
+// check ext driver duplications
+const checkExtGuideDuplications = () => {
+    let isAlreadySelected = false;
+
+    const extGuideNICValue = document.getElementById('extGuideNIC').value.trim();
+
+    if (booking.externalPersonnels.length === 0) {
+        isAlreadySelected = false;
+    } else {
+        booking.externalPersonnels.forEach((person) => {
+            if (person && person.role === "Guide") {
+
+                // skip the driver currently being edited
+                if (extGuideBeingEdited && person.nic === extGuideBeingEdited.nic) {
+                    return;
+                }
+
+                if (extGuideNICValue === person.nic.trim()) {
+                    isAlreadySelected = true;
+                }
+            }
+        });
+    }
+
+    console.log(booking.externalPersonnels);
+    return isAlreadySelected;
+}
+
+//update ext driver
+const updateExternalGuide = () => {
+
+    const errors = checkExtGuideFormErrors();
+    const duplicationExtGuide = checkExtGuideDuplications();
+
+    if (errors == "") {
+
+        if (!duplicationExtGuide) {
+
+            const userConfirm = confirm("Are you sure to update ?");
+            if (userConfirm) {
+
+                const index = booking.externalPersonnels.findIndex(p => p === extGuideBeingEdited);
+
+                if (index !== -1) {
+                    booking.externalPersonnels[index] = { ...externalPersonnels };
+                    showAlertModal('suc', "Successfully Updated");
+                    renderAssignedExtGuides();
+                    resetExtGuideInputs();
+                } else {
+                    showAlertModal('err', 'Guide not found for update');
+                }
+
+                extDriverBeingEdited = null;
+            }
+
+        } else {
+            showAlertModal("err", "This guide is already added");
+        }
+
+    } else {
+        showAlertModal("err", "Form has some errors \n " + errors);
+    }
+}
 
 
 
