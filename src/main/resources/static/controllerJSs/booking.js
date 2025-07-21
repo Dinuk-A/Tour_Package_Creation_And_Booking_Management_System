@@ -425,6 +425,10 @@ const resetExtVehicleInputs = () => {
             el.style.border = "1px solid #ced4da";
         }
     });
+
+    document.getElementById("btnAddExtVehicleBtnContainer").classList.remove("d-none");
+    document.getElementById("btnUpdateExtVehicleBtnContainer").classList.add("d-none");
+
 };
 
 //render int vehicles in right side
@@ -519,6 +523,7 @@ const renderAssignedExternalVehicles = () => {
         removeBtn.addEventListener("click", () => {
             booking.externalVehicles = booking.externalVehicles.filter(v => v.numberplate !== vehicle.numberplate);
             vehiRow.remove();
+            resetExtVehicleInputs();
             console.log("externalVehicles vehis: ", booking.externalVehicles);
         });
 
@@ -574,8 +579,6 @@ const updateExternalVehicle = () => {
                     showAlertModal('suc', "Successfully Updated");
                     renderAssignedExternalVehicles();
                     resetExtVehicleInputs();
-                    document.getElementById("btnAddExtVehicleBtnContainer").classList.remove("d-none");
-                    document.getElementById("btnUpdateExtVehicleBtnContainer").classList.add("d-none");
                 } else {
                     showAlertModal('err', 'Vehicle not found for update');
                 }
@@ -734,6 +737,9 @@ const addExternalDriver = () => {
 
 //reset ext driver add form
 const resetExtDriverInputs = () => {
+
+    externalPersonnels = new Object;
+    
     const fields = [
         "extDriverFullName",
         "extDriverNIC",
@@ -749,6 +755,9 @@ const resetExtDriverInputs = () => {
             el.style.border = "1px solid #ced4da";
         }
     });
+
+    document.getElementById("btnAddExtDriverBtnContainer").classList.remove("d-none");
+    document.getElementById("btnUpdateExtDriverBtnContainer").classList.add("d-none");
 }
 
 // global variable to store the external driver being edited
@@ -794,6 +803,7 @@ const renderAssignedExtDrivers = () => {
 
         removeBtn.addEventListener("click", () => {
             booking.externalPersonnels = booking.externalPersonnels.filter(p => p.nic !== driver.nic);
+            resetExtDriverInputs();
             driverRow.remove();
         });
 
@@ -874,8 +884,6 @@ const updateExternalDriver = () => {
                     showAlertModal('suc', "Successfully Updated");
                     renderAssignedExtDrivers();
                     resetExtDriverInputs();
-                    document.getElementById("btnAddExtDriverBtnContainer").classList.remove("d-none");
-                    document.getElementById("btnUpdateExtDriverBtnContainer").classList.add("d-none");
                 } else {
                     showAlertModal('err', 'Driver not found for update');
                 }
