@@ -4506,7 +4506,7 @@ const updateAddCost = () => {
 
     const errors = checkAddiCostFormErrors();
 
-    if (errors !== '') {
+    if (errors == '') {
 
         const userConfirm = confirm("Are you sure you want to update this additional cost?");
         if (userConfirm) {

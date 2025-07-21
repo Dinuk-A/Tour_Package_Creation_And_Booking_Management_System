@@ -78,7 +78,7 @@ const refreshBookingForm = async () => {
     //availableGuides
 
     //get vehicle types 
-   
+
     try {
         vehiTypes = await ajaxGetReq('/vehitypes/all');
     } catch (error) {
@@ -350,7 +350,7 @@ const addIntVehi = () => {
 }
 
 //check ext vehi duplications
-const checkExtVehiDuplications = () => {
+const checkExtVehiDuplicationsOri = () => {
 
     let isAlreadySelected = false;
 
@@ -376,6 +376,35 @@ const checkExtVehiDuplications = () => {
 
     return isAlreadySelected;
 }
+
+//check ext vehi duplications
+const checkExtVehiDuplications = () => {
+    let isAlreadySelected = false;
+    
+    const extVehiNumberPlateValue = document.getElementById('extVehPlate').value.trim();
+    
+    if (booking.externalVehicles.length === 0) {
+        isAlreadySelected = false;
+    } else {
+        booking.externalVehicles.forEach((vehi) => {
+            if (vehi) {
+
+                // skip the vehicle currently editing
+                if (extVehiBeingEdited && vehi.numberplate === extVehiBeingEdited.numberplate) {
+                    return; 
+                }
+                
+                if (extVehiNumberPlateValue == vehi.numberplate.trim()) {
+                    isAlreadySelected = true;
+                }
+            }
+        });
+    }
+    
+    console.log(booking.externalVehicles);
+    return isAlreadySelected;
+}
+
 
 //add ext vehi
 const addExternalVehicle = () => {
@@ -509,25 +538,7 @@ const renderAssignedExternalVehicles = () => {
         const editBtn = document.createElement("button");
         editBtn.className = "btn btn-sm btn-warning";
         editBtn.innerText = "Edit";
-
-        editBtn.addEventListener("click", () => {
-
-            extVehiToEdit = vehicle;
-
-            document.getElementById("extVehName").value = vehicle.vehiname || "";
-            document.getElementById("extVehPlate").value = vehicle.numberplate || "";
-            fillDataIntoDynamicSelects(extVehitype, 'Please Select Type', vehiTypes, 'name', vehicle.vehicletype_id.name);
-            document.getElementById("extVehProviderName").value = vehicle.providername || "";
-            document.getElementById("extVehProviderContact").value = vehicle.providercontactone || "";
-            document.getElementById("extVehProviderEmail").value = vehicle.providercontactemail || "";
-
-            document.getElementById("btnAddExtVehicleBtnContainer").classList.add("d-none");
-            document.getElementById("btnUpdateExtVehicleBtnContainer").classList.remove("d-none");
-
-            //update the object
-             updateExtVehicleObjectFromInputs();
-           
-        });    
+        editBtn.onclick = () => refillExtVehiForm(vehicle);
 
         // Remove button
         const removeBtn = document.createElement("button");
@@ -555,6 +566,23 @@ const renderAssignedExternalVehicles = () => {
 
 }
 
+//refill the ext form with editing data
+const refillExtVehiForm = (extVehiObj) => {
+
+    document.getElementById("extVehName").value = extVehiObj.vehiname || "";
+    document.getElementById("extVehPlate").value = extVehiObj.numberplate || "";
+    fillDataIntoDynamicSelects(extVehitype, 'Please Select Type', vehiTypes, 'name', extVehiObj.vehicletype_id.name);
+    document.getElementById("extVehProviderName").value = extVehiObj.providername || "";
+    document.getElementById("extVehProviderContact").value = extVehiObj.providercontactone || "";
+    document.getElementById("extVehProviderEmail").value = extVehiObj.providercontactemail || "";
+
+    document.getElementById("btnAddExtVehicleBtnContainer").classList.add("d-none");
+    document.getElementById("btnUpdateExtVehicleBtnContainer").classList.remove("d-none");
+
+    extVehiBeingEdited = extVehiObj;
+    externalVehicles = extVehiObj;
+}
+
 //set the current data before update
 const updateExtVehicleObjectFromInputs = () => {
     externalVehicles.vehiname = document.getElementById("extVehName").value.trim();
@@ -577,10 +605,12 @@ const updateExternalVehicle = () => {
             const userConfirm = confirm("Are you sure to update ?");
             if (userConfirm) {
 
-                const index = booking.externalVehicles.findIndex(v => v.numberplate === extVehiBeingEdited?.numberplate);
+                //const index = booking.externalVehicles.findIndex(v => v.numberplate === extVehiBeingEdited.numberplate);
+                const index = booking.externalVehicles.findIndex(v => v === extVehiBeingEdited);
 
                 if (index !== -1) {
                     booking.externalVehicles[index] = { ...externalVehicles };
+                    showAlertModal('suc', "Successfully Updated");
                     renderAssignedExternalVehicles();
                     resetExtVehicleInputs();
                     document.getElementById("btnAddExtVehicleBtnContainer").classList.remove("d-none");
@@ -588,6 +618,8 @@ const updateExternalVehicle = () => {
                 } else {
                     showAlertModal('err', 'Vehicle not found for update');
                 }
+
+                extVehiBeingEdited = null;
             }
 
         } else {
