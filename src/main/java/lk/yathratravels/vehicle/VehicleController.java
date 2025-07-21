@@ -32,8 +32,8 @@ public class VehicleController {
     @Autowired
     private VehicleDao vehiDao;
 
-    @Autowired
-    private VehicleTypeDao vehicleTypeDao;
+    //@Autowired
+    //private VehicleTypeDao vehicleTypeDao;
 
     @Autowired
     private UserDao userDao;
