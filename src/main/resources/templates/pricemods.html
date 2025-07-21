@@ -28,8 +28,8 @@
 
             <!-- for history table side -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="table-tab" data-bs-toggle="tab" href="#tablePriceModHistoryHolderDiv"
-                    role="tab" aria-controls="tablePriceModHistoryHolderDiv" aria-selected="true">History</a>
+                <a class="nav-link" id="table-tab" data-bs-toggle="tab" href="#tablePriceModHistoryHolderDiv" role="tab"
+                    aria-controls="tablePriceModHistoryHolderDiv" aria-selected="true">History</a>
             </li>
 
         </ul>
@@ -38,17 +38,19 @@
         <div class="tab-content mt-1" id="myTabContent">
 
             <!-- Table tab  -->
-            <div id="tablePriceModHistoryHolderDiv" class="tab-pane fade table-container p-4 rounded-3"
-                role="tabpanel" aria-labelledby="table-tab">
+            <div id="tablePriceModHistoryHolderDiv" class="tab-pane fade table-container p-4 rounded-3" role="tabpanel"
+                aria-labelledby="table-tab">
             </div>
 
             <!-- Form tab -->
-            <div class="tab-pane fade show active" id="formPriceModsHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+            <div class="tab-pane fade show active" id="formPriceModsHolderDiv" role="tabpanel"
+                aria-labelledby="form-tab">
                 <div class="card mx-auto" style="max-width: 850px;">
                     <div class="card-header bg-dark text-white text-center py-3">
                         <h4 class="mb-0 text-uppercase fw-bold">Tour Pricing Configuration Panel</h4>
                     </div>
                     <div class="card-body" style="background-color: ivory;">
+
                         <form id="formPriceMods" onsubmit="return false">
 
                             <!-- General Pricing Strategy Card -->
@@ -92,17 +94,17 @@
                                         </div>
                                         <div class="col-2 d-flex align-items-center">
                                             <div class="form-check form-switch">
-                                                <input disabled class="form-check-input" type="checkbox" id="promoActiveToggle"
+                                                <input disabled class="form-check-input" type="checkbox"
+                                                    id="promoActiveToggle"
                                                     onchange="handleTempPromoStatus(); enableFormUpdateBtn();">
-                                                <label id="promoActiveLabel"
-                                                    class="form-check-label"
+                                                <label id="promoActiveLabel" class="form-check-label"
                                                     for="promoActiveToggle">Active</label>
                                             </div>
                                         </div>
                                         <div class="col-3">
                                             <button class="btn btn-outline-primary w-100" id="promoDiscountBtn"
-                                                onclick="enableInput('promoDiscount'); promoActiveToggle.disabled = false;">Edit <i
-                                                    class="bi bi-pencil-square"></i></button>
+                                                onclick="enableInput('promoDiscount'); promoActiveToggle.disabled = false;">Edit
+                                                <i class="bi bi-pencil-square"></i></button>
                                         </div>
                                     </div>
 

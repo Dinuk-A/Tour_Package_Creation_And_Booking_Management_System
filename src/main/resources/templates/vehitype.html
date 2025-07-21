@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
+
+<head>
+
+    <!-- link employee css -->
+    <!--<link rel="stylesheet" href="css/vehicle.css">-->
+
+    <!-- link vehicle js -->
+    <script src="controllerJSs/vehitype.js"></script>
+
+</head>
+
+<body>
+
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+    <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
+
+    <main id="mainAreaID" class="main min-vh-100 mx-auto">
+
+        <!-- Tabs navigation panel -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+            <!-- for table side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableVehicleTypeHolderDiv"
+                    role="tab" aria-controls="tableVehicleTypeHolderDiv" aria-selected="true">Table</a>
+            </li>
+
+            <!-- for form side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formVehicleTypeHolderDiv" role="tab"
+                    aria-controls="formVehicleTypeHolderDiv" aria-selected="false"
+                    onclick="setVehicleStatusAuto()">Form</a>
+            </li>
+
+        </ul>
+
+        <!-- Tabs content -->
+        <div class="tab-content mt-1" id="myTabContent">
+
+            <!-- Table tab  -->
+            <div id="tableVehicleTypeHolderDiv" class="active tab-pane fade show  table-container p-4 rounded-3"
+                role="tabpanel" aria-labelledby="table-tab">
+                <!-- a table will be dynamically generated in here -->
+            </div>
+
+            <!-- Form tab -->
+            <div class="tab-pane fade" id="formVehicleTypeHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+                <div class="card mx-auto" style="width: 1050px;">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">Vehicle Types Management Form</h3>
+                    </div>
+                    <div class="card-body" style="background-color: ivory;">
+
+                        <!-- form starts -->
+                        <form id="formVehicle" class="" onsubmit="return false">
+
+                            <!-- Basic Info -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Vehicle Type Information</legend>
+
+                                <div class="row">
+
+                                    <div class="col-md-5">
+
+                                        <label for="inputVehicleName" class="fw-bold form-label mb-0">Vehicle
+                                            Modal
+                                            :</label>
+                                        <input id="inputVehicleName" type="text" placeholder="Enter Vehicle Type"
+                                            class="test form-control form-input"
+                                            onkeyup="inputValidatorText(this,'','vehitype','name')" required>
+
+                                    </div>                                
+
+                                    <!-- AAvg. Cost per KM Section -->
+                                    <div class="col-md-7">
+                                        <div class="border rounded p-2 bg-white h-100">
+                                            <label class="fw-bold mb-2 text-primary">Avg. Cost per KM <span class="text-danger">*</span></label>
+                                    
+                                            <div class="row">
+                                                <!-- Internal -->
+                                                <div class="col-6">
+                                                    <label class="form-label mb-0" for="inputInternalAvgCPKMPrice">Internal</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text p-1 pb-0">
+                                                            <h6 class="my-auto">LKR</h6>
+                                                        </span>
+                                                        <input type="text" id="inputInternalAvgCPKMPrice"
+                                                            class="form-control form-input p-1 text-center"
+                                                            onkeyup="inputValidatorText(this,'','vehitype','int_avg_cpkm')"
+                                                            onblur="insertDecimals(this);" required>
+                                                    </div>
+                                                </div>
+                                    
+                                                <!-- External -->
+                                                <div class="col-6">
+                                                    <label class="form-label mb-0" for="inputExternalAvgCPKMPPrice">External</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text p-1 pb-0">
+                                                            <h6 class="my-auto">LKR</h6>
+                                                        </span>
+                                                        <input type="text" id="inputExternalAvgCPKMPPrice"
+                                                            class="form-control form-input p-1 text-center"
+                                                            onkeyup="inputValidatorText(this,'','vehitype','ext_avg_cpkm')"
+                                                            onblur="insertDecimals(this);" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-3">
+                                                <div class="col-12">
+                                                    <div class="alert alert-warning p-2 mb-0 ">
+                                                        ⚠️ <strong>Note:</strong> Please ensure these average cost per kilometer (LKR) values are entered after conducting proper market research and reviewing operational cost trends. Accurate values are crucial for maintaining competitive and sustainable pricing in your tour packages.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </fieldset>
+
+                            <!-- Form Buttons -->
+                            <div class="row mt-3 mb-2">
+
+                                <div class="col-4">
+                                    <button type="reset" class="btn-clear fw-bold" onclick="refreshVehicleForm();">Reset
+                                        Form</button>
+                                </div>
+
+                                <div class="col-8 text-end">
+                                    <button type="button" id="vehicleUpdateBtn" class=" btn-update fw-bold "
+                                        onclick="updateVehicle()">Update Entry</button>
+
+                                    <button type="submit" id="vehicleAddBtn" class="btn-add fw-bold"
+                                        onclick="addNewVehicle()">Add Entry</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
