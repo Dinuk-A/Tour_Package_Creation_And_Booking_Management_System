@@ -71,10 +71,15 @@ function debounce(func, delay) {
     };
 }
 
+// Hide all except first two
 /*Array.from(select.options).map((opt, index) => {
-    opt.hidden = index > 1; // Hide all except first two
+    opt.hidden = index > 1; 
 });
 */
+
+//also correct
+//const show = (id) => document.getElementById(id).classList.remove("d-none");
+//const hide = (id) => document.getElementById(id).classList.add("d-none");
 
 //control sidebar elements visibility by logged user role
 function controlSidebarLinks() {
@@ -82,35 +87,19 @@ function controlSidebarLinks() {
     const raw = document.getElementById("userRolesArraySection").textContent;
     const userRoles = JSON.parse(raw);
 
-    const show = (id) => document.getElementById(id).classList.remove("d-none");
-    const hide = (id) => document.getElementById(id).classList.add("d-none");
+    const show = (id) => {
+        document.getElementById(id).classList.remove("d-none");
+    }
+
+    const hide = (id) => {
+        document.getElementById(id).classList.add("d-none");
+    }
 
     if (userRoles.includes("System_Admin") || userRoles.includes("Manager")) {
         show("employeeManagementLink");
-        show("successInquiryReportLink");
-        show("paymentReportLink");
-    } else {
-        hide("employeeManagementLink");
-        hide("successInquiryReportLink");
-        hide("paymentReportLink");
-    }
-
-    if (userRoles.includes("System_Admin")) {
         show("userAccountManagementLink");
         show("privilegeManagementLink");
-    } else {
-        hide("userAccountManagementLink");
-        hide("privilegeManagementLink");
-    }
-
-    if (userRoles.includes("System_Admin") || userRoles.includes("Manager") || userRoles.includes("Assistant Manager")) {
         show("priceConfigsLink");
-    } else {
-        hide("priceConfigsLink");
-    }
-
-    const commonRoles = ["System_Admin", "Manager", "Assistant Manager", "Executive"];
-    if (userRoles.some(role => commonRoles.includes(role))) {
         show("vehicleManagementLink");
         show("restaurantManagementLink");
         show("accommodationManagementLink");
@@ -122,7 +111,45 @@ function controlSidebarLinks() {
         show("bookingManagementLink");
         show("paymentManagementLink");
         show("expensesManagementLink");
+    } else if (userRoles.includes("Assistant Manager")) {
+        hide("employeeManagementLink");
+        hide("userAccountManagementLink");
+        hide("privilegeManagementLink");
+        hide("priceConfigsLink");
+
+        show("vehicleManagementLink");
+        show("restaurantManagementLink");
+        show("accommodationManagementLink");
+        show("destinationManagementLink");
+        show("itineraryBuilderLink");
+        show("tourPackageBuilderLink");
+        show("inquiryManagementLink");
+        show("clientManagementLink");
+        show("bookingManagementLink");
+        show("paymentManagementLink");
+        show("expensesManagementLink");
+    } else if (userRoles.includes("Executive")) {
+        hide("employeeManagementLink");
+        hide("userAccountManagementLink");
+        hide("privilegeManagementLink");
+        hide("priceConfigsLink");
+        hide("paymentManagementLink");
+        hide("expensesManagementLink");
+
+        show("vehicleManagementLink");
+        show("restaurantManagementLink");
+        show("accommodationManagementLink");
+        show("destinationManagementLink");
+        show("itineraryBuilderLink");
+        show("tourPackageBuilderLink");
+        show("inquiryManagementLink");
+        show("clientManagementLink");
+        show("bookingManagementLink");
     } else {
+        hide("employeeManagementLink");
+        hide("userAccountManagementLink");
+        hide("privilegeManagementLink");
+        hide("priceConfigsLink");
         hide("vehicleManagementLink");
         hide("restaurantManagementLink");
         hide("accommodationManagementLink");
@@ -136,4 +163,6 @@ function controlSidebarLinks() {
         hide("expensesManagementLink");
     }
 }
+
+
 
