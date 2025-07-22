@@ -101,18 +101,18 @@
                                         aria-selected="true">Inquiry</a>
                                 </li>
 
-                                <!--in li onclick="checkFirstTab()" > -->
-                                <!-- in a class = disabled -->
                                 <li class="nav-item" role="presentation">
                                     <a class=" nav-link border border-dark" id="inqStep3-tab" data-bs-toggle="tab"
                                         href="#inqStep3" role="tab" aria-controls="inqStep3"
-                                        aria-selected="false">Other</a>
+                                        aria-selected="false">Follow-up / Responses</a>
                                 </li>
 
+                                <!--in li onclick="checkFirstTab()" > -->
+                                <!-- in a class = disabled -->
                                 <li class="nav-item" role="presentation">
                                     <a class=" nav-link border border-dark" id="inqStep4-tab" data-bs-toggle="tab"
                                         href="#inqStep4" role="tab" aria-controls="inqStep4"
-                                        aria-selected="false">Follow-up / Responses</a>
+                                        aria-selected="false">Other</a>
                                 </li>
 
                             </ul>
@@ -565,8 +565,38 @@
 
                                 </div>
 
-                                <!-- step 3 -->
+                                <!-- Step 3 -->
                                 <div class="tab-pane fade" id="inqStep3" role="tabpanel" aria-labelledby="inqStep3-tab">
+
+                                    <!-- Inquiry Response Section -->
+                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                        <legend class="float-none w-auto px-2 text-primary">Inquiry Responses</legend>
+
+
+                                        <!-- button to add new responses -->
+                                        <div class="row mt-2">
+                                            <button disabled id="createNewResponseRowBtn"
+                                                class="btn btn-primary mx-auto w-25"
+                                                onclick="createNewResponseInputSection();">Add a new
+                                                Response</button>
+                                        </div>
+
+                                        <!-- section to add new responses -->
+                                        <div class="row mt-2" id="manualResponseAddingSection">
+                                            <!-- a;so includes teh cancel and add response buttons -->
+                                        </div>
+
+                                        <!-- show previously submittede responses -->
+                                        <div class="row mt-2" id="previousSubmittedAllResponses">
+                                            <!-- updates histories will display here too -->
+                                        </div>
+
+                                    </fieldset>
+
+                                </div>
+
+                                <!-- step 4 -->
+                                <div class="tab-pane fade" id="inqStep4" role="tabpanel" aria-labelledby="inqStep4-tab">
                                     <!-- Notes Section -->
                                     <fieldset class="border border-dark p-4 mb-4 bg-light">
                                         <legend class="float-none w-auto px-2 text-primary">Additional Details</legend>
@@ -644,7 +674,8 @@
                                                     onclick="refreshSystemInqForm()">Reset
                                                     Form</button>
                                                 <button id="inqPrintBtn" type="button" class="d-none btn-print fw-bold"
-                                                    onclick="printInquirySummary(window['currentObject'])">Print Inquiry Summary
+                                                    onclick="printInquirySummary(window['currentObject'])">Print Inquiry
+                                                    Summary
                                                 </button>
                                             </div>
                                             <div class="col-8 text-end">
@@ -657,40 +688,6 @@
 
                                     </fieldset>
                                 </div>
-
-                                <!-- Step 4 -->
-                                <div class="tab-pane fade" id="inqStep4" role="tabpanel" aria-labelledby="inqStep4-tab">
-
-                                    <!-- Inquiry Response Section -->
-                                    <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                        <legend class="float-none w-auto px-2 text-primary">Inquiry Responses</legend>
-
-
-                                        <!-- button to add new responses -->
-                                        <div class="row mt-2">
-                                            <button disabled id="createNewResponseRowBtn"
-                                                class="btn btn-primary mx-auto w-25"
-                                                onclick="createNewResponseInputSection();">Add a new
-                                                Response</button>
-                                        </div>
-
-                                        <!-- section to add new responses -->
-                                        <div class="row mt-2" id="manualResponseAddingSection">
-                                            <!-- a;so includes teh cancel and add response buttons -->
-                                        </div>
-
-                                        <!-- show previously submittede responses -->
-                                        <div class="row mt-2" id="previousSubmittedAllResponses">
-                                            <!-- updates histories will display here too -->
-                                        </div>
-
-
-
-                                    </fieldset>
-
-                                </div>
-
-
 
                             </div>
                         </form>

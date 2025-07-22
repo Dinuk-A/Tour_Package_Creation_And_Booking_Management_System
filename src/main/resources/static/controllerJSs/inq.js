@@ -963,17 +963,32 @@ const openModal = async (inqObj) => {
 
     //if inq is completed, cant edit anymore
     if (inqObj.inq_status == "Confirmed" || inqObj.inq_status == "Dropped" || inqObj.deleted_inq == true) {
+
         enableEditBtn.disabled = true;
         enableEditBtn.style.cursor = "not-allowed";
 
         addNewResponseRowBtn.disabled = true;
         addNewResponseRowBtn.style.cursor = "not-allowed";
+
+        btnChangeAssignedUser.disabled = true;
+        btnChangeAssignedUser.style.cursor = "not-allowed";
+
+        manualInqUpdateBtn.disabled = true;
+        manualInqUpdateBtn.style.cursor = "not-allowed";
+
     } else {
+
         enableEditBtn.disabled = false;
         enableEditBtn.style.cursor = "pointer";
 
         addNewResponseRowBtn.disabled = false;
         addNewResponseRowBtn.style.cursor = "pointer";
+
+        btnChangeAssignedUser.disabled = false;
+        btnChangeAssignedUser.style.cursor = "pointer";
+
+        manualInqUpdateBtn.disabled = false;
+        manualInqUpdateBtn.style.cursor = "pointer";
     }
 
     //disable add new button
