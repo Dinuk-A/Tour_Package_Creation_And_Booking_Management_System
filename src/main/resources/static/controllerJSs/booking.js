@@ -707,7 +707,10 @@ const checkExtDriverFormErrors = () => {
         errors += "Mobile Number cannot be empty\n";
     }
 
-    // contacttwo is optional, so no check here
+    //check contact duplication
+    if (externalPersonnels.contacttwo && externalPersonnels.contactone === externalPersonnels.contacttwo) {
+        errors += "Contact Two cannot be same as Contact One\n";
+    }
 
     return errors;
 };
@@ -988,7 +991,6 @@ const renderAssignedInternalGuides = () => {
     console.log("internal guides: ", booking.int_guides);
 };
 
-
 //for ext guide form
 const checkExtGuideFormErrors = () => {
     let errors = "";
@@ -1007,6 +1009,11 @@ const checkExtGuideFormErrors = () => {
 
     if (!externalPersonnels.contactone) {
         errors += "Contact Number cannot be empty\n";
+    }
+
+    //check contact duplication
+    if (externalPersonnels.contacttwo && externalPersonnels.contactone === externalPersonnels.contacttwo) {
+        errors += "Contact Two cannot be same as Contact One\n";
     }
 
     return errors;
@@ -1100,7 +1107,7 @@ const renderAssignedExtGuides = () => {
         removeBtn.innerText = "Remove";
 
         removeBtn.addEventListener("click", () => {
-           
+
             booking.externalPersonnels = booking.externalPersonnels.filter(p => p.nic !== guide.nic);
             resetExtGuideInputs();
             guideRow.remove();
@@ -1121,7 +1128,7 @@ const renderAssignedExtGuides = () => {
 };
 
 //refill the same section when edotong
-const refillExtGuideForm =(guideObj)=>{
+const refillExtGuideForm = (guideObj) => {
     document.getElementById("extGuideFullName").value = guideObj.fullname || "";
     document.getElementById("extGuideNIC").value = guideObj.nic || "";
     document.getElementById("extGuideEmail").value = guideObj.email || "";
@@ -1201,6 +1208,30 @@ const updateExternalGuide = () => {
     }
 }
 
+//for 2nd contact num field
+const sameContactError = (thisElement, otherElement) => {
+
+    if (thisElement.value === otherElement.value) {
+        showAlertModal("err", "Enter A Different Number than The Previous Contact Number")
+        thisElement.style.border = '2px solid red';
+
+        if (thisElement == "extDriverMobile" || thisElement == "extGuideMobile") {
+            externalPersonnels.contactone = null;
+        } else if (thisElement == "extDriverMobile2" || thisElement == "extGuideMobile2") {
+            externalPersonnels.contacttwo = null;
+        }
+
+    }
+    // else {
+    //    thisElement.style.border = '2px solid lime';
+    //    if (thisElement == "extDriverMobile" || thisElement == "extGuideMobile") {
+    //        inputValidatorText(thisElement, '^[0][7][01245678][0-9]{7}$', 'externalPersonnels', 'contactone');
+    //    } else if (thisElement == "extDriverMobile2" || thisElement == "extGuideMobile2") {
+    //        inputValidatorText(thisElement, '^[0][7][01245678][0-9]{7}$', 'externalPersonnels', 'contacttwo')
+    //    }
+    //}
+
+}
 
 
 
