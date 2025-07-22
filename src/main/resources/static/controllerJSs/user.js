@@ -5,6 +5,10 @@ window.addEventListener('load', () => {
 
 })
 
+document.addEventListener("DOMContentLoaded", function () {
+    controlSidebarLinks();
+});
+
 //global var to store id of the table
 let sharedTableId = "mainTableUser";
 

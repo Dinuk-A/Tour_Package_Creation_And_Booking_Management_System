@@ -9,6 +9,10 @@ window.addEventListener('load', () => {
 
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    controlSidebarLinks();
+});
+
 //get all day plans and save in global variables
 let onlyFirstDays = [];
 let onlyLastDays = [];

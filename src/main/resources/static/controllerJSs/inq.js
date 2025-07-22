@@ -7,6 +7,10 @@ window.addEventListener('load', () => {
     refillFilterExecutives();
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    controlSidebarLinks();
+});
+
 //clear out the form everytime a user switches to table tab
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {

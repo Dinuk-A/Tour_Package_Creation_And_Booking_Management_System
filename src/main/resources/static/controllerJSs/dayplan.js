@@ -6,6 +6,10 @@ window.addEventListener('load', () => {
 
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    controlSidebarLinks();
+});
+
 //globally available
 let allStays = [];
 let allProvinces = [];

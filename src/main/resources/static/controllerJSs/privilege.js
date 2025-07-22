@@ -6,6 +6,10 @@ window.addEventListener('load', () => {
 
 })
 
+document.addEventListener("DOMContentLoaded", function () {
+    controlSidebarLinks();
+});
+
 //for filters
 const refreshPriviFilters = async () => {
     let roles = [];
