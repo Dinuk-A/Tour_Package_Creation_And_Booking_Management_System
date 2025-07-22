@@ -25,11 +25,11 @@ const ajaxPPDRequest = (url, method, object) => {
             contentType: "application/json",
             success: function (data) {
                 console.log(method + " success for " + url);
-                resolve(data);  
+                resolve(data);
             },
             error: function (response) {
                 console.error(method + " failed for " + url);
-                reject(response);  
+                reject(response);
             }
         });
     });
@@ -75,3 +75,64 @@ function debounce(func, delay) {
     opt.hidden = index > 1; // Hide all except first two
 });
 */
+
+function controlSidebarLinks() {
+
+    const raw = document.getElementById("userRolesArraySection").textContent;
+    const userRoles = JSON.parse(raw);
+
+    const show = (id) => document.getElementById(id).classList.remove("d-none");
+    const hide = (id) => document.getElementById(id).classList.add("d-none");
+
+    if (userRoles.includes("System_Admin") || userRoles.includes("Manager")) {
+        show("employeeManagementLink");
+        show("successInquiryReportLink");
+        show("paymentReportLink");
+    } else {
+        hide("employeeManagementLink");
+        hide("successInquiryReportLink");
+        hide("paymentReportLink");
+    }
+
+    if (userRoles.includes("System_Admin")) {
+        show("userAccountManagementLink");
+        show("privilegeManagementLink");
+    } else {
+        hide("userAccountManagementLink");
+        hide("privilegeManagementLink");
+    }
+
+    if (userRoles.includes("System_Admin") || userRoles.includes("Manager") || userRoles.includes("Assistant Manager")) {
+        show("priceConfigsLink");
+    } else {
+        hide("priceConfigsLink");
+    }
+
+    const commonRoles = ["System_Admin", "Manager", "Assistant Manager", "Executive"];
+    if (userRoles.some(role => commonRoles.includes(role))) {
+        show("vehicleManagementLink");
+        show("restaurantManagementLink");
+        show("accommodationManagementLink");
+        show("destinationManagementLink");
+        show("itineraryBuilderLink");
+        show("tourPackageBuilderLink");
+        show("inquiryManagementLink");
+        show("clientManagementLink");
+        show("bookingManagementLink");
+        show("paymentManagementLink");
+        show("expensesManagementLink");
+    } else {
+        hide("vehicleManagementLink");
+        hide("restaurantManagementLink");
+        hide("accommodationManagementLink");
+        hide("destinationManagementLink");
+        hide("itineraryBuilderLink");
+        hide("tourPackageBuilderLink");
+        hide("inquiryManagementLink");
+        hide("clientManagementLink");
+        hide("bookingManagementLink");
+        hide("paymentManagementLink");
+        hide("expensesManagementLink");
+    }
+}
+

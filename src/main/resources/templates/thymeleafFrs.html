@@ -125,147 +125,122 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/emp">
+        <li class="nav-item" id="employeeManagementLink">
+            <a class="nav-link" href="http://localhost:8081/emp">
                 <span>Employee Management</span>
             </a>
         </li>
 
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/user">
-                <span>User Account Management </span>
+        <li class="nav-item" id="userAccountManagementLink">
+            <a class="nav-link" href="http://localhost:8081/user">
+                <span>User Account Management</span>
             </a>
         </li>
 
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/privilege">
+        <li class="nav-item" id="privilegeManagementLink">
+            <a class="nav-link" href="http://localhost:8081/privilege">
                 <span>Privilege Management</span>
             </a>
         </li>
 
-        <!-- main items -->
-        <li class="nav-item" id="priceModsLinkInSideBar">
-            <a class="nav-link " href="http://localhost:8081/pricemods">
+        <li class="nav-item" id="priceConfigsLink">
+            <a class="nav-link" href="http://localhost:8081/pricemods">
                 <span>Price Configs</span>
             </a>
         </li>
 
-        <hr>
+        <!--<hr>-->
 
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/vehicle">
+        <li class="nav-item" id="vehicleManagementLink">
+            <a class="nav-link" href="http://localhost:8081/vehicle">
                 <span>Vehicle Management</span>
             </a>
         </li>
 
-        <!-- main items -->
-        <li class="nav-item">
+        <li class="nav-item" id="restaurantManagementLink">
             <a class="nav-link" href="http://localhost:8081/lunchplace">
                 <span>Restaurant Management</span>
             </a>
         </li>
 
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/stay">
+        <li class="nav-item" id="accommodationManagementLink">
+            <a class="nav-link" href="http://localhost:8081/stay">
                 <span>Accommodation Management</span>
             </a>
         </li>
 
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/attraction">
-                <span>Destination Management </span>
+        <li class="nav-item" id="destinationManagementLink">
+            <a class="nav-link" href="http://localhost:8081/attraction">
+                <span>Destination Management</span>
             </a>
         </li>
 
-        <!-- main items -->
         <!--<li class="nav-item">
             <a class="nav-link " href="http://localhost:8081/activity">
                 <span>Activity Management </span>
             </a>
         </li>-->
 
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/dayplan">
+        <li class="nav-item" id="itineraryBuilderLink">
+            <a class="nav-link" href="http://localhost:8081/dayplan">
                 <span>Itinerary Builder</span>
             </a>
         </li>
 
-        <hr>
+        <!--<hr>-->
 
-        <!-- main items -->
-        <li class="nav-item">
+        <li class="nav-item" id="tourPackageBuilderLink">
             <a class="nav-link" href="http://localhost:8081/tourpackage">
                 <span>Tour Package Builder</span>
             </a>
         </li>
 
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/inq">
+        <li class="nav-item" id="inquiryManagementLink">
+            <a class="nav-link" href="http://localhost:8081/inq">
                 <span>Inquiry Management</span>
             </a>
         </li>
 
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/client">
+        <li class="nav-item" id="clientManagementLink">
+            <a class="nav-link" href="http://localhost:8081/client">
                 <span>Client Management</span>
             </a>
         </li>
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/booking">
+
+        <li class="nav-item" id="bookingManagementLink">
+            <a class="nav-link" href="http://localhost:8081/booking">
                 <span>Booking Management</span>
             </a>
         </li>
-        <!-- main items -->
-        <li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/payment">
+
+        <li class="nav-item" id="paymentManagementLink">
+            <a class="nav-link" href="http://localhost:8081/payment">
                 <span>Payment Management</span>
             </a>
         </li>
 
-        <!-- main items -->
-        <li class="nav-item">
+        <li class="nav-item" id="expensesManagementLink">
             <a class="nav-link" href="http://localhost:8081/expenses">
                 <span>Expenses Management</span>
             </a>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" id="successInquiryReportLink">
             <a class="nav-link" href="http://localhost:8081/reportsuccessinqs">
                 <span>Success Inquiry Report</span>
             </a>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" id="paymentReportLink">
             <a class="nav-link" href="http://localhost:8081/reportpaymentsum">
                 <span>Payment Report</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="http://localhost:8081/inquiry">
-                <span>New Inquiries</span>
-            </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="http://localhost:8081/inquiryresponse">
-                <span>Inquiry Responses</span>
             </a>
         </li>
 
     </ul>
 
 </aside>
+
 
 <!-- modal for change user's info by himself -->
 <div th:fragment="userInfoEditModalFragment" class="modal fade" id="userInfoEditModal" tabindex="-1"

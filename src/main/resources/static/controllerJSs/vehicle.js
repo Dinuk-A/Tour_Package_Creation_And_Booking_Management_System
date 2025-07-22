@@ -246,6 +246,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    controlSidebarLinks();
+});
+
 const checkVehiFormErrors = () => {
 
     let errors = '';

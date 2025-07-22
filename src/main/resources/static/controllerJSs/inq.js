@@ -18,6 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    controlSidebarLinks();
+});
+
 //handle min max of date fields
 const handleDateFields = () => {
 
