@@ -96,11 +96,13 @@ function controlSidebarLinks() {
     }
 
     if (userRoles.includes("System_Admin") || userRoles.includes("Manager")) {
+
         show("employeeManagementLink");
         show("userAccountManagementLink");
         show("privilegeManagementLink");
         show("priceConfigsLink");
         show("vehicleManagementLink");
+        show("vehicleTypeManagementLink");
         show("restaurantManagementLink");
         show("accommodationManagementLink");
         show("destinationManagementLink");
@@ -111,13 +113,16 @@ function controlSidebarLinks() {
         show("bookingManagementLink");
         show("paymentManagementLink");
         show("expensesManagementLink");
+
     } else if (userRoles.includes("Assistant Manager")) {
+
         hide("employeeManagementLink");
         hide("userAccountManagementLink");
         hide("privilegeManagementLink");
         hide("priceConfigsLink");
 
         show("vehicleManagementLink");
+        show("vehicleTypeManagementLink");
         show("restaurantManagementLink");
         show("accommodationManagementLink");
         show("destinationManagementLink");
@@ -128,13 +133,16 @@ function controlSidebarLinks() {
         show("bookingManagementLink");
         show("paymentManagementLink");
         show("expensesManagementLink");
+
     } else if (userRoles.includes("Executive")) {
+
         hide("employeeManagementLink");
         hide("userAccountManagementLink");
         hide("privilegeManagementLink");
         hide("priceConfigsLink");
         hide("paymentManagementLink");
         hide("expensesManagementLink");
+        hide("vehicleTypeManagementLink");
 
         show("vehicleManagementLink");
         show("restaurantManagementLink");
@@ -145,7 +153,31 @@ function controlSidebarLinks() {
         show("inquiryManagementLink");
         show("clientManagementLink");
         show("bookingManagementLink");
-    } else {
+
+    } else if (userRoles.includes("Receptionist")) {
+       
+        hide("employeeManagementLink");
+        hide("userAccountManagementLink");
+        hide("privilegeManagementLink");
+        hide("priceConfigsLink");
+        hide("vehicleManagementLink");
+        hide("restaurantManagementLink");
+        hide("accommodationManagementLink");
+        hide("destinationManagementLink");
+        hide("itineraryBuilderLink");
+        hide("tourPackageBuilderLink");
+        hide("paymentManagementLink");
+        hide("expensesManagementLink");
+        hide("vehicleTypeManagementLink");
+
+        // receptionist can access inquiries, view clients, and see booking status
+        show("inquiryManagementLink");
+        show("clientManagementLink");
+        show("bookingManagementLink");
+    }
+
+    else {
+
         hide("employeeManagementLink");
         hide("userAccountManagementLink");
         hide("privilegeManagementLink");

@@ -37,7 +37,78 @@
                     <img src="images/ylogo2.png" alt="Logo" class="img-fluid">
                 </div>
 
-                <!--<div class="card-body">
+                <div class="card-body my-0" style="border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1);">
+                    <h4 class="text-center text-primary fw-bold mb-4">Log Into Your Account</h4>
+
+                    <form action="login" method="post" class="form-box px-3">
+                        <!-- Username -->
+                        <div class="mb-3">
+                            <input id="loginUN" name="username" type="text" placeholder="Username" autocomplete="off"
+                                required class="form-control form-control-lg rounded-pill shadow-sm text-center">
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-4">
+                            <input id="loginPW" name="password" type="password" placeholder="Password"
+                                autocomplete="off" required
+                                class="form-control form-control-lg rounded-pill shadow-sm text-center">
+                        </div>
+
+                        <!-- Login Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill shadow">Login</button>
+                        </div>
+
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const urlParams = new URLSearchParams(window.location.search);
+            // `window.location` is a JavaScript object representing the current page's URL.
+            // `window.location.search` returns the query string part of the URL (everything after the '?' including '?').
+            // For example, if the URL is:
+            //   https://example.com/login?error=true&user=123
+            // then
+            //   window.location.search === "?error=true&user=123"
+            // `URLSearchParams` is a built-in web API that parses this query string into an object.
+            // `urlParams` is now an instance of `URLSearchParams`, allowing easy access to query parameters.
+            // You can check if a parameter exists using urlParams.has('param'),
+            // get a parameter value using urlParams.get('param'),
+            // or iterate over all parameters with urlParams.entries().
+
+            if (urlParams.has("error")) {
+                showAlertModal("err", "Invalid Username or Password! \n Please try again.");
+            }
+        });
+
+        const usernameInput = document.getElementById('loginUN');
+        const passwordInput = document.getElementById('loginPW');
+
+        passwordInput.disabled = true;
+
+        usernameInput.addEventListener('input', () => {
+            if (usernameInput.value.trim() !== "") {
+                passwordInput.disabled = false;
+            } else {
+                passwordInput.disabled = true;
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
+
+<!--<div class="card-body">
                     <h4 class="title text-center mt-4">Log Into Account</h4>
 
                     <form action="login" method="post" class="form-box px-3">
@@ -56,48 +127,3 @@
 
                     </form>
                 </div>-->
-
-                <div class="card-body my-0" style="border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1);">
-                    <h4 class="text-center text-primary fw-bold mb-4">Log Into Your Account</h4>
-                
-                    <form action="login" method="post" class="form-box px-3">
-                        <!-- Username -->
-                        <div class="mb-3">
-                            <input name="username" type="text" placeholder="Username" autocomplete="off" required
-                                class="form-control form-control-lg rounded-pill shadow-sm text-center">
-                        </div>
-                
-                        <!-- Password -->
-                        <div class="mb-4">
-                            <input name="password" type="password" placeholder="Password" autocomplete="off" required
-                                class="form-control form-control-lg rounded-pill shadow-sm text-center">
-                        </div>
-                
-                        <!-- Login Button -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-success btn-lg rounded-pill shadow">Login</button>
-                        </div>
-                                       
-                    </form>
-                </div>
-
-                
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const modal = document.getElementById("customAlertModal");
-
-            if (urlParams.has("error")) {
-                showAlertModal("err", "Invalid Username or Password! \n Please try again.");
-            }
-        });
-
-    </script>
-
-</body>
-
-</html>

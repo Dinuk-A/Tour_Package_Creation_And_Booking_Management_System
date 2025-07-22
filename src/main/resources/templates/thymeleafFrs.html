@@ -73,23 +73,16 @@
         <!-- Display module name (dynamic) -->
         <h2 th:text="${moduleName}" class="ms-5 my-auto text-info"></h2>
 
-        <!-- only the 1st role (hidden, for later use in tourpackage module) -->
-        <!--<div class="d-flex align-items-center ms-5">
-            <span th:text="${loggeduserrole}" style="visibility: hidden;">role</span>
-        </div>-->
-
         <!-- get all the roles as an array -->
-        <div class="d-flex align-items-center ms-5">
-            <span th:text="${loggeduserroles}" style="visibility: hidden;" id="userRolesArraySection"></span>
-        </div>
-
+        <div id="userRolesArraySection" th:text="${loggeduserroles}" style="display: none !important;"></div>
+       
         <!-- hidden, only need when designation specific elements are there -->
         <div class=" d-md-block ps-2" id="loggedUserDesignationSectionId" th:text="${loggeduserdesignation}"
-            style="visibility: hidden !important;"></div>
+            style="display: none !important;"></div>
 
         <!-- hidden, only need when creating the personal inquiries table in INQ module -->
         <div class=" d-md-block ps-2" id="loggedUserEmpIdSectionId" th:text="${loggedUserEmpId}"
-            style="visibility: hidden !important;"></div>
+            style="display: none !important;"></div>
 
         <!--<img th:src="'data:image/png;base64,' + ${loggeduserphoto}" alt="Employee Photo" class="rounded-circle"
             style="width: 40px; height: 40px; object-fit: cover;" />-->
@@ -120,6 +113,15 @@
     </div>
 </header>
 
+ <!--<div class="d-flex align-items-center ms-5" style="display: none !important;">
+            <span style="display: none !important;" th:text="${loggeduserroles}" id="userRolesArraySection"></span>
+        </div>-->
+
+  <!-- only the 1st role (hidden, for later use in tourpackage module) -->
+        <!--<div class="d-flex align-items-center ms-5">
+            <span th:text="${loggeduserrole}" style="visibility: hidden;">role</span>
+        </div>-->
+
 <!-- common sidebar -->
 <aside th:fragment="asideFragment" id="dashboardSidebarID" class="sidebar">
 
@@ -127,104 +129,104 @@
 
         <li class="nav-item" id="employeeManagementLink">
             <a class="nav-link" href="http://localhost:8081/emp">
-                <span>Employee Management</span>
+                <i class="bi bi-people me-3"></i> <span>Employee Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="userAccountManagementLink">
             <a class="nav-link" href="http://localhost:8081/user">
-                <span>User Account Management</span>
+                <i class="bi bi-person-badge me-3"></i> <span>User Account Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="privilegeManagementLink">
             <a class="nav-link" href="http://localhost:8081/privilege">
-                <span>Privilege Management</span>
+                <i class="bi bi-shield-lock me-3"></i> <span>Privilege Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="priceConfigsLink">
             <a class="nav-link" href="http://localhost:8081/pricemods">
-                <span>Price Configs</span>
+                <i class="bi bi-currency-dollar me-3"></i> <span>Pricing Controls</span>
             </a>
         </li>
 
+        <li class="nav-item" id="vehicleTypeManagementLink">
+            <a class="nav-link" href="http://localhost:8081/vehitype">
+                <i class="bi bi-card-list me-3"></i> <span>Vehicle Type Management</span>
+            </a>
+        </li>
+
+
         <li class="nav-item" id="vehicleManagementLink">
             <a class="nav-link" href="http://localhost:8081/vehicle">
-                <span>Vehicle Management</span>
+                <i class="bi bi-truck me-3"></i> <span>Transport Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="restaurantManagementLink">
             <a class="nav-link" href="http://localhost:8081/lunchplace">
-                <span>Restaurant Management</span>
+                <i class="bi bi-basket me-3"></i> <span>Restaurant Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="accommodationManagementLink">
             <a class="nav-link" href="http://localhost:8081/stay">
-                <span>Accommodation Management</span>
+                <i class="bi bi-house-door me-2"></i> <span>Accommodation Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="destinationManagementLink">
             <a class="nav-link" href="http://localhost:8081/attraction">
-                <span>Destination Management</span>
+                <i class="bi bi-geo-alt me-3"></i> <span>Destination Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="itineraryBuilderLink">
             <a class="nav-link" href="http://localhost:8081/dayplan">
-                <span>Itinerary Builder</span>
+                <i class="bi bi-calendar3 me-3"></i> <span>Itinerary Builder</span>
             </a>
         </li>
 
         <li class="nav-item" id="tourPackageBuilderLink">
             <a class="nav-link" href="http://localhost:8081/tourpackage">
-                <span>Tour Package Builder</span>
+                <i class="bi bi-box-seam me-3"></i> <span>Tour Package Builder</span>
             </a>
         </li>
 
         <li class="nav-item" id="inquiryManagementLink">
             <a class="nav-link" href="http://localhost:8081/inq">
-                <span>Inquiry Management</span>
+                <i class="bi bi-envelope me-3"></i> <span>Inquiry Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="clientManagementLink">
             <a class="nav-link" href="http://localhost:8081/client">
-                <span>Client Management</span>
+                <i class="bi bi-person me-3"></i> <span>Client Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="bookingManagementLink">
             <a class="nav-link" href="http://localhost:8081/booking">
-                <span>Booking Management</span>
+                <i class="bi bi-journal-check me-3"></i> <span>Booking Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="paymentManagementLink">
             <a class="nav-link" href="http://localhost:8081/payment">
-                <span>Payment Management</span>
+                <i class="bi bi-credit-card me-3"></i> <span>Payment Management</span>
             </a>
         </li>
 
         <li class="nav-item" id="expensesManagementLink">
             <a class="nav-link" href="http://localhost:8081/expenses">
-                <span>Expenses Management</span>
+                <i class="bi bi-wallet2 me-3"></i> <span>Expenses Management</span>
             </a>
         </li>
 
     </ul>
 
 </aside>
-
-<!--<li class="nav-item">
-            <a class="nav-link " href="http://localhost:8081/activity">
-                <span>Activity Management </span>
-            </a>
-        </li>-->
-
 
 <!-- modal for change user's info by himself -->
 <div th:fragment="userInfoEditModalFragment" class="modal fade" id="userInfoEditModal" tabindex="-1"
@@ -342,3 +344,115 @@
         <button id="btnConfirmCancel">Cancel</button>
     </div>
 </div>
+
+<!-- common sidebar OLD 💥💥💥-->
+<aside th:fragment="asideFragmentOri" id="dashboardSidebarIDOri" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item" id="employeeManagementLink">
+            <a class="nav-link" href="http://localhost:8081/emp">
+                <span>Employee Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="userAccountManagementLink">
+            <a class="nav-link" href="http://localhost:8081/user">
+                <span>User Account Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="privilegeManagementLink">
+            <a class="nav-link" href="http://localhost:8081/privilege">
+                <span>Privilege Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="priceConfigsLink">
+            <a class="nav-link" href="http://localhost:8081/pricemods">
+                <span>Pricing Controls</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="vehicleTypeManagementLink">
+            <a class="nav-link" href="http://localhost:8081/vehitype">
+                <span>Vehicle Type Management</span>
+            </a>
+        </li>
+
+
+        <li class="nav-item" id="vehicleManagementLink">
+            <a class="nav-link" href="http://localhost:8081/vehicle">
+                <span>Vehicle Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="restaurantManagementLink">
+            <a class="nav-link" href="http://localhost:8081/lunchplace">
+                <span>Restaurant Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="accommodationManagementLink">
+            <a class="nav-link" href="http://localhost:8081/stay">
+                <span>Accommodation Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="destinationManagementLink">
+            <a class="nav-link" href="http://localhost:8081/attraction">
+                <span>Destination Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="itineraryBuilderLink">
+            <a class="nav-link" href="http://localhost:8081/dayplan">
+                <span>Itinerary Builder</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="tourPackageBuilderLink">
+            <a class="nav-link" href="http://localhost:8081/tourpackage">
+                <span>Tour Package Builder</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="inquiryManagementLink">
+            <a class="nav-link" href="http://localhost:8081/inq">
+                <span>Inquiry Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="clientManagementLink">
+            <a class="nav-link" href="http://localhost:8081/client">
+                <span>Client Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="bookingManagementLink">
+            <a class="nav-link" href="http://localhost:8081/booking">
+                <span>Booking Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="paymentManagementLink">
+            <a class="nav-link" href="http://localhost:8081/payment">
+                <span>Payment Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="expensesManagementLink">
+            <a class="nav-link" href="http://localhost:8081/expenses">
+                <span>Expenses Management</span>
+            </a>
+        </li>
+
+    </ul>
+
+</aside>
+
+<!--<li class="nav-item">
+            <a class="nav-link " href="http://localhost:8081/activity">
+                <span>Activity Management </span>
+            </a>
+        </li>-->
