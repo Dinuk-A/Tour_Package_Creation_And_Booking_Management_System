@@ -76,6 +76,7 @@ function debounce(func, delay) {
 });
 */
 
+//control sidebar elements visibility by logged user role
 function controlSidebarLinks() {
 
     const raw = document.getElementById("userRolesArraySection").textContent;

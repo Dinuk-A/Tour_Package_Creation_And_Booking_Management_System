@@ -3,6 +3,7 @@ package lk.yathratravels.lunchplace;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -20,8 +21,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.user.Role;
+import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
 @RestController
@@ -37,7 +43,7 @@ public class LunchPlaceController {
     private PrivilegeServices privilegeService;
 
     @RequestMapping(value = "/lunchplace", method = RequestMethod.GET)
-    public ModelAndView lunchMgtUI() {
+    public ModelAndView lunchMgtUI() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -54,6 +60,15 @@ public class LunchPlaceController {
             lunchMgtView.setViewName("lunchplace.html");
             lunchMgtView.addObject("loggedUserUN", auth.getName());
             lunchMgtView.addObject("title", "Yathra Lunch");
+
+            User loggedUser = userDao.getUserByUsername(auth.getName());
+            
+            // get all the roles as a custom array
+            List<String> roleNames = loggedUser.getRoles()
+                    .stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+            lunchMgtView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
             return lunchMgtView;
         }

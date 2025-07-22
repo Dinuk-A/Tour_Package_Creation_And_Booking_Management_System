@@ -3,6 +3,7 @@ package lk.yathratravels.attraction;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -20,8 +21,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
@@ -39,7 +44,7 @@ public class AttractionController {
 
     // display attraction UI
     @RequestMapping(value = "/attraction", method = RequestMethod.GET)
-    public ModelAndView attractionUI() {
+    public ModelAndView attractionUI() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -62,6 +67,13 @@ public class AttractionController {
             User loggedUser = userDao.getUserByUsername(auth.getName());
             attrView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
 
+            // get all the roles as a custom array
+            List<String> roleNames = loggedUser.getRoles()
+                    .stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+            attrView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
+
             return attrView;
         }
     }
@@ -74,10 +86,10 @@ public class AttractionController {
 
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "ATTRACTION");
 
-          if (!privilegeLevelForLoggedUser.getPrvselect()) {
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
             return new ArrayList<Attraction>();
         }
-       
+
         return attractionDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
@@ -94,14 +106,14 @@ public class AttractionController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "ATTRACTION");
-      
+
         if (!privilegeLevelForLoggedUser.getPrvinsert()) {
             return "Attraction Save Not Completed; You Dont Have Permission";
         }
 
         try {
             vplace.setAddeddatetime(LocalDateTime.now());
-             vplace.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+            vplace.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             attractionDao.save(vplace);
 
@@ -122,14 +134,14 @@ public class AttractionController {
         if (!privilegeLevelForLoggedUser.getPrvupdate()) {
             return "Attraction Update Not Completed; You Dont Have Permission";
         }
-       
+
         // check existence
 
         // duplications
 
         try {
             vplace.setLastmodifieddatetime(LocalDateTime.now());
-             vplace.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
+            vplace.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             attractionDao.save(vplace);
             return "OK";

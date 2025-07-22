@@ -77,7 +77,6 @@ public class InqController {
                     .stream()
                     .map(Role::getName)
                     .collect(Collectors.toList());
-            // tpkgView.addObject("loggeduserroles", roleNames);
             inqView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
             // get logged users' employee id to filter his own assigned inqs

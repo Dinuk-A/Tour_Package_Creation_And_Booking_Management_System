@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lk.yathratravels.employee.EmployeeDao;
 import lk.yathratravels.user.Role;
 import lk.yathratravels.user.RoleDao;
@@ -65,7 +68,7 @@ public class CommonMethods {
     @GetMapping(value = "/login")
     public ModelAndView loginUI() {
 
-        //kalin session eka clean wenawa
+        // kalin session eka clean wenawa
         SecurityContextHolder.clearContext();
         ModelAndView loginView = new ModelAndView();
         loginView.setViewName("login.html");
@@ -74,7 +77,7 @@ public class CommonMethods {
 
     // UI for dashboard
     @GetMapping(value = "/dashboard")
-    public ModelAndView dashboardUI() {
+    public ModelAndView dashboardUI() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -92,7 +95,7 @@ public class CommonMethods {
         // get designation (only one value)
         dbView.addObject("loggeduserdesignation", loggedUser.getEmployee_id().getDesignation_id().getName());
 
-        //get logged users'id to filter his own assigned inqs
+        // get logged users'id to filter his own assigned inqs
         dbView.addObject("loggedUserEmpId", loggedUser.getEmployee_id().getId());
 
         // get all the roles as a custom array
@@ -100,7 +103,7 @@ public class CommonMethods {
                 .stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());
-        dbView.addObject("loggeduserroles", roleNames);
+        dbView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
         // roles godak thiyana nisa list eke palawni eka witharay enne 💥💥💥
         // dbView.addObject("loggeduserrole",

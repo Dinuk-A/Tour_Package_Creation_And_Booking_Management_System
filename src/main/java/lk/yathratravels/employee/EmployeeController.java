@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -22,6 +24,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.security.core.Authentication;
 import jakarta.transaction.Transactional;
 import lk.yathratravels.privilege.Privilege;
@@ -51,7 +57,7 @@ public class EmployeeController {
 
     // display employee UI
     @RequestMapping(value = "/emp", method = RequestMethod.GET)
-    public ModelAndView showEmployeeUI() {
+    public ModelAndView showEmployeeUI() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -73,6 +79,13 @@ public class EmployeeController {
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
             empView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
+
+            // get all the roles as a custom array
+            List<String> roleNames = loggedUser.getRoles()
+                    .stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+            empView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
             return empView;
         }
@@ -400,7 +413,7 @@ public class EmployeeController {
             employeeDao.save(existingEmployee);
 
             User relatedUserAcc = userDao.getUserByEmployeeID(employee.getId());
-            
+
             if (relatedUserAcc != null) {
                 relatedUserAcc.setAcc_status(false);
                 relatedUserAcc.setNote("Account disabled due to Employee record is deleted");

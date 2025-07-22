@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -21,8 +22,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
@@ -32,9 +37,6 @@ public class VehicleController {
     @Autowired
     private VehicleDao vehiDao;
 
-    //@Autowired
-    //private VehicleTypeDao vehicleTypeDao;
-
     @Autowired
     private UserDao userDao;
 
@@ -43,7 +45,7 @@ public class VehicleController {
 
     // mapping for get the vehicle UI
     @RequestMapping(value = "/vehicle", method = RequestMethod.GET)
-    public ModelAndView VehicleUI() {
+    public ModelAndView VehicleUI() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -63,6 +65,13 @@ public class VehicleController {
             vehicleView.addObject("title", "Yathra Vehicles");
             User loggedUser = userDao.getUserByUsername(auth.getName());
             vehicleView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
+
+            // get all the roles as a custom array
+            List<String> roleNames = loggedUser.getRoles()
+                    .stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+            vehicleView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
             return vehicleView;
         }

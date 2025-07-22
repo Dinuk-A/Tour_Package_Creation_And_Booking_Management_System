@@ -2,6 +2,7 @@ package lk.yathratravels.privilege;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -20,6 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 //import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
@@ -45,7 +50,7 @@ public class PrivilegeController {
 
     // display privi web page
     @RequestMapping(value = "/privilege", method = RequestMethod.GET)
-    public ModelAndView privilegeUi() {
+    public ModelAndView privilegeUi() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -56,6 +61,13 @@ public class PrivilegeController {
 
         User loggedUser = userDao.getUserByUsername(auth.getName());
         privilegeView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
+
+        // get all the roles as a custom array
+        List<String> roleNames = loggedUser.getRoles()
+                .stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
+        privilegeView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
         return privilegeView;
     }
@@ -126,10 +138,9 @@ public class PrivilegeController {
             privilege.setDeleteddatetime(LocalDateTime.now());
             privilegeDao.save(privilege);
 
-            //to delete permanatly
-            //privilegeDao.delete(existingRecord);
-          
-          
+            // to delete permanatly
+            // privilegeDao.delete(existingRecord);
+
             return "OK";
         } catch (Exception e) {
             return "Delete Not Completed " + e.getMessage();

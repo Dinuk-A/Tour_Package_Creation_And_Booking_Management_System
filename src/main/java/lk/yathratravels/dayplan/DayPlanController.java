@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -21,9 +22,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lk.yathratravels.attraction.District;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
@@ -40,7 +45,7 @@ public class DayPlanController {
 
     // display dayplan UI
     @RequestMapping(value = "/dayplan", method = RequestMethod.GET)
-    public ModelAndView showDayPlanUI() {
+    public ModelAndView showDayPlanUI() throws JsonProcessingException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "DAYPLAN");
@@ -61,6 +66,13 @@ public class DayPlanController {
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
             dpView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
+
+            // get all the roles as a custom array
+            List<String> roleNames = loggedUser.getRoles()
+                    .stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+            dpView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
             return dpView;
         }
@@ -105,7 +117,7 @@ public class DayPlanController {
         return daoDP.getOnlyTemplateDays();
     }
 
-     // and by the given inquiry
+    // and by the given inquiry
     @GetMapping(value = "/dayplan/onlyfirstdays/bydpbasedinq/{basedInqDP}", produces = "application/json")
     public List<DayPlan> getFDsByInquiry(@PathVariable("basedInqDP") String basedInqDP) {
         return daoDP.getOnlyFirstDaysAlsoBelongsToGivenInquiry(basedInqDP);

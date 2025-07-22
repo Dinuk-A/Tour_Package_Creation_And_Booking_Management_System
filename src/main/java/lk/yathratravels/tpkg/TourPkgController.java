@@ -71,12 +71,14 @@ public class TourPkgController {
             User loggedUser = userDao.getUserByUsername(auth.getName());
             tpkgView.addObject("loggeduserdesignation", loggedUser.getEmployee_id().getDesignation_id().getName());
             tpkgView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
+            
             List<String> roleNames = loggedUser.getRoles()
                     .stream()
                     .map(Role::getName)
                     .collect(Collectors.toList());
             // tpkgView.addObject("loggeduserroles", roleNames);
             tpkgView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
+
             // get logged users'id to filter his own assigned inqs
             tpkgView.addObject("loggedUserId", loggedUser.getId());
 

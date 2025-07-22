@@ -3,6 +3,7 @@ package lk.yathratravels.bookings;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Sort;
@@ -22,6 +26,7 @@ import org.springframework.data.domain.Sort.Direction;
 
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
@@ -38,7 +43,7 @@ public class BookingController {
 
     // display booking UI
     @RequestMapping(value = "/booking", method = RequestMethod.GET)
-    public ModelAndView bookingUI() {
+    public ModelAndView bookingUI() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -60,6 +65,13 @@ public class BookingController {
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
             bookingView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
+
+            // get all the roles as a custom array
+            List<String> roleNames = loggedUser.getRoles()
+                    .stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+            bookingView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
             return bookingView;
         }
@@ -103,7 +115,7 @@ public class BookingController {
                 personnel.setBooking(booking);
             }
 
-            bookingDao.save(booking);           
+            bookingDao.save(booking);
 
             return "OK";
         } catch (Exception e) {

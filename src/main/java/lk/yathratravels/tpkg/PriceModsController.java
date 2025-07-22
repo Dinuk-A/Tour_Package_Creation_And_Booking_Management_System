@@ -2,6 +2,7 @@ package lk.yathratravels.tpkg;
 
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
 
@@ -13,10 +14,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class PriceModsController {
@@ -35,7 +40,7 @@ public class PriceModsController {
 
     // Display Price Modifiers UI
     @RequestMapping(value = "/pricemods", method = RequestMethod.GET)
-    public ModelAndView showPriceModsUI() {
+    public ModelAndView showPriceModsUI() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
@@ -54,6 +59,13 @@ public class PriceModsController {
             User loggedUser = userDao.getUserByUsername(auth.getName());
             view.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
 
+            // get all the roles as a custom array
+            List<String> roleNames = loggedUser.getRoles()
+                    .stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+            view.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
+
             return view;
         }
     }
@@ -62,12 +74,13 @@ public class PriceModsController {
     @GetMapping(value = "/pricemods/all", produces = "application/json")
     public PriceMods getLatestPriceModifier() {
 
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
-//
-//        if (!privilegeLevelForLoggedUser.getPrvselect()) {
-//            return null;
-//        }
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // Privilege privilegeLevelForLoggedUser =
+        // privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
+        //
+        // if (!privilegeLevelForLoggedUser.getPrvselect()) {
+        // return null;
+        // }
 
         return priceModsDao.findLatestEntry();
     }
@@ -145,8 +158,8 @@ public class PriceModsController {
             priceModHistoryDao.save(history);
 
             // preserve the same previous values
-             priceModNew.setAddeddatetime(existingPMRow.getAddeddatetime());
-             priceModNew.setAddeduserid(existingPMRow.getAddeduserid());
+            priceModNew.setAddeddatetime(existingPMRow.getAddeddatetime());
+            priceModNew.setAddeduserid(existingPMRow.getAddeduserid());
 
             // for price mods
             priceModNew.setId(existingPMRow.getId());
@@ -154,8 +167,6 @@ public class PriceModsController {
             priceModNew.setUpdateduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             priceModsDao.save(priceModNew);
-
-            
 
             return "OK";
 

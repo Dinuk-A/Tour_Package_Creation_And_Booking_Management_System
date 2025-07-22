@@ -3,6 +3,7 @@ package lk.yathratravels.user;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -21,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
 
@@ -38,7 +42,7 @@ public class UserController {
 
     // display user UI
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public ModelAndView showUserUI() {
+    public ModelAndView showUserUI() throws JsonProcessingException {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -58,6 +62,13 @@ public class UserController {
 
             User loggedUser = userDao.getUserByUsername(auth.getName());
             userView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
+
+            // get all the roles as a custom array
+            List<String> roleNames = loggedUser.getRoles()
+                    .stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toList());
+            userView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
             return userView;
         }
@@ -94,19 +105,18 @@ public class UserController {
     }
 
     @GetMapping(value = "/user/exceptadminloggeduser", produces = "application/json")
-public List<User> returnAllUsersExceptAdminAndLoggedUSer() {
-    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    String currentUsername = auth.getName();
+    public List<User> returnAllUsersExceptAdminAndLoggedUSer() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = auth.getName();
 
-    Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(currentUsername, "USER");
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(currentUsername, "USER");
 
-    if (!privilegeLevelForLoggedUser.getPrvselect()) {
-        return new ArrayList<>();
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<>();
+        }
+
+        return userDao.getAllUserAccsExceptAdminAndLoggedUser(currentUsername);
     }
-
-    return userDao.getAllUserAccsExceptAdminAndLoggedUser(currentUsername);
-}
-
 
     // this will be used for prints only
     @GetMapping(value = "/username/byid/{userid}", produces = "application/json")
