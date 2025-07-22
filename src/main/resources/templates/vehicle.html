@@ -73,9 +73,11 @@
                                             </div>
 
                                             <div class="col-md-7">
-                                                <label for="inputVehicleName" class="fw-bold form-label mb-0">Vehicle Modal
+                                                <label for="inputVehicleName" class="fw-bold form-label mb-0">Vehicle
+                                                    Modal
                                                     :</label>
-                                                <input id="inputVehicleName" type="text" placeholder="Enter Vehicle Brand/Modal/Year"
+                                                <input id="inputVehicleName" type="text"
+                                                    placeholder="Enter Vehicle Brand/Modal/Year"
                                                     class="test form-control form-input"
                                                     onkeyup="inputValidatorText(this,'','vehicle','vehiclename')"
                                                     required>
@@ -88,12 +90,14 @@
                                                     Plate
                                                     number
                                                     :</label>
-                                                <input id="inputNumberPlate" type="text" placeholder="Enter Vehicle Number Plate" class="form-control form-input"
+                                                <input id="inputNumberPlate" type="text"
+                                                    placeholder="Enter Vehicle Number Plate"
+                                                    class="form-control form-input"
                                                     onkeyup="inputValidatorText(this,'','vehicle','numberplate')"
                                                     required>
                                             </div>
 
-                                            <div class="col-4">
+                                            <!--<div class="col-4">
                                                 <label class="fw-bold  mb-0" for="inputVehiCostPerKM">Cost Per
                                                     Kilometer</label>
 
@@ -106,7 +110,7 @@
                                                         placeholder="100.00"
                                                         onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','vehicle','cost_per_km')" onblur="insertDecimals(this);">
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
 
 
@@ -145,7 +149,8 @@
                                         <label for="inputPassengerSeatCount" class="fw-bold form-label mb-0">Passenger's
                                             Seat Count
                                             :</label>
-                                        <input id="inputPassengerSeatCount" type="text" placeholder="Enter Passengers Seat Count"
+                                        <input id="inputPassengerSeatCount" type="text"
+                                            placeholder="Enter Passengers Seat Count"
                                             class="test form-control form-input"
                                             onkeyup="inputValidatorText(this,'','vehicle','passengerseats')" required>
                                     </div>
@@ -154,7 +159,8 @@
                                         <label for="inputVehiLuggageCapacity" class="fw-bold form-label mb-0">Luggage
                                             Capacity
                                             :</label>
-                                        <input id="inputVehiLuggageCapacity" type="text" placeholder="5-6 Large Bags/ 1-2 Small Bags"
+                                        <input id="inputVehiLuggageCapacity" type="text"
+                                            placeholder="5-6 Large Bags/ 1-2 Small Bags"
                                             class="test form-control form-input"
                                             onkeyup="inputValidatorText(this,'','vehicle','luggage_capacity')" required>
                                     </div>
@@ -198,7 +204,8 @@
 
                                     <div class="col-6">
                                         <label for="inputNote" class="fw-bold">Additional Information</label>
-                                        <textarea id="inputNote" class="form-control" rows="5" placeholder="Enter Any Additional Information"
+                                        <textarea id="inputNote" class="form-control" rows="5"
+                                            placeholder="Enter Any Additional Information"
                                             onkeyup="inputValidatorText(this,'','vehicle','note')"></textarea>
                                     </div>
 
@@ -263,16 +270,18 @@
 
                                     <p class="fw-bold text-primary mb-0">Model Name:</p>
                                     <p id="modalVehiModalName" class="mb-2"></p>
+                                </div>
 
+                                <div class="col-md-4">
                                     <p class="fw-bold text-primary mb-0">Number Plate:</p>
                                     <p id="modalVehiNumberPlate" class="mb-2"></p>
                                 </div>
 
                                 <!-- Cost Per KM -->
-                                <div class="col-md-4">
-                                    <p class="fw-bold text-primary mb-0">Cost Per Kilometer:</p>
-                                    <p id="modalVehiCostPerKM" class="mb-2"></p>
-                                </div>
+                                <!--<div class="col-md-4">-->
+                                <!--<p class="fw-bold text-primary mb-0">Cost Per Kilometer:</p>
+                                    <p id="modalVehiCostPerKM" class="mb-2"></p>-->
+                                <!--</div>-->
                             </div>
 
                             <!-- Row 2 -->

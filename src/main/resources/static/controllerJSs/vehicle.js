@@ -270,9 +270,9 @@ const checkVehiFormErrors = () => {
         errors = errors + "PLEASE ENTER THE MAXIMUM LUGGAGE CAPACITY \n";
     }
 
-    if (vehicle.cost_per_km == null) {
-        errors = errors + "PLEASE ENTER THE ESTIMATED COST PER KILOMETER AMOUNT \n";
-    }
+    //if (vehicle.cost_per_km == null) {
+    //    errors = errors + "PLEASE ENTER THE ESTIMATED COST PER KILOMETER AMOUNT \n";
+    //}
 
     if (vehicle.vehi_status == null) {
         errors = errors + "PLEASE SELECT THE VEHICLE STATUS \n"
@@ -350,7 +350,7 @@ const openModal = (vehiObj) => {
     document.getElementById('modalVehiType').innerText = vehiObj.vehicletype_id.name || 'N/A';
     document.getElementById('modalVehiStatus').innerText = vehiObj.vehi_status || 'N/A';
     document.getElementById('modalVehiLuggageCapacity').innerText = vehiObj.luggage_capacity || 'N/A';
-    document.getElementById('modalVehiCostPerKM').innerText = vehiObj.cost_per_km || 'N/A';
+    //document.getElementById('modalVehiCostPerKM').innerText = vehiObj.cost_per_km || 'N/A';
     document.getElementById('modalVehiLSDate').innerText = vehiObj.last_service_date || 'N/A';
     document.getElementById('modalVehiNote').innerText = vehiObj.note || 'N/A';
 
@@ -386,7 +386,7 @@ const refillVehicleForm = async (ob) => {
     inputPassengerSeatCount.value = vehicle.passengerseats;
     inputNote.value = vehicle.note;
     inputVehiLuggageCapacity.value = vehicle.luggage_capacity;
-    inputVehiCostPerKM.value = vehicle.cost_per_km;
+    //inputVehiCostPerKM.value = vehicle.cost_per_km;
     dateLastService.value = vehicle.last_service_date;
     selectVehicleStatus.value = vehicle.vehi_status;
 
@@ -446,9 +446,9 @@ const showVehicleValueChanges = () => {
         updates = updates + oldVehi.luggage_capacity + " will be changed to " + vehicle.luggage_capacity + "\n"
     }
 
-    if (vehicle.cost_per_km != oldVehi.cost_per_km) {
-        updates = updates + oldVehi.cost_per_km + " will be changed to " + vehicle.cost_per_km + "\n"
-    }
+    //if (vehicle.cost_per_km != oldVehi.cost_per_km) {
+    //    updates = updates + oldVehi.cost_per_km + " will be changed to " + vehicle.cost_per_km + "\n"
+    //}
 
     if (vehicle.passengerseats != oldVehi.passengerseats) {
         updates = updates + oldVehi.passengerseats + " will be changed to " + vehicle.passengerseats + "\n"
