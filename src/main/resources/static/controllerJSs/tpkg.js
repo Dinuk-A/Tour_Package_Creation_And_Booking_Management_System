@@ -398,10 +398,10 @@ const openModalTpkg = (tpkgObj) => {
     resetModalTpkg();
 
     // Show template info if applicable
-    if (!tpkgObj.is_custompkg) {
-        document.getElementById('modTpkgInfoTemplate').classList.remove('d-none');
-        document.getElementById('modTpkgIsTemplateOrNot').innerText = 'This is a Template Package';
-    }
+    //if (!tpkgObj.is_custompkg) {
+    //    document.getElementById('modTpkgInfoTemplate').classList.remove('d-none');
+    //    document.getElementById('modTpkgIsTemplateOrNot').innerText = 'This is a Template Package';
+    //}
 
     // Basic Info
     document.getElementById('modTpkgCode').innerText = tpkgObj.pkgcode || 'N/A';
@@ -484,6 +484,7 @@ const openModalTpkg = (tpkgObj) => {
 
     const editBtn = document.getElementById('modalDPEditBtn');
     const deleteBtn = document.getElementById('modalDPDeleteBtn');
+    const unpublishBtn = document.getElementById('modalDPUnpublishBtn');
 
     // Deleted Record
     if (tpkgObj.deleted_tpkg) {
@@ -508,12 +509,12 @@ const openModalTpkg = (tpkgObj) => {
     //run only if this is a template
     if (tpkgObj.is_custompkg == false) {
 
-        console.log("Template Package detected. Enabling template-specific features.");
+        // Show template info on top
+        document.getElementById('modTpkgInfoTemplate').classList.remove('d-none');
+        document.getElementById('modTpkgIsTemplateOrNot').innerText = 'This is a Template Package';
 
-        //disable edit button based on logged user roles
+        //disable edit/delete button based on logged user roles
         if (roles.includes("System_Admin") || roles.includes("Manager")) {
-
-            console.log("User has permission to edit template packages.");
 
             editBtn.disabled = false;
             deleteBtn.disabled = false;
@@ -521,12 +522,25 @@ const openModalTpkg = (tpkgObj) => {
             deleteBtn.style.cursor = "pointer";
         } else {
 
-            console.log("User does not have permission to edit template packages.");
-
             editBtn.disabled = true;
             deleteBtn.disabled = true;
             editBtn.style.cursor = "not-allowed";
             deleteBtn.style.cursor = "not-allowed";
+        }
+
+        //based on status, show/hide buttons
+        if (tpkgObj.tpkg_status === "Active") {
+
+            editBtn.classList.add('d-none');
+            deleteBtn.classList.add('d-none');
+            unpublishBtn.classList.remove('d-none');
+
+        } else {
+
+            editBtn.classList.remove('d-none');
+            deleteBtn.classList.remove('d-none');
+            unpublishBtn.classList.add('d-none');
+
         }
 
     }
@@ -627,134 +641,6 @@ const fetchTemplateDaysForRefill = async () => {
         templateDaysForRefill = await ajaxGetReq("/dayplan/onlytemplatedays");
     } catch (error) {
         console.error("Error loading templates:", error);
-    }
-}
-
-//to control the editing of template packages that live on website
-const controlEditingForLivePackages = (tpkgObj) => {
-
-    if (tpkgObj.is_custompkg == false) {
-
-        const tpkgStatusMsg = document.getElementById('tpkgStatusMsg');
-
-        // Array of input field IDs to reset
-        const inputTagsIds = [
-            'tpDescription',
-            'inputPkgTitle',
-            'tpkgFirstDaySelect',
-            'tpkgFinalDaySelect',
-            'pkgStartingPrice',
-            'tpNote'
-        ];
-
-        //radio tags to reset
-        const btnIdsToReset = [
-            'removeFinalDayBtn',
-            'fileImg1',
-            'fileImg2',
-            'fileImg3',
-            'addNewDaysBtn',
-            'calcStartingPricePerAdultBtn'
-        ];
-
-        //for the packages that live on website, disable inputs, show msg to mark as 'Inactive' to edit
-        if (tpkgObj.tpkg_status === "Active" && tpkg.tpkg_status === "Active") {
-
-            console.log("tpkgObj.tpkg_status", tpkgObj.tpkg_status);
-
-            tpkgStatusMsg.innerText = "Live packages on website cannot be edited until they are deactivated.";
-            tpkgStatusMsg.style.display = "block";
-
-            //clear out any previous styles
-            inputTagsIds.forEach((fieldID) => {
-                const field = document.getElementById(fieldID);
-                if (field) {
-                    field.disabled = true;
-                }
-            });
-
-            //disable other buttons (without using IDs)
-            document.querySelectorAll('button').forEach(btn => {
-                if (btn.textContent.trim() === 'Use Templates') {
-                    btn.disabled = true;
-                }
-            });
-
-            document.querySelectorAll('button').forEach(btn => {
-                if (btn.textContent.trim() === 'View') {
-                    btn.disabled = true;
-                }
-            });
-
-            document.querySelectorAll('button').forEach(btn => {
-                if (btn.textContent.trim() === 'Delete') {
-                    btn.disabled = true;
-                }
-            });
-
-            document.querySelectorAll('button').forEach(btn => {
-                if (btn.textContent.trim() === 'Clear') {
-                    btn.disabled = true;
-                }
-            });
-
-            //clear out any previous styles
-            btnIdsToReset.forEach(id => {
-                const btn = document.getElementById(id);
-                if (btn) {
-                    btn.disabled = true;
-                }
-            });
-
-        } else if (tpkg.tpkg_status === "Inactive" || tpkgObj.tpkg_status === "Inactive") {
-
-            console.log("tpkgObj.tpkg_status 2", tpkgObj.tpkg_status);
-
-            //clear out any previous styles
-            inputTagsIds.forEach((fieldID) => {
-                const field = document.getElementById(fieldID);
-                if (field) {
-                    field.disabled = false;
-                }
-            });
-
-            //disable other buttons (without using IDs)
-            document.querySelectorAll('button').forEach(btn => {
-                if (btn.textContent.trim() === 'Use Templates') {
-                    btn.disabled = false;
-                }
-            });
-
-            document.querySelectorAll('button').forEach(btn => {
-                if (btn.textContent.trim() === 'View') {
-                    btn.disabled = false;
-                }
-            });
-
-            document.querySelectorAll('button').forEach(btn => {
-                if (btn.textContent.trim() === 'Delete') {
-                    btn.disabled = false;
-                }
-            });
-
-            document.querySelectorAll('button').forEach(btn => {
-                if (btn.textContent.trim() === 'Clear') {
-                    btn.disabled = false;
-                }
-            });
-
-            //clear out any previous styles
-            btnIdsToReset.forEach(id => {
-                const btn = document.getElementById(id);
-                if (btn) {
-                    btn.disabled = false;
-                }
-            });
-
-            tpkgStatusMsg.innerText = "You can edit this package.";
-            tpkgStatusMsg.style.display = "none";
-
-        }
     }
 }
 
@@ -975,9 +861,10 @@ const refillTpkgForm = (tpkgObj) => {
         //refill per person price
         document.getElementById('pkgStartingPrice').value = tpkgObj.pkgstartingprice.toFixed(2);
 
-        setTimeout(() => {
-            controlEditingForLivePackages(tpkg);
-        }, 150);
+        //not using
+        //setTimeout(() => {
+        //    controlEditingForLivePackages(tpkg);
+        //}, 150);
 
     }
 
@@ -1027,6 +914,40 @@ const refillTpkgForm = (tpkgObj) => {
     midDayCounter = 1;
 
 }
+
+//unpublish a template to make it editable again
+const unpublishTpkgRecord = async () => {
+
+    const userConfirm = confirm("Are you sure to unpublish this package from the website? It will be editable again in the system.");
+
+    if (userConfirm) {
+        try {
+
+            tpkg = window.currentObject;
+            tpkg.tpkg_status = "Inactive";
+
+            let putServiceResponse = await ajaxPPDRequest("/tpkg", "PUT", tpkg);
+
+            if (putServiceResponse === "OK") {
+                showAlertModal('suc', "Package unpublished successfully. You can now edit it.");
+                $("#infoModalTpkg").modal("hide");
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 100);
+
+            } else {
+                showAlertModal('err', "Unpublish Failed\n" + putServiceResponse);
+            }
+
+        } catch (error) {
+            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+        }
+    } else {
+        showAlertModal('inf', 'User cancelled the unpublish task');
+    }
+}
+
 
 //show updated values
 const showTpkgValueChanges = () => {
@@ -4794,6 +4715,135 @@ const fetchAllDataParallel = async () => {
     });
 }
 
+
+//to control the editing of template packages that live on website 
+//not using
+const controlEditingForLivePackages = (tpkgObj) => {
+
+    if (tpkgObj.is_custompkg == false) {
+
+        const tpkgStatusMsg = document.getElementById('tpkgStatusMsg');
+
+        // Array of input field IDs to reset
+        const inputTagsIds = [
+            'tpDescription',
+            'inputPkgTitle',
+            'tpkgFirstDaySelect',
+            'tpkgFinalDaySelect',
+            'pkgStartingPrice',
+            'tpNote'
+        ];
+
+        //radio tags to reset
+        const btnIdsToReset = [
+            'removeFinalDayBtn',
+            'fileImg1',
+            'fileImg2',
+            'fileImg3',
+            'addNewDaysBtn',
+            'calcStartingPricePerAdultBtn'
+        ];
+
+        //for the packages that live on website, disable inputs, show msg to mark as 'Inactive' to edit
+        if (tpkgObj.tpkg_status === "Active" && tpkg.tpkg_status === "Active") {
+
+            console.log("tpkgObj.tpkg_status", tpkgObj.tpkg_status);
+
+            tpkgStatusMsg.innerText = "Live packages on website cannot be edited until they are deactivated.";
+            tpkgStatusMsg.style.display = "block";
+
+            //clear out any previous styles
+            inputTagsIds.forEach((fieldID) => {
+                const field = document.getElementById(fieldID);
+                if (field) {
+                    field.disabled = true;
+                }
+            });
+
+            //disable other buttons (without using IDs)
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Use Templates') {
+                    btn.disabled = true;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'View') {
+                    btn.disabled = true;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Delete') {
+                    btn.disabled = true;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Clear') {
+                    btn.disabled = true;
+                }
+            });
+
+            //clear out any previous styles
+            btnIdsToReset.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.disabled = true;
+                }
+            });
+
+        } else if (tpkg.tpkg_status === "Inactive" || tpkgObj.tpkg_status === "Inactive") {
+
+            console.log("tpkgObj.tpkg_status 2", tpkgObj.tpkg_status);
+
+            //clear out any previous styles
+            inputTagsIds.forEach((fieldID) => {
+                const field = document.getElementById(fieldID);
+                if (field) {
+                    field.disabled = false;
+                }
+            });
+
+            //disable other buttons (without using IDs)
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Use Templates') {
+                    btn.disabled = false;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'View') {
+                    btn.disabled = false;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Delete') {
+                    btn.disabled = false;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Clear') {
+                    btn.disabled = false;
+                }
+            });
+
+            //clear out any previous styles
+            btnIdsToReset.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.disabled = false;
+                }
+            });
+
+            tpkgStatusMsg.innerText = "You can edit this package.";
+            tpkgStatusMsg.style.display = "none";
+
+        }
+    }
+}
 
 
 

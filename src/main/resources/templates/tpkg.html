@@ -1403,7 +1403,7 @@
         <!-- Modal to display full details of a row  -->
         <div class="modal fade py-5" id="infoModalTpkg" tabindex="-1" aria-labelledby="infoModalLabel"
             aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg" style="max-width: 80vw;">
                 <div class="modal-content shadow-lg rounded-4">
                     <!-- Modal Header -->
                     <div class="modal-header bg-primary text-white">
@@ -1608,18 +1608,27 @@
                             Print Record
                         </button>
                         <div>
+
+                            <button id="modalDPUnpublishBtn" class="d-none  btn btn-warning fw-bold px-3 py-2 rounded-2 shadow-sm"
+                                onclick="unpublishTpkgRecord()">
+                                Unpublish from Website
+                            </button>
+
                             <button id="modalDPEditBtn" class="btn-edit me-2 fw-bold"
                                 onclick="refillTpkgForm(window['currentObject'])">
                                 Edit Entry
                             </button>
+
                             <button id="modalDPDeleteBtn" class="btn-delete fw-bold"
                                 onclick="deleteTpkgRecord(window['currentObject'])">
                                 Delete Entry
                             </button>
+
                             <button id="modalDPRecoverBtn" class="btn-restore d-none fw-bold"
                                 onclick="restoreTpkgRecord()">
                                 Restore Entry
                             </button>
+                            
                         </div>
                     </div>
 
