@@ -21,6 +21,9 @@ let onlyTemplates = [];
 let allActiveInqs = [];
 let vehiTypes = [];
 
+
+let roles = [];
+
 const fetchDays = async () => {
 
     //get first days only
@@ -96,7 +99,6 @@ const refreshTpkgForm = async () => {
     console.log("midDayCounter ", midDayCounter);
 
     //general changes. no matter loggeduser role
-
     //general changes for entire form
     tpkg = new Object();
     tpkg.dayplans = new Array();
@@ -307,7 +309,7 @@ const refreshTpkgForm = async () => {
     //get logged user roles
     const rolesRaw = document.getElementById('userRolesArraySection').textContent;
     console.log("Raw roles text:", rolesRaw);
-    const roles = JSON.parse(rolesRaw);
+    roles = JSON.parse(rolesRaw);
     console.log("Parsed roles:", roles);
 
     //changes for higher users
@@ -480,11 +482,12 @@ const openModalTpkg = (tpkgObj) => {
     // Status
     document.getElementById('modTpkgStatus').innerText = tpkgObj.tpkg_status || 'N/A';
 
+    const editBtn = document.getElementById('modalDPEditBtn');
+    const deleteBtn = document.getElementById('modalDPDeleteBtn');
+
     // Deleted Record
     if (tpkgObj.deleted_tpkg) {
         const deletedBanner = document.getElementById('modTpkgIfDeleted');
-        const editBtn = document.getElementById('modalDPEditBtn');
-        const deleteBtn = document.getElementById('modalDPDeleteBtn');
         const recoverBtn = document.getElementById('modalDPRecoverBtn');
 
         // Show deleted message
@@ -500,6 +503,32 @@ const openModalTpkg = (tpkgObj) => {
 
         // Show restore button
         recoverBtn.classList.remove('d-none');
+    }
+
+    //run only if this is a template
+    if (tpkgObj.is_custompkg == false) {
+
+        console.log("Template Package detected. Enabling template-specific features.");
+
+        //disable edit button based on logged user roles
+        if (roles.includes("System_Admin") || roles.includes("Manager")) {
+
+            console.log("User has permission to edit template packages.");
+
+            editBtn.disabled = false;
+            deleteBtn.disabled = false;
+            editBtn.style.cursor = "pointer";
+            deleteBtn.style.cursor = "pointer";
+        } else {
+
+            console.log("User does not have permission to edit template packages.");
+
+            editBtn.disabled = true;
+            deleteBtn.disabled = true;
+            editBtn.style.cursor = "not-allowed";
+            deleteBtn.style.cursor = "not-allowed";
+        }
+
     }
 
     // Show modal
@@ -592,13 +621,140 @@ const resetDayPlanInfoSection = () => {
 
 //load templates and save globally just for refill
 let templateDaysForRefill = [];
-
 const fetchTemplateDaysForRefill = async () => {
 
     try {
         templateDaysForRefill = await ajaxGetReq("/dayplan/onlytemplatedays");
     } catch (error) {
         console.error("Error loading templates:", error);
+    }
+}
+
+//to control the editing of template packages that live on website
+const controlEditingForLivePackages = (tpkgObj) => {
+
+    if (tpkgObj.is_custompkg == false) {
+
+        const tpkgStatusMsg = document.getElementById('tpkgStatusMsg');
+
+        // Array of input field IDs to reset
+        const inputTagsIds = [
+            'tpDescription',
+            'inputPkgTitle',
+            'tpkgFirstDaySelect',
+            'tpkgFinalDaySelect',
+            'pkgStartingPrice',
+            'tpNote'
+        ];
+
+        //radio tags to reset
+        const btnIdsToReset = [
+            'removeFinalDayBtn',
+            'fileImg1',
+            'fileImg2',
+            'fileImg3',
+            'addNewDaysBtn',
+            'calcStartingPricePerAdultBtn'
+        ];
+
+        //for the packages that live on website, disable inputs, show msg to mark as 'Inactive' to edit
+        if (tpkgObj.tpkg_status === "Active" && tpkg.tpkg_status === "Active") {
+
+            console.log("tpkgObj.tpkg_status", tpkgObj.tpkg_status);
+
+            tpkgStatusMsg.innerText = "Live packages on website cannot be edited until they are deactivated.";
+            tpkgStatusMsg.style.display = "block";
+
+            //clear out any previous styles
+            inputTagsIds.forEach((fieldID) => {
+                const field = document.getElementById(fieldID);
+                if (field) {
+                    field.disabled = true;
+                }
+            });
+
+            //disable other buttons (without using IDs)
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Use Templates') {
+                    btn.disabled = true;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'View') {
+                    btn.disabled = true;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Delete') {
+                    btn.disabled = true;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Clear') {
+                    btn.disabled = true;
+                }
+            });
+
+            //clear out any previous styles
+            btnIdsToReset.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.disabled = true;
+                }
+            });
+
+        } else if (tpkg.tpkg_status === "Inactive" || tpkgObj.tpkg_status === "Inactive") {
+
+            console.log("tpkgObj.tpkg_status 2", tpkgObj.tpkg_status);
+
+            //clear out any previous styles
+            inputTagsIds.forEach((fieldID) => {
+                const field = document.getElementById(fieldID);
+                if (field) {
+                    field.disabled = false;
+                }
+            });
+
+            //disable other buttons (without using IDs)
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Use Templates') {
+                    btn.disabled = false;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'View') {
+                    btn.disabled = false;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Delete') {
+                    btn.disabled = false;
+                }
+            });
+
+            document.querySelectorAll('button').forEach(btn => {
+                if (btn.textContent.trim() === 'Clear') {
+                    btn.disabled = false;
+                }
+            });
+
+            //clear out any previous styles
+            btnIdsToReset.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.disabled = false;
+                }
+            });
+
+            tpkgStatusMsg.innerText = "You can edit this package.";
+            tpkgStatusMsg.style.display = "none";
+
+        }
     }
 }
 
@@ -609,19 +765,6 @@ const refillTpkgForm = (tpkgObj) => {
 
     tpkg = JSON.parse(JSON.stringify(tpkgObj));
     oldTpkg = JSON.parse(JSON.stringify(tpkgObj));
-
-    //refill generally, doesnt matter the type (custom or template)
-    //title and code
-    document.getElementById("inputPkgTitle").value = tpkgObj.pkgtitle || "";
-    document.getElementById("inputPkgCode").value = tpkgObj.pkgcode || "";
-
-    //total days and km count
-    document.getElementById('showTotalKMCount').value = tpkgObj.totalkmcount;
-    document.getElementById('showTotalDaysCount').value = tpkgObj.totaldays;
-
-    // note , status
-    document.getElementById('tpNote').value = tpkgObj.note;
-    document.getElementById('tpSelectStatus').value = tpkgObj.tpkg_status;
 
     //type based changes   
     //first setup UI for both types
@@ -803,7 +946,7 @@ const refillTpkgForm = (tpkgObj) => {
                 document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
                 document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
 
-            }, 150);
+            }, 100);
 
             midDayCounter++;
         }
@@ -832,7 +975,24 @@ const refillTpkgForm = (tpkgObj) => {
         //refill per person price
         document.getElementById('pkgStartingPrice').value = tpkgObj.pkgstartingprice.toFixed(2);
 
+        setTimeout(() => {
+            controlEditingForLivePackages(tpkg);
+        }, 150);
+
     }
+
+    //refill generally, doesnt matter the type (custom or template)
+    //title and code
+    document.getElementById("inputPkgTitle").value = tpkgObj.pkgtitle || "";
+    document.getElementById("inputPkgCode").value = tpkgObj.pkgcode || "";
+
+    //total days and km count
+    document.getElementById('showTotalKMCount').value = tpkgObj.totalkmcount;
+    document.getElementById('showTotalDaysCount').value = tpkgObj.totaldays;
+
+    // note , status
+    document.getElementById('tpNote').value = tpkgObj.note;
+    document.getElementById('tpSelectStatus').value = tpkgObj.tpkg_status;
 
     //reactive days related button
     document.getElementById('showFirstDayBtn').disabled = false;
@@ -3637,7 +3797,7 @@ const generateNormalDayPlanSelectSections = () => {
     templateBtn.onclick = () => {
         loadTemplates(select, currentDay);
     };
-    templateBtn.innerHTML = `<i class="bi bi-pencil-square me-1"></i> Use Template`;
+    templateBtn.innerHTML = `<i class="bi bi-pencil-square me-1"></i> Use Templates`;
 
     const existingBtn = document.createElement('button');
     existingBtn.className = 'btn btn-outline-secondary btn-sm';

@@ -328,10 +328,10 @@
                                                                     <button class="btn btn-outline-primary btn-sm"
                                                                         onclick="loadTemplates(tpkgFirstDaySelect)">
                                                                         <i class="bi bi-pencil-square me-1"></i>
-                                                                        Use
-                                                                        Template
+                                                                        Use Templates
                                                                     </button>
-                                                                    <button id="loadExistingFDsBtn" class="btn btn-outline-secondary btn-sm"
+                                                                    <button id="loadExistingFDsBtn"
+                                                                        class="btn btn-outline-secondary btn-sm"
                                                                         onclick="loadExistingFDs(tpkgFirstDaySelect)">
                                                                         <i class="bi bi-archive me-1"></i> Use
                                                                         Existing
@@ -381,14 +381,11 @@
                                                                 <button type="button" disabled id="showFinalDayBtn"
                                                                     class="btn btn-outline-primary"
                                                                     onclick="showDayPlanDetails('tpkgFinalDaySelect')">
-                                                                    View
-                                                                </button>
+                                                                    View </button>
                                                                 <button type="button" disabled id="removeFinalDayBtn"
                                                                     class="btn btn-outline-danger"
                                                                     onclick="removeFinalDay();">
-                                                                    Remove
-                                                                </button>
-
+                                                                    Remove </button>
                                                             </div>
                                                         </div>
 
@@ -1314,7 +1311,8 @@
 
                                             <!-- Button -->
                                             <div class="col-4">
-                                                <button class="btn btn-outline-info w-100"
+                                                <button id="calcStartingPricePerAdultBtn"
+                                                    class="btn btn-outline-info w-100"
                                                     onclick="calcStartingPricePerAdult();">
                                                     Calculate Price
                                                 </button>
@@ -1346,7 +1344,8 @@
                                                     Status
                                                     :</label>
                                                 <select id="tpSelectStatus" class="form-control form-select"
-                                                    onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status')">
+                                                    onchange="staticSelectValidator(this , 'tpkg' , 'tpkg_status');">
+                                                    <!-- controlEditingForLivePackages(window['currentObject']); -->
 
                                                     <option value="" selected disabled> Select Status </option>
                                                     <option value="Draft"> Draft </option>
@@ -1357,6 +1356,15 @@
 
                                                 </select>
                                             </div>
+
+                                            <!-- msg under the stts -->
+                                            <div class="row mt-2">
+                                                <div class="col-12">
+                                                    <small id="tpkgStatusMsg" class="text-info fw-semibold"
+                                                        style="display: none;"></small>
+                                                </div>
+                                            </div>
+
                                         </div>
 
                                     </fieldset>
