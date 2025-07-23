@@ -294,6 +294,7 @@ const enableAssignedUserChange = () => {
 
 //global variables , used in openModal 
 let intrstdPkgList = [];
+let roles = [];
 
 //refresh the inquiry form and reset all fields 
 const refreshInquiryForm = async () => {
@@ -387,10 +388,10 @@ const refreshInquiryForm = async () => {
     const rolesRaw = document.getElementById('userRolesArraySection').textContent;
     console.log("Raw roles text:", rolesRaw);
 
-    const roles = JSON.parse(rolesRaw);
+    roles = JSON.parse(rolesRaw);
     console.log("Parsed roles:", roles);
 
-    if (roles.includes("System_Admin") || roles.includes("Manager")) {
+    if (roles.includes("System_Admin") || roles.includes("Manager") || roles.includes("Assistant Manager")) {
         btnChangeAssignedUser.disabled = false;
     } else {
         btnChangeAssignedUser.disabled = true;
@@ -962,7 +963,7 @@ const openModal = async (inqObj) => {
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
 
     //if inq is completed, cant edit anymore
-    if (inqObj.inq_status == "Confirmed" || inqObj.inq_status == "Dropped" || inqObj.deleted_inq == true) {
+    if (inqObj.inq_status == "Confirmed" || inqObj.inq_status == "Closed" || inqObj.deleted_inq == true) {
 
         enableEditBtn.disabled = true;
         enableEditBtn.style.cursor = "not-allowed";
@@ -987,9 +988,18 @@ const openModal = async (inqObj) => {
         btnChangeAssignedUser.disabled = false;
         btnChangeAssignedUser.style.cursor = "pointer";
 
+        console.log("roles: ", roles);
+        if (roles.includes("System_Admin") || roles.includes("Manager") || roles.includes("Assistant Manager")) {
+            btnChangeAssignedUser.disabled = false;
+        } else {
+            btnChangeAssignedUser.disabled = true;
+        }
+
         manualInqUpdateBtn.disabled = false;
         manualInqUpdateBtn.style.cursor = "pointer";
     }
+
+
 
     //disable add new button
     const addBtn = document.getElementById('manualInqAddBtn');

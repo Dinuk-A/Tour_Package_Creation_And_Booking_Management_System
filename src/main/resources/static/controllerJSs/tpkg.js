@@ -390,6 +390,12 @@ const resetModalTpkg = () => {
     if (recoverBtn) {
         recoverBtn.classList.add('d-none');
     }
+
+    //hide unpublish button
+    const unpublishBtn = document.getElementById('modalDPUnpublishBtn');
+    if (unpublishBtn) {
+        unpublishBtn.classList.add('d-none');
+    }
 };
 
 //open modal to show all the info
@@ -504,6 +510,7 @@ const openModalTpkg = (tpkgObj) => {
 
         // Show restore button
         recoverBtn.classList.remove('d-none');
+
     }
 
     //run only if this is a template
@@ -929,6 +936,7 @@ const unpublishTpkgRecord = async () => {
             let putServiceResponse = await ajaxPPDRequest("/tpkg", "PUT", tpkg);
 
             if (putServiceResponse === "OK") {
+
                 showAlertModal('suc', "Package unpublished successfully. You can now edit it.");
                 $("#infoModalTpkg").modal("hide");
 
