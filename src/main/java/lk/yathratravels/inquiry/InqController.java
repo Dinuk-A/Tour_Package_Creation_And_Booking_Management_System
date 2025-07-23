@@ -28,7 +28,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.security.core.Authentication;
-import jakarta.transaction.Transactional;
+//import jakarta.transaction.Transactional;
 import lk.yathratravels.employee.Employee;
 import lk.yathratravels.employee.EmployeeDao;
 import lk.yathratravels.privilege.Privilege;
@@ -177,10 +177,6 @@ public class InqController {
             return "save not completed : " + e.getMessage();
         }
     }
-
-    // if an employee manually added this which recieved from email or call
-    // inq.setAddeddatetime(LocalDateTime.now());
-    // inq.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
     // inqs from manual system
     @PostMapping(value = "/inq")

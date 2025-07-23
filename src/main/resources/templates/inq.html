@@ -680,7 +680,7 @@
                                             </div>
                                             <div class="col-8 text-end">
                                                 <button type="submit" id="manualInqUpdateBtn" class="btn-update fw-bold"
-                                                    onclick="updateSystemInq()">Update Entry</button>
+                                                    onclick="updateSystemInqWithFollowup()">Update Entry</button>
                                                 <button type="submit" id="manualInqAddBtn" class="btn-add fw-bold"
                                                     onclick="addNewInquiry()">Add Entry</button>
                                             </div>
@@ -720,7 +720,7 @@
                                                         </option>
                                                         <option value="quote_sent">Quote Sent</option>
                                                         <option value="no_response">No Response</option>
-                                                        <option value="good_to_book">Success</option>
+                                                        <!--<option value="good_to_book">Success</option>-->
                                                     </select>
                                                 </div>
                                             </div>
@@ -743,7 +743,7 @@
                                                 <button type="reset" class="btn btn-secondary"
                                                     onclick="deleteInqFollowupSection()">Cancel</button>
                                                 <button type="button" class="btn btn-primary"
-                                                    onclick="submitManualFollowup()">Submit Followup Response</button>
+                                                    onclick="submitOnlyManualFollowup()">Submit Followup Response</button>
                                             </div>
 
                                         </div>
