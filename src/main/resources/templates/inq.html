@@ -654,7 +654,7 @@
                                                     Status:
                                                     <span class="text-danger"> * </span> :</label>
                                                 <select id="inqStatus" class="form-select"
-                                                    onchange="staticSelectValidator(this , 'inquiry' , 'inq_status')">
+                                                    onchange="staticSelectValidator(this , 'inquiry' , 'inq_status'); changesBasedOnInqStts(this);">
                                                     <option value="" selected disabled> Select Status </option>
                                                     <option value="New"> New </option>
                                                     <option value="Assigned"> Assigned </option>
@@ -679,6 +679,8 @@
                                                 </button>
                                             </div>
                                             <div class="col-8 text-end">
+                                                <button type="submit" id="convertToBookingBtn" class="btn-add d-none fw-bold"
+                                                onclick="convertInqToBooking()">Convert to Booking</button>
                                                 <button type="submit" id="manualInqUpdateBtn" class="btn-update fw-bold"
                                                     onclick="updateSystemInqWithFollowup()">Update Entry</button>
                                                 <button type="submit" id="manualInqAddBtn" class="btn-add fw-bold"
