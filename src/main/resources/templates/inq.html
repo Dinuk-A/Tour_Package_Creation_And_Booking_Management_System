@@ -302,14 +302,12 @@
 
                                             <!-- passport OR nic num -->
                                             <!-- filterClient(); -->
-                                            <div class="col-6">
+                                            <div class="col-6" id="colPptOrNic">
                                                 <label id="lblForNICorPpt" for="inqClientPassportNumorNIC"
-                                                    class="form-label mb-0">Passport
-                                                    or NIC
+                                                    class="form-label mb-0">Passport or NIC
                                                     :</label>
 
-                                                <input id="inqClientPassportNumorNIC"
-                                                    class="form-control form-input d-none"
+                                                <input id="inqClientPassportNumorNIC" class="form-control form-input"
                                                     onkeyup="inputValidatorText(this,'', 'inquiry' , 'passportnumornic')">
                                             </div>
 
@@ -428,8 +426,8 @@
                                                         <div class="col-md-3">
                                                             <label for="inqLocalAdultCount"
                                                                 class="form-label mb-0 fs-6">Local Adults</label>
-                                                            <input type="number" placeholder="0" class="w-75 form-control"
-                                                                id="inqLocalAdultCount"
+                                                            <input type="number" placeholder="0"
+                                                                class="w-75 form-control" id="inqLocalAdultCount"
                                                                 onkeyup="inputValidatorText(this, ' ^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'inquiry', 'inq_local_adults'); handleChildInputAvailability();  checkAtLeastOneAdultPresent();">
                                                         </div>
 
@@ -437,8 +435,9 @@
                                                         <div class="col-md-3">
                                                             <label for="inqLocalChildCount"
                                                                 class="form-label mb-0 fs-6">Local Children</label>
-                                                            <input type="number" placeholder="0" class="w-75 form-control"
-                                                                id="inqLocalChildCount" disabled
+                                                            <input type="number" placeholder="0"
+                                                                class="w-75 form-control" id="inqLocalChildCount"
+                                                                disabled
                                                                 onkeyup="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'inquiry', 'inq_local_kids');">
                                                         </div>
 
@@ -446,8 +445,8 @@
                                                         <div class="col-md-3">
                                                             <label for="inqForeignAdultCount"
                                                                 class="form-label mb-0 fs-6">Foreign Adults</label>
-                                                            <input type="number" placeholder="0" class="w-75 form-control"
-                                                                id="inqForeignAdultCount"
+                                                            <input type="number" placeholder="0"
+                                                                class="w-75 form-control" id="inqForeignAdultCount"
                                                                 onkeyup="inputValidatorText(this, ' ^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'inquiry', 'inq_foreign_adults'); handleChildInputAvailability();  checkAtLeastOneAdultPresent();">
                                                         </div>
 
@@ -455,8 +454,9 @@
                                                         <div class="col-md-3">
                                                             <label for="inqForeignChildCount"
                                                                 class="form-label mb-0 fs-6">Foreign Children</label>
-                                                            <input type="number" placeholder="0" class="w-75 form-control"
-                                                                id="inqForeignChildCount" disabled
+                                                            <input type="number" placeholder="0"
+                                                                class="w-75 form-control" id="inqForeignChildCount"
+                                                                disabled
                                                                 onkeyup="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'inquiry', 'inq_foreign_kids');">
                                                         </div>
                                                         <!-- Optional Total Travellers -->
@@ -610,8 +610,7 @@
                                                 <!-- main selection area -->
                                                 <div class="col-6">
                                                     <label for="assignedUserSelect"
-                                                        class="form-label fw-bold mb-1">Assigned
-                                                        To:</label>
+                                                        class="form-label fw-bold mb-1">Assigned To:</label>
                                                     <select id="assignedUserSelect" class="form-control form-select"
                                                         disabled
                                                         onchange="dynamicSelectValidator(this, 'inquiry','assigned_empid')">
@@ -624,7 +623,7 @@
                                                         <button disabled id="btnChangeAssignedUser"
                                                             class="btn btn-outline-primary btn-sm"
                                                             onclick="enableAssignedUserChange()">
-                                                            Change Assigned User
+                                                            Change Assigned Employee
                                                         </button>
                                                     </div>
 
@@ -639,11 +638,9 @@
                                             <!-- note -->
                                             <div class="col-7">
                                                 <label for="inputNoteInquiry" class="form-label fw-bold mb-0">
-                                                    Additional
-                                                    Information
+                                                    Additional Information
                                                     <span class="text-info">
-                                                        *
-                                                    </span> :</label>
+                                                        * </span> :</label>
                                                 <textarea id="inputNoteInquiry" class="form-control" rows="6"
                                                     onkeyup="inputValidatorText(this, '' ,'inquiry' , 'note')"></textarea>
                                             </div>
@@ -652,17 +649,16 @@
                                             <!-- status -->
                                             <div class="col-5 ">
                                                 <label for="inqStatus" class="form-label fw-bold mb-0">
-                                                    Inquiry
-                                                    Status:
+                                                    Inquiry Status:
                                                     <span class="text-danger"> * </span> :</label>
                                                 <select id="inqStatus" class="form-select"
                                                     onchange="staticSelectValidator(this , 'inquiry' , 'inq_status'); changesBasedOnInqStts(this);">
                                                     <option value="" selected disabled> Select Status </option>
-                                                    <option value="New"> New </option>
-                                                    <option value="Assigned"> Assigned </option>
-                                                    <option value="Working"> In-Progress </option>
-                                                    <option value="Confirmed"> Success</option>
-                                                    <option value="Closed"> Closed</option>
+                                                    <option value="New"> New Inquiry </option>
+                                                    <option value="Assigned"> Assigned to Employee </option>
+                                                    <option value="Working"> Processing Inquiry </option>
+                                                    <option value="Confirmed"> Client Confirmed Booking</option>
+                                                    <option value="Closed"> Inquiry Closed</option>
                                                     <option value="ifDeleted" class="d-none"> Deleted </option>
                                                 </select>
                                             </div>

@@ -7,6 +7,7 @@ window.addEventListener('load', () => {
     refillFilterExecutives();
 });
 
+//defined in common fn
 document.addEventListener("DOMContentLoaded", function () {
     controlSidebarLinks();
 });
@@ -20,10 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
             refreshInqFollowupSection();
         }
     });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    controlSidebarLinks();
 });
 
 //handle min max of date fields
@@ -155,11 +152,6 @@ const buildPersonalInqTable = async () => {
         console.error("Failed to build personal inq table:", error);
     }
 }
-
-//const convertInqToBooking =()=>{
-//    
-//}
-
 
 //filter by inq status , common fn for both tABLES
 const applyInquiryStatusFilter = () => {
@@ -590,7 +582,6 @@ const printInquirySummary = async (inqObj) => {
     };
 };
 
-
 //set status auto
 const setInqStatusAuto = () => {
 
@@ -641,18 +632,6 @@ const handleNeedGuideCB = () => {
         inquiry.inq_guideneed = false;
     }
 }
-
-//for 2nd contact num field
-//const sameContactError = () => {
-//    if (inqAdditionalContact.value === inqContactOne.value) {
-//        alert("Enter A Different Number than The Previous Contact Number")
-//        inqAdditionalContact.style.border = '2px solid red';
-//        inquiry.contactnumtwo = null
-//    } else {
-//        inputFieldValidator(this, '', 'inquiry', 'contactnumtwo');
-//        inqAdditionalContact.style.border = '2px solid lime';
-//    }
-//}
 
 //check errors
 const checkManualInqErrors = () => {
@@ -1210,6 +1189,7 @@ const showInqValueChanges = () => {
 
 }
 
+//at least one adult count has to be non zero
 const checkAtLeastOneAdultPresent = () => {
 
     const localAdult = document.getElementById('inqLocalAdultCount');
@@ -1253,24 +1233,23 @@ const changesBasedOnInqStts = (statusSelectElement) => {
 
     const value = statusSelectElement.value;
     const updateBtn = document.getElementById('manualInqUpdateBtn');
-    const conToBknBtn = document.getElementById('convertToBookingBtn');
-    const pptOrNicField = document.getElementById('inqClientPassportNumorNIC');
+    const convToBknBtn = document.getElementById('convertToBookingBtn');
+    //const pptOrNicCol = document.getElementById('colPptOrNic');
+    //const pptOrNicField = document.getElementById('inqClientPassportNumorNIC');
 
     if (value === "Confirmed") {
-
-        conToBknBtn.classList.remove('d-none');
+        convToBknBtn.classList.remove('d-none');
         updateBtn.classList.add('d-none');
-        pptOrNicField.classList.remove('d-none');
-        pptOrNicField.disabled = false;
-
+        //pptOrNicCol.classList.remove('d-none');
+        //pptOrNicField.disabled = false;
     } else if (value === "Closed") {
-
         updateBtn.textContent = "Close Inquiry";
         updateBtn.classList.remove('d-none');
-
+        convToBknBtn.classList.add('d-none');
     } else {
         updateBtn.textContent = "Update Entry";
         updateBtn.classList.remove('d-none');
+        convToBknBtn.classList.add('d-none');
     }
 
 }
@@ -1491,7 +1470,7 @@ const refillAllPrevResponses = async () => {
 
 }
 
-//re render the template  ✅
+//re render the template  
 const createNewResponseInputSection = async () => {
     document.getElementById("createNewResponseRowBtn").disabled = true;
 
@@ -1658,7 +1637,17 @@ const enableChildCountInputsOri = () => {
 }
 
 
-
+//for 2nd contact num field
+//const sameContactError = () => {
+//    if (inqAdditionalContact.value === inqContactOne.value) {
+//        alert("Enter A Different Number than The Previous Contact Number")
+//        inqAdditionalContact.style.border = '2px solid red';
+//        inquiry.contactnumtwo = null
+//    } else {
+//        inputFieldValidator(this, '', 'inquiry', 'contactnumtwo');
+//        inqAdditionalContact.style.border = '2px solid lime';
+//    }
+//}
 
 
 
