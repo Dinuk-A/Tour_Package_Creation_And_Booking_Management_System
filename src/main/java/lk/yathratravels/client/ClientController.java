@@ -142,7 +142,7 @@ public class ClientController {
         }
 
         try {
-            // Assuming you have updated datetime and user ID fields in Client entity
+            
             client.setLastmodifieddatetime(LocalDateTime.now());
             client.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
 

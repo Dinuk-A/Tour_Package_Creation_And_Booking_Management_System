@@ -58,6 +58,7 @@ public class Client {
 
     @Column(name = "cli_status")
     private String cli_status;
+    //["New", "Active", "Inactive", "Archived", "Blacklisted"]
 
     @ManyToOne
     @JoinColumn(name = "nationality_id", referencedColumnName = "id")
