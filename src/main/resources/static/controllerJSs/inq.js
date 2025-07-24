@@ -160,24 +160,6 @@ const buildPersonalInqTable = async () => {
 //    
 //}
 
-// some changes based on inq stts updates
-const changesBasedOnInqStts = (statusSelectElement) => {
-
-    const value = statusSelectElement.value;
-    const updateBtn = document.getElementById('manualInqUpdateBtn');
-
-    if (value === "Confirmed") {
-        updateBtn.textContent = "Proceed to booking";
-        //all the checks must be happened here 
-        //(passportnic, confirmed startdate, not null traveller count)
-
-    } else if (value === "Closed") {
-        updateBtn.textContent = "Close inquiry";
-    } else {
-        updateBtn.textContent = "Update Entry";
-    }
-
-}
 
 //filter by inq status , common fn for both tABLES
 const applyInquiryStatusFilter = () => {
@@ -359,7 +341,6 @@ const refreshInquiryForm = async () => {
         'inqClientName',
         'InqClientNationality',
         'inqContactOne',
-        'inqAdditionalContact',
         'inqClientEmail',
         'inqMainEnquiry',
         'prefContMethodPkgRelForm',
@@ -662,16 +643,16 @@ const handleNeedGuideCB = () => {
 }
 
 //for 2nd contact num field
-const sameContactError = () => {
-    if (inqAdditionalContact.value === inqContactOne.value) {
-        alert("Enter A Different Number than The Previous Contact Number")
-        inqAdditionalContact.style.border = '2px solid red';
-        inquiry.contactnumtwo = null
-    } else {
-        inputFieldValidator(this, '', 'inquiry', 'contactnumtwo');
-        inqAdditionalContact.style.border = '2px solid lime';
-    }
-}
+//const sameContactError = () => {
+//    if (inqAdditionalContact.value === inqContactOne.value) {
+//        alert("Enter A Different Number than The Previous Contact Number")
+//        inqAdditionalContact.style.border = '2px solid red';
+//        inquiry.contactnumtwo = null
+//    } else {
+//        inputFieldValidator(this, '', 'inquiry', 'contactnumtwo');
+//        inqAdditionalContact.style.border = '2px solid lime';
+//    }
+//}
 
 //check errors
 const checkManualInqErrors = () => {
@@ -824,25 +805,25 @@ const openModal = async (inqObj) => {
         existingClientRegId.classList.remove('d-none');
         existingClientRegId.textContent = `Customer ID: CUST-${custsByEmail[0].clientcode || 'N/A'}`;
 
-        const passportInputWrapper = document.querySelector('#inqClientPassportNumorNIC').closest('.col-6');
-        passportInputWrapper.classList.remove('d-none');
-        document.getElementById('inqClientPassportNumorNIC').value = custsByEmail[0].passportornic || '';
-
-        const additionalContactWrapper = document.querySelector('#inqAdditionalContact').closest('.col-3');
-        additionalContactWrapper.classList.remove('d-none');
-        document.getElementById('inqAdditionalContact').value = custsByEmail[0].contacttwo || '';
+        //        const passportInputWrapper = document.querySelector('#inqClientPassportNumorNIC').closest('.col-6');
+        //        passportInputWrapper.classList.remove('d-none');
+        //        document.getElementById('inqClientPassportNumorNIC').value = custsByEmail[0].passportornic || '';
+        //
+        //        const additionalContactWrapper = document.querySelector('#inqAdditionalContact').closest('.col-3');
+        //        additionalContactWrapper.classList.remove('d-none');
+        //        document.getElementById('inqAdditionalContact').value = custsByEmail[0].contacttwo || '';
 
     } else {
         existingClientNotice.classList.add('d-none');
         existingClientRegId.classList.add('d-none');
 
-        const passportInputWrapper = document.querySelector('#inqClientPassportNumorNIC').closest('.col-6');
-        passportInputWrapper.classList.add('d-none');
-        document.getElementById('inqClientPassportNumorNIC').value = '';
-
-        const additionalContactWrapper = document.querySelector('#inqAdditionalContact').closest('.col-3');
-        additionalContactWrapper.classList.add('d-none');
-        document.getElementById('inqAdditionalContact').value = '';
+        //        const passportInputWrapper = document.querySelector('#inqClientPassportNumorNIC').closest('.col-6');
+        //        passportInputWrapper.classList.add('d-none');
+        //        document.getElementById('inqClientPassportNumorNIC').value = '';
+        //
+        //        const additionalContactWrapper = document.querySelector('#inqAdditionalContact').closest('.col-3');
+        //        additionalContactWrapper.classList.add('d-none');
+        //        document.getElementById('inqAdditionalContact').value = '';
     }
 
     document.getElementById('inqCodeInput').value = inqObj.inqcode || "N/A";
@@ -855,7 +836,7 @@ const openModal = async (inqObj) => {
     document.getElementById('inqClientName').value = inqObj.clientname || "N/A";
     document.getElementById('InqClientNationality').value = inqObj.nationality_id?.countryname || "N/A";
     document.getElementById('inqContactOne').value = inqObj.contactnum || "N/A";
-    document.getElementById('inqAdditionalContact').value = inqObj.contactnumtwo || "N/A";
+    //document.getElementById('inqAdditionalContact').value = inqObj.contactnumtwo || "N/A";
     document.getElementById('inqClientEmail').value = inqObj.email || "N/A";
     document.getElementById('prefContMethodPkgRelForm').value = inqObj.prefcontactmethod || "N/A";
     document.getElementById('inqClientPassportNumorNIC').value = inqObj.passportnumornic || "N/A";
@@ -877,24 +858,24 @@ const openModal = async (inqObj) => {
     if (inqObj.inq_adults != null && inqObj.inq_adults != 0) {
         if (inquiry.nationality_id.countryname == "Sri Lanka") {
 
-            document.getElementById('inqLocalAdultCount').value = inqObj.inq_adults || 0;
+            document.getElementById('inqLocalAdultCount').value = inqObj.inq_adults;
             inquiry.inq_local_adults = inqObj.inq_adults;
             oldInquiry.inq_local_adults = inqObj.inq_adults;
             inquiry.inq_adults = null;
 
-            document.getElementById('inqLocalChildCount').value = inqObj.inq_kids || 0;
+            document.getElementById('inqLocalChildCount').value = inqObj.inq_kids;
             inquiry.inq_local_kids = inqObj.inq_kids;
             oldInquiry.inq_local_kids = inqObj.inq_kids;
             inquiry.inq_kids = null;
 
         } else {
 
-            document.getElementById('inqForeignAdultCount').value = inqObj.inq_adults || 0;
+            document.getElementById('inqForeignAdultCount').value = inqObj.inq_adults;
             inquiry.inq_foreign_adults = inqObj.inq_adults;
             oldInquiry.inq_foreign_adults = inqObj.inq_adults;
             inquiry.inq_adults = null;
 
-            document.getElementById('inqForeignChildCount').value = inqObj.inq_kids || 0;
+            document.getElementById('inqForeignChildCount').value = inqObj.inq_kids;
             inquiry.inq_foreign_kids = inqObj.inq_kids;
             oldInquiry.inq_foreign_kids = inqObj.inq_kids;
             inquiry.inq_kids = null;
@@ -902,10 +883,11 @@ const openModal = async (inqObj) => {
         }
         //if (inqObj.inq_adults == 0)
     } else {
-        document.getElementById('inqLocalAdultCount').value = inqObj.inq_local_adults || 0;
-        document.getElementById('inqLocalChildCount').value = inqObj.inq_local_kids || 0;
-        document.getElementById('inqForeignAdultCount').value = inqObj.inq_foreign_adults || 0;
-        document.getElementById('inqForeignChildCount').value = inqObj.inq_foreign_kids || 0;
+        //|| 0 for all
+        document.getElementById('inqLocalAdultCount').value = inqObj.inq_local_adults;
+        document.getElementById('inqLocalChildCount').value = inqObj.inq_local_kids;
+        document.getElementById('inqForeignAdultCount').value = inqObj.inq_foreign_adults;
+        document.getElementById('inqForeignChildCount').value = inqObj.inq_foreign_kids;
     }
 
     if (inqObj.inq_guideneed === true) {
@@ -933,7 +915,6 @@ const openModal = async (inqObj) => {
         'inqClientName',
         'InqClientNationality',
         'inqContactOne',
-        'inqAdditionalContact',
         'inqClientEmail',
         'inqClientPassportNumorNIC',
         'inqMainEnquiry',
@@ -1182,19 +1163,35 @@ const showInqValueChanges = () => {
         //when chainging for the 2nd time and after, when this happens there is no value in inq_adults or inq_kids
     } else {
 
-        if (inquiry.inq_local_adults !== oldInquiry.inq_local_adults && !(inquiry.inq_local_adults == 0 && oldInquiry.inq_local_adults == 0)) {
+        //        if (inquiry.inq_local_adults !== oldInquiry.inq_local_adults && !(inquiry.inq_local_adults == 0 && oldInquiry.inq_local_adults == 0)) {
+        //            updates += `Traveller Group: Local Adult Count changed from ${oldInquiry.inq_local_adults || 0} to ${inquiry.inq_local_adults}\n`;
+        //        }
+        //
+        //        if (inquiry.inq_local_kids !== oldInquiry.inq_local_kids && !(inquiry.inq_local_kids == 0 && oldInquiry.inq_local_kids == 0)) {
+        //            updates += `Traveller Group: Local Child Count changed from ${oldInquiry.inq_local_kids || 0} to ${inquiry.inq_local_kids}\n`;
+        //        }
+        //
+        //        if (inquiry.inq_foreign_adults !== oldInquiry.inq_foreign_adults && !(inquiry.inq_foreign_adults == 0 && oldInquiry.inq_foreign_adults == 0)) {
+        //            updates += `Traveller Group: Foreign Adult Count changed from ${oldInquiry.inq_foreign_adults || 0} to ${inquiry.inq_foreign_adults}\n`;
+        //        }
+        //
+        //        if (inquiry.inq_foreign_kids !== oldInquiry.inq_foreign_kids && !(inquiry.inq_foreign_kids == 0 && oldInquiry.inq_foreign_kids == 0)) {
+        //            updates += `Traveller Group: Foreign Child Count changed from ${oldInquiry.inq_foreign_kids || 0} to ${inquiry.inq_foreign_kids}\n`;
+        //        }
+
+        if (inquiry.inq_local_adults !== oldInquiry.inq_local_adults && !((inquiry.inq_local_adults || 0) == 0 && (oldInquiry.inq_local_adults || 0) == 0)) {
             updates += `Traveller Group: Local Adult Count changed from ${oldInquiry.inq_local_adults || 0} to ${inquiry.inq_local_adults}\n`;
         }
 
-        if (inquiry.inq_local_kids !== oldInquiry.inq_local_kids && !(inquiry.inq_local_kids == 0 && oldInquiry.inq_local_kids == 0)) {
+        if (inquiry.inq_local_kids !== oldInquiry.inq_local_kids && !((inquiry.inq_local_kids || 0) == 0 && (oldInquiry.inq_local_kids || 0) == 0)) {
             updates += `Traveller Group: Local Child Count changed from ${oldInquiry.inq_local_kids || 0} to ${inquiry.inq_local_kids}\n`;
         }
 
-        if (inquiry.inq_foreign_adults !== oldInquiry.inq_foreign_adults && !(inquiry.inq_foreign_adults == 0 && oldInquiry.inq_foreign_adults == 0)) {
+        if (inquiry.inq_foreign_adults !== oldInquiry.inq_foreign_adults && !((inquiry.inq_foreign_adults || 0) == 0 && (oldInquiry.inq_foreign_adults || 0) == 0)) {
             updates += `Traveller Group: Foreign Adult Count changed from ${oldInquiry.inq_foreign_adults || 0} to ${inquiry.inq_foreign_adults}\n`;
         }
 
-        if (inquiry.inq_foreign_kids !== oldInquiry.inq_foreign_kids && !(inquiry.inq_foreign_kids == 0 && oldInquiry.inq_foreign_kids == 0)) {
+        if (inquiry.inq_foreign_kids !== oldInquiry.inq_foreign_kids && !((inquiry.inq_foreign_kids || 0) == 0 && (oldInquiry.inq_foreign_kids || 0) == 0)) {
             updates += `Traveller Group: Foreign Child Count changed from ${oldInquiry.inq_foreign_kids || 0} to ${inquiry.inq_foreign_kids}\n`;
         }
 
@@ -1208,10 +1205,35 @@ const showInqValueChanges = () => {
 
     //for status
     if (inquiry.inq_status !== oldInquiry.inq_status) {
-        updates += `Internal Note changed from ${oldInquiry.inq_status || "N/A"} to ${inquiry.inq_status || "N/A"}\n`;
+        updates += `Status changed from ${oldInquiry.inq_status || "N/A"} to ${inquiry.inq_status || "N/A"}\n`;
     }
 
     return updates;
+
+}
+
+const checkAtLeastOneAdultPresent = () => {
+
+    const localAdult = document.getElementById('inqLocalAdultCount');
+    const foreignAdult = document.getElementById('inqForeignAdultCount');
+
+    const localVal = parseInt(localAdult.value) || 0;
+    const foreignVal = parseInt(foreignAdult.value) || 0;
+
+    if (localVal === 0 && foreignVal === 0) {
+        localAdult.style.border = "2px solid red";
+        foreignAdult.style.border = "2px solid red";
+        inquiry.inq_foreign_adults = null;
+        inquiry.inq_local_adults = null;
+    }
+    else {
+
+        localAdult.style.border = "2px solid lime";
+        foreignAdult.style.border = "2px solid lime";
+        inquiry.inq_foreign_adults = foreignVal;
+        inquiry.inq_local_adults = localVal;
+
+    }
 
 }
 
@@ -1228,58 +1250,130 @@ const refreshInqFollowupSection = () => {
 
 }
 
+// some changes based on inq stts updates
+const changesBasedOnInqStts = (statusSelectElement) => {
+
+    const value = statusSelectElement.value;
+    const updateBtn = document.getElementById('manualInqUpdateBtn');
+    const conToBknBtn = document.getElementById('convertToBookingBtn');
+    const pptOrNicField = document.getElementById('inqClientPassportNumorNIC');
+
+    if (value === "Confirmed") {
+
+        conToBknBtn.classList.remove('d-none');
+        updateBtn.classList.add('d-none');
+        pptOrNicField.classList.remove('d-none');
+        pptOrNicField.disabled = false;
+
+    } else if (value === "Closed") {
+
+        updateBtn.textContent = "Close Inquiry";
+        updateBtn.classList.remove('d-none');
+
+    } else {
+        updateBtn.textContent = "Update Entry";
+        updateBtn.classList.remove('d-none');
+    }
+
+}
+
+//only runs when inq is marked as confirmed
 const checkInqSuccessErrors = () => {
 
     let errors = "";
 
     if (inquiry.passportnumornic == null || inquiry.passportnumornic.trim() === "") {
-        errors = + "Please enter the client's passport number or NIC";
+        errors += "Please enter the client's passport number or NIC \n";
     }
 
     if (inquiry.inq_apprx_start_date == null) {
-        errors = + "Please choose a confirmed start date"
+        errors += "Please choose a confirmed start date \n"
     }
 
-    let totalAdultTravellers = parseInt(inquiry.inq_foreign_adults) + parseInt(inquiry.inq_local_adults);
+    let foreignAdults = parseInt(inquiry.inq_foreign_adults) || 0;
+    let localAdults = parseInt(inquiry.inq_local_adults) || 0;
+    //let totalAdultTravellers = foreignAdults + localAdults;
 
-    if (totalAdultTravellers == null || totalAdultTravellers <= 0) {
-        errors = + "Please add the traveller count"
+    if (foreignAdults === 0 && localAdults === 0) {
+        errors += "Please add the traveller count \n";
     }
+
 
     if (inquiry.inq_guideneed == null) {
-        errors = + "Please choose whether a guide is needed or not";
+        errors += "Please choose whether a guide is needed or not \n";
     }
 
     if (inquiry.inq_pick == null || inquiry.inq_pick.trim() === "") {
-        errors = + "Please enter the initial pickup location";
+        errors += "Please enter the initial pickup location \n";
     }
 
     if (inquiry.inq_drop == null || inquiry.inq_drop.trim() === "") {
-        errors = + "Please enter the final drop-off location";
+        errors += "Please enter the final drop-off location \n";
     }
 
     return errors;
 }
 
-//update a manual inq (also with or without followup auto made by showValueChanges fn)
-const updateSystemInqWithFollowup = async () => {
+//mark inquiry as success and create booking and customer records
+const convertInqToBooking = async () => {
 
-    let errors;
-
-    if (inquiry.inq_status == "Confirmed") {
-        errors = checkInqSuccessErrors();
-    } else {
-        errors = checkManualInqErrors();
-    }
-
-    //errors = checkManualInqErrors();
+    let errors = checkInqSuccessErrors();
 
     if (errors == "") {
-
         const changesHappened = showInqValueChanges();
-
         if (changesHappened == "") {
+            showAlertModal('war', "No changes detected to update");
+        } else {
+            //to remove general traveller grp counts, bcz they are now saved in local/foreign separately
+            inquiry.inq_adults = null;
+            inquiry.inq_kids = null;
 
+            let userConfirm = confirm("Are you sure to preoceed thin inquiry to a booking?\n\n" + changesHappened);
+
+            if (userConfirm) {
+
+                followup.content = "Converted to a booking";
+
+                //update the main inquiry too (important)
+                followup.inquiry_id = inquiry;
+
+                try {
+
+                    let putServiceResponse = await ajaxPPDRequest("/autogeneratedfollowupalsowithmaininquiry", "POST", followup);
+
+                    if (putServiceResponse === "OK") {
+
+                        showAlertModal('suc', "Successfully Created Booking");
+                        refreshInquiryForm();
+                        refillAllPrevResponses();
+                        handleTableCreation();
+                        var tableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                        tableTab.show();
+
+                    } else {
+                        showAlertModal('err', "Booking creation failed \n" + putServiceResponse);
+                    }
+
+                } catch (error) {
+                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+                }
+            } else {
+                showAlertModal('inf', 'User cancelled the task');
+            }
+        }
+    } else {
+        showAlertModal('err', errors);
+    }
+}
+
+//update a manual inq (also with or without followups that auto made by showValueChanges fn)
+const updateSystemInqWithFollowup = async () => {
+
+    let errors = checkManualInqErrors();
+
+    if (errors == "") {
+        const changesHappened = showInqValueChanges();
+        if (changesHappened == "") {
             showAlertModal('war', "No changes detected to update");
 
         } else {
@@ -1288,88 +1382,36 @@ const updateSystemInqWithFollowup = async () => {
             inquiry.inq_adults = null;
             inquiry.inq_kids = null;
 
-            if (inquiry.inq_status == "Confirmed") {
+            let userComment = prompt("Add a short comment to describe this update:\n\n" + changesHappened);
 
-                let userConfirm = confirm("Are you sure to preoceed to booking?\n\n" + changesHappened);
-
-                if (userConfirm) {
-
-                    followup.content = "Converted to booking";
-
-                    //update the main inquiry too
-                    followup.inquiry_id = inquiry;
-
-                    try {
-                        let putServiceResponse = await ajaxPPDRequest("/autogeneratedfollowupalsowithmaininquiry", "POST", followup);
-                        if (putServiceResponse === "OK") {
-                            showAlertModal('suc', "Successfully Updated Booking");
-                            refillAllPrevResponses();
-                            //document.getElementById('formSystemInq').reset();
-                            //refreshInquiryForm();
-                            handleTableCreation();
-                            var followupTab = new bootstrap.Tab(document.getElementById('inqStep3-tab'));
-                            followupTab.show();
-                        } else {
-                            showAlertModal('err', "Update Failed \n" + putServiceResponse);
-                        }
-
-                    } catch (error) {
-                        showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
-                    }
-                }
-
-
-            } else {
-                let userComment = prompt("Add a short comment to describe this update:\n\n" + changesHappened);
-
-                if (userComment === null || userComment.trim() === "") {
-                    showAlertModal('inf', "No comment entered. Task cancelled.");
-                    return;
-                }
-
-                let fullContent = `${changesHappened}\n---\nEmployee Comment: ${userComment || 'N/A'}`;
-
-                //to add the followup
-                followup.content = fullContent;
-                //followup.followup_status = "gathering_info";
-
-                //update the main inquiry too
-                followup.inquiry_id = inquiry;
-
-                console.log("Follow up object: ", followup);
-
-                try {
-                    let putServiceResponse = await ajaxPPDRequest("/autogeneratedfollowupalsowithmaininquiry", "POST", followup);
-                    if (putServiceResponse === "OK") {
-                        showAlertModal('suc', "Successfully Updated");
-                        refillAllPrevResponses();
-                        //document.getElementById('formSystemInq').reset();
-                        //refreshInquiryForm();
-                        handleTableCreation();
-                        var followupTab = new bootstrap.Tab(document.getElementById('inqStep3-tab'));
-                        followupTab.show();
-                    } else {
-                        showAlertModal('err', "Update Failed \n" + putServiceResponse);
-                    }
-
-                } catch (error) {
-                    showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
-                }
-
+            if (userComment === null || userComment.trim() === "") {
+                showAlertModal('inf', "No comment entered. Task cancelled.");
+                return;
             }
 
-            //            let userComment = prompt("Add a short comment to describe this update:\n\n" + changesHappened);
-            //
-            //            if (userComment === null || userComment.trim() === "") {
-            //                showAlertModal('inf', "No comment entered. Task cancelled.");
-            //                return;
-            //            }
+            let fullContent = `${changesHappened}\n---\nEmployee Comment: ${userComment || 'N/A'}`;
 
-            //let fullContent = `${changesHappened}\n---\nEmployee Comment: ${userComment || 'N/A'}`;
+            //to add the followup
+            followup.content = fullContent;
 
+            //update the main inquiry too
+            followup.inquiry_id = inquiry;
 
+            try {
+                let putServiceResponse = await ajaxPPDRequest("/autogeneratedfollowupalsowithmaininquiry", "POST", followup);
+                if (putServiceResponse === "OK") {
+                    showAlertModal('suc', "Successfully Updated");
+                    refillAllPrevResponses();
+                    handleTableCreation();
+                    var followupTab = new bootstrap.Tab(document.getElementById('inqStep3-tab'));
+                    followupTab.show();
+                } else {
+                    showAlertModal('err', "Update Failed \n" + putServiceResponse);
+                }
 
-
+            } catch (error) {
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+            }
 
         }
     } else {
@@ -1377,28 +1419,6 @@ const updateSystemInqWithFollowup = async () => {
     }
 
 }
-
-//handle adult counts
-const validateInquiryAdultCounts = () => {
-    const localAdult = document.getElementById('inqLocalAdultCount');
-    const foreignAdult = document.getElementById('inqForeignAdultCount');
-
-    const localVal = parseInt(localAdult.value) || 0;
-    const foreignVal = parseInt(foreignAdult.value) || 0;
-
-    if (localVal === 0 && foreignVal === 0) {
-        localAdult.style.border = "2px solid red";
-        foreignAdult.style.border = "2px solid red";
-        inquiry.inq_foreign_adults = null;
-        inquiry.inq_local_adults = null;
-    } else {
-
-        inputValidatorText(localAdult, ' ^([0]|[1-9][0-9]{0,1})$', 'inquiry', 'inq_local_adults');
-        inputValidatorText(foreignAdult, ' ^([0]|[1-9][0-9]{0,1})$', 'inquiry', 'inq_foreign_adults');
-
-    }
-}
-
 
 //show all the responses
 const refillAllPrevResponses = async () => {
@@ -1489,7 +1509,7 @@ const checkManualFollowupErrors = () => {
     let errors = "";
 
     if (followup.content == null || followup.content.trim() === "") {
-        errors = errors + " Please Enter The Follow-up Response \n";
+        errors = errors + " Please Enter The Follow-up Response Summary\n";
     }
 
     //    if (followup.followup_status == null) {

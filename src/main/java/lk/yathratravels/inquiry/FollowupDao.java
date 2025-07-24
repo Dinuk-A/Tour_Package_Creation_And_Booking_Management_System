@@ -13,6 +13,6 @@ public interface FollowupDao extends JpaRepository<Followup, Integer> {
 
     // get the tpkg id of ( last sent tpkg ) by the last followup that has status as
     // "good_to_book"
-    @Query(value = "select flwup from  Followup as flwup  where flwup.inquiry_id.id=?1 and flwup.followup_status='good_to_book'")
-    public Followup getTpkgOfLastSent(Integer flwup);
+//    @Query(value = "select flwup from  Followup as flwup  where flwup.inquiry_id.id=?1 and flwup.followup_status='good_to_book'")
+//    public Followup getTpkgOfLastSent(Integer flwup);
 }

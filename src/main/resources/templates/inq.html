@@ -301,26 +301,28 @@
                                         <div class="row mt-2">
 
                                             <!-- passport OR nic num -->
-                                            <div class="col-6 d-none">
+                                            <!-- filterClient(); -->
+                                            <div class="col-6">
                                                 <label id="lblForNICorPpt" for="inqClientPassportNumorNIC"
                                                     class="form-label mb-0">Passport
                                                     or NIC
                                                     :</label>
 
-                                                <input id="inqClientPassportNumorNIC" class="form-control form-input"
-                                                    onkeyup="filterClient();  inputValidatorText(this,'', 'inquiry' , 'passportnumornic')">
+                                                <input id="inqClientPassportNumorNIC"
+                                                    class="form-control form-input d-none"
+                                                    onkeyup="inputValidatorText(this,'', 'inquiry' , 'passportnumornic')">
                                             </div>
 
-                                            <div class="col-3"></div>
+                                            <!--<div class="col-3"></div>-->
 
                                             <!-- additional contact -->
-                                            <div class="col-3 d-none">
+                                            <!--<div class="col-3 d-none">
                                                 <label for="inqAdditionalContact" class="form-label mb-0">Contact
                                                     #2:</label>
 
                                                 <input id="inqAdditionalContact" class="form-control form-input"
                                                     onkeyup="sameContactError(); ">
-                                            </div>
+                                            </div>-->
 
                                         </div>
 
@@ -426,36 +428,36 @@
                                                         <div class="col-md-3">
                                                             <label for="inqLocalAdultCount"
                                                                 class="form-label mb-0 fs-6">Local Adults</label>
-                                                            <input type="number" value="0" class="w-75 form-control"
+                                                            <input type="number" placeholder="0" class="w-75 form-control"
                                                                 id="inqLocalAdultCount"
-                                                                onkeyup=" validateInquiryAdultCounts(); handleChildInputAvailability();">
+                                                                onkeyup="inputValidatorText(this, ' ^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'inquiry', 'inq_local_adults'); handleChildInputAvailability();  checkAtLeastOneAdultPresent();">
                                                         </div>
 
                                                         <!-- Local Children -->
                                                         <div class="col-md-3">
                                                             <label for="inqLocalChildCount"
                                                                 class="form-label mb-0 fs-6">Local Children</label>
-                                                            <input type="number" value="0" class="w-75 form-control"
+                                                            <input type="number" placeholder="0" class="w-75 form-control"
                                                                 id="inqLocalChildCount" disabled
-                                                                onchange="inputValidatorText(this, '^([0]|[1-9][0-9]{0,1})$', 'inquiry', 'inq_local_kids');">
+                                                                onkeyup="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'inquiry', 'inq_local_kids');">
                                                         </div>
 
                                                         <!-- Foreign Adults -->
                                                         <div class="col-md-3">
                                                             <label for="inqForeignAdultCount"
                                                                 class="form-label mb-0 fs-6">Foreign Adults</label>
-                                                            <input type="number" value="0" class="w-75 form-control"
+                                                            <input type="number" placeholder="0" class="w-75 form-control"
                                                                 id="inqForeignAdultCount"
-                                                                onkeyup=" validateInquiryAdultCounts(); handleChildInputAvailability();">
+                                                                onkeyup="inputValidatorText(this, ' ^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'inquiry', 'inq_foreign_adults'); handleChildInputAvailability();  checkAtLeastOneAdultPresent();">
                                                         </div>
 
                                                         <!-- Foreign Children -->
                                                         <div class="col-md-3">
                                                             <label for="inqForeignChildCount"
                                                                 class="form-label mb-0 fs-6">Foreign Children</label>
-                                                            <input type="number" value="0" class="w-75 form-control"
+                                                            <input type="number" placeholder="0" class="w-75 form-control"
                                                                 id="inqForeignChildCount" disabled
-                                                                onchange="inputValidatorText(this, '^([0]|[1-9][0-9]{0,1})$', 'inquiry', 'inq_foreign_kids');">
+                                                                onkeyup="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'inquiry', 'inq_foreign_kids');">
                                                         </div>
                                                         <!-- Optional Total Travellers -->
                                                         <!--
@@ -680,7 +682,7 @@
                                             </div>
                                             <div class="col-8 text-end">
                                                 <button type="submit" id="convertToBookingBtn"
-                                                    class="btn-add d-none fw-bold"
+                                                    class="btn-update d-none fw-bold"
                                                     onclick="convertInqToBooking()">Convert to Booking</button>
                                                 <button type="submit" id="manualInqUpdateBtn" class="btn-update fw-bold"
                                                     onclick="updateSystemInqWithFollowup()">Update Entry</button>
