@@ -679,8 +679,9 @@
                                                 </button>
                                             </div>
                                             <div class="col-8 text-end">
-                                                <button type="submit" id="convertToBookingBtn" class="btn-add d-none fw-bold"
-                                                onclick="convertInqToBooking()">Convert to Booking</button>
+                                                <button type="submit" id="convertToBookingBtn"
+                                                    class="btn-add d-none fw-bold"
+                                                    onclick="convertInqToBooking()">Convert to Booking</button>
                                                 <button type="submit" id="manualInqUpdateBtn" class="btn-update fw-bold"
                                                     onclick="updateSystemInqWithFollowup()">Update Entry</button>
                                                 <button type="submit" id="manualInqAddBtn" class="btn-add fw-bold"
@@ -702,36 +703,37 @@
                                         <div class="card-body">
 
                                             <div class="row gx-4">
-                                                <div class="col-md-8 mb-3">
+                                                <div class="col-md-12 mb-3">
                                                     <label for="inputNewResponseTextField"
-                                                        class="form-label fw-semibold">Followup Response:</label>
+                                                        class="form-label fw-semibold">Summary of
+                                                        Followup/Response:</label>
                                                     <textarea id="inputNewResponseTextField" class="form-control"
                                                         style="height: 120px;"
                                                         onkeyup="inputValidatorText(this, '', 'followup', 'content')"></textarea>
                                                 </div>
 
-                                                <div class="col-md-4 mb-3">
+                                                <!--<div class="col-md-4 mb-3">
                                                     <label for="newInqResponseStatusSelect"
-                                                        class="form-label fw-semibold">Followup Response
+                                                        class="form-label fw-semibold mb-0">Followup Response
                                                         Status:</label>
                                                     <select id="newInqResponseStatusSelect" class="form-select"
-                                                        onchange="staticSelectValidator(this, 'followup', 'followup_status')">
+                                                        onchange="staticSelectValidator(this, 'followup', 'followup_status'); ">
                                                         <option disabled selected>Please select status
                                                         </option>
-                                                        <option value="gathering_info">Gathering Info
+                                                        <option value="gathering_info">Gathering Information
                                                         </option>
-                                                        <option value="quote_sent">Quote Sent</option>
-                                                        <option value="no_response">No Response</option>
-                                                        <!--<option value="good_to_book">Success</option>-->
+                                                        <option value="quote_sent">Tour Package Quoted</option>
+                                                        <option value="no_response">Client Not Responding</option>
+                                                        <option value="system_gen">System Generated</option>
+                                                        <option value="followup_scheduled">Follow-up Scheduled</option>
                                                     </select>
-                                                </div>
+                                                </div>-->
                                             </div>
 
                                             <div class="row mb-3">
                                                 <div class="col-md-4 d-flex align-items-center">
-                                                    <label for="lastSentTourPackageSelect" class="mb-0 fw-semibold">Last
-                                                        Sent Tour
-                                                        Package:</label>
+                                                    <label for="lastSentTourPackageSelect"
+                                                        class="mb-0 fw-semibold">Recently Quoted Tour Package:</label>
                                                 </div>
                                                 <div class="col-md-8">
                                                     <select id="lastSentTourPackageSelect"
@@ -745,7 +747,8 @@
                                                 <button type="reset" class="btn btn-secondary"
                                                     onclick="deleteInqFollowupSection()">Cancel</button>
                                                 <button type="button" class="btn btn-primary"
-                                                    onclick="submitOnlyManualFollowup()">Submit Followup Response</button>
+                                                    onclick="submitOnlyManualFollowup()">Submit Followup
+                                                    Response</button>
                                             </div>
 
                                         </div>

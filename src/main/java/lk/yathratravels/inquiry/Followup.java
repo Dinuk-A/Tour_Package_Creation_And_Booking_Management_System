@@ -30,8 +30,8 @@ public class Followup {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "followup_status")
-    private String followup_status;
+    //@Column(name = "followup_status")
+    //private String followup_status;
 
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;

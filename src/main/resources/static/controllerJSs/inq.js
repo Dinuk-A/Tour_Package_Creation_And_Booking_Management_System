@@ -482,18 +482,19 @@ const printInquirySummary = async (inqObj) => {
                 const followupDate = new Date(followup.addeddatetime).toLocaleDateString();
                 const followupTime = new Date(followup.addeddatetime).toLocaleTimeString();
 
-                // Format status for display
-                const statusDisplay = followup.followup_status
-                    ? followup.followup_status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
-                    : 'N/A';
 
+                //const statusDisplay = followup.followup_status
+                //    ? followup.followup_status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+                //    : 'N/A';
+
+                //                        <div class="mb-2"><strong>Status:</strong> ${statusDisplay}</div>
                 followupsSection += `
                     <div class="followup-item mb-3 p-2 border border-secondary rounded">
                         <div class="row mb-2">
                             <div class="col-md-6"><strong>Follow-up #${followupsSize - index}</strong></div>
                             <div class="col-md-6"><strong>Date:</strong> ${followupDate} ${followupTime}</div>
                         </div>
-                        <div class="mb-2"><strong>Status:</strong> ${statusDisplay}</div>
+
                         <div class="mb-2"><strong>Content:</strong> ${followup.content || 'N/A'}</div>
                     </div>
                 `;
@@ -1228,10 +1229,35 @@ const refreshInqFollowupSection = () => {
 }
 
 const checkInqSuccessErrors = () => {
-    let errors ="";
-    if (inquiry.inq_apprx_start_date == null) {
-        errors =+ "please select start date"
+
+    let errors = "";
+
+    if (inquiry.passportnumornic == null || inquiry.passportnumornic.trim() === "") {
+        errors = + "Please enter the client's passport number or NIC";
     }
+
+    if (inquiry.inq_apprx_start_date == null) {
+        errors = + "Please choose a confirmed start date"
+    }
+
+    let totalAdultTravellers = parseInt(inquiry.inq_foreign_adults) + parseInt(inquiry.inq_local_adults);
+
+    if (totalAdultTravellers == null || totalAdultTravellers <= 0) {
+        errors = + "Please add the traveller count"
+    }
+
+    if (inquiry.inq_guideneed == null) {
+        errors = + "Please choose whether a guide is needed or not";
+    }
+
+    if (inquiry.inq_pick == null || inquiry.inq_pick.trim() === "") {
+        errors = + "Please enter the initial pickup location";
+    }
+
+    if (inquiry.inq_drop == null || inquiry.inq_drop.trim() === "") {
+        errors = + "Please enter the final drop-off location";
+    }
+
     return errors;
 }
 
@@ -1447,6 +1473,7 @@ const createNewResponseInputSection = async () => {
 
     document.getElementById("manualResponseAddingSection").appendChild(clone);
 
+    //get custom tour packages made for this inquiry
     try {
         console.log(inquiry.id);
         const tpkgs = await ajaxGetReq("/tpkg/custom/byinq?inqid=" + inquiry.id);
@@ -1465,17 +1492,17 @@ const checkManualFollowupErrors = () => {
         errors = errors + " Please Enter The Follow-up Response \n";
     }
 
-    if (followup.followup_status == null) {
-        errors = errors + " Please Select The Follow-up Status \n";
-    }
-
-    if (followup.followup_status == "quote_sent" && followup.last_sent_tpkg == null) {
-        errors = errors + " Please Select The Tour Package Sent \n";
-    }
-
-    if (followup.followup_status == "good_to_book" && followup.last_sent_tpkg == null) {
-        errors = errors + " Please Select The Tour Package \n";
-    }
+    //    if (followup.followup_status == null) {
+    //        errors = errors + " Please Select The Follow-up Status \n";
+    //    }
+    //
+    //    if (followup.followup_status == "quote_sent" && followup.last_sent_tpkg == null) {
+    //        errors = errors + " Please Select The Tour Package Sent \n";
+    //    }
+    //
+    //    if (followup.followup_status == "good_to_book" && followup.last_sent_tpkg == null) {
+    //        errors = errors + " Please Select The Tour Package \n";
+    //    }
 
     return errors;
 }
