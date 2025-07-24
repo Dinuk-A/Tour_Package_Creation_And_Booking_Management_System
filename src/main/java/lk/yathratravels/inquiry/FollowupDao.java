@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import lk.yathratravels.tpkg.TourPkg;
+
 public interface FollowupDao extends JpaRepository<Followup, Integer> {
 
     // return all followups of this inq
@@ -14,5 +16,9 @@ public interface FollowupDao extends JpaRepository<Followup, Integer> {
     // return last quoted followup of this inq
     @Query(value = "SELECT flwup FROM Followup flwup WHERE flwup.inquiry_id.id = ?1 AND flwup.is_package_quoted = true ORDER BY flwup.id DESC")
     public Followup getLastQuotedFollowup(Integer inqId);
-    
+
+    // return last sent tour package of this inq
+    @Query("SELECT flwup.last_sent_tpkg FROM Followup flwup WHERE flwup.inquiry_id.id = ?1 AND flwup.is_package_quoted = true ORDER BY flwup.id DESC")
+    TourPkg getLastSentTourPackage(Integer inqId);
+
 }

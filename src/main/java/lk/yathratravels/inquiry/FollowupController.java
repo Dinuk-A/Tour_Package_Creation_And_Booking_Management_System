@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 //import java.util.Optional;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.transaction.Transactional;
 import lk.yathratravels.bookings.Booking;
 import lk.yathratravels.bookings.BookingDao;
+import lk.yathratravels.bookings.BookingService;
 import lk.yathratravels.client.Client;
 import lk.yathratravels.client.ClientDao;
 import lk.yathratravels.privilege.Privilege;
@@ -42,6 +44,9 @@ public class FollowupController {
     private InqDao inqDao;
 
     @Autowired
+    private BookingService bookingService;
+
+    @Autowired
     private ClientDao clientDao;
 
     @Autowired
@@ -63,17 +68,24 @@ public class FollowupController {
 
     }
 
-    // get followups by inq id (test only)
+    // get followups by inq id
     @GetMapping(value = "/followup/byinqid/{inqId}", produces = "application/JSON")
     public List<Followup> getFollowupsByInq(@PathVariable("inqId") int inquiryID) {
-
         return followupDao.getAllFollowupsByInqId(inquiryID);
     }
 
-    // get last quoted followup by inq id
-    @GetMapping(value = "/followup/last-quoted", produces = "application/json")
+    // get last quoted followup by inq id(test only)
+    // http://localhost:8081/followup/lastquoted?inqId=43
+    @GetMapping(value = "/followup/lastquoted", produces = "application/JSON")
     public Followup getLastQuotedFollowup(@RequestParam Integer inqId) {
         return followupDao.getLastQuotedFollowup(inqId);
+    }
+
+    // get last sent tour package of last quoted followup by inq id(test only)
+    // http://localhost:8081/followup/lastsenttpkg?inqId=40
+    @GetMapping(value = "/followup/lastsenttpkg", produces = "application/JSON")
+    public TourPkg getLastSentTourPackage(@RequestParam Integer inqId) {
+        return followupDao.getLastSentTourPackage(inqId);
     }
 
     // save just the followup (no main inq data)
@@ -112,13 +124,12 @@ public class FollowupController {
     public String addNewFollowupWithInqUpdates(@RequestBody Followup flwup) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //
-        // Privilege privilegeLevelForLoggedUser =
-        // privilegeService.getPrivileges(auth.getName(), "INQUIRY");
 
-        // if (!privilegeLevelForLoggedUser.getPrvinsert()) {
-        // return "Update Not Completed; You Dont Have Permission";
-        // }
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "INQUIRY");
+
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "Update Not Completed; You Dont Have Permission";
+        }
 
         try {
 
@@ -141,6 +152,88 @@ public class FollowupController {
             if (flwup.getInquiry_id().getInq_status().equals("Confirmed")) {
 
                 System.out.println("Booking created");
+
+            }
+
+            return "OK";
+
+        } catch (Exception e) {
+            return "Error Saving Followup Update: " + e.getMessage();
+        }
+
+    }
+
+    // for main inq status == confirmed ones
+    @PostMapping(value = "/createbookingbyinq")
+    @Transactional
+    public String createBookingByConfirmedInquiryOfFollowup(@RequestBody Followup flwup) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "INQUIRY");
+
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "Update Not Completed; You Dont Have Permission";
+        }
+
+        try {
+
+            flwup.setAddeddatetime(LocalDateTime.now());
+            flwup.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+            followupDao.save(flwup);
+
+            // update the inquiry too
+            inqDao.save(flwup.getInquiry_id());
+
+            if (flwup.getInquiry_id().getInq_status().equals("Confirmed")) {
+
+                Inq mainInquiry = flwup.getInquiry_id();
+
+                System.out.println("Creating a Client ");
+                Optional<Client> clientOpt = clientDao.findByEmail(mainInquiry.getEmail());
+                Client finalClient;
+
+                if (clientOpt.isPresent()) {
+                    finalClient = clientOpt.get();
+                } else {
+                    Client newClient = new Client();
+                    newClient.setFullname(mainInquiry.getClientname());
+                    newClient.setPassportornic(mainInquiry.getPassportnumornic());
+                    newClient.setContactone(mainInquiry.getContactnum());
+                    newClient.setContacttwo(mainInquiry.getContactnumtwo());
+                    newClient.setEmail(mainInquiry.getEmail());
+                    newClient.setNote(mainInquiry.getNote());
+                    newClient.setCli_status("Active");
+                    newClient.setNationality_id(mainInquiry.getNationality_id());
+
+                    finalClient = clientDao.save(newClient);
+                }
+
+                System.out.println("Creating a Booking ");
+                Booking newBooking = new Booking();
+
+                newBooking.setClient(finalClient);
+                bookingService.assignNextBookingCode(newBooking);
+
+                TourPkg lastSentPkg = followupDao.getLastSentTourPackage(mainInquiry.getId());
+                newBooking.setTpkg(lastSentPkg);
+
+                // if (lastSentPkg != null) {
+                // newBooking.setTpkg(lastSentPkg);
+                // } else {
+                // System.out.println("No quoted tour package found for inquiry ID: " +
+                // mainInquiry.getId());
+                // }
+
+                newBooking.setStartdate(mainInquiry.getInq_apprx_start_date());
+                newBooking.setBooking_status("Pending");
+                newBooking.setEnddate(lastSentPkg.getTourenddate());
+                // newBooking.setFinal_price(lastSentPkg != null ?
+                // lastSentPkg.getPkgfinalprice() : 0.0);
+                newBooking.setFinal_price(lastSentPkg.getPkgfinalprice());
+
+                bookingDao.save(newBooking);
 
             }
 

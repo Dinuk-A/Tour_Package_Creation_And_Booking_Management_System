@@ -91,6 +91,7 @@ public class BookingController {
         return bookingDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
+    // update a booking (assign vehicles, personnel, etc)
     @PutMapping(value = "/booking")
     @Transactional
     public String updateBooking(@RequestBody Booking booking) {
@@ -122,6 +123,16 @@ public class BookingController {
             return "Update Not Completed Because :" + e.getMessage();
         }
 
+    }
+
+    // reusable method to get next booking code
+    private void assignNextBookingCode(Booking booking) {
+        String nextBookingCode = bookingDao.getNextBookingCode();
+        if (nextBookingCode == null || nextBookingCode.equals("")) {
+            booking.setBookingcode("BK00001");
+        } else {
+            booking.setBookingcode(nextBookingCode);
+        }
     }
 
 }

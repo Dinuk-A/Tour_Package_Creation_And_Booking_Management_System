@@ -30,9 +30,6 @@ public class Followup {
     @Column(name = "content")
     private String content;
 
-    //@Column(name = "followup_status")
-    //private String followup_status;
-
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
 
@@ -57,6 +54,9 @@ public class Followup {
     private LocalDateTime next_followup_datetime;
 
 }
+
+    //@Column(name = "followup_status")
+    //private String followup_status;
 
 /*
  * adddeddatetime datetime
