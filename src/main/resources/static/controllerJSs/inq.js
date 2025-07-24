@@ -979,8 +979,8 @@ const openModal = async (inqObj) => {
         btnChangeAssignedUser.disabled = true;
         btnChangeAssignedUser.style.cursor = "not-allowed";
 
-        manualInqUpdateBtn.disabled = true;
-        manualInqUpdateBtn.style.cursor = "not-allowed";
+        //manualInqUpdateBtn.disabled = true;
+        //manualInqUpdateBtn.style.cursor = "not-allowed";
 
     } else {
 
@@ -1000,11 +1000,9 @@ const openModal = async (inqObj) => {
             btnChangeAssignedUser.disabled = true;
         }
 
-        manualInqUpdateBtn.disabled = false;
-        manualInqUpdateBtn.style.cursor = "pointer";
+        //manualInqUpdateBtn.disabled = false;
+        //manualInqUpdateBtn.style.cursor = "pointer";
     }
-
-
 
     //disable add new button
     const addBtn = document.getElementById('manualInqAddBtn');
@@ -1282,7 +1280,8 @@ const checkInqSuccessErrors = () => {
 
     let errors = "";
 
-    if (inquiry.passportnumornic == null || inquiry.passportnumornic.trim() === "") {
+    if (inquiry.passportnumornic == null || inquiry.passportnumornic.trim() === "" ||
+        inquiry.passportnumornic.trim().toUpperCase() === "N/A") {
         errors += "Please enter the client's passport number or NIC \n";
     }
 
@@ -1292,8 +1291,7 @@ const checkInqSuccessErrors = () => {
 
     let foreignAdults = parseInt(inquiry.inq_foreign_adults) || 0;
     let localAdults = parseInt(inquiry.inq_local_adults) || 0;
-    //let totalAdultTravellers = foreignAdults + localAdults;
-
+    
     if (foreignAdults === 0 && localAdults === 0) {
         errors += "Please add the traveller count \n";
     }
@@ -1303,13 +1301,22 @@ const checkInqSuccessErrors = () => {
         errors += "Please choose whether a guide is needed or not \n";
     }
 
-    if (inquiry.inq_pick == null || inquiry.inq_pick.trim() === "") {
+    if (
+        inquiry.inq_pick == null ||
+        inquiry.inq_pick.trim() === "" ||
+        inquiry.inq_pick.trim().toUpperCase() === "N/A"
+    ) {
         errors += "Please enter the initial pickup location \n";
     }
-
-    if (inquiry.inq_drop == null || inquiry.inq_drop.trim() === "") {
+    
+    if (
+        inquiry.inq_drop == null ||
+        inquiry.inq_drop.trim() === "" ||
+        inquiry.inq_drop.trim().toUpperCase() === "N/A"
+    ) {
         errors += "Please enter the final drop-off location \n";
     }
+    
 
     return errors;
 }
@@ -1344,9 +1351,9 @@ const convertInqToBooking = async () => {
                     if (putServiceResponse === "OK") {
 
                         showAlertModal('suc', "Successfully Created Booking");
-                        refreshInquiryForm();
                         refillAllPrevResponses();
                         handleTableCreation();
+                        refreshInquiryForm();
                         var tableTab = new bootstrap.Tab(document.getElementById('table-tab'));
                         tableTab.show();
 
