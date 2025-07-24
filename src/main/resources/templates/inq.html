@@ -701,7 +701,7 @@
                                         <div class="card-body">
 
                                             <div class="row gx-4">
-                                                <div class="col-md-12 mb-3">
+                                                <div class="col-md-7 mb-3">
                                                     <label for="inputNewResponseTextField"
                                                         class="form-label fw-semibold">Summary of
                                                         Followup/Response:</label>
@@ -709,6 +709,35 @@
                                                         style="height: 120px;"
                                                         onkeyup="inputValidatorText(this, '', 'followup', 'content')"></textarea>
                                                 </div>
+
+                                                <div class="col-md-5 mb-3">
+                                                    <!-- Label in full-width row -->
+                                                    <div class="col-12">
+                                                        <label class="form-label fw-semibold mb-0"
+                                                            for="packageQuotedYes">Was a package quoted?</label>
+                                                    </div>
+
+                                                    <!-- Radio buttons inline below -->
+                                                    <div class="row g-2 mt-1">
+                                                        <div class="col-6">
+                                                            <input type="radio" class="btn-check" name="packageQuoted"
+                                                                id="packageQuotedYes" autocomplete="off"
+                                                                onchange="handlePkgQuotedOrNot()">
+                                                            <label
+                                                                class="btn btn-outline-success w-100 fw-bold text-uppercase"
+                                                                for="packageQuotedYes">Yes</label>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <input type="radio" class="btn-check" name="packageQuoted"
+                                                                id="packageQuotedNo" autocomplete="off"
+                                                                onchange="handlePkgQuotedOrNot()">
+                                                            <label
+                                                                class="btn btn-outline-danger w-100 fw-bold text-uppercase"
+                                                                for="packageQuotedNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
 
                                                 <!--<div class="col-md-4 mb-3">
                                                     <label for="newInqResponseStatusSelect"
@@ -736,7 +765,8 @@
                                                 <div class="col-md-8">
                                                     <select id="lastSentTourPackageSelect"
                                                         class="form-select form-select"
-                                                        onchange="dynamicSelectValidator(this, 'followup','last_sent_tpkg')">
+                                                        onchange="dynamicSelectValidator(this, 'followup','last_sent_tpkg')"
+                                                        disabled>
                                                     </select>
                                                 </div>
                                             </div>

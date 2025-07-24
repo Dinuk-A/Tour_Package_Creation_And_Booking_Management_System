@@ -43,9 +43,18 @@ public class Followup {
     @JoinColumn(name = "inquiry_id", referencedColumnName = "id")
     private Inq inquiry_id;
 
+    @Column(name = "is_package_quoted")
+    private Boolean is_package_quoted;
+
     @ManyToOne(optional = true)
     @JoinColumn(name = "last_sent_tpkg" , referencedColumnName = "id")
     private TourPkg last_sent_tpkg;
+
+    @Column(name = "is_next_followup_required")
+    private Boolean is_next_followup_required;
+
+    @Column(name = "next_followup_datetime")
+    private LocalDateTime next_followup_datetime;
 
 }
 

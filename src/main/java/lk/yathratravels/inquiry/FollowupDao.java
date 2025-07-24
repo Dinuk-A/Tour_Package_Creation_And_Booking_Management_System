@@ -11,8 +11,8 @@ public interface FollowupDao extends JpaRepository<Followup, Integer> {
     @Query(value = "select * from newyathra.followup as flwup where flwup.inquiry_id=?1 order by flwup.addeddatetime desc", nativeQuery = true)
     List<Followup> getAllFollowupsByInqId(Integer inqId);
 
-    // get the tpkg id of ( last sent tpkg ) by the last followup that has status as
-    // "good_to_book"
-//    @Query(value = "select flwup from  Followup as flwup  where flwup.inquiry_id.id=?1 and flwup.followup_status='good_to_book'")
-//    public Followup getTpkgOfLastSent(Integer flwup);
+    // return last quoted followup of this inq
+    @Query(value = "SELECT flwup FROM Followup flwup WHERE flwup.inquiry_id.id = ?1 AND flwup.is_package_quoted = true ORDER BY flwup.id DESC")
+    public Followup getLastQuotedFollowup(Integer inqId);
+    
 }

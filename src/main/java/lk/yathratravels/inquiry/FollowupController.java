@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.transaction.Transactional;
@@ -62,11 +63,17 @@ public class FollowupController {
 
     }
 
-    // get followups by inq id
+    // get followups by inq id (test only)
     @GetMapping(value = "/followup/byinqid/{inqId}", produces = "application/JSON")
     public List<Followup> getFollowupsByInq(@PathVariable("inqId") int inquiryID) {
 
         return followupDao.getAllFollowupsByInqId(inquiryID);
+    }
+
+    // get last quoted followup by inq id
+    @GetMapping(value = "/followup/last-quoted", produces = "application/json")
+    public Followup getLastQuotedFollowup(@RequestParam Integer inqId) {
+        return followupDao.getLastQuotedFollowup(inqId);
     }
 
     // save just the followup (no main inq data)
@@ -133,7 +140,7 @@ public class FollowupController {
             // records
             if (flwup.getInquiry_id().getInq_status().equals("Confirmed")) {
 
-               System.out.println("Booking created");
+                System.out.println("Booking created");
 
             }
 

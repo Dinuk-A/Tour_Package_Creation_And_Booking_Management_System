@@ -1270,7 +1270,7 @@ const checkInqSuccessErrors = () => {
 
     let foreignAdults = parseInt(inquiry.inq_foreign_adults) || 0;
     let localAdults = parseInt(inquiry.inq_local_adults) || 0;
-    
+
     if (foreignAdults === 0 && localAdults === 0) {
         errors += "Please add the traveller count \n";
     }
@@ -1287,7 +1287,7 @@ const checkInqSuccessErrors = () => {
     ) {
         errors += "Please enter the initial pickup location \n";
     }
-    
+
     if (
         inquiry.inq_drop == null ||
         inquiry.inq_drop.trim() === "" ||
@@ -1295,7 +1295,7 @@ const checkInqSuccessErrors = () => {
     ) {
         errors += "Please enter the final drop-off location \n";
     }
-    
+
 
     return errors;
 }
@@ -1488,6 +1488,9 @@ const createNewResponseInputSection = async () => {
         console.error("Failed to fetch tour packages:", error);
     }
 
+    packageQuotedNo.checked = true; 
+    inquiry.is_package_quoted = false;
+
 }
 
 //check manual followup errors
@@ -1620,6 +1623,28 @@ const enableDateStatusRadios = () => {
     }
 }
 
+// to handle the package selection , its quoted or not
+const handlePkgQuotedOrNot = () => {
+
+    const yesRadio = document.getElementById('packageQuotedYes');
+    const noRadio = document.getElementById('packageQuotedNo');
+    const pkgSelect = document.getElementById('lastSentTourPackageSelect');
+
+    if (yesRadio.checked) {
+
+        inquiry.is_package_quoted = true;
+        pkgSelect.disabled = false;
+
+    } else if (noRadio.checked) {
+
+        inquiry.is_package_quoted = false;
+        pkgSelect.value = "";
+        pkgSelect.style.border = "1px solid #ced4da";
+        pkgSelect.disabled = true;
+        followup.last_sent_tpkg = null;
+    }
+}
+
 //childs are allowed only with adult of any type NOT USED 💥💥
 const enableChildCountInputsOri = () => {
 
@@ -1635,6 +1660,7 @@ const enableChildCountInputsOri = () => {
 
     }
 }
+
 
 
 //for 2nd contact num field
