@@ -159,7 +159,7 @@
                                                     :</label>
 
                                                 <input id="inqRecievedDate" class="form-control form-input" type="date"
-                                                    onchange="inputValidatorText(this, '' , 'inquiry' , 'recieveddate')">
+                                                    onchange="inputValidatorText(this, '' , 'inquiry' , 'recieveddate')" onkeypress="return false">
                                             </div>
 
                                             <!-- recieved time -->
@@ -170,7 +170,8 @@
 
                                                 <input id="inqRecievedTime" value="09:00"
                                                     class="form-control form-input" type="time"
-                                                    onchange=" inputValidatorText(this, '' , 'inquiry' , 'recievedtime')">
+                                                    onchange="inputValidatorText(this, '' , 'inquiry' , 'recievedtime')"
+                                                    onkeypress="return false">
                                             </div>
 
                                         </div>
@@ -280,7 +281,7 @@
                                                 </label>
 
                                                 <input id="inqClientEmail" class="form-control form-input"
-                                                    onkeyup="inputValidatorText(this,'', 'inquiry' , 'email')">
+                                                    onkeyup="inputValidatorText(this,'', 'inquiry' , 'email')" onblur="getClientByEmail(this.value)"> 
                                             </div>
 
                                             <!-- Preferred Contact Method -->

@@ -23,6 +23,57 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// make max selectable time now
+const setMaxTimeToNow = () => {
+    const now = new Date();
+
+    //first convert to a string, then add leading zeros if needed
+    //9 >> 09
+    //14>>>14
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    //format the time as HH:MM
+    const maxTime = `${hours}:${minutes}`;
+
+    const timeInput = document.getElementById('inqRecievedTime');
+    timeInput.setAttribute('max', maxTime);
+    timeInput.value = maxTime;
+}
+
+//fn to get client by email and show the existing client notice
+const getClientByEmail = async (emailValue) => {
+
+    if (emailValue || emailValue.trim() !== "") {
+
+        console.log("Fetching client by email:", emailValue);
+
+        //call cx filter by email
+        let custsByEmail = null;
+
+        try {
+            custsByEmail = await ajaxGetReq("/client/byemail?email=" + emailValue);
+            console.log("Clients fetched by email:", custsByEmail);
+        } catch (error) {
+            console.error("Error fetching clients by email:", error);
+        }
+
+        const existingClientNotice = document.getElementById('existingClientNotice');
+        const existingClientRegId = document.getElementById('existingClientRegId');
+
+        if (custsByEmail && custsByEmail.length > 0) {
+            existingClientNotice.classList.remove('d-none');
+            existingClientRegId.classList.remove('d-none');
+            existingClientRegId.textContent = `Customer ID: ${custsByEmail[0].clientcode || 'N/A'}`;
+
+        } else {
+            existingClientNotice.classList.add('d-none');
+            existingClientRegId.classList.add('d-none');
+
+        }
+    }
+}
+
 //handle min max of date fields
 const handleDateFields = () => {
 
@@ -295,6 +346,8 @@ let roles = [];
 
 //refresh the inquiry form and reset all fields 
 const refreshInquiryForm = async () => {
+
+    setMaxTimeToNow();
 
     inquiry = new Object();
 
@@ -782,7 +835,7 @@ const openModal = async (inqObj) => {
     if (custsByEmail && custsByEmail.length > 0) {
         existingClientNotice.classList.remove('d-none');
         existingClientRegId.classList.remove('d-none');
-        existingClientRegId.textContent = `Customer ID: CUST-${custsByEmail[0].clientcode || 'N/A'}`;
+        existingClientRegId.textContent = `Customer ID: ${custsByEmail[0].clientcode || 'N/A'}`;
 
         //        const passportInputWrapper = document.querySelector('#inqClientPassportNumorNIC').closest('.col-6');
         //        passportInputWrapper.classList.remove('d-none');
@@ -1488,7 +1541,7 @@ const createNewResponseInputSection = async () => {
         console.error("Failed to fetch tour packages:", error);
     }
 
-    packageQuotedNo.checked = true; 
+    packageQuotedNo.checked = true;
     inquiry.is_package_quoted = false;
 
 }
