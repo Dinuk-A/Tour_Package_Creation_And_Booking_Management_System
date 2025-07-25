@@ -281,7 +281,7 @@
                                                 </label>
 
                                                 <input id="inqClientEmail" class="form-control form-input"
-                                                    onkeyup="inputValidatorText(this,'', 'inquiry' , 'email')" onblur="getClientByEmail(this.value)"> 
+                                                    onkeyup="inputValidatorText(this,'', 'inquiry' , 'email'); debouncedGetClientByEmail(this.value)" onblur="getClientByEmail(this.value)"> 
                                             </div>
 
                                             <!-- Preferred Contact Method -->

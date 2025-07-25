@@ -446,6 +446,12 @@ const refreshInquiryForm = async () => {
         btnChangeAssignedUser.disabled = true;
     }
 
+    const existingClientNotice = document.getElementById('existingClientNotice');
+    const existingClientRegId = document.getElementById('existingClientRegId');
+
+    existingClientNotice.classList.add('d-none');
+    existingClientRegId.classList.add('d-none');
+
     //disable add new responses button
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
     addNewResponseRowBtn.disabled = true;
@@ -835,7 +841,7 @@ const openModal = async (inqObj) => {
     if (custsByEmail && custsByEmail.length > 0) {
         existingClientNotice.classList.remove('d-none');
         existingClientRegId.classList.remove('d-none');
-        existingClientRegId.textContent = `Customer ID: ${custsByEmail[0].clientcode || 'N/A'}`;
+        existingClientRegId.textContent = `Customer ID: ${custsByEmail[0].clientcode}`;
 
         //        const passportInputWrapper = document.querySelector('#inqClientPassportNumorNIC').closest('.col-6');
         //        passportInputWrapper.classList.remove('d-none');
@@ -858,22 +864,22 @@ const openModal = async (inqObj) => {
         //        document.getElementById('inqAdditionalContact').value = '';
     }
 
-    document.getElementById('inqCodeInput').value = inqObj.inqcode || "N/A";
-    document.getElementById('inqRecievedMethod').value = inqObj.inqsrc || "N/A";
-    document.getElementById('inqRecievedDate').value = inqObj.recieveddate || "N/A";
-    document.getElementById('inqRecievedTime').value = inqObj.recievedtime || "N/A";
-    document.getElementById('inqRecievedContact').value = inqObj.recievedcontactoremail || "N/A";
+    document.getElementById('inqCodeInput').value = inqObj.inqcode;
+    document.getElementById('inqRecievedMethod').value = inqObj.inqsrc;
+    document.getElementById('inqRecievedDate').value = inqObj.recieveddate;
+    document.getElementById('inqRecievedTime').value = inqObj.recievedtime;
+    document.getElementById('inqRecievedContact').value = inqObj.recievedcontactoremail;
     fillMultDataIntoDynamicSelectsInq(inqInterestedPkg, 'Please Select Package', intrstdPkgList, 'pkgcode', 'pkgtitle', inqObj.intrstdpkgid);
-    document.getElementById('inqClientTitle').value = inqObj.clienttitle || "N/A";
-    document.getElementById('inqClientName').value = inqObj.clientname || "N/A";
-    document.getElementById('InqClientNationality').value = inqObj.nationality_id?.countryname || "N/A";
-    document.getElementById('inqContactOne').value = inqObj.contactnum || "N/A";
+    document.getElementById('inqClientTitle').value = inqObj.clienttitle;
+    document.getElementById('inqClientName').value = inqObj.clientname;
+    document.getElementById('InqClientNationality').value = inqObj.nationality_id?.countryname;
+    document.getElementById('inqContactOne').value = inqObj.contactnum;
     //document.getElementById('inqAdditionalContact').value = inqObj.contactnumtwo || "N/A";
-    document.getElementById('inqClientEmail').value = inqObj.email || "N/A";
-    document.getElementById('prefContMethodPkgRelForm').value = inqObj.prefcontactmethod || "N/A";
-    document.getElementById('inqClientPassportNumorNIC').value = inqObj.passportnumornic || "N/A";
-    document.getElementById('inqMainEnquiry').value = inqObj.main_inq_msg || "N/A";
-    document.getElementById('inqApproxStartDate').value = inqObj.inq_apprx_start_date || "N/A";
+    document.getElementById('inqClientEmail').value = inqObj.email;
+    document.getElementById('prefContMethodPkgRelForm').value = inqObj.prefcontactmethod;
+    document.getElementById('inqClientPassportNumorNIC').value = inqObj.passportnumornic;
+    document.getElementById('inqMainEnquiry').value = inqObj.main_inq_msg;
+    document.getElementById('inqApproxStartDate').value = inqObj.inq_apprx_start_date;
 
     if (inqObj.inq_apprx_start_date != null || inqObj.inq_apprx_start_date != undefined) {
         document.getElementById('startDateConfirmed').disabled = false;
@@ -928,13 +934,13 @@ const openModal = async (inqObj) => {
         document.getElementById('guideNo').checked = true;
     }
 
-    document.getElementById('inqPlacesPreferences').value = inqObj.inq_vplaces || "N/A";
-    document.getElementById('inqAccommodationNote').value = inqObj.inq_accos || "N/A";
-    document.getElementById('inqTransportNote').value = inqObj.inq_vehi || "N/A";
-    document.getElementById('estdPickupLocation').value = inqObj.inq_pick || "N/A";
-    document.getElementById('estdDropOffLocation').value = inqObj.inq_drop || "N/A";
-    document.getElementById('inputNoteInquiry').value = inqObj.note || "N/A";
-    document.getElementById('inqStatus').value = inqObj.inq_status || "N/A";
+    document.getElementById('inqPlacesPreferences').value = inqObj.inq_vplaces;
+    document.getElementById('inqAccommodationNote').value = inqObj.inq_accos;
+    document.getElementById('inqTransportNote').value = inqObj.inq_vehi;
+    document.getElementById('estdPickupLocation').value = inqObj.inq_pick;
+    document.getElementById('estdDropOffLocation').value = inqObj.inq_drop;
+    document.getElementById('inputNoteInquiry').value = inqObj.note;
+    document.getElementById('inqStatus').value = inqObj.inq_status;
 
     const inputTagsIds = [
         'inqCodeInput',
@@ -1107,6 +1113,13 @@ const enableInqEditing = () => {
         if (statusSelectElem.options[i]) {
             statusSelectElem.options[i].style.display = 'none';
         }
+    }
+
+    //as soon as this btn clicked, the sttas will be Working
+    if (statusSelectElem.value == "Assigned") {
+        statusSelectElem.options[2].style.display = 'none';
+        statusSelectElem.value = "Working";
+        statusSelectElem.style.border = "2px solid lime"
     }
 
 
@@ -1421,7 +1434,7 @@ const updateSystemInqWithFollowup = async () => {
             inquiry.inq_adults = null;
             inquiry.inq_kids = null;
 
-            let userComment = prompt("Add a short comment to describe this update:\n\n" + changesHappened);
+            let userComment = prompt(changesHappened + "\n\n Add a short comment to describe this update: ");
 
             if (userComment === null || userComment.trim() === "") {
                 showAlertModal('inf', "No comment entered. Task cancelled.");
@@ -1459,6 +1472,8 @@ const updateSystemInqWithFollowup = async () => {
 
 }
 
+//const debouncedGetClientByEmail = debounce(getClientByEmail, 500);
+
 //show all the responses
 const refillAllPrevResponses = async () => {
 
@@ -1478,47 +1493,74 @@ const refillAllPrevResponses = async () => {
             return;
         }
 
-        prevResponses.forEach(res => {
-            // Outer column div
+        for (const res of prevResponses) {
+            let empInfo = null;
+            try {
+                empInfo = await ajaxGetReq("empinfo/byuserid?userid=" + res.addeduserid);
+            } catch (error) {
+                console.error("Failed to fetch empinfo for user " + res.addeduserid + ":", error);
+            }
+
             const colDiv = document.createElement("div");
             colDiv.classList.add("col-12", "mb-3");
 
-            // Card box
+            // Box container with border/shadow
             const boxDiv = document.createElement("div");
             boxDiv.classList.add("p-3", "rounded", "border", "shadow-sm", "bg-light");
 
-            // Header row (user id + time)
-            const headerDiv = document.createElement("div");
-            headerDiv.classList.add("d-flex", "justify-content-between", "mb-2");
+            // Inner row for layout
+            const rowDiv = document.createElement("div");
+            rowDiv.classList.add("row");
 
-            const userSpan = document.createElement("small");
-            userSpan.classList.add("text-muted");
-            userSpan.innerHTML = `<i class="bi bi-person"></i> User ID: ${res.addeduserid}`;
+            // ---- col-9: Main Content ----
+            const col8 = document.createElement("div");
+            col8.classList.add("col-8");
 
-            const timeSpan = document.createElement("small");
-            timeSpan.classList.add("text-muted");
-            const dateObj = new Date(res.addeddatetime);
-            timeSpan.innerHTML = `<i class="bi bi-clock-history"></i> ${dateObj.toLocaleString()}`;
+            const contentLabel = document.createElement("div");
+            contentLabel.classList.add("text-muted", "fw-bold");
+            contentLabel.innerText = "Content:";
 
-            headerDiv.appendChild(userSpan);
-            headerDiv.appendChild(timeSpan);
-
-            // Content (with <pre> to preserve line breaks)
             const contentPre = document.createElement("pre");
             contentPre.classList.add("mb-0");
             contentPre.innerText = res.content;
 
-            // Assemble all
-            boxDiv.appendChild(headerDiv);
-            boxDiv.appendChild(contentPre);
+            col8.appendChild(contentLabel);
+            col8.appendChild(contentPre);
+
+            // ---- col-3: Meta info ----
+            const col4 = document.createElement("div");
+            col4.classList.add("col-4", "d-flex", "flex-column", "align-items-end", "text-end");
+
+            // Added by label + user id or employee name if available
+            const userSpan = document.createElement("div");
+            userSpan.classList.add("text-muted");
+            const userLabel = empInfo && empInfo.fullname
+                ? `<i class="bi bi-person"></i> Added by: ${empInfo.fullname}`
+                : `<i class="bi bi-person"></i> Added by: ${res.addeduserid}`;
+            userSpan.innerHTML = userLabel;
+
+            // At label + formatted time
+            const timeSpan = document.createElement("div");
+            timeSpan.classList.add("text-muted");
+            const dateObj = new Date(res.addeddatetime);
+            timeSpan.innerHTML = ` <i class="bi bi-clock-history"></i> At: ${dateObj.toLocaleString()}`;
+
+            col4.appendChild(userSpan);
+            col4.appendChild(timeSpan);
+
+            // Assemble row
+            rowDiv.appendChild(col8);
+            rowDiv.appendChild(col4);
+
+            // Wrap in card box
+            boxDiv.appendChild(rowDiv);
             colDiv.appendChild(boxDiv);
             container.appendChild(colDiv);
-        });
+        }
 
 
     } catch (error) {
         console.error("Failed to fetch inquiry responses:", error);
-
     }
 
 }
@@ -1551,7 +1593,11 @@ const checkManualFollowupErrors = () => {
     let errors = "";
 
     if (followup.content == null || followup.content.trim() === "") {
-        errors = errors + " Please Enter The Follow-up Response Summary\n";
+        errors = errors + " Please Enter The Follow-up Response Summary \n";
+    }
+
+    if (followup.is_package_quoted && followup.last_sent_tpkg == null) {
+        errors = errors + " Please Select The Last Sent Package \n";
     }
 
     //    if (followup.followup_status == null) {
@@ -1685,12 +1731,12 @@ const handlePkgQuotedOrNot = () => {
 
     if (yesRadio.checked) {
 
-        inquiry.is_package_quoted = true;
+        followup.is_package_quoted = true;
         pkgSelect.disabled = false;
 
     } else if (noRadio.checked) {
 
-        inquiry.is_package_quoted = false;
+        followup.is_package_quoted = false;
         pkgSelect.value = "";
         pkgSelect.style.border = "1px solid #ced4da";
         pkgSelect.disabled = true;
