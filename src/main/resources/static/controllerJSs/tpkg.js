@@ -3138,7 +3138,7 @@ const refillMidDaysPickupLocations = async () => {
                 fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', tpkg.sd_dayplan_id.drop_stay_id.district_id.province_id.name);
 
                 await getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect, tpkg.sd_dayplan_id.drop_stay_id.name);
-                
+
                 dayplan.pickup_stay_id = tpkg.sd_dayplan_id.drop_stay_id;
                 pickupAccommodationSelect.style.border = '2px solid lime';
 
@@ -3164,6 +3164,32 @@ const refillMidDaysPickupLocations = async () => {
 
         }
 
+    }
+
+    // for second and after middays
+    if (number > 1) {
+        //for stays
+        if (tpkg.dayplans[number - 2] != null && tpkg.dayplans[number - 2].drop_stay_id != null) {
+
+            console.log("refillMidDaysPickupLocations: ", tpkg.dayplans[number - 2].drop_stay_id);
+            manualPickupCB.disabled = true;
+            accommodationsPickupCB.disabled = false;
+            accommodationsPickupCB.checked = true;
+            selectPickupType(document.getElementById('accommodationsPickupCB'));
+
+            try {
+                fillDataIntoDynamicSelects(pickupDistrictSelect, 'Please Select The District', allDists, 'name', tpkg.dayplans[number - 2].drop_stay_id.district_id.name);
+                fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', tpkg.dayplans[number - 2].drop_stay_id.district_id.province_id.name);
+
+                await getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect, tpkg.dayplans[number - 2].drop_stay_id.name);
+
+                dayplan.pickup_stay_id = tpkg.dayplans[number - 2].drop_stay_id;
+                pickupAccommodationSelect.style.border = '2px solid lime';
+
+            } catch (error) {
+                console.error('error fetching previous start stay info')
+            }
+        }
     }
 
 }
