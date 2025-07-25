@@ -21,7 +21,6 @@ let onlyTemplates = [];
 let allActiveInqs = [];
 let vehiTypes = [];
 
-
 let roles = [];
 
 const fetchDays = async () => {
@@ -351,7 +350,6 @@ const refreshTpkgForm = async () => {
 
     //set the min start date to 7 days future
     setTpkgStartDateToFuture();
-
 }
 
 //clear out the form everytime a user switches to table tab   
@@ -3402,6 +3400,46 @@ const refillSelectedDayPlan = async (dpObj) => {
     dpSelectStatusElement.children[5].classList.add('d-none');
     dpSelectStatusElement.style.border = '1px solid lime';
 
+    //refill the pickup points based on previous dayplan's drop info 
+    //only runs if this day already doesnt have a pickup point
+    if (dpObj.pickup_stay_id == null && dpObj.pickuppoint == null) {
+
+        if (prevDayStay != null) {
+
+            console.log("prevDayStay: ", prevDayStay);
+            fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', prevDayStay.district_id.province_id.name);
+            fillDataIntoDynamicSelects(pickupDistrictSelect, 'Please Select The District', allDists, 'name', prevDayStay.district_id.name);
+
+            accommodationsPickupCB.checked = true;
+            //document.querySelector('label[for="accommodationsPickupCB"]').click();
+            selectPickupType(document.getElementById('accommodationsPickupCB'));
+
+            try {
+                await getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect, prevDayStay.name);
+                dayplan.pickup_stay_id = prevDayStay;
+            } catch (error) {
+                console.error('error fetching previous start stay info');
+            }
+
+        } else {
+            console.warn("No previous day stay found, pickup point will not be set.");
+        }
+
+        //refill the pickup points based on previous dayplan's manual pickup info
+        if (prevDayManualStay != null) {
+
+            manualPickupCB.checked = true;
+            //document.querySelector('label[for="manualPickupCB"]').click();
+            selectPickupType(document.getElementById('manualPickupCB'));
+            manualLocationPickup.value = prevDayManualStay;
+            geoCoords.value = prevDayManualStayGCoords;
+            dayplan.pickuppoint = prevDayManualStay;
+            dayplan.pick_manual_gcoords = prevDayManualStayGCoords;
+        }
+
+
+    }
+
     var step1Tab = new bootstrap.Tab(document.getElementById('dayStep1-tab'));
     step1Tab.show();
 
@@ -3586,6 +3624,11 @@ const checkDPFormErrorsInTpkg = () => {
     return errors;
 }
 
+//to store the prev days stay info
+let prevDayStay = null;
+let prevDayManualStay = null;
+let prevDayManualStayGCoords = null;
+
 // add new day plan in the tpkg module
 const addNewDayPlanInTpkg = async () => {
 
@@ -3595,6 +3638,18 @@ const addNewDayPlanInTpkg = async () => {
 
         if (userConfirm) {
             try {
+
+                //save the previous day stay info if its a hotel in system
+                if (dayplan.drop_stay_id != null) {
+                    prevDayStay = dayplan.drop_stay_id;
+                    prevDayManualStay = null;
+                    prevDayManualStayGCoords = null;
+                } else if (dayplan.droppoint != null && dayplan.drop_manual_gcoords != null) {
+                    //save the previous day manual stay info if its a manual location
+                    prevDayManualStay = dayplan.droppoint;
+                    prevDayManualStayGCoords = dayplan.drop_manual_gcoords;
+                    prevDayStay = null;
+                }
 
                 dayplan.id = null;
                 dayplan.is_template = false;

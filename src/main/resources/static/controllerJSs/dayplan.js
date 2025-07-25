@@ -496,6 +496,8 @@ const clearOtherInputsGenPickup = () => {
 //when manual stay is selected in pickup options 
 const clearOtherInputsStayPickup = () => {
 
+    console.log("clearOtherInputsStayPickup called");
+
     const inputTagsIds = [
         'manualLocationPickup',
         'geoCoords',
