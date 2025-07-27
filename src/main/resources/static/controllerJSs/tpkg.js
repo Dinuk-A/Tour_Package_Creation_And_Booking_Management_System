@@ -4933,6 +4933,10 @@ const refillAdditionalCostFormNew = (addiCostObj) => {
     document.getElementById('additionalCostAmount').value = addiCostObj.amount;
     document.getElementById('additionalCostNote').value = addiCostObj.note;
 
+    addiCost.costname = addiCostObj.costname;
+    addiCost.amount = addiCostObj.amount;
+    addiCost.note = addiCostObj.note;
+
     document.getElementById('addCostAddBtn').style.cursor = 'not-allowed';
     document.getElementById('addCostAddBtn').disabled = true;
 
