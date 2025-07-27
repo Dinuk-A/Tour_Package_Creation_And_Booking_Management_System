@@ -1372,7 +1372,10 @@ const validateAdultTravellerCounts = () => {
 const fillDataFromInq = async () => {
 
     //reset the previous midday section
-    //document.getElementById('tpkgMidDaysSelectSection').innerHTML = '';
+    document.getElementById('tpkgMidDaysSelectSection').innerHTML = '';
+
+    //reset global var
+    midDayCounter = 1;
 
     if (tpkg.basedinq?.id != null) {
 
@@ -3194,6 +3197,61 @@ const refillMidDaysPickupLocations = async () => {
 
 }
 
+//refill last day pickup loc from prev last midday's drop loc
+const refillLastDayPickupFromPrevLastMidday = async () => {
+
+    let allDists, allProvinces;
+
+    try {
+        allDists = await ajaxGetReq('district/all');
+        allProvinces = await ajaxGetReq("/province/all");
+    } catch (error) {
+        console.error("Failed to fetch districts or provinces:", error);
+    }
+
+    //get the lastly added day in tpkg.dayplans
+    const lastMidday = tpkg.dayplans[tpkg.dayplans.length - 1];
+
+    //for stays
+    if (lastMidday != null && lastMidday.drop_stay_id != null) {
+
+        manualPickupCB.disabled = true;
+        accommodationsPickupCB.disabled = false;
+        accommodationsPickupCB.checked = true;
+        selectPickupType(document.getElementById('accommodationsPickupCB'));
+
+        try {
+            fillDataIntoDynamicSelects(pickupDistrictSelect, 'Please Select The District', allDists, 'name', lastMidday.drop_stay_id.district_id.name);
+            fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', lastMidday.drop_stay_id.district_id.province_id.name);
+
+            await getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect, lastMidday.drop_stay_id.name);
+
+            dayplan.pickup_stay_id = lastMidday.drop_stay_id;
+            pickupAccommodationSelect.style.border = '2px solid lime';
+
+        } catch (error) {
+            console.error('error fetching previous start stay info')
+        }
+
+    } else if (lastMidday != null && lastMidday.droppoint != null) {
+        //for manual pickup
+        manualPickupCB.checked = true;
+        manualPickupCB.disabled = false;
+        selectPickupType(manualPickupCB);
+
+        manualLocationPickup.value = lastMidday.droppoint;
+        geoCoords.value = lastMidday.drop_manual_gcoords;
+
+        dayplan.pickuppoint = lastMidday.droppoint;
+        dayplan.pickup_manual_gcoords = lastMidday.drop_manual_gcoords;
+        dayplan.pickup_stay_id = null;
+
+        manualLocationPickup.style.border = '2px solid lime';
+        geoCoords.style.border = '2px solid lime';
+    }
+
+}
+
 // to refill the selected day plan in order to prepare for edit
 const refillSelectedDayPlan = async (dpObj) => {
 
@@ -3544,8 +3602,20 @@ const refillSelectedDayPlan = async (dpObj) => {
     //
     //    }
 
-    //test 2 
-    refillMidDaysPickupLocations();
+    if (selectedDayTypeToEdit === "middle") {
+        //test 2  success ✅✅✅
+        refillMidDaysPickupLocations();
+
+    } else if (selectedDayTypeToEdit === "final") {
+
+        refillLastDayPickupFromPrevLastMidday();
+
+    } else if (selectedDayTypeToEdit === "first") {
+        //no need to fill the first days pickup, its manually done
+        console.log("No need to refill first day pickup, its manually done.");
+    }
+
+    //setTimeout(() => { refillLastDayPickupFromPrevLastMidday(); }, 100)
 
     var step1Tab = new bootstrap.Tab(document.getElementById('dayStep1-tab'));
     step1Tab.show();
