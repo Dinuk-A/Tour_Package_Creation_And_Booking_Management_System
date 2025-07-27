@@ -124,7 +124,7 @@ public class PrivilegeController {
         }
     }
 
-    @DeleteMapping(value = "/privilege")
+    @PutMapping(value = "/privilegedelete")
     public String deletePrivilege(@RequestBody Privilege privilege) {
 
         Privilege existingRecord = privilegeDao.getReferenceById(privilege.getId());
@@ -135,11 +135,15 @@ public class PrivilegeController {
 
         try {
 
-            privilege.setDeleteddatetime(LocalDateTime.now());
-            privilegeDao.save(privilege);
+            // setting all 4 privis to disabled
+            privilege.setPrvinsert(false);
+            privilege.setPrvupdate(false);
+            privilege.setPrvdelete(false);
+            privilege.setPrvselect(false);
 
-            // to delete permanatly
-            // privilegeDao.delete(existingRecord);
+            privilege.setDeleteddatetime(LocalDateTime.now());
+
+            privilegeDao.save(privilege);
 
             return "OK";
         } catch (Exception e) {
@@ -148,3 +152,7 @@ public class PrivilegeController {
     }
 
 }
+
+// in DeleteMapping >>>>>
+// to delete permanatly
+// privilegeDao.delete(existingRecord);

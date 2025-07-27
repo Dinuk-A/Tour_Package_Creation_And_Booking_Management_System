@@ -354,6 +354,11 @@ const refreshPrivilegeForm = async () => {
     privilege.prvupdate = false;
     privilege.prvdelete = false;
 
+    selectRevokeSwitch.checked = true;
+    insertRevokeSwitch.checked = true;
+    updateRevokeSwitch.checked = true;
+    deleteRevokeSwitch.checked = true;
+
     priviUpdateBtn.disabled = true;
     priviUpdateBtn.style.cursor = "not-allowed";
 
@@ -616,9 +621,13 @@ const deletePriviRecord = async (prvObj) => {
     if (userConfirm) {
 
         try {
-            const deleteServerResponse = await ajaxPPDRequest("/privilege", "DELETE", prvObj);
+            const deleteServerResponse = await ajaxPPDRequest("/privilegedelete", "PUT", prvObj);
+
             if (deleteServerResponse === 'OK') {
-                showAlertModal('suc', 'Record Deleted');
+
+                showAlertModal('suc', 'Succesfully Deleted');
+                buildPriviTable();
+                refreshPrivilegeForm();
 
             } else {
                 showAlertModal('err', 'Delete Failed' + deleteServerResponce);
@@ -643,8 +652,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-//print entire table module vise or ??? 💥💥💥
-const printPrivi = (prvObj) => { showAlertModal('inf', 'test print ') }
+
 
 //const adults = users.filter(user => user.age >= 18);
 //is same as

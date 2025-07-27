@@ -9,6 +9,7 @@ window.addEventListener('load', () => {
 
 });
 
+//control what links will be shown or not based on logged user role
 document.addEventListener("DOMContentLoaded", function () {
     controlSidebarLinks();
 });
@@ -2116,6 +2117,7 @@ const updateTourEndDate = () => {
     //endDateDisplay.innerText = endDate.toLocaleDateString(undefined, options);
 };
 
+
 //***********************✅AVAILABILITY CHK CODE✅********************** 
 
 //function to flag which driver source is selected  
@@ -2243,7 +2245,7 @@ const savePrefVehitype = (selectElement) => {
 
 }
 
-//
+// reset vehi count showing field
 const showVehiAvailabilityButtons = () => {
     // show the vehi availability button
     document.getElementById("btnCheckVehiAvailability").classList.remove("d-none");
@@ -2442,78 +2444,7 @@ const calcSellingPrice = () => {
 
 };
 
-//if no discount is given (not used) 💥
-const handleDiscountNoneToggle = () => {
-    const noneCb = document.getElementById('discountNone');
-    const loyalityCb = document.getElementById('discountLoyality');
-    const offpeakCb = document.getElementById('discountOffpeak');
-
-    if (noneCb.checked) {
-        loyalityCb.checked = false;
-        loyalityCb.disabled = true;
-
-        offpeakCb.checked = false;
-        offpeakCb.disabled = true;
-
-    } else {
-        loyalityCb.disabled = false;
-        offpeakCb.disabled = false;
-    }
-};
-
 //other discounts
-const handleDiscsOri = () => {
-
-    const loyalDiscCB = document.getElementById('discountLoyality');
-    const offpeakCbDiscCB = document.getElementById('discountOffpeak');
-    const finalPriceInput = document.getElementById('pkgFinalPrice');
-    const noneCb = document.getElementById('discountNone');
-
-    discount = 0.00;
-    let discountLabels = [];
-
-    if (loyalDiscCB.checked) {
-        const loyalDisc = parseFloat(globalPriceMods.loyalty_discount) || 0;
-        discount = discount + loyalDisc;
-        noneCb.checked = false;
-        discountLabels.push("loyality");
-    }
-
-    if (offpeakCbDiscCB.checked) {
-        const offPeakDisc = parseFloat(globalPriceMods.off_peak_discount) || 0;
-        discount = discount + offPeakDisc;
-        noneCb.checked = false;
-        discountLabels.push("off-peak");
-    }
-
-    if (noneCb.checked) {
-        loyalDiscCB.checked = false;
-        loyalDiscCB.disabled = true;
-
-        offpeakCbDiscCB.checked = false;
-        offpeakCbDiscCB.disabled = true;
-
-        discountLabels = ["none"];
-        discount = 0.00;
-    } else {
-        loyalDiscCB.disabled = false;
-        offpeakCbDiscCB.disabled = false;
-    }
-
-    //calc final price
-    const sellingPrice = parseFloat(tpkg.pkgsellingprice);
-    const discountedePrice = sellingPrice * (discount / 100);
-    const finalPriceRaw = sellingPrice - discountedePrice;
-
-    const finalPrice = Math.ceil(finalPriceRaw / 100) * 100;
-    finalPriceInput.value = finalPrice.toFixed(2);
-    tpkg.pkgfinalprice = finalPriceInput.value;
-
-    //save the discs used
-    tpkg.useddiscounts = discountLabels.join(',');
-
-}
-
 const handleDiscs = () => {
 
     const noneCb = document.getElementById('discountNone');
