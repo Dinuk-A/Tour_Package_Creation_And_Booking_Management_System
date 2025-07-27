@@ -185,7 +185,7 @@
                                                     <div class="col-8">
                                                         <select disabled id="tpkgBasedInq"
                                                             class="form-control form-select"
-                                                            onchange="dynamicSelectValidator(this, 'tpkg','basedinq'); fillDataFromInq();">
+                                                            onchange="dynamicSelectValidator(this, 'tpkg','basedinq'); getUserPermissionForRefill();">
                                                         </select>
                                                     </div>
                                                 </div>
@@ -225,8 +225,9 @@
                                                 <label for="tpStartDateInput" class="form-label mb-0 fw-bold">Tour
                                                     Start
                                                     Date(Estimated):</label>
-                                                <input name="tourstartdateName" type="date" class="form-control" id="tpStartDateInput"
-                                                    onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate'); showDnGAvailabilityButtons();  showVehiAvailabilityButtons();"
+                                                <input name="tourstartdateName" type="date" class="form-control"
+                                                    id="tpStartDateInput"
+                                                    onchange="inputValidatorText(this, '' ,'tpkg' , 'tourstartdate'); showTourStartDate(); showDnGAvailabilityButtons();  showVehiAvailabilityButtons(); "
                                                     oninput="showTourStartDate(); updateTourEndDate();"
                                                     onkeydown="return false">
                                             </div>
@@ -478,8 +479,8 @@
                                                                 class="form-label mb-0 fs-6">Local Adults</label>
                                                             <input type="number" value="0" class="form-control"
                                                                 id="tpkgLocalAdultCount"
-                                                                onkeyup="inputValidatorText(this, ' ^([0]|[1-9][0-9]{0,1})$', 'tpkg', 'localadultcount'); enableChildCountInputs(); "
-                                                                oninput="validateAdultTravellerCounts(); updateTotalTravellers()">
+                                                                onkeyup="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'tpkg', 'localadultcount'); enableChildCountInputs(); validateAdultTravellerCounts(); "
+                                                                oninput=" updateTotalTravellers()">
                                                         </div>
 
                                                         <!-- Local Children -->
@@ -488,7 +489,7 @@
                                                                 class="form-label mb-0 fs-6">Local Children</label>
                                                             <input type="number" value="0" class="form-control"
                                                                 id="tpkgLocalChildCount" disabled
-                                                                onchange="inputValidatorText(this, ' ^([0]|[1-9][0-9]{0,1})$', 'tpkg', 'localchildcount');"
+                                                                onchange="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'tpkg', 'localchildcount');"
                                                                 oninput="updateTotalTravellers()">
                                                         </div>
 
@@ -498,8 +499,8 @@
                                                                 class="form-label mb-0 fs-6">Foreign Adults</label>
                                                             <input type="number" value="0" class="form-control"
                                                                 id="tpkgForeignAdultCount"
-                                                                onkeyup="inputValidatorText(this, ' ^([0]|[1-9][0-9]{0,1})$', 'tpkg', 'foreignadultcount'); enableChildCountInputs();"
-                                                                oninput="validateAdultTravellerCounts(); updateTotalTravellers()">
+                                                                onkeyup="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'tpkg', 'foreignadultcount'); validateAdultTravellerCounts(); enableChildCountInputs();"
+                                                                oninput="updateTotalTravellers()">
                                                         </div>
 
                                                         <!-- Foreign Children -->
@@ -508,7 +509,7 @@
                                                                 class="form-label mb-0 fs-6">Foreign Children</label>
                                                             <input type="number" value="0" class="form-control"
                                                                 id="tpkgForeignChildCount" disabled
-                                                                onchange="inputValidatorText(this, ' ^([0]|[1-9][0-9]{0,1})$', 'tpkg', 'foreignchildcount');"
+                                                                onchange="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'tpkg', 'foreignchildcount');"
                                                                 oninput="updateTotalTravellers()">
                                                         </div>
 
@@ -1609,7 +1610,8 @@
                         </button>
                         <div>
 
-                            <button id="modalDPUnpublishBtn" class="d-none  btn btn-warning fw-bold px-3 py-2 rounded-2 shadow-sm"
+                            <button id="modalDPUnpublishBtn"
+                                class="d-none  btn btn-warning fw-bold px-3 py-2 rounded-2 shadow-sm"
                                 onclick="unpublishTpkgRecord()">
                                 Unpublish from Website
                             </button>
@@ -1628,7 +1630,7 @@
                                 onclick="restoreTpkgRecord()">
                                 Restore Entry
                             </button>
-                            
+
                         </div>
                     </div>
 

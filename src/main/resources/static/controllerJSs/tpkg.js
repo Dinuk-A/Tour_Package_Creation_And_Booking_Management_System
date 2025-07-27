@@ -1355,6 +1355,7 @@ const printTpkgRecord = (tpkgObj) => {
 
 //handle adult counts
 const validateAdultTravellerCounts = () => {
+
     const localAdultInput = document.getElementById('tpkgLocalAdultCount');
     const foreignAdultInput = document.getElementById('tpkgForeignAdultCount');
 
@@ -1365,6 +1366,39 @@ const validateAdultTravellerCounts = () => {
         showAlertModal('war', 'At least one adult traveller is required (local or foreign).');
         localAdultInput.style.border = '2px solid red';
         foreignAdultInput.style.border = '2px solid red';
+        tpkg.foreignadultcount = 0;
+        tpkg.localadultcount = 0;
+    } else {
+        localAdultInput.style.border = '2px solid lime';
+        foreignAdultInput.style.border = '2px solid lime';
+        tpkg.foreignadultcount = foreignAdults;
+        tpkg.localadultcount = localAdults;
+    }
+}
+
+//get user permission before refill tpkg by inq when there are already data
+const getUserPermissionForRefill = async () => {
+
+    if (tpkg.pkgtitle != null || tpkg.sd_dayplan_id != null || tpkg.tourstartdate != null || tpkg.pkgfinalprice != null) {
+
+        const userConfirm = confirm("Are you sure to refill the package data from the inquiry? All current data will be lost.");
+
+        if (!userConfirm) {
+            showAlertModal('inf', 'User cancelled the refill task');
+            return;
+        } else if (userConfirm) {
+            const pkgTitleInput = document.getElementById('inputPkgTitle');
+            pkgTitleInput.value = "";
+            pkgTitleInput.style.border = "1px solid #ced4da";
+
+            //reset costs section 💥💥
+            //reset addicost table 💥💥
+
+            fillDataFromInq();
+        }
+    } else {
+        //if there is no data, just refill
+        fillDataFromInq();
     }
 }
 
@@ -1381,25 +1415,61 @@ const fillDataFromInq = async () => {
 
         //approx start date
         if (tpkg.basedinq.inq_apprx_start_date != null && tpkg.basedinq.is_startdate_confirmed == true) {
-            document.getElementById('tpStartDateInput').value = tpkg.basedinq.inq_apprx_start_date;
+            const startDateInput = document.getElementById('tpStartDateInput');
+            startDateInput.value = tpkg.basedinq.inq_apprx_start_date;
+            tpkg.tourstartdate = tpkg.basedinq.inq_apprx_start_date;
+            startDateInput.style.border = "2px solid lime";
+            startDateInput.disabled = true;
         }
 
         //traveller grp
-        document.getElementById('tpkgLocalAdultCount').value = tpkg.basedinq.inq_local_adults || 0;
-        document.getElementById('tpkgLocalChildCount').value = tpkg.basedinq.inq_local_kids || 0;
-        document.getElementById('tpkgForeignAdultCount').value = tpkg.basedinq.inq_foreign_adults || 0;
-        document.getElementById('tpkgForeignChildCount').value = tpkg.basedinq.inq_foreign_kids || 0;
+        const localAdultInput = document.getElementById('tpkgLocalAdultCount');
+        localAdultInput.value = tpkg.basedinq.inq_local_adults || 0;
+        tpkg.localadultcount = tpkg.basedinq.inq_local_adults;
+        localAdultInput.style.border = "2px solid lime";
+        localAdultInput.disabled = true;
+
+        const localChildInput = document.getElementById('tpkgLocalChildCount');
+        localChildInput.value = tpkg.basedinq.inq_local_kids || 0;
+        tpkg.localchildcount = tpkg.basedinq.inq_local_kids;
+        localChildInput.style.border = "2px solid lime";
+        localChildInput.disabled = true;
+
+        const foreignAdultInput = document.getElementById('tpkgForeignAdultCount');
+        foreignAdultInput.value = tpkg.basedinq.inq_foreign_adults || 0;
+        tpkg.foreignadultcount = tpkg.basedinq.inq_foreign_adults;
+        foreignAdultInput.style.border = "2px solid lime";
+        foreignAdultInput.disabled = true;
+
+        const foreignChildInput = document.getElementById('tpkgForeignChildCount');
+        foreignChildInput.value = tpkg.basedinq.inq_foreign_kids || 0;
+        tpkg.foreignchildcount = tpkg.basedinq.inq_foreign_kids;
+        foreignChildInput.style.border = "2px solid lime";
+        foreignChildInput.disabled = true;
+
+        const guideYesCB = document.getElementById('guideYes');
+        const guideNoCB = document.getElementById('guideNo');
 
         //guide
         if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == true) {
-            document.getElementById('guideYes').checked = true;
+
+            guideYesCB.checked = true;
+            guideYesCB.disabled = true;
+
             document.getElementById('yathraGuideCB').disabled = false;
             document.getElementById('rentalGuideCB').disabled = false;
-        } else if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == false) {
-            document.getElementById('guideNo').checked = true;
+            tpkg.is_guide_needed = true;
 
+            guideNoCB.disabled = true;
+
+        } else if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == false) {
+
+            guideNoCB.checked = true;
+            guideNoCB.disabled = true;
+            tpkg.is_guide_needed = false;
         }
 
+        // days
         if (tpkg.basedinq.intrstdpkgid != null) {
 
             const interestedTemplatePkg = await ajaxGetReq("/tpkg/byid?tpkgId=" + tpkg.basedinq.intrstdpkgid);
@@ -1479,7 +1549,6 @@ const fillDataFromInq = async () => {
         }
     }
 }
-
 
 //to handle the reset button click in the form
 const handlePkgReset = () => {
