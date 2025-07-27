@@ -869,7 +869,7 @@ const openModal = async (inqObj) => {
     document.getElementById('inqRecievedDate').value = inqObj.recieveddate;
     document.getElementById('inqRecievedTime').value = inqObj.recievedtime;
     document.getElementById('inqRecievedContact').value = inqObj.recievedcontactoremail;
-    fillMultDataIntoDynamicSelectsInq(inqInterestedPkg, 'Please Select Package', intrstdPkgList, 'pkgcode', 'pkgtitle', inqObj.intrstdpkgid);
+    fillMultDataIntoDynamicSelectsRefillById(inqInterestedPkg, 'Please Select Package', intrstdPkgList, 'pkgcode', 'pkgtitle', inqObj.intrstdpkgid);
     document.getElementById('inqClientTitle').value = inqObj.clienttitle;
     document.getElementById('inqClientName').value = inqObj.clientname;
     document.getElementById('InqClientNationality').value = inqObj.nationality_id?.countryname;

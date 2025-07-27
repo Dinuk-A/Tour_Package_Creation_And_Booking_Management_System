@@ -621,22 +621,23 @@ const refillTpkgForm = (tpkgObj) => {
     //for custom pkgs
     if (tpkgObj.is_custompkg === true) {
 
-        document.getElementById('finalDaySelectUseExistingBtn').disabled = false;
-
         //based inquiry
         if (tpkg.basedinq != null) {
-            fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', tpkgObj.basedinq.inqcode);
-            tpkgBasedInq.disabled = false;
+            fillMultDataIntoDynamicSelectsRefillById(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname', tpkg.basedinq);
+            tpkgBasedInq.disabled = true;
         }
 
         //approx start date
-        document.getElementById("tpStartDateInput").value = tpkgObj.tourstartdate || "";
+        const startDateInput = document.getElementById("tpStartDateInput");
+        startDateInput.value = tpkgObj.tourstartdate || "";
+        startDateInput.disabled = true;
 
         //start day plan
         fillDataIntoDynamicSelects(tpkgFirstDaySelect, 'please select first day plan', onlyFirstDays, 'daytitle', tpkgObj.sd_dayplan_id.daytitle);
 
         //last day plan 
         fillDataIntoDynamicSelects(tpkgFinalDaySelect, 'please select final day plan', onlyLastDays, 'daytitle', tpkgObj.ed_dayplan_id.daytitle);
+        document.getElementById('finalDaySelectUseExistingBtn').disabled = false;
 
         //reset midday counter
         let midDayCounter = 1;
@@ -655,7 +656,7 @@ const refillTpkgForm = (tpkgObj) => {
                 const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
                 const selectElement = document.getElementById(midDaySelectId);
 
-                selectElement.disabled = false;
+                selectElement.disabled = true;
 
                 fillDataIntoDynamicSelects(
                     selectElement,
@@ -676,15 +677,20 @@ const refillTpkgForm = (tpkgObj) => {
         //traevellers counts
         document.getElementById("tpkgLocalAdultCount").value = tpkgObj.localadultcount ?? 0;
         document.getElementById("tpkgLocalChildCount").value = tpkgObj.localchildcount ?? 0;
+        tpkgLocalChildCount.disabled = false;
         document.getElementById("tpkgForeignAdultCount").value = tpkgObj.foreignadultcount ?? 0;
         document.getElementById("tpkgForeignChildCount").value = tpkgObj.foreignchildcount ?? 0;
+        tpkgForeignChildCount.disabled = false;
+
+        //show start day on availability check section
+        showTourStartDate();
 
         // update total travellers
         updateTotalTravellers();
 
-        // preferred vehicle type
-        fillDataIntoDynamicSelects(
-            document.getElementById("tpkgVehitype"),
+        // preferred vehicle type 💥
+        fillDataIntoDynamicSelectsRefillByName(
+            tpkgVehitype,
             'Please Select Vehicle Type',
             vehiTypes,
             'vehiclename',
@@ -694,10 +700,13 @@ const refillTpkgForm = (tpkgObj) => {
         // include guide
         if (tpkgObj.is_guide_needed === true) {
             document.getElementById("guideYes").checked = true;
+            yathraGuideCB.disabled = false;
+            rentalGuideCB.disabled = false;
         } else if (tpkgObj.is_guide_needed === false) {
             document.getElementById("guideNo").checked = true;
+            yathraGuideCB.disabled = true;
+            rentalGuideCB.disabled = true;
         }
-        handleNeedGuideCB();
 
         // vehicle source (int or ext)
         if (tpkgObj.is_company_vehicle === true) {
@@ -720,7 +729,8 @@ const refillTpkgForm = (tpkgObj) => {
             document.getElementById("rentalGuideCB").checked = true;
         }
 
-        //additional cost entire table create again 💥💥💥
+        //refill additional cost entire table create again 
+        createAddiCostTable();
 
         //refill all the related costs
         document.getElementById('totalTktCostInput').value = tpkgObj.totaltktcost?.toFixed(2) || '0.00';
@@ -841,7 +851,7 @@ const refillTpkgForm = (tpkgObj) => {
     document.getElementById('showFinalDayBtn').disabled = false;
     document.getElementById('removeFinalDayBtn').disabled = false;
     document.getElementById('finalDaySelectUseTempsBtn').disabled = false;
-    document.getElementById('finalDaySelectUseExistingBtn').disabled = true;
+    document.getElementById('finalDaySelectUseExistingBtn').disabled = false;
 
     updateTotalDaysCount();
     showTotalKmCount();
@@ -1083,8 +1093,6 @@ const updateTpkg = async () => {
                 // Only send the ID of basedinq
                 if (tpkg.basedinq && tpkg.basedinq.id) {
                     tpkg.basedinq = tpkg.basedinq.id;
-                } else {
-                    tpkg.basedinq = null;
                 }
 
                 try {
@@ -4604,7 +4612,7 @@ const addNewTpkg = async () => {
                 if (tpkg.basedinq && tpkg.basedinq.id) {
                     tpkg.basedinq = tpkg.basedinq.id;
                 } else {
-                    tpkg.basedinq = null; // or handle as needed
+                    tpkg.basedinq = null;
                 }
 
                 //remove null days from dayplans list

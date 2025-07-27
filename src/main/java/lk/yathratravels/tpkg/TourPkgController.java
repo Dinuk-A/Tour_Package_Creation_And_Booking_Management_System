@@ -71,7 +71,7 @@ public class TourPkgController {
             User loggedUser = userDao.getUserByUsername(auth.getName());
             tpkgView.addObject("loggeduserdesignation", loggedUser.getEmployee_id().getDesignation_id().getName());
             tpkgView.addObject("loggedUserCompanyEmail", loggedUser.getWork_email());
-            
+
             List<String> roleNames = loggedUser.getRoles()
                     .stream()
                     .map(Role::getName)
@@ -103,7 +103,7 @@ public class TourPkgController {
         return daoTPkg.findAll(Sort.by(Direction.DESC, "id"));
     }
 
-    // get custom completed pkgs 
+    // get custom completed pkgs
     @GetMapping(value = "/tpkg/custom/completed", produces = "application/json")
     public List<TourPkg> getCustomDraftTourPackages() {
         return daoTPkg.getAllCompletedCustomPackages();
@@ -152,8 +152,8 @@ public class TourPkgController {
             tpkg.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
             for (AdditionalCost ac : tpkg.getAddiCostList()) {
-                ac.setAddeddatetime(LocalDateTime.now());
-                ac.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+                //ac.setAddeddatetime(LocalDateTime.now());
+                //ac.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
                 ac.setTourPkg(tpkg);
             }
 
@@ -166,7 +166,7 @@ public class TourPkgController {
 
     }
 
-  
+    // update a tpkg
     @PutMapping(value = "/tpkg")
     public String updateTourPkg(@RequestBody TourPkg tpkg) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -179,6 +179,13 @@ public class TourPkgController {
         try {
             tpkg.setLastmodifieddatetime(LocalDateTime.now());
             tpkg.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+            for (AdditionalCost ac : tpkg.getAddiCostList()) {
+                ac.setAddeddatetime(LocalDateTime.now());
+                ac.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+                ac.setTourPkg(tpkg);
+            }
+
             daoTPkg.save(tpkg);
             return "OK";
         } catch (Exception e) {

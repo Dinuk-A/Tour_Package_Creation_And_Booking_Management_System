@@ -37,7 +37,7 @@ const fillDataIntoDynamicSelectsOriOri = (tagId, msg, dataContainer, displayingP
 
 }
 
-//new
+//new ✅
 const fillDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropertyName, selectedValue) => {
     tagId.innerHTML = "";
 
@@ -61,6 +61,46 @@ const fillDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPropert
 
         if (selectedValue && selectedValue === element[displayingPropertyName]) {
             foundMatch = true;
+        }
+
+        tagId.appendChild(selectableOption);
+    });
+
+    // ✅ set the selected value on the <select> itself
+    if (foundMatch) {
+        const matchedOption = [...tagId.options].find(opt => opt.text === selectedValue);
+        if (matchedOption) {
+            tagId.value = matchedOption.value;
+        }
+    }
+};
+
+//same as above but refilled by name
+const fillDataIntoDynamicSelectsRefillByName = (tagId, msg, dataContainer, displayingPropertyName, selectedValue) => {
+    tagId.innerHTML = "";
+
+    let foundMatch = false;
+
+    // Create the first placeholder option
+    if (msg !== "") {
+        const firstOption = document.createElement('option');
+        firstOption.innerText = msg;
+        firstOption.value = "";
+        firstOption.selected = true;
+        firstOption.disabled = true;
+        tagId.appendChild(firstOption);
+    }
+
+    // Create other options
+    dataContainer.forEach((element) => {
+        const selectableOption = document.createElement('option');
+        selectableOption.innerText = element[displayingPropertyName];
+        selectableOption.value = JSON.stringify(element);
+
+        if (selectedValue != "") {
+            if (selectedValue == element['name']) {
+                selectableOption.selected = true;
+            }
         }
 
         tagId.appendChild(selectableOption);
@@ -108,7 +148,7 @@ const fillMultDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPro
 }
 
 //fill and display 2 values into the same <option>
-const fillMultDataIntoDynamicSelectsInq = (tagId, msg, dataContainer, displayingPropertyName1, displayingPropertyName2, selectedValue) => {
+const fillMultDataIntoDynamicSelectsRefillById = (tagId, msg, dataContainer, displayingPropertyName1, displayingPropertyName2, selectedValue) => {
 
     tagId.innerHTML = "";
 
