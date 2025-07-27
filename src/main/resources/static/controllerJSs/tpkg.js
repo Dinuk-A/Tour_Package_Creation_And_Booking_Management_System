@@ -20,9 +20,9 @@ let onlyMidDays = [];
 let onlyTemplates = [];
 let allActiveInqs = [];
 let vehiTypes = [];
-
 let roles = [];
 
+//fetch days to reuse
 const fetchDays = async () => {
 
     //get first days only
@@ -53,7 +53,6 @@ const fetchDays = async () => {
         console.error('Error fetching mid days:', error);
     }
 
-
 }
 
 // to fetch all price modifiers and store them globally 
@@ -66,6 +65,8 @@ const fetchPriceMods = async () => {
         console.error("Failed to load price modifiers:", error);
     }
 }
+
+//***********************✅TPKG BASIC CODE✅********************** 
 
 //global var to store id of the table
 let sharedTableIdForTpkg = "mainTableTpkg";
@@ -91,7 +92,94 @@ const buildTpkgTable = async () => {
     }
 }
 
-//to ready the main form   
+//to support fill main table  
+const showTpkgStatus = (tpkgObj) => {
+
+    if (tpkgObj.deleted_tpkg == null || tpkgObj.deleted_tpkg === false) {
+
+        if (tpkgObj.tpkg_status === "Draft") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Draft
+                </p>`;
+        }
+
+        else if (tpkgObj.tpkg_status === "Completed") {
+            return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+            style="background-color: #28a745; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+            Finalized
+         </p>`;
+        }
+
+        else if (tpkgObj.tpkg_status === "Active") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #007bff; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Live on website
+                </p>`;
+        }
+
+        else if (tpkgObj.tpkg_status === "Inactive") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #6c757d; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Inactive
+                </p>`;
+        }
+
+    } else if (tpkgObj.deleted_tpkg != null && tpkgObj.deleted_tpkg === true) {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Deleted Record
+            </p>`;
+    }
+}
+
+//to support fill main table   
+const showTpkgType = (tpkgObj) => {
+    if (!tpkgObj.is_custompkg) {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #6f42c1; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Template Package
+            </p>`;
+    } else {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #20c997; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Custom Package
+            </p>`;
+    }
+}
+
+//clear out the form everytime a user switches to table tab   
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTabTpkg').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            refreshTpkgForm();
+        }
+    });
+});
+
+//set status auto
+const setTpkgStatus = () => {
+    const tpkgStatusSelectElement = document.getElementById('tpSelectStatus');
+    tpkg.tpkg_status = "Draft";
+    tpkgStatusSelectElement.value = "Draft";
+    tpkgStatusSelectElement.style.border = "2px solid lime";
+
+    //hide options from 3 to 5
+    for (let i = 3; i <= 5; i++) {
+        if (tpkgStatusSelectElement.children[i]) {
+            tpkgStatusSelectElement.children[i].classList.add('d-none');
+        }
+    }
+}
+
+//to reset & ready the main form   
 const refreshTpkgForm = async () => {
 
     midDayCounter = 1;
@@ -173,7 +261,7 @@ const refreshTpkgForm = async () => {
 
     //get the logged user's emp id to filter inquiries assigned to him
     const loggedEmpId = document.getElementById('loggedUserEmpIdSectionId').textContent;
-    console.log("loggedEmpId: " , loggedEmpId);
+    console.log("loggedEmpId: ", loggedEmpId);
 
     // refresh based inq field active inquiries of the logged user
     try {
@@ -300,17 +388,6 @@ const refreshTpkgForm = async () => {
     //set the min start date to 7 days future
     setTpkgStartDateToFuture();
 }
-
-//clear out the form everytime a user switches to table tab   
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('myTabTpkg').addEventListener('shown.bs.tab', function (event) {
-        if (event.target.id === 'table-tab') {
-            console.log("Switching to table tab - clearing form");
-            refreshTpkgForm();
-
-        }
-    });
-});
 
 //to reset the modal when opening it
 const resetModalTpkg = () => {
@@ -502,101 +579,6 @@ const openModalTpkg = (tpkgObj) => {
     // Show modal
     $('#infoModalTpkg').modal('show');
 };
-
-//to support fill main table   
-const showTpkgType = (tpkgObj) => {
-    if (!tpkgObj.is_custompkg) {
-        return `
-            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-               style="background-color: #6f42c1; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-               Template Package
-            </p>`;
-    } else {
-        return `
-            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-               style="background-color: #20c997; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-               Custom Package
-            </p>`;
-    }
-}
-
-
-//to support fill main table  
-const showTpkgStatus = (tpkgObj) => {
-
-    if (tpkgObj.deleted_tpkg == null || tpkgObj.deleted_tpkg === false) {
-
-        if (tpkgObj.tpkg_status === "Draft") {
-            return `
-                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-                   style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                   Draft
-                </p>`;
-        }
-
-        else if (tpkgObj.tpkg_status === "Completed") {
-            return `
-            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-            style="background-color: #28a745; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            Finalized
-         </p>`;
-        }
-
-        else if (tpkgObj.tpkg_status === "Active") {
-            return `
-                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-                   style="background-color: #007bff; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                   Live on website
-                </p>`;
-        }
-
-        else if (tpkgObj.tpkg_status === "Inactive") {
-            return `
-                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-                   style="background-color: #6c757d; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                   Inactive
-                </p>`;
-        }
-
-    } else if (tpkgObj.deleted_tpkg != null && tpkgObj.deleted_tpkg === true) {
-        return `
-            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
-               style="background-color: #e74c3c; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-               Deleted Record
-            </p>`;
-    }
-}
-
-//to clear the day plan info section 
-const resetDayPlanInfoSection = () => {
-
-    document.getElementById('tempInfoDisRow').classList.add('d-none');
-    document.getElementById('dpInfoIsTemplate').innerText = '';
-
-    // Reset all <span> elements to 'N/A'
-    document.getElementById('dpInfoCode').innerText = 'N/A';
-    document.getElementById('dpInfoTitle').innerText = 'N/A';
-    document.getElementById('dpInfoStartLocation').innerText = 'N/A';
-    document.getElementById('dpInfoLunchPlace').innerText = 'N/A';
-    document.getElementById('dpInfoDropPoint').innerText = 'N/A';
-    document.getElementById('dpInfoNote').innerText = 'N/A';
-
-    const placesList = document.getElementById('dpInfoPlaces');
-    placesList.innerHTML = '<li>N/A</li>';
-
-    document.getElementById('dayPlanInfoEditBtn').disabled = true;
-};
-
-//load templates and save globally just for refill
-let templateDaysForRefill = [];
-const fetchTemplateDaysForRefill = async () => {
-
-    try {
-        templateDaysForRefill = await ajaxGetReq("/dayplan/onlytemplatedays");
-    } catch (error) {
-        console.error("Error loading templates:", error);
-    }
-}
 
 //refill the TPKG
 const refillTpkgForm = (tpkgObj) => {
@@ -879,7 +861,7 @@ const refillTpkgForm = (tpkgObj) => {
 
 }
 
-//unpublish a template to make it editable again
+//unpublish a WEB template to make it editable again
 const unpublishTpkgRecord = async () => {
 
     const userConfirm = confirm("Are you sure to unpublish this package from the website? It will be editable again in the system.");
@@ -1067,7 +1049,7 @@ const showTpkgValueChanges = () => {
     }
 
     return updates;
-};
+}
 
 //to update the TPKG
 const updateTpkg = async () => {
@@ -1120,7 +1102,7 @@ const updateTpkg = async () => {
     } else {
         showAlertModal('war', errors);
     }
-};
+}
 
 //delete tpkg
 const deleteTpkgRecord = async (tpkgObj) => {
@@ -1308,309 +1290,6 @@ const printTpkgRecord = (tpkgObj) => {
         printWindow.print();
         setTimeout(() => printWindow.close(), 1000);
     };
-};
-
-//handle adult counts
-const validateAdultTravellerCounts = () => {
-
-    const localAdultInput = document.getElementById('tpkgLocalAdultCount');
-    const foreignAdultInput = document.getElementById('tpkgForeignAdultCount');
-
-    const localAdults = parseInt(localAdultInput.value) || 0;
-    const foreignAdults = parseInt(foreignAdultInput.value) || 0;
-
-    if (localAdults === 0 && foreignAdults === 0) {
-        showAlertModal('war', 'At least one adult traveller is required (local or foreign).');
-        localAdultInput.style.border = '2px solid red';
-        foreignAdultInput.style.border = '2px solid red';
-        tpkg.foreignadultcount = 0;
-        tpkg.localadultcount = 0;
-    } else {
-        localAdultInput.style.border = '2px solid lime';
-        foreignAdultInput.style.border = '2px solid lime';
-        tpkg.foreignadultcount = foreignAdults;
-        tpkg.localadultcount = localAdults;
-    }
-}
-
-//reset cost inputs section
-const resetTotalCostInputsAndAddiCostTable = () => {
-    // reset additionalcost table 
-    document.getElementById("additionalCostTableBody").innerHTML = "";
-
-    //reset additionalCost inner form
-    refreshAddiCostForm();
-
-    //reset additional cost add btn
-    document.getElementById('addCostAddBtn').disabled = false;
-
-    // Array of input field IDs to reset
-    const inputTagsIds = [
-
-        'totalTktCostInput',
-        'totalVehicleParkingCost',
-        'totalLunchCostForAll',
-        'totalVehiCostInput',
-        'totalStayCostInput',
-        'totalDriverCostInput',
-        'totalGuideCostInput',
-        'totalAdditionalCosts',
-        'pkgStartingPrice'
-
-    ];
-
-    //clear out any previous styles
-    inputTagsIds.forEach((fieldID) => {
-        const field = document.getElementById(fieldID);
-        if (field) {
-            field.style.border = "1px solid #ced4da";
-            field.value = '';
-        }
-    });
-
-    //reset total costs section 
-    document.getElementById('totalTktCostGroup').classList.remove('d-none');
-    document.getElementById('totalTktCostMsg').classList.add('d-none');
-
-    document.getElementById('totalVehiParkCostGroup').classList.remove('d-none');
-    document.getElementById('totalVehicleParkingCostMsg').classList.add('d-none');
-
-    document.getElementById('totalLunchCostGroup').classList.remove('d-none');
-    document.getElementById('totalLunchCostMsg').classList.add('d-none');
-
-    document.getElementById('totalVehiCostGroup').classList.remove('d-none');
-    document.getElementById('totalVehicleCostMsg').classList.add('d-none');
-
-    document.getElementById('totalStayCostGroup').classList.remove('d-none');
-    document.getElementById('totalStayCostMsg').classList.add('d-none');
-
-    document.getElementById('totalDriverCostGroup').classList.remove('d-none');
-    document.getElementById('totalDriverCostMsg').classList.add('d-none');
-
-    document.getElementById('totalGuideCostGroup').classList.remove('d-none');
-    document.getElementById('totalGuideCostMsg').classList.add('d-none');
-
-    document.getElementById('finalTotalCost').value = '';
-    document.getElementById('pkgSellingPrice').value = '';
-
-    //discount section
-    const noneCb = document.getElementById('discountNone');
-    const loyalityCb = document.getElementById('discountLoyality');
-    const offpeakCb = document.getElementById('discountOffpeak');
-
-    noneCb.disabled = false;
-    noneCb.checked = true;
-
-    loyalityCb.checked = false;
-    offpeakCb.checked = false;
-
-    loyalityCb.disabled = true;
-    offpeakCb.disabled = true;
-
-    //reset final price section
-    const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
-    pkgFinalPriceShowInput.value = '';
-    pkgFinalPriceShowInput.style.border = "1px solid #ced4da";
-}
-
-//get user permission before refill tpkg by inq when there are already data
-const getUserPermissionForRefill = async () => {
-
-    if (tpkg.pkgtitle != null || tpkg.sd_dayplan_id != null || tpkg.tourstartdate != null || tpkg.pkgfinalprice != null) {
-
-        const userConfirm = confirm("Are you sure to refill the package data from the inquiry? All current data will be lost.");
-
-        if (!userConfirm) {
-            showAlertModal('inf', 'User cancelled the refill task');
-            return;
-        } else if (userConfirm) {
-            const pkgTitleInput = document.getElementById('inputPkgTitle');
-            pkgTitleInput.value = "";
-            pkgTitleInput.style.border = "1px solid #ced4da";
-
-            //reset costs section 
-            resetTotalCostInputsAndAddiCostTable();
-
-            //then refill
-            fillDataFromInq();
-        }
-    } else {
-        //if there is no data, just refill
-        fillDataFromInq();
-    }
-}
-
-//handle refill tpkg data from inquiry
-const fillDataFromInq = async () => {
-
-    //reset the previous midday section
-    document.getElementById('tpkgMidDaysSelectSection').innerHTML = '';
-
-    //reset global var
-    midDayCounter = 1;
-
-    if (tpkg.basedinq?.id != null) {
-
-        //approx start date
-        if (tpkg.basedinq.inq_apprx_start_date != null && tpkg.basedinq.is_startdate_confirmed == true) {
-            const startDateInput = document.getElementById('tpStartDateInput');
-            startDateInput.value = tpkg.basedinq.inq_apprx_start_date;
-            tpkg.tourstartdate = tpkg.basedinq.inq_apprx_start_date;
-            startDateInput.style.border = "2px solid lime";
-            startDateInput.disabled = true;
-        }
-
-        //traveller grp
-        const localAdultInput = document.getElementById('tpkgLocalAdultCount');
-        localAdultInput.value = tpkg.basedinq.inq_local_adults || 0;
-        tpkg.localadultcount = tpkg.basedinq.inq_local_adults;
-        localAdultInput.style.border = "2px solid lime";
-        localAdultInput.disabled = true;
-
-        const localChildInput = document.getElementById('tpkgLocalChildCount');
-        localChildInput.value = tpkg.basedinq.inq_local_kids || 0;
-        tpkg.localchildcount = tpkg.basedinq.inq_local_kids;
-        localChildInput.style.border = "2px solid lime";
-        localChildInput.disabled = true;
-
-        const foreignAdultInput = document.getElementById('tpkgForeignAdultCount');
-        foreignAdultInput.value = tpkg.basedinq.inq_foreign_adults || 0;
-        tpkg.foreignadultcount = tpkg.basedinq.inq_foreign_adults;
-        foreignAdultInput.style.border = "2px solid lime";
-        foreignAdultInput.disabled = true;
-
-        const foreignChildInput = document.getElementById('tpkgForeignChildCount');
-        foreignChildInput.value = tpkg.basedinq.inq_foreign_kids || 0;
-        tpkg.foreignchildcount = tpkg.basedinq.inq_foreign_kids;
-        foreignChildInput.style.border = "2px solid lime";
-        foreignChildInput.disabled = true;
-
-        const guideYesCB = document.getElementById('guideYes');
-        const guideNoCB = document.getElementById('guideNo');
-
-        //guide
-        if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == true) {
-
-            guideYesCB.checked = true;
-            guideYesCB.disabled = true;
-
-            document.getElementById('yathraGuideCB').disabled = false;
-            document.getElementById('rentalGuideCB').disabled = false;
-            tpkg.is_guide_needed = true;
-
-            guideNoCB.disabled = true;
-
-        } else if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == false) {
-
-            guideNoCB.checked = true;
-            guideNoCB.disabled = true;
-            tpkg.is_guide_needed = false;
-        }
-
-        // days
-        if (tpkg.basedinq.intrstdpkgid != null) {
-
-            const interestedTemplatePkg = await ajaxGetReq("/tpkg/byid?tpkgId=" + tpkg.basedinq.intrstdpkgid);
-            console.log(interestedTemplatePkg);
-
-            tpkg.sd_dayplan_id = interestedTemplatePkg.sd_dayplan_id;
-            tpkg.ed_dayplan_id = interestedTemplatePkg.ed_dayplan_id;
-
-            //for first day
-            const fdSelect = document.getElementById('tpkgFirstDaySelect');
-            fillDataIntoDynamicSelects(fdSelect, 'Please select first day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.sd_dayplan_id.daytitle);
-            handleFirstDayChange(tpkgFirstDaySelect);
-            //fdSelect.disabled = true;
-
-            //for middays
-            const intrstdPkgMidDays = interestedTemplatePkg.dayplans;
-
-            //reset the midday count
-            let midDayCounter = 1;
-
-            for (let i = 0; i < intrstdPkgMidDays.length; i++) {
-
-                console.log("runs,", i);
-                const dayPlan = intrstdPkgMidDays[i];
-
-                //created once per loop element
-                generateNormalDayPlanSelectSections();
-
-                const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
-                const selectElement = document.getElementById(midDaySelectId);
-                //let msgElemetId = `midDayMsg${i + 1}`;
-                let msgElement = selectElement.parentNode.children[1];
-
-                //selectElement.disabled = false;
-
-                fillDataIntoDynamicSelects(
-                    selectElement,
-                    'Please Select',
-                    onlyTemplates,
-                    'daytitle',
-                    dayPlan.daytitle
-                );
-
-                tpkg.dayplans[i] = dayPlan;
-
-                document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
-                document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
-
-                if (tpkg.dayplans[i].is_template) {
-
-                    selectElement.style.border = "2px solid orange";
-
-                    msgElement.classList.remove("d-none");
-
-                    tpkg.dayplans[i] = null;
-
-                    addNewDaysBtn.disabled = true;
-                }
-
-                midDayCounter++
-
-            }
-
-            //for final day
-            const ldSelect = document.getElementById('tpkgFinalDaySelect');
-            fillDataIntoDynamicSelects(ldSelect, 'Please select last day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.ed_dayplan_id.daytitle);
-            handleFinalDayChange(tpkgFinalDaySelect);
-
-            //ldSelect.disabled = true;
-            //showFinalDayBtn.disabled = false;
-            //finalDayMsg.classList.remove('d-none');
-
-            updateTotalDaysCount();
-            showTotalKmCount();
-            updateTotalTravellers();
-
-        }
-    }
-}
-
-//to handle the reset button click in the form
-const handlePkgReset = () => {
-    let userConfirm = confirm("Are you sure you want to reset the form? All unsaved data will be lost.");
-    if (userConfirm) {
-        refreshTpkgForm();
-    } else {
-        showAlertModal('inf', "Reset Cancelled");
-    }
-}
-
-//set status auto
-const setTpkgStatus = () => {
-    const tpkgStatusSelectElement = document.getElementById('tpSelectStatus');
-    tpkg.tpkg_status = "Draft";
-    tpkgStatusSelectElement.value = "Draft";
-    tpkgStatusSelectElement.style.border = "2px solid lime";
-
-    //hide options from 3 to 5
-    for (let i = 3; i <= 5; i++) {
-        if (tpkgStatusSelectElement.children[i]) {
-            tpkgStatusSelectElement.children[i].classList.add('d-none');
-        }
-    }
 }
 
 //set the start date to 7 days future   
@@ -1624,6 +1303,9 @@ const setTpkgStartDateToFuture = () => {
     dateInput.setAttribute('min', formattedDate);
 
 }
+
+
+//***********************✅TPKG FORM CODE✅********************** 
 
 //for first 2 radio buttons to choose package type   
 const changesTpkgCustomOrTemp = () => {
@@ -1775,6 +1457,29 @@ const changesTpkgCustomOrTemp = () => {
     }
 }
 
+//handle adult counts
+const validateAdultTravellerCounts = () => {
+
+    const localAdultInput = document.getElementById('tpkgLocalAdultCount');
+    const foreignAdultInput = document.getElementById('tpkgForeignAdultCount');
+
+    const localAdults = parseInt(localAdultInput.value) || 0;
+    const foreignAdults = parseInt(foreignAdultInput.value) || 0;
+
+    if (localAdults === 0 && foreignAdults === 0) {
+        showAlertModal('war', 'At least one adult traveller is required (local or foreign).');
+        localAdultInput.style.border = '2px solid red';
+        foreignAdultInput.style.border = '2px solid red';
+        tpkg.foreignadultcount = 0;
+        tpkg.localadultcount = 0;
+    } else {
+        localAdultInput.style.border = '2px solid lime';
+        foreignAdultInput.style.border = '2px solid lime';
+        tpkg.foreignadultcount = foreignAdults;
+        tpkg.localadultcount = localAdults;
+    }
+}
+
 //adults counts must be >0 in order to fill the child counts  
 const enableChildCountInputs = () => {
     if (parseInt(tpkgLocalAdultCount.value) > 0 || parseInt(tpkgForeignAdultCount.value) > 0) {
@@ -1791,6 +1496,683 @@ const enableChildCountInputs = () => {
         tpkg.foreignchildcount = 0;
 
     }
+}
+
+// to calculate total travellers and refill the suitable vehi types
+const updateTotalTravellers = () => {
+    const localAdult = parseInt(document.getElementById('tpkgLocalAdultCount').value) || 0;
+    const localChild = parseInt(document.getElementById('tpkgLocalChildCount').value) || 0;
+    const foreignAdult = parseInt(document.getElementById('tpkgForeignAdultCount').value) || 0;
+    const foreignChild = parseInt(document.getElementById('tpkgForeignChildCount').value) || 0;
+
+    const total = localAdult + localChild + foreignAdult + foreignChild;
+
+    document.getElementById('tpkgTotalTravellers').value = total;
+
+    //function to update the predered vehicle type select input
+    debouncedGetVehicleTypesByMinSeats();
+
+}
+
+//without selecting the suitable vehi type
+const updateTotalTravellersForRefillOnly = () => {
+    const localAdult = parseInt(document.getElementById('tpkgLocalAdultCount').value) || 0;
+    const localChild = parseInt(document.getElementById('tpkgLocalChildCount').value) || 0;
+    const foreignAdult = parseInt(document.getElementById('tpkgForeignAdultCount').value) || 0;
+    const foreignChild = parseInt(document.getElementById('tpkgForeignChildCount').value) || 0;
+
+    const total = localAdult + localChild + foreignAdult + foreignChild;
+
+    document.getElementById('tpkgTotalTravellers').value = total;
+
+}
+
+// update total km count of the tour package
+const showTotalKmCount = () => {
+
+    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+
+    //first day
+    const kmCountFD = tpkg.sd_dayplan_id?.totalkmcount || 0;
+
+    //last day
+    let kmCountLD = 0;
+    if (tpkg.ed_dayplan_id) {
+        kmCountLD = tpkg.ed_dayplan_id.totalkmcount || 0;
+    }
+
+    //mid days
+    let kmCountMD = 0;
+    if (tpkg.dayplans.length > 0) {
+        tpkg.dayplans.forEach((day) => {
+            kmCountMD = kmCountMD + (day.totalkmcount || 0);
+        })
+    }
+
+    const sumKM = kmCountFD + kmCountLD + kmCountMD;
+    const inputTotalKm = document.getElementById('showTotalKMCount');
+    tpkg.totalkmcountofpkg = sumKM;
+    inputTotalKm.value = sumKM;
+
+}
+
+// to reset data in dynamic selects  
+const resetSelectElements = (selectElement, defaultText = "Please Select") => {
+    selectElement.disabled = false;
+    selectElement.innerHTML = '';
+    const defaultOption = document.createElement("option");
+    defaultOption.text = defaultText;
+    defaultOption.value = "";
+    selectElement.add(defaultOption);
+}
+
+//reset cost inputs section
+const resetTotalCostInputsAndAddiCostTable = () => {
+    // reset additionalcost table 
+    document.getElementById("additionalCostTableBody").innerHTML = "";
+
+    //reset additionalCost inner form
+    refreshAddiCostForm();
+
+    //reset additional cost add btn
+    document.getElementById('addCostAddBtn').disabled = false;
+
+    // Array of input field IDs to reset
+    const inputTagsIds = [
+
+        'totalTktCostInput',
+        'totalVehicleParkingCost',
+        'totalLunchCostForAll',
+        'totalVehiCostInput',
+        'totalStayCostInput',
+        'totalDriverCostInput',
+        'totalGuideCostInput',
+        'totalAdditionalCosts',
+        'pkgStartingPrice'
+
+    ];
+
+    //clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    //reset total costs section 
+    document.getElementById('totalTktCostGroup').classList.remove('d-none');
+    document.getElementById('totalTktCostMsg').classList.add('d-none');
+
+    document.getElementById('totalVehiParkCostGroup').classList.remove('d-none');
+    document.getElementById('totalVehicleParkingCostMsg').classList.add('d-none');
+
+    document.getElementById('totalLunchCostGroup').classList.remove('d-none');
+    document.getElementById('totalLunchCostMsg').classList.add('d-none');
+
+    document.getElementById('totalVehiCostGroup').classList.remove('d-none');
+    document.getElementById('totalVehicleCostMsg').classList.add('d-none');
+
+    document.getElementById('totalStayCostGroup').classList.remove('d-none');
+    document.getElementById('totalStayCostMsg').classList.add('d-none');
+
+    document.getElementById('totalDriverCostGroup').classList.remove('d-none');
+    document.getElementById('totalDriverCostMsg').classList.add('d-none');
+
+    document.getElementById('totalGuideCostGroup').classList.remove('d-none');
+    document.getElementById('totalGuideCostMsg').classList.add('d-none');
+
+    document.getElementById('finalTotalCost').value = '';
+    document.getElementById('pkgSellingPrice').value = '';
+
+    //discount section
+    const noneCb = document.getElementById('discountNone');
+    const loyalityCb = document.getElementById('discountLoyality');
+    const offpeakCb = document.getElementById('discountOffpeak');
+
+    noneCb.disabled = false;
+    noneCb.checked = true;
+
+    loyalityCb.checked = false;
+    offpeakCb.checked = false;
+
+    loyalityCb.disabled = true;
+    offpeakCb.disabled = true;
+
+    //reset final price section
+    const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
+    pkgFinalPriceShowInput.value = '';
+    pkgFinalPriceShowInput.style.border = "1px solid #ced4da";
+}
+
+//get user permission before refill tpkg by inq when there are already data
+const getUserPermissionForRefill = async () => {
+
+    if (tpkg.pkgtitle != null || tpkg.sd_dayplan_id != null || tpkg.tourstartdate != null || tpkg.pkgfinalprice != null) {
+
+        const userConfirm = confirm("Are you sure to refill the package data from the inquiry? All current data will be lost.");
+
+        if (!userConfirm) {
+            showAlertModal('inf', 'User cancelled the refill task');
+            return;
+        } else if (userConfirm) {
+            const pkgTitleInput = document.getElementById('inputPkgTitle');
+            pkgTitleInput.value = "";
+            pkgTitleInput.style.border = "1px solid #ced4da";
+
+            //reset costs section 
+            resetTotalCostInputsAndAddiCostTable();
+
+            //then refill
+            fillDataFromInq();
+        }
+    } else {
+        //if there is no data, just refill
+        fillDataFromInq();
+    }
+}
+
+//to handle the reset button click in the form
+const handlePkgReset = () => {
+    let userConfirm = confirm("Are you sure you want to reset the form? All unsaved data will be lost.");
+    if (userConfirm) {
+        refreshTpkgForm();
+    } else {
+        showAlertModal('inf', "Reset Cancelled");
+    }
+}
+
+//handle refill tpkg data from inquiry
+const fillDataFromInq = async () => {
+
+    //reset the previous midday section
+    document.getElementById('tpkgMidDaysSelectSection').innerHTML = '';
+
+    //reset global var
+    midDayCounter = 1;
+
+    if (tpkg.basedinq?.id != null) {
+
+        //approx start date
+        if (tpkg.basedinq.inq_apprx_start_date != null && tpkg.basedinq.is_startdate_confirmed == true) {
+            const startDateInput = document.getElementById('tpStartDateInput');
+            startDateInput.value = tpkg.basedinq.inq_apprx_start_date;
+            tpkg.tourstartdate = tpkg.basedinq.inq_apprx_start_date;
+            startDateInput.style.border = "2px solid lime";
+            startDateInput.disabled = true;
+        }
+
+        //traveller grp
+        const localAdultInput = document.getElementById('tpkgLocalAdultCount');
+        localAdultInput.value = tpkg.basedinq.inq_local_adults || 0;
+        tpkg.localadultcount = tpkg.basedinq.inq_local_adults;
+        localAdultInput.style.border = "2px solid lime";
+        localAdultInput.disabled = true;
+
+        const localChildInput = document.getElementById('tpkgLocalChildCount');
+        localChildInput.value = tpkg.basedinq.inq_local_kids || 0;
+        tpkg.localchildcount = tpkg.basedinq.inq_local_kids;
+        localChildInput.style.border = "2px solid lime";
+        localChildInput.disabled = true;
+
+        const foreignAdultInput = document.getElementById('tpkgForeignAdultCount');
+        foreignAdultInput.value = tpkg.basedinq.inq_foreign_adults || 0;
+        tpkg.foreignadultcount = tpkg.basedinq.inq_foreign_adults;
+        foreignAdultInput.style.border = "2px solid lime";
+        foreignAdultInput.disabled = true;
+
+        const foreignChildInput = document.getElementById('tpkgForeignChildCount');
+        foreignChildInput.value = tpkg.basedinq.inq_foreign_kids || 0;
+        tpkg.foreignchildcount = tpkg.basedinq.inq_foreign_kids;
+        foreignChildInput.style.border = "2px solid lime";
+        foreignChildInput.disabled = true;
+
+        const guideYesCB = document.getElementById('guideYes');
+        const guideNoCB = document.getElementById('guideNo');
+
+        //guide
+        if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == true) {
+
+            guideYesCB.checked = true;
+            guideYesCB.disabled = true;
+
+            document.getElementById('yathraGuideCB').disabled = false;
+            document.getElementById('rentalGuideCB').disabled = false;
+            tpkg.is_guide_needed = true;
+
+            guideNoCB.disabled = true;
+
+        } else if (tpkg.basedinq.inq_guideneed != null && tpkg.basedinq.inq_guideneed == false) {
+
+            guideNoCB.checked = true;
+            guideNoCB.disabled = true;
+            tpkg.is_guide_needed = false;
+        }
+
+        // days
+        if (tpkg.basedinq.intrstdpkgid != null) {
+
+            const interestedTemplatePkg = await ajaxGetReq("/tpkg/byid?tpkgId=" + tpkg.basedinq.intrstdpkgid);
+            console.log(interestedTemplatePkg);
+
+            tpkg.sd_dayplan_id = interestedTemplatePkg.sd_dayplan_id;
+            tpkg.ed_dayplan_id = interestedTemplatePkg.ed_dayplan_id;
+
+            //for first day
+            const fdSelect = document.getElementById('tpkgFirstDaySelect');
+            fillDataIntoDynamicSelects(fdSelect, 'Please select first day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.sd_dayplan_id.daytitle);
+            handleFirstDayChange(tpkgFirstDaySelect);
+            //fdSelect.disabled = true;
+
+            //for middays
+            const intrstdPkgMidDays = interestedTemplatePkg.dayplans;
+
+            //reset the midday count
+            let midDayCounter = 1;
+
+            for (let i = 0; i < intrstdPkgMidDays.length; i++) {
+
+                console.log("runs,", i);
+                const dayPlan = intrstdPkgMidDays[i];
+
+                //created once per loop element
+                generateNormalDayPlanSelectSections();
+
+                const midDaySelectId = `tpkgMidDaySelect${i + 1}`;
+                const selectElement = document.getElementById(midDaySelectId);
+                //let msgElemetId = `midDayMsg${i + 1}`;
+                let msgElement = selectElement.parentNode.children[1];
+
+                //selectElement.disabled = false;
+
+                fillDataIntoDynamicSelects(
+                    selectElement,
+                    'Please Select',
+                    onlyTemplates,
+                    'daytitle',
+                    dayPlan.daytitle
+                );
+
+                tpkg.dayplans[i] = dayPlan;
+
+                document.getElementById(`showMidDayBtn${i + 1}`).disabled = false;
+                document.getElementById(`midDayDeleteBtn${i + 1}`).disabled = false;
+
+                if (tpkg.dayplans[i].is_template) {
+
+                    selectElement.style.border = "2px solid orange";
+
+                    msgElement.classList.remove("d-none");
+
+                    tpkg.dayplans[i] = null;
+
+                    addNewDaysBtn.disabled = true;
+                }
+
+                midDayCounter++
+
+            }
+
+            //for final day
+            const ldSelect = document.getElementById('tpkgFinalDaySelect');
+            fillDataIntoDynamicSelects(ldSelect, 'Please select last day plan', onlyTemplates, 'daytitle', interestedTemplatePkg.ed_dayplan_id.daytitle);
+            handleFinalDayChange(tpkgFinalDaySelect);
+
+            //ldSelect.disabled = true;
+            //showFinalDayBtn.disabled = false;
+            //finalDayMsg.classList.remove('d-none');
+
+            updateTotalDaysCount();
+            showTotalKmCount();
+            updateTotalTravellers();
+
+        }
+    }
+}
+
+// fn to calculate the total days count of the tour package 
+const updateTotalDaysCount = () => {
+
+    let total = 0;
+
+    // add 1 if start dayplan is selected
+    if (tpkg.sd_dayplan_id?.id != null) {
+        total += 1;
+    }
+
+    // add 1 if end dayplan is selected
+    if (tpkg.ed_dayplan_id?.id != null) {
+        total += 1;
+    }
+
+    // add number of middle day plans
+    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+    if (tpkg.dayplans && Array.isArray(tpkg.dayplans)) {
+        total += tpkg.dayplans.length;
+    }
+
+    document.getElementById('showTotalDaysCount').value = total;
+    tpkg.totaldays = total;
+
+    updateTourEndDate();
+    showDnGAvailabilityButtons();
+    showVehiAvailabilityButtons();
+};
+
+// check if first tabs inputs are all filled 💥💥💥
+const checkFirstTab = () => {
+    const pkgTitle = tpkg.pkgtitle;
+    const startDate = tpkg.tourstartdate;
+    const description = tpkg.web_description;
+
+    if (tpkg.is_custompkg == null) {
+        alert("Please select whether this is a custom package or a template package.");
+        return null;
+    }
+
+    if (!pkgTitle) {
+        alert("Please enter the tour package title.");
+        return null;
+    }
+
+    if (tpkg.is_custompkg === true) {
+        if (!startDate) {
+            alert("For a custom package, please fill the start date.");
+            return null;
+        }
+    }
+
+    if (tpkg.is_custompkg === false) {
+        if (!description) {
+            alert("For a template package, please fill the web description.");
+            return null;
+        }
+    }
+
+    tabelement = document.getElementById('tpkgStep2-tab');
+    tabelement.classList.remove("disabled");
+    tabelement.click();
+
+};
+
+//check errors before adding 
+const checkTpkgFormErrors = () => {
+    let errors = "";
+
+    if (!tpkg.pkgtitle) {
+        errors += "Title cannot be empty \n";
+    }
+
+    if (tpkg.is_custompkg === null || tpkg.is_custompkg === undefined) {
+        errors += "Please select the type of package \n";
+    }
+
+    if (!tpkg.sd_dayplan_id) {
+        errors += "Please select the first day plan \n";
+    }
+
+    if (!tpkg.ed_dayplan_id && tpkg.dayplans && tpkg.dayplans.length > 0) {
+        errors += "Please add a last day plan \n";
+    }
+
+    if (!tpkg.tpkg_status) {
+        errors += "Please select the status of the package \n";
+    }
+
+    //for custom packages
+    if (tpkg.is_custompkg) {
+        if (!tpkg.basedinq) {
+            errors += "Custom packages must be based on an inquiry \n";
+        }
+
+        if (!tpkg.tourstartdate) {
+            errors += "Please select the start date of the tour \n";
+        }
+
+        if (
+            (tpkg.localadultcount == null || tpkg.localadultcount < 0) &&
+            (tpkg.foreignadultcount == null || tpkg.foreignadultcount < 0)
+        ) {
+            errors += "At least one adult count must be greater than 0 \n";
+        }
+
+        if (tpkg.pkgcostsum == null) {
+            errors += "Package cost sum is required \n";
+        }
+
+        if (tpkg.pkgfinalprice == null) {
+            errors += "Final price is required \n";
+        }
+
+        if (tpkg.is_guide_needed === null || tpkg.is_guide_needed === undefined) {
+            errors += "Please specify whether a guide is needed \n";
+        }
+
+        if (tpkg.is_guide_needed && (tpkg.is_company_guide === null || tpkg.is_company_guide === undefined)) {
+            errors += "Please specify if the guide is from the company \n";
+        }
+
+        if (tpkg.is_company_vehicle === null || tpkg.is_company_vehicle === undefined) {
+            errors += "Please specify if the vehicle is from the company \n";
+        }
+
+        if (tpkg.is_company_driver === null || tpkg.is_company_driver === undefined) {
+            errors += "Please specify if the driver is from the company \n";
+        }
+
+        if (!tpkg.pref_vehi_type) {
+            errors += "Preferred vehicle type is required \n";
+        }
+
+        if (tpkg.pkgcostsum == null || tpkg.pkgcostsum <= 0) {
+            errors += "Please calculate the total cost for the package \n";
+        }
+
+        if (tpkg.pkgfinalprice == null || tpkg.pkgfinalprice <= 0) {
+            errors += "Please calculate the final price for the package \n";
+        }
+
+
+    }
+
+    //for template packages
+    if (tpkg.is_custompkg != null && tpkg.is_custompkg == false) {
+
+        if (!tpkg.web_description || tpkg.web_description.trim() === "") {
+            errors += "Please enter the description for the website \n";
+        }
+
+        if (!tpkg.img1 || tpkg.img1.trim() === "") {
+            errors += "Please upload the first image for the website \n";
+        }
+
+        if (!tpkg.img2 || tpkg.img2.trim() === "") {
+            errors += "Please upload the second image for the website \n";
+        }
+
+        if (!tpkg.img3 || tpkg.img3.trim() === "") {
+            errors += "Please upload the third image for the website \n";
+        }
+    }
+
+    return errors;
+}
+
+//add a tpkg
+const addNewTpkg = async () => {
+
+    const errors = checkTpkgFormErrors();
+    if (errors == "") {
+        const userConfirm = confirm("Are you sure you want to add this package?");
+        if (userConfirm) {
+            try {
+
+                //bind addiCost array with the tpkg obj 💥💥💥
+                //console.log("tpkg.addiCostList:", tpkg.addiCostList);
+
+                //bind the based inq id only, not whole obj
+                if (tpkg.basedinq && tpkg.basedinq.id) {
+                    tpkg.basedinq = tpkg.basedinq.id;
+                } else {
+                    tpkg.basedinq = null;
+                }
+
+                //remove null days from dayplans list
+                //tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+
+                if (tpkg.dayplans) {
+                    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
+                } else {
+                    tpkg.dayplans = [];
+                }
+
+
+                const postServerResponse = await ajaxPPDRequest("/tpkg", "POST", tpkg);
+                if (postServerResponse === 'OK') {
+                    showAlertModal('suc', 'Saved Successfully');
+                    refreshAddiCostForm();
+                    refreshTpkgForm();
+                    buildTpkgTable();
+                    var tpkgTblTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    tpkgTblTab.show();
+                } else { showAlertModal('err', 'Submit Failed ' + postServerResponse); }
+            } catch (error) { showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message)); }
+        } else { showAlertModal('inf', 'User cancelled the task'); }
+    } else { showAlertModal('war', errors); }
+
+}
+
+//image binding
+const imgValidatorfortpkg = (fileElement, object, imgProperty, previewId) => {
+    if (fileElement.files && fileElement.files[0]) {
+        let file = fileElement.files[0];
+        let fileReader = new FileReader();
+
+        fileReader.onload = function (e) {
+            previewId.src = e.target.result;
+            window[object][imgProperty] = btoa(e.target.result);
+        }
+        fileReader.readAsDataURL(file);
+    }
+}
+
+// clear image
+const clearImg = (imgProperty, previewId) => {
+    if (tpkg[imgProperty] != null) {
+        let userConfirmImgDlt = confirm("Are You Sure To Remove This Image?");
+        if (userConfirmImgDlt) {
+            tpkg[imgProperty] = null;
+            previewId.src = 'images/sigiriya.jpg';
+        } else {
+            alert("User Cancelled The Image Deletion Task");
+        }
+    }
+}
+
+// show the tour start date 
+const showTourStartDate = () => {
+
+    //actual date input
+    const estimatedStartDateInput = document.getElementById('tpStartDateInput');
+
+    //to display the start date
+    const startDateDisplay = document.getElementById('tourStartDateDisplay');
+    startDateDisplay.textContent = estimatedStartDateInput.value;
+
+}
+
+//calc tour end date and display it
+const updateTourEndDate = () => {
+
+    const startDateInputValue = document.getElementById('tpStartDateInput').value;
+    const totalDaysCounterDisplay = document.getElementById('showTotalDaysCount').value;
+    const endDateDisplay = document.getElementById('tourEndDateDisplay');
+
+    //check if bothnecessary values are present
+    if (!startDateInputValue || totalDaysCounterDisplay <= 0) {
+        endDateDisplay.innerText = "Please enter a start date and choose day plans.";
+        return;
+    }
+
+    const startDate = new Date(startDateInputValue);
+    const totalDays = parseInt(totalDaysCounterDisplay);
+
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + totalDays - 1);
+
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+    endDateDisplay.innerText = formattedEndDate;
+
+    tpkg.tourenddate = formattedEndDate;
+
+    console.log("startDate:", startDate);
+    console.log("totalDays:", totalDays);
+    console.log("endDate:", endDate);
+
+
+    // format and display the end date
+    //const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    //endDateDisplay.innerText = endDate.toLocaleDateString(undefined, options);
+};
+
+//***********************✅AVAILABILITY CHK CODE✅********************** 
+
+//function to flag which driver source is selected  
+const handleDriverSourceChange = () => {
+
+    if (yathraDriverCB.checked) {
+        tpkg.is_company_driver = true;
+    } else if (rentalDriverCB.checked) {
+        tpkg.is_company_driver = false;
+    }
+
+}
+
+// function to flag which guide source is selected  
+const handleGuideSourceChange = () => {
+    if (yathraGuideCB.checked) {
+        tpkg.is_company_guide = true;
+    } else if (rentalGuideCB.checked) {
+        tpkg.is_company_guide = false;
+    }
+}
+
+// to save guide need or not  
+const handleNeedGuideCB = () => {
+
+    if (guideYes.checked) {
+
+        tpkg.is_guide_needed = true;
+        yathraGuideCB.disabled = false;
+        rentalGuideCB.disabled = false;
+
+        tpkg.is_company_guide = null;
+        yathraGuideCB.checked = false;
+        rentalGuideCB.checked = false;
+
+    } else if (guideNo.checked) {
+
+        tpkg.is_guide_needed = false;
+        yathraGuideCB.disabled = true;
+        rentalGuideCB.disabled = true;
+
+        tpkg.is_company_guide = null;
+        rentalGuideCB.checked = false;
+        yathraGuideCB.checked = false;
+
+    }
+}
+
+//function to save vehicle source  
+const handleVehicleSourceChange = () => {
+
+    if (yathraVehiCB.checked) {
+        tpkg.is_company_vehicle = true;
+    } else if (rentalVehiCB.checked) {
+        tpkg.is_company_vehicle = false;
+    }
+
 }
 
 // to get vehicle types by minimum seats based on total travellers  
@@ -1844,203 +2226,156 @@ const getVehicleTypesByMinSeats = async () => {
 // debounced version to limit query calls  
 const debouncedGetVehicleTypesByMinSeats = debounce(getVehicleTypesByMinSeats, 300);
 
-// to calculate total travellers and refill the suitable vehi types
-const updateTotalTravellers = () => {
-    const localAdult = parseInt(document.getElementById('tpkgLocalAdultCount').value) || 0;
-    const localChild = parseInt(document.getElementById('tpkgLocalChildCount').value) || 0;
-    const foreignAdult = parseInt(document.getElementById('tpkgForeignAdultCount').value) || 0;
-    const foreignChild = parseInt(document.getElementById('tpkgForeignChildCount').value) || 0;
+// save the preferred vehi types name only., as a string
+const savePrefVehitype = (selectElement) => {
 
-    const total = localAdult + localChild + foreignAdult + foreignChild;
+    const selectedOption = selectElement.value;
 
-    document.getElementById('tpkgTotalTravellers').value = total;
-
-    //function to update the predered vehicle type select input
-    debouncedGetVehicleTypesByMinSeats();
-
-}
-
-//without selecting the suitable vehi type
-const updateTotalTravellersForRefillOnly = () => {
-    const localAdult = parseInt(document.getElementById('tpkgLocalAdultCount').value) || 0;
-    const localChild = parseInt(document.getElementById('tpkgLocalChildCount').value) || 0;
-    const foreignAdult = parseInt(document.getElementById('tpkgForeignAdultCount').value) || 0;
-    const foreignChild = parseInt(document.getElementById('tpkgForeignChildCount').value) || 0;
-
-    const total = localAdult + localChild + foreignAdult + foreignChild;
-
-    document.getElementById('tpkgTotalTravellers').value = total;
-
-}
-
-// to save guide need or not  
-const handleNeedGuideCB = () => {
-
-    if (guideYes.checked) {
-
-        tpkg.is_guide_needed = true;
-        yathraGuideCB.disabled = false;
-        rentalGuideCB.disabled = false;
-
-        tpkg.is_company_guide = null;
-        yathraGuideCB.checked = false;
-        rentalGuideCB.checked = false;
-
-    } else if (guideNo.checked) {
-
-        tpkg.is_guide_needed = false;
-        yathraGuideCB.disabled = true;
-        rentalGuideCB.disabled = true;
-
-        tpkg.is_company_guide = null;
-        rentalGuideCB.checked = false;
-        yathraGuideCB.checked = false;
-
-    }
-}
-
-//function to save vehicle source  
-const handleVehicleSourceChange = () => {
-
-    if (yathraVehiCB.checked) {
-        tpkg.is_company_vehicle = true;
-    } else if (rentalVehiCB.checked) {
-        tpkg.is_company_vehicle = false;
-    }
-
-}
-
-//function to flag which driver source is selected  
-const handleDriverSourceChange = () => {
-
-    if (yathraDriverCB.checked) {
-        tpkg.is_company_driver = true;
-    } else if (rentalDriverCB.checked) {
-        tpkg.is_company_driver = false;
-    }
-
-}
-
-// function to flag which guide source is selected  
-const handleGuideSourceChange = () => {
-    if (yathraGuideCB.checked) {
-        tpkg.is_company_guide = true;
-    } else if (rentalGuideCB.checked) {
-        tpkg.is_company_guide = false;
-    }
-}
-
-// to reset data in dynamic selects  
-const resetSelectElements = (selectElement, defaultText = "Please Select") => {
-    selectElement.disabled = false;
-    selectElement.innerHTML = '';
-    const defaultOption = document.createElement("option");
-    defaultOption.text = defaultText;
-    defaultOption.value = "";
-    selectElement.add(defaultOption);
-}
-
-// get the index of the midday select element from its label text
-const getMidDayIndexFromSelect = (selectEl) => {
-    const labelText = selectEl.closest('.row').querySelector('label').innerText;
-    return parseInt(labelText.split(" ")[2]) - 1;
-};
-
-// to handle first day changes  
-const handleFirstDayChange = (selectElement) => {
-
-    dynamicSelectValidator(selectElement, 'tpkg', 'sd_dayplan_id');
-    showFirstDayBtn.disabled = false;
-    const fdMsg = document.getElementById('firstDayMsg');
-
-    if (tpkg.is_custompkg == true && tpkg.sd_dayplan_id.is_template == true) {
-        selectElement.style.border = "2px solid orange";
-        fdMsg.classList.remove('d-none');
-        tpkg.sd_dayplan_id = null;
-        addNewDaysBtn.disabled = true;
-    } else {
+    if (selectedOption != "") {
+        const selectedVehicleTypeName = JSON.parse(selectedOption).name;
+        tpkg.pref_vehi_type = selectedVehicleTypeName;
         selectElement.style.border = "2px solid lime";
-        fdMsg.classList.add('d-none');
-        addNewDaysBtn.disabled = false;
-        finalDaySelectUseTempsBtn.disabled = false;
-        finalDaySelectUseExistingBtn.disabled = false;
-        updateTotalDaysCount();
-    }
-
-    showTotalKmCount();
-
-}
-
-// to handle last day changes  
-const handleFinalDayChange = (selectElement) => {
-
-    dynamicSelectValidator(selectElement, 'tpkg', 'ed_dayplan_id');
-    showFinalDayBtn.disabled = false;
-    removeFinalDayBtn.disabled = false;
-
-    const finalDMsg = document.getElementById('finalDayMsg');
-
-    console.log('tpkg.ed_dayplan_id:', tpkg.ed_dayplan_id);
-
-    if (tpkg.is_custompkg == true && tpkg.ed_dayplan_id.is_template == true) {
-
-        selectElement.style.border = "2px solid orange";
-        finalDMsg.classList.remove('d-none');
-        tpkg.ed_dayplan_id = null;
+        getAvailableVehiCount();
     } else {
-
-        console.log('Final day is a valid custom day.');
-
-        selectElement.style.border = "2px solid lime";
-        finalDMsg.classList.add('d-none');
-        finalDaySelectUseTempsBtn.disabled = false;
-        finalDaySelectUseExistingBtn.disabled = false;
-        updateTotalDaysCount();
-
+        tpkg.pref_vehi_type = null;
+        selectElement.style.border = "1px solid #ced4da";
     }
 
-    showTotalKmCount();
-
-};
-
-// 💥💥💥
-// refreshMainCostCard();
-
-// fn to calculate the total days count of the tour package 
-const updateTotalDaysCount = () => {
-
-    let total = 0;
-
-    // add 1 if start dayplan is selected
-    if (tpkg.sd_dayplan_id?.id != null) {
-        total += 1;
-    }
-
-    // add 1 if end dayplan is selected
-    if (tpkg.ed_dayplan_id?.id != null) {
-        total += 1;
-    }
-
-    // add number of middle day plans
-    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
-    if (tpkg.dayplans && Array.isArray(tpkg.dayplans)) {
-        total += tpkg.dayplans.length;
-    }
-
-    document.getElementById('showTotalDaysCount').value = total;
-    tpkg.totaldays = total;
-
-    updateTourEndDate();
-    showDnGAvailabilityButtons();
-    showVehiAvailabilityButtons();
-};
-
-//💥💥💥
-//for every change in selected days,number of travellers,dates the main cost card must be refreshed
-const refreshMainCostCard = () => {
-    //and also show a hidden msg
 }
 
+//
+const showVehiAvailabilityButtons = () => {
+    // show the vehi availability button
+    document.getElementById("btnCheckVehiAvailability").classList.remove("d-none");
+
+    // hide + clear spans
+    const vehicleSpan = document.getElementById("showAvailableVehiCount");
+    vehicleSpan.textContent = "";
+}
+
+// function to show both buttons again
+const showDnGAvailabilityButtons = () => {
+
+    document.getElementById("btnCheckGuideAvailability").classList.remove("d-none");
+    document.getElementById("btnCheckDriverAvailability").classList.remove("d-none");
+
+    // hide + clear spans
+    const guideSpan = document.getElementById("showAvailableGuideCount");
+    const driverSpan = document.getElementById("showAvailableDriverCount");
+
+    guideSpan.textContent = "";
+    driverSpan.textContent = "";
+}
+
+//get available vehi count based on date range and vehi type
+const getAvailableVehiCount = async () => {
+
+    const startDate = document.getElementById('tpStartDateInput').value || tpkg.tourstartdate;
+    const endDate = tpkg.tourenddate;
+    const selectedVehitype = document.getElementById('tpkgVehitype').value;
+
+    if (!startDate || !endDate || !selectedVehitype) {
+        alert("Please select start date, day plans and vehicle type.");
+        return;
+    }
+
+    const selectedVehitypeObjid = JSON.parse(selectedVehitype).id;
+    const btnCheckVehiAvailability = document.getElementById("btnCheckVehiAvailability");
+
+
+    const vehicleResultSection = document.getElementById('showAvailableVehiCount');
+
+    try {
+        const availablevehiListByTypeAndDates = await ajaxGetReq("vehi/availablevehiclesbyvehitype/" + startDate + "/" + endDate + "/" + selectedVehitypeObjid);
+        const availableCount = availablevehiListByTypeAndDates.length;
+        vehicleResultSection.classList.remove('text-danger');
+        vehicleResultSection.classList.add('text-success');
+        vehicleResultSection.innerText = ` ${availableCount} Vehicles Available `;
+
+        btnCheckVehiAvailability.classList.add("d-none");
+    } catch (error) {
+        console.error("Error fetching available vehicles:", error);
+        vehicleResultSection.classList.remove('text-success');
+        vehicleResultSection.classList.add('text-danger');
+        vehicleResultSection.innerText = "Error fetching available vehicles";
+
+        btnCheckVehiAvailability.classList.remove("d-none");
+    }
+
+}
+
+//get available drivers count based on date range 
+const getAvailableIntrDriversCount = async () => {
+
+    const startDate = document.getElementById('tpStartDateInput').value || tpkg.tourstartdate;
+    const endDate = tpkg.tourenddate;
+
+    if (!startDate || !endDate) {
+        alert("Please select both start date and day plans.");
+        return;
+    }
+
+    const driverResultSection = document.getElementById('showAvailableDriverCount');
+    const btnCheckDriverAvailability = document.getElementById("btnCheckDriverAvailability");
+
+    try {
+        const availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + startDate + "/" + endDate);
+        const availableCount = availabledriversByDates.length;
+        driverResultSection.classList.remove('text-danger');
+        driverResultSection.classList.add('text-success');
+        driverResultSection.innerText = ` ${availableCount} Drivers Available `;
+
+        btnCheckDriverAvailability.classList.add("d-none");
+
+    } catch (error) {
+        console.error("Error fetching available drivers:", error);
+        driverResultSection.classList.remove('text-success');
+        driverResultSection.classList.add('text-danger');
+        driverResultSection.innerText = "Error fetching available drivers";
+
+        btnCheckDriverAvailability.classList.remove("d-none");
+    }
+
+}
+
+//get available drivers count based on date range 
+const getAvailableIntrGuidesCount = async () => {
+
+    const startDate = document.getElementById('tpStartDateInput').value || tpkg.tourstartdate;
+    const endDate = tpkg.tourenddate;
+
+    if (!startDate || !endDate) {
+        alert("Please select both start date and day plans.");
+        return;
+    }
+
+    const guideResultSection = document.getElementById('showAvailableGuideCount');
+    const btnCheckGuideAvailability = document.getElementById("btnCheckGuideAvailability");
+
+    try {
+        const availableguidesByDates = await ajaxGetReq("emp/availableguidesbydates/" + startDate + "/" + endDate);
+        const availableCount = availableguidesByDates.length;
+
+        btnCheckGuideAvailability.classList.add("d-none");
+
+        guideResultSection.classList.remove('text-danger');
+        guideResultSection.classList.add('text-success');
+        guideResultSection.innerText = ` ${availableCount} Guides Available `;
+        guideResultSection.classList.remove("d-none");
+
+    } catch (error) {
+        console.error("Error fetching available guides:", error);
+        guideResultSection.classList.remove('text-success');
+        guideResultSection.classList.add('text-danger');
+        guideResultSection.innerText = "Error fetching available guides";
+
+        btnCheckGuideAvailability.classList.remove("d-none");
+    }
+
+}
+
+
+//***********************COST RELATED CODE✅********************** 
 
 //to calculate the total costs of the tour package 
 const calculateMainCosts = () => {
@@ -2230,7 +2565,6 @@ const handleDiscs = () => {
     tpkg.useddiscounts = discountLabels.join(',');
 };
 
-
 //this will be neede when refilling the form
 const refillDiscountSection = (obj) => {
 
@@ -2262,35 +2596,6 @@ const refillDiscountSection = (obj) => {
         noneCb.checked = false;
     }
 };
-
-// update total km count of the tour package
-const showTotalKmCount = () => {
-
-    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
-
-    //first day
-    const kmCountFD = tpkg.sd_dayplan_id?.totalkmcount || 0;
-
-    //last day
-    let kmCountLD = 0;
-    if (tpkg.ed_dayplan_id) {
-        kmCountLD = tpkg.ed_dayplan_id.totalkmcount || 0;
-    }
-
-    //mid days
-    let kmCountMD = 0;
-    if (tpkg.dayplans.length > 0) {
-        tpkg.dayplans.forEach((day) => {
-            kmCountMD = kmCountMD + (day.totalkmcount || 0);
-        })
-    }
-
-    const sumKM = kmCountFD + kmCountLD + kmCountMD;
-    const inputTotalKm = document.getElementById('showTotalKMCount');
-    tpkg.totalkmcountofpkg = sumKM;
-    inputTotalKm.value = sumKM;
-
-}
 
 //to show in website
 const calcStartingPricePerAdult = () => {
@@ -2804,191 +3109,102 @@ const calcTotalVehiParkingfeeTpkg = () => {
 
 }
 
-// check if first tabs inputs are all filled 💥💥💥
-const checkFirstTab = () => {
-    const pkgTitle = tpkg.pkgtitle;
-    const startDate = tpkg.tourstartdate;
-    const description = tpkg.web_description;
 
-    if (tpkg.is_custompkg == null) {
-        alert("Please select whether this is a custom package or a template package.");
-        return null;
-    }
+//***********************✅DAYPLAN RELATED CODE✅********************** 
 
-    if (!pkgTitle) {
-        alert("Please enter the tour package title.");
-        return null;
-    }
+//to clear the day plan info section 
+const resetDayPlanInfoSection = () => {
 
-    if (tpkg.is_custompkg === true) {
-        if (!startDate) {
-            alert("For a custom package, please fill the start date.");
-            return null;
-        }
-    }
+    document.getElementById('tempInfoDisRow').classList.add('d-none');
+    document.getElementById('dpInfoIsTemplate').innerText = '';
 
-    if (tpkg.is_custompkg === false) {
-        if (!description) {
-            alert("For a template package, please fill the web description.");
-            return null;
-        }
-    }
+    // Reset all <span> elements to 'N/A'
+    document.getElementById('dpInfoCode').innerText = 'N/A';
+    document.getElementById('dpInfoTitle').innerText = 'N/A';
+    document.getElementById('dpInfoStartLocation').innerText = 'N/A';
+    document.getElementById('dpInfoLunchPlace').innerText = 'N/A';
+    document.getElementById('dpInfoDropPoint').innerText = 'N/A';
+    document.getElementById('dpInfoNote').innerText = 'N/A';
 
-    tabelement = document.getElementById('tpkgStep2-tab');
-    tabelement.classList.remove("disabled");
-    tabelement.click();
+    const placesList = document.getElementById('dpInfoPlaces');
+    placesList.innerHTML = '<li>N/A</li>';
 
+    document.getElementById('dayPlanInfoEditBtn').disabled = true;
 };
 
-// save the preferred vehi types name only., as a string
-const savePrefVehitype = (selectElement) => {
+//load templates and save globally just for refill
+let templateDaysForRefill = [];
+const fetchTemplateDaysForRefill = async () => {
 
-    const selectedOption = selectElement.value;
+    try {
+        templateDaysForRefill = await ajaxGetReq("/dayplan/onlytemplatedays");
+    } catch (error) {
+        console.error("Error loading templates:", error);
+    }
+}
 
-    if (selectedOption != "") {
-        const selectedVehicleTypeName = JSON.parse(selectedOption).name;
-        tpkg.pref_vehi_type = selectedVehicleTypeName;
-        selectElement.style.border = "2px solid lime";
-        getAvailableVehiCount();
+// get the index of the midday select element from its label text
+const getMidDayIndexFromSelect = (selectEl) => {
+    const labelText = selectEl.closest('.row').querySelector('label').innerText;
+    return parseInt(labelText.split(" ")[2]) - 1;
+};
+
+// to handle first day changes  
+const handleFirstDayChange = (selectElement) => {
+
+    dynamicSelectValidator(selectElement, 'tpkg', 'sd_dayplan_id');
+    showFirstDayBtn.disabled = false;
+    const fdMsg = document.getElementById('firstDayMsg');
+
+    if (tpkg.is_custompkg == true && tpkg.sd_dayplan_id.is_template == true) {
+        selectElement.style.border = "2px solid orange";
+        fdMsg.classList.remove('d-none');
+        tpkg.sd_dayplan_id = null;
+        addNewDaysBtn.disabled = true;
     } else {
-        tpkg.pref_vehi_type = null;
-        selectElement.style.border = "1px solid #ced4da";
+        selectElement.style.border = "2px solid lime";
+        fdMsg.classList.add('d-none');
+        addNewDaysBtn.disabled = false;
+        finalDaySelectUseTempsBtn.disabled = false;
+        finalDaySelectUseExistingBtn.disabled = false;
+        updateTotalDaysCount();
     }
+
+    showTotalKmCount();
 
 }
 
-//
-function showVehiAvailabilityButtons() {
-    // show the vehi availability button
-    document.getElementById("btnCheckVehiAvailability").classList.remove("d-none");
+// to handle last day changes  
+const handleFinalDayChange = (selectElement) => {
 
-    // hide + clear spans
-    const vehicleSpan = document.getElementById("showAvailableVehiCount");
-    vehicleSpan.textContent = "";
-}
+    dynamicSelectValidator(selectElement, 'tpkg', 'ed_dayplan_id');
+    showFinalDayBtn.disabled = false;
+    removeFinalDayBtn.disabled = false;
 
-// function to show both buttons again
-function showDnGAvailabilityButtons() {
+    const finalDMsg = document.getElementById('finalDayMsg');
 
-    document.getElementById("btnCheckGuideAvailability").classList.remove("d-none");
-    document.getElementById("btnCheckDriverAvailability").classList.remove("d-none");
+    console.log('tpkg.ed_dayplan_id:', tpkg.ed_dayplan_id);
 
-    // hide + clear spans
-    const guideSpan = document.getElementById("showAvailableGuideCount");
-    const driverSpan = document.getElementById("showAvailableDriverCount");
+    if (tpkg.is_custompkg == true && tpkg.ed_dayplan_id.is_template == true) {
 
-    guideSpan.textContent = "";
-    driverSpan.textContent = "";
-}
+        selectElement.style.border = "2px solid orange";
+        finalDMsg.classList.remove('d-none');
+        tpkg.ed_dayplan_id = null;
+    } else {
 
-//get available vehi count based on date range and vehi type
-const getAvailableVehiCount = async () => {
+        console.log('Final day is a valid custom day.');
 
-    const startDate = document.getElementById('tpStartDateInput').value || tpkg.tourstartdate;
-    const endDate = tpkg.tourenddate;
-    const selectedVehitype = document.getElementById('tpkgVehitype').value;
+        selectElement.style.border = "2px solid lime";
+        finalDMsg.classList.add('d-none');
+        finalDaySelectUseTempsBtn.disabled = false;
+        finalDaySelectUseExistingBtn.disabled = false;
+        updateTotalDaysCount();
 
-    if (!startDate || !endDate || !selectedVehitype) {
-        alert("Please select start date, day plans and vehicle type.");
-        return;
     }
 
-    const selectedVehitypeObjid = JSON.parse(selectedVehitype).id;
-    const btnCheckVehiAvailability = document.getElementById("btnCheckVehiAvailability");
+    showTotalKmCount();
 
-
-    const vehicleResultSection = document.getElementById('showAvailableVehiCount');
-
-    try {
-        const availablevehiListByTypeAndDates = await ajaxGetReq("vehi/availablevehiclesbyvehitype/" + startDate + "/" + endDate + "/" + selectedVehitypeObjid);
-        const availableCount = availablevehiListByTypeAndDates.length;
-        vehicleResultSection.classList.remove('text-danger');
-        vehicleResultSection.classList.add('text-success');
-        vehicleResultSection.innerText = ` ${availableCount} Vehicles Available `;
-
-        btnCheckVehiAvailability.classList.add("d-none");
-    } catch (error) {
-        console.error("Error fetching available vehicles:", error);
-        vehicleResultSection.classList.remove('text-success');
-        vehicleResultSection.classList.add('text-danger');
-        vehicleResultSection.innerText = "Error fetching available vehicles";
-
-        btnCheckVehiAvailability.classList.remove("d-none");
-    }
-
-}
-
-//get available drivers count based on date range 
-const getAvailableIntrDriversCount = async () => {
-
-    const startDate = document.getElementById('tpStartDateInput').value || tpkg.tourstartdate;
-    const endDate = tpkg.tourenddate;
-
-    if (!startDate || !endDate) {
-        alert("Please select both start date and day plans.");
-        return;
-    }
-
-    const driverResultSection = document.getElementById('showAvailableDriverCount');
-    const btnCheckDriverAvailability = document.getElementById("btnCheckDriverAvailability");
-
-    try {
-        const availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + startDate + "/" + endDate);
-        const availableCount = availabledriversByDates.length;
-        driverResultSection.classList.remove('text-danger');
-        driverResultSection.classList.add('text-success');
-        driverResultSection.innerText = ` ${availableCount} Drivers Available `;
-
-        btnCheckDriverAvailability.classList.add("d-none");
-
-    } catch (error) {
-        console.error("Error fetching available drivers:", error);
-        driverResultSection.classList.remove('text-success');
-        driverResultSection.classList.add('text-danger');
-        driverResultSection.innerText = "Error fetching available drivers";
-
-        btnCheckDriverAvailability.classList.remove("d-none");
-    }
-
-}
-
-//get available drivers count based on date range 
-const getAvailableIntrGuidesCount = async () => {
-
-    const startDate = document.getElementById('tpStartDateInput').value || tpkg.tourstartdate;
-    const endDate = tpkg.tourenddate;
-
-    if (!startDate || !endDate) {
-        alert("Please select both start date and day plans.");
-        return;
-    }
-
-    const guideResultSection = document.getElementById('showAvailableGuideCount');
-    const btnCheckGuideAvailability = document.getElementById("btnCheckGuideAvailability");
-
-    try {
-        const availableguidesByDates = await ajaxGetReq("emp/availableguidesbydates/" + startDate + "/" + endDate);
-        const availableCount = availableguidesByDates.length;
-
-        btnCheckGuideAvailability.classList.add("d-none");
-
-        guideResultSection.classList.remove('text-danger');
-        guideResultSection.classList.add('text-success');
-        guideResultSection.innerText = ` ${availableCount} Guides Available `;
-        guideResultSection.classList.remove("d-none");
-
-    } catch (error) {
-        console.error("Error fetching available guides:", error);
-        guideResultSection.classList.remove('text-success');
-        guideResultSection.classList.add('text-danger');
-        guideResultSection.innerText = "Error fetching available guides";
-
-        btnCheckGuideAvailability.classList.remove("d-none");
-    }
-
-}
-
-//++++++++++++++++++++++ DayPlan form related codes ++++++++++++++++++++++
+};
 
 //this will helps in refilling the dayplan when editing
 let editingDPsSelectElementIdVal = null;
@@ -3011,10 +3227,6 @@ const clearDpInfoShowSection = () => {
     editingDPsSelectElementIdVal = null;
 
 }
-
-//this will be neededfor retrieve the prev days drop loc info for fill new days pick loc
-let clickedViewBtnId = null;
-//not used ❌
 
 //this will be helps when refilling a dp and set the correct day type auto
 let selectedDayTypeToEdit = null;
@@ -3092,7 +3304,6 @@ const getDayTypeFromLabel = (selectId) => {
     return null;
 }
 
-//💥💥💥 new
 // to get the day number from the label of the select element 
 const getDayNumberFromLabel = (selectId) => {
 
@@ -3112,8 +3323,7 @@ const getDayNumberFromLabel = (selectId) => {
     //return null;
 };
 
-//💥💥💥
-// to refresh the day plan form in the tpkg module 💥
+// to refresh the day plan form in the tpkg module
 const refreshDpFormInTpkg = async () => {
 
     dayplan = new Object();
@@ -3861,6 +4071,7 @@ const feedAndSelectNewlyAddedDp = async () => {
 
 }
 
+/*
 //                        const options = midDaySelect.querySelectorAll('option');
 //                        for (let option of options) {
 //                            if (option.textContent.includes(newlyAddedDayTitle)) {
@@ -3873,7 +4084,7 @@ const feedAndSelectNewlyAddedDp = async () => {
 //                                midDaySelect.dispatchEvent(changeEvent);
 //                                break;
 //                            }
-//                        }
+//                        }*/
 
 //check errors in newly adding dp
 const checkDPFormErrorsInTpkg = () => {
@@ -3921,11 +4132,13 @@ const checkDPFormErrorsInTpkg = () => {
     return errors;
 }
 
+/*
 //to store the prev days stay info
 //test 1 success✅✅✅
 //let prevDayStay = null;
 //let prevDayManualStay = null;
 //let prevDayManualStayGCoords = null;
+*/
 
 // add new day plan in the tpkg module
 const addNewDayPlanInTpkg = async () => {
@@ -3979,7 +4192,6 @@ const addNewDayPlanInTpkg = async () => {
         showAlertModal('war', errors);
     }
 }
-
 
 //###################################################### mid day handle +++++++++++++++++++++++++++++++++++
 //this will be needed for create dyamic IDs in mid days
@@ -4112,10 +4324,6 @@ const generateNormalDayPlanSelectSections = () => {
 
     midDayCounter++;
 }
-
-//const msgElement = document.getElementById(msgId);
-//const msgId = `midDayMsg${currentDay}`;
-//const viewBtnId = `showMidDayBtn${currentDay}`;
 
 //handle midday changes
 const handleMidDaySelectChange = (selectElem, currentDay = null) => {
@@ -4507,295 +4715,7 @@ const removeFinalDay = () => {
     showVehiAvailabilityButtons();
 }
 
-//check errors before adding 
-const checkTpkgFormErrors = () => {
-    let errors = "";
-
-    if (!tpkg.pkgtitle) {
-        errors += "Title cannot be empty \n";
-    }
-
-    if (tpkg.is_custompkg === null || tpkg.is_custompkg === undefined) {
-        errors += "Please select the type of package \n";
-    }
-
-    if (!tpkg.sd_dayplan_id) {
-        errors += "Please select the first day plan \n";
-    }
-
-    if (!tpkg.ed_dayplan_id && tpkg.dayplans && tpkg.dayplans.length > 0) {
-        errors += "Please add a last day plan \n";
-    }
-
-    if (!tpkg.tpkg_status) {
-        errors += "Please select the status of the package \n";
-    }
-
-    //for custom packages
-    if (tpkg.is_custompkg) {
-        if (!tpkg.basedinq) {
-            errors += "Custom packages must be based on an inquiry \n";
-        }
-
-        if (!tpkg.tourstartdate) {
-            errors += "Please select the start date of the tour \n";
-        }
-
-        if (
-            (tpkg.localadultcount == null || tpkg.localadultcount < 0) &&
-            (tpkg.foreignadultcount == null || tpkg.foreignadultcount < 0)
-        ) {
-            errors += "At least one adult count must be greater than 0 \n";
-        }
-
-        if (tpkg.pkgcostsum == null) {
-            errors += "Package cost sum is required \n";
-        }
-
-        if (tpkg.pkgfinalprice == null) {
-            errors += "Final price is required \n";
-        }
-
-        if (tpkg.is_guide_needed === null || tpkg.is_guide_needed === undefined) {
-            errors += "Please specify whether a guide is needed \n";
-        }
-
-        if (tpkg.is_guide_needed && (tpkg.is_company_guide === null || tpkg.is_company_guide === undefined)) {
-            errors += "Please specify if the guide is from the company \n";
-        }
-
-        if (tpkg.is_company_vehicle === null || tpkg.is_company_vehicle === undefined) {
-            errors += "Please specify if the vehicle is from the company \n";
-        }
-
-        if (tpkg.is_company_driver === null || tpkg.is_company_driver === undefined) {
-            errors += "Please specify if the driver is from the company \n";
-        }
-
-        if (!tpkg.pref_vehi_type) {
-            errors += "Preferred vehicle type is required \n";
-        }
-
-        if (tpkg.pkgcostsum == null || tpkg.pkgcostsum <= 0) {
-            errors += "Please calculate the total cost for the package \n";
-        }
-
-        if (tpkg.pkgfinalprice == null || tpkg.pkgfinalprice <= 0) {
-            errors += "Please calculate the final price for the package \n";
-        }
-
-
-    }
-
-    //for template packages
-    if (tpkg.is_custompkg != null && tpkg.is_custompkg == false) {
-
-        if (!tpkg.web_description || tpkg.web_description.trim() === "") {
-            errors += "Please enter the description for the website \n";
-        }
-
-        if (!tpkg.img1 || tpkg.img1.trim() === "") {
-            errors += "Please upload the first image for the website \n";
-        }
-
-        if (!tpkg.img2 || tpkg.img2.trim() === "") {
-            errors += "Please upload the second image for the website \n";
-        }
-
-        if (!tpkg.img3 || tpkg.img3.trim() === "") {
-            errors += "Please upload the third image for the website \n";
-        }
-    }
-
-    return errors;
-}
-
-//add a tpkg
-const addNewTpkg = async () => {
-
-    const errors = checkTpkgFormErrors();
-    if (errors == "") {
-        const userConfirm = confirm("Are you sure you want to add this package?");
-        if (userConfirm) {
-            try {
-
-                //bind addiCost array with the tpkg obj 💥💥💥
-                //console.log("tpkg.addiCostList:", tpkg.addiCostList);
-
-                //bind the based inq id only, not whole obj
-                if (tpkg.basedinq && tpkg.basedinq.id) {
-                    tpkg.basedinq = tpkg.basedinq.id;
-                } else {
-                    tpkg.basedinq = null;
-                }
-
-                //remove null days from dayplans list
-                //tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
-
-                if (tpkg.dayplans) {
-                    tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
-                } else {
-                    tpkg.dayplans = [];
-                }
-
-
-                const postServerResponse = await ajaxPPDRequest("/tpkg", "POST", tpkg);
-                if (postServerResponse === 'OK') {
-                    showAlertModal('suc', 'Saved Successfully');
-                    refreshAddiCostForm();
-                    refreshTpkgForm();
-                    buildTpkgTable();
-                    var tpkgTblTab = new bootstrap.Tab(document.getElementById('table-tab'));
-                    tpkgTblTab.show();
-                } else { showAlertModal('err', 'Submit Failed ' + postServerResponse); }
-            } catch (error) { showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message)); }
-        } else { showAlertModal('inf', 'User cancelled the task'); }
-    } else { showAlertModal('war', errors); }
-
-}
-
-//image binding
-const imgValidatorfortpkg = (fileElement, object, imgProperty, previewId) => {
-    if (fileElement.files && fileElement.files[0]) {
-        let file = fileElement.files[0];
-        let fileReader = new FileReader();
-
-        fileReader.onload = function (e) {
-            previewId.src = e.target.result;
-            window[object][imgProperty] = btoa(e.target.result);
-        }
-        fileReader.readAsDataURL(file);
-    }
-}
-
-// clear image
-const clearImg = (imgProperty, previewId) => {
-    if (tpkg[imgProperty] != null) {
-        let userConfirmImgDlt = confirm("Are You Sure To Remove This Image?");
-        if (userConfirmImgDlt) {
-            tpkg[imgProperty] = null;
-            previewId.src = 'images/sigiriya.jpg';
-        } else {
-            alert("User Cancelled The Image Deletion Task");
-        }
-    }
-}
-
-// show the tour start date 
-const showTourStartDate = () => {
-
-    //actual date input
-    const estimatedStartDateInput = document.getElementById('tpStartDateInput');
-
-    //to display the start date
-    const startDateDisplay = document.getElementById('tourStartDateDisplay');
-    startDateDisplay.textContent = estimatedStartDateInput.value;
-
-}
-
-//calc tour end date and display it
-const updateTourEndDate = () => {
-
-    const startDateInputValue = document.getElementById('tpStartDateInput').value;
-    const totalDaysCounterDisplay = document.getElementById('showTotalDaysCount').value;
-    const endDateDisplay = document.getElementById('tourEndDateDisplay');
-
-    //check if bothnecessary values are present
-    if (!startDateInputValue || totalDaysCounterDisplay <= 0) {
-        endDateDisplay.innerText = "Please enter a start date and choose day plans.";
-        return;
-    }
-
-    const startDate = new Date(startDateInputValue);
-    const totalDays = parseInt(totalDaysCounterDisplay);
-
-    const endDate = new Date(startDate);
-    endDate.setDate(startDate.getDate() + totalDays - 1);
-
-    const formattedEndDate = endDate.toISOString().split('T')[0];
-    endDateDisplay.innerText = formattedEndDate;
-
-    tpkg.tourenddate = formattedEndDate;
-
-    console.log("startDate:", startDate);
-    console.log("totalDays:", totalDays);
-    console.log("endDate:", endDate);
-
-
-    // format and display the end date
-    //const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    //endDateDisplay.innerText = endDate.toLocaleDateString(undefined, options);
-};
-
-
-//💥💥💥💥💥💥💥💥💥💥💥
-//add , delete, update
-//check errors, check updates 
-//refill 
-//print
-
-//handle the creation method radio buttons NOT USED 💥💥💥
-const handleCeationMethodSelect = () => {
-    const fromScratch = document.getElementById('createFromScratch');
-    const fromInq = document.getElementById('createFromInquiry');
-
-    // track which option was selected BEFORE reset
-    const selectedMethod = fromScratch.checked ? 'scratch' : fromInq.checked ? 'inquiry' : null;
-
-    const hasExistingData =
-        tpkg.pkgtitle != null ||
-        tpkg.sd_dayplan_id?.id != null ||
-        tpkg.dayplans?.length > 0 ||
-        tpkg.web_description != null ||
-        tpkg.img1 != null ||
-        tpkg.img2 != null ||
-        tpkg.img3 != null;
-
-    if (hasExistingData) {
-        const userConfirm = confirm("Changing the creation method will reset all current data. Do you want to continue?");
-        if (userConfirm) {
-
-            refreshTpkgForm();
-
-            // re-check the user's original choice
-            if (selectedMethod === 'scratch') {
-                document.getElementById('createFromScratch').checked = true;
-            } else if (selectedMethod === 'inquiry') {
-                document.getElementById('createFromInquiry').checked = true;
-            }
-
-            // apply changes based on the selection
-            elementChangesOnCreationMethod();
-        }
-    } else {
-        elementChangesOnCreationMethod();
-    }
-};
-
-//NOT USED 💥💥💥
-const elementChangesOnCreationMethod = () => {
-    const fromScratch = document.getElementById('createFromScratch');
-    const fromInq = document.getElementById('createFromInquiry');
-    const selectBasedInq = document.getElementById('tpkgBasedInq');
-    const forWebSiteRadio = document.getElementById('forWebSite');
-
-    if (fromScratch.checked) {
-        selectBasedInq.disabled = true;
-        selectBasedInq.value = "";
-        selectBasedInq.style.border = "1px solid #ced4da";
-        forWebSiteRadio.disabled = false;
-        tpkg.basedinq = null;
-    } else if (fromInq.checked) {
-        selectBasedInq.disabled = false;
-        forWebSiteRadio.disabled = true;
-    }
-
-}
-
-
-//################ additional costs related codes ###################
-
-//tpkg.addiCostList = new Array();
+//################ ✅additional costs related codes✅ ###################
 
 //refresh the additional cost form
 const refreshAddiCostForm = () => {
@@ -4871,7 +4791,7 @@ const createAddiCostTable = () => {
 
         const viewBtn = document.createElement('button');
         viewBtn.className = 'btn btn-sm btn-outline-primary me-1';
-        viewBtn.innerText = 'View';
+        viewBtn.innerText = 'View All';
         viewBtn.onclick = () => showNote(cost);
         btnGroup.appendChild(viewBtn);
 
@@ -4920,9 +4840,8 @@ const addAddiCostToTable = () => {
 }
 
 // show all the info in an alert in once
-//use custom alert 💥💥💥
 const showNote = (addiCostObj) => {
-    alert(addiCostObj.costname + "\n" + addiCostObj.amount);
+    showAlertModal('inf' , addiCostObj.costname + "\n" + addiCostObj.amount + "\n" + addiCostObj.note );
 }
 
 //refill the same form with the data of the selected row
@@ -4999,68 +4918,8 @@ const updateTotalAdditionalCost = () => {
 };
 
 
-//###################################################### NOT USED
-
-//declared globally because needed for filterings
-let allItineraryTemplates = [];
-
 //not used 💥
-const filterDayPlanTemplatesByDistrict = () => {
-    const rawValue = document.getElementById('dpTemplateStartDistrict ').value;
-    const selectedDistrict = JSON.parse(rawValue);
-
-    const filteredTemplates = allItineraryTemplates.filter(dp =>
-        dp.start_district_id && dp.start_district_id.id === selectedDistrict.id
-    );
-
-    displayFilteredTemplates(filteredTemplates);
-}
-
-//not used 💥
-const displayFilteredTemplates = (templates) => {
-    const container = document.getElementById('availableDayTemplatesContainer');
-    container.innerHTML = ''; // Clear previous results
-
-    if (templates.length === 0) {
-        container.innerHTML = '<p class="text-muted">No templates found for this district.</p>';
-        return;
-    }
-
-    templates.forEach(dp => {
-        const div = document.createElement('div');
-        div.className = 'border p-2 mb-2 rounded bg-light';
-
-        // Title row
-        const titleDiv = document.createElement('div');
-        titleDiv.className = 'fw-bold';
-        titleDiv.textContent = dp.title || 'Untitled';
-
-        // Bottom row with code and button
-        const bottomRow = document.createElement('div');
-        bottomRow.className = 'd-flex justify-content-between align-items-center';
-
-        const codeText = document.createElement('small');
-        codeText.className = 'text-muted';
-        codeText.textContent = dp.dayplancode;
-
-        const viewBtn = document.createElement('button');
-        viewBtn.className = 'btn btn-sm btn-outline-primary';
-        viewBtn.textContent = 'View';
-        viewBtn.onclick = () => openDayPlanModal(dp.dayplancode, dp.title || 'Untitled');
-
-        bottomRow.appendChild(codeText);
-        bottomRow.appendChild(viewBtn);
-
-        // Append to main card
-        div.appendChild(titleDiv);
-        div.appendChild(bottomRow);
-
-        container.appendChild(div);
-    });
-
-}
-
-//not used 💥
+//example ✅
 const fetchAllDataParallel = async () => {
     const endpoints = [
         { key: 'onlyFirstDays', url: "/dayplan/onlyfirstdays" },
@@ -5082,9 +4941,8 @@ const fetchAllDataParallel = async () => {
     });
 }
 
-
 //to control the editing of template packages that live on website 
-//not using
+//not using 💥
 const controlEditingForLivePackages = (tpkgObj) => {
 
     if (tpkgObj.is_custompkg == false) {
