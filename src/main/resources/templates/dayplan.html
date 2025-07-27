@@ -184,11 +184,28 @@
                                             </div>
                                         </div>
 
+                                        <!-- based inquiry -->
+                                        <div class="row mb-3 mb-2">
+                                            <div class="col-12">
+                                                <div class="row ">
+                                                    <label for="dpBasedInq" class="col-4 form-label mb-0 fw-bold">
+                                                        Based Inquiry:
+                                                    </label>
+                                                    <div class="col-8">
+                                                        <select disabled id="dpBasedInq"
+                                                            class="form-control form-select"
+                                                            onchange="dynamicSelectValidator(this, 'dayplan','dp_basedinq');">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <!-- If a template, show this message -->
                                         <div class="d-none" id="dayTypeMsgForTemplate">
                                             <div class="row">
-                                                <div class="col-6 mx-auto">
-                                                    <div class="text-danger my-3 ms-1 fw-bold"> Selecting A Day Type Is
+                                                <div class="col-10 mx-auto">
+                                                    <div class="text-danger text-center my-3 ms-1 fw-bold"> Selecting A Day Type And A Based Inquiry Is
                                                         Unavailable Because This Is A Template </div>
                                                 </div>
                                             </div>

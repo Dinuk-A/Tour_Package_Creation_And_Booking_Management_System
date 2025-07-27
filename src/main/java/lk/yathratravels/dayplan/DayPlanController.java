@@ -74,6 +74,12 @@ public class DayPlanController {
                     .collect(Collectors.toList());
             dpView.addObject("loggeduserroles", new ObjectMapper().writeValueAsString(roleNames));
 
+            // get logged users' employee id to filter his own assigned inqs
+            dpView.addObject("loggedUserEmpId", loggedUser.getEmployee_id().getId());
+
+            // get logged users'id to filter his own assigned inqs
+            dpView.addObject("loggedUserId", loggedUser.getId());
+
             return dpView;
         }
     }

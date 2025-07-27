@@ -173,12 +173,12 @@ const refreshTpkgForm = async () => {
 
     //get the logged user's emp id to filter inquiries assigned to him
     const loggedEmpId = document.getElementById('loggedUserEmpIdSectionId').textContent;
-    console.log(loggedEmpId);
+    console.log("loggedEmpId: " , loggedEmpId);
 
     // refresh based inq field active inquiries of the logged user
     try {
         allActiveInqs = await ajaxGetReq("/inq/personal/active?empid=" + loggedEmpId);
-        fillDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname')
+        fillMultDataIntoDynamicSelects(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname');
     } catch (error) {
         console.error("Failed to fetch inquiries for assigned user:", error);
     }
@@ -3953,7 +3953,8 @@ const addNewDayPlanInTpkg = async () => {
 
                 dayplan.id = null;
                 dayplan.is_template = false;
-                dayplan.dp_basedinq = tpkg.basedinq.inqcode;
+                //dayplan.dp_basedinq = tpkg.basedinq.inqcode;
+                dayplan.dp_basedinq = tpkg.basedinq.id;
 
                 const postServerResponse = await ajaxPPDRequest("/dayplan/saveasnew", "POST", dayplan);
 

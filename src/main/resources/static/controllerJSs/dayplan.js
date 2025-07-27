@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
 let allStays = [];
 let allProvinces = [];
 let allDistricts = [];
+let allActiveInqsInDp = [];
+let dayplans = [];
 
 //global var to store id of the table
 let sharedTableId = "mainTableDayPlan";
@@ -42,8 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-
-let dayplans = [];
 
 //to create and refresh content in main dayplan table
 const buildDayPlanTable = async () => {
@@ -177,7 +177,6 @@ const applyDayTableFilter = () => {
     }, 100);
 };
 
-
 //reset
 function resetDayPlanFilters() {
     document.getElementById('daytypeFilter').value = '';
@@ -249,6 +248,9 @@ const refreshDayPlanForm = async () => {
         return;
     }
 
+    dayplan = new Object();
+    dayplan.vplaces = new Array();
+
     try {
         allStays = await ajaxGetReq('/stay/all');
         allProvinces = await ajaxGetReq("/province/all");
@@ -256,11 +258,7 @@ const refreshDayPlanForm = async () => {
     } catch (error) {
         console.error('failed to fetch provinces,districts and stays')
     }
-
-    dayplan = new Object();
-
-    dayplan.vplaces = new Array();
-
+  
     document.getElementById('formDayPlan').reset();
 
     document.getElementById('dayTypeMsgForTemplate').classList.add("d-none");
@@ -279,9 +277,23 @@ const refreshDayPlanForm = async () => {
         console.error("Failed to fetch Provinces : ", error);
     }
 
+    //get the logged user's emp id to filter inquiries assigned to him
+    const loggedEmpId = document.getElementById('loggedUserEmpIdSectionId').textContent;
+    console.log(loggedEmpId);
+
+    // refresh based inq field active inquiries of the logged user
+    try {
+        allActiveInqs = await ajaxGetReq("/inq/personal/active?empid=" + loggedEmpId);
+        fillMultDataIntoDynamicSelects(dpBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname');
+        dpBasedInq.disabled = true;
+    } catch (error) {
+        console.error("Failed to fetch inquiries for assigned user:", error);
+    }
+
     // Array of input field IDs to reset
     const inputTagsIds = [
         'dpTitle',
+        'dpBasedInq',
         'selectDPStartProv',
         'selectDPStartDist',
         'selectVPProv',
@@ -830,8 +842,11 @@ const changesBasedDPType = () => {
     if (dpTemplate.checked) {
         //template day
         dayplan.is_template = true;
-
         titleInput.disabled = false;
+
+        dpBasedInq.disabled = true;
+        dpBasedInq.value = "";
+        dpBasedInq.style.border = '1px solid #ced4da';
 
         //show these messages 
         document.getElementById('dayTypeMsgForTemplate').classList.remove("d-none");
@@ -871,6 +886,8 @@ const changesBasedDPType = () => {
         //dayplan.totalkmcount = null;
         dayplan.is_takepackedlunch = null;
         dayplan.lunchplace_id = null;
+
+        dayplan.dp_basedinq = null;
 
         const lunchProv = document.getElementById('selectLPProv');
         const lunchDist = document.getElementById('selectLPDist');
@@ -927,7 +944,7 @@ const changesBasedDPType = () => {
         //custom day
 
         dayplan.is_template = false;
-
+        dpBasedInq.disabled = false;     
 
         titleInput.disabled = true;
         titleInput.value = "";
@@ -1075,7 +1092,7 @@ const passManualGeoCoords = () => {
     const regex = /^-?\d{1,2}(\.\d+)?,\s*-?\d{1,3}(\.\d+)?$/;
 
     if (regex.test(value)) {
-       
+
         const [latStr, lngStr] = value.split(',').map(s => s.trim());
         const lat = parseFloat(latStr);
         const lng = parseFloat(lngStr);
@@ -1859,6 +1876,10 @@ const checkDPFormErrors = () => {
         errors += "Day Type is required (choose from First Day, Mid Day, or Final Day)\n";
     }
 
+    if (!dayplan.is_template && dayplan.dp_basedinq == null) {
+        errors += "Based Inquiry is required for custom day plans \n";
+    }
+
     if (dayplan.daytitle == null) {
         errors += "Day Plan Name cannot be empty \n";
     }
@@ -1927,6 +1948,14 @@ const addNewDayPlan = async () => {
 
         if (userConfirm) {
             try {
+
+                //bind the based inq id only, not whole obj
+                if (dayplan.dp_basedinq && dayplan.dp_basedinq.id) {
+                    dayplan.dp_basedinq = dayplan.dp_basedinq.id;
+                } else {
+                    dayplan.dp_basedinq = null;
+                }
+
                 // Await the response from the AJAX request
                 const postServerResponse = await ajaxPPDRequest("/dayplan", "POST", dayplan);
 
@@ -2219,11 +2248,18 @@ const refillDayPlanForm = async (dpObj) => {
         firstDayCB.disabled = true;
         middleDayCB.disabled = true;
         lastDayCB.disabled = true;
+        dpBasedInq.disabled = true;
 
         if (dpObj.is_template) {
             generalPickupCB.disabled = true;
             accommodationsPickupCB.disabled = true;
             manualPickupCB.disabled = true;
+        }
+
+        //based inquiry
+        if (dayplan.dp_basedinq != null) {
+            fillMultDataIntoDynamicSelectsRefillById(dpBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname', dayplan.dp_basedinq);
+            dpBasedInq.disabled = true;
         }
 
         if (dpObj.is_takepackedlunch) {
