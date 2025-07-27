@@ -1,11 +1,19 @@
 package lk.yathratravels.payment;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.tpkg.AdditionalCost;
 import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
@@ -38,7 +47,7 @@ public class PaymentController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "payment");
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PAYMENT");
 
         if (!privilegeLevelForLoggedUser.getPrvselect()) {
 
@@ -73,4 +82,68 @@ public class PaymentController {
             return paymentView;
         }
     }
+
+    // get all employee list from DB
+    @GetMapping(value = "/payment/all", produces = "application/json")
+    public List<Payment> getAllPayments() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PAYMENT");
+
+        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+            return new ArrayList<Payment>();
+        }
+
+        return paymentDao.findAll(Sort.by(Direction.DESC, "id"));
+    }
+
+    // when payment added by an employee
+    @PostMapping(value = "/paymentbyemp")
+    public String addPaymentByEmp(@RequestBody Payment payment) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "PAYMENT");
+
+        if (!privilegeLevelForLoggedUser.getPrvinsert()) {
+            return "You do not have permission to add a new Payment.";
+        }
+
+        try {
+
+            // generate nextPaymentCode
+            String nextPaymentCode = paymentDao.getNextPaymentCode();
+
+            if (nextPaymentCode.equals(null) || nextPaymentCode.equals("")) {
+                payment.setPaymentcode("PAY000001");
+            } else {
+                payment.setPaymentcode(nextPaymentCode);
+            }
+
+            payment.setAddeddatetime(LocalDateTime.now());
+            payment.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+            paymentDao.save(payment);
+            return "OK";
+        } catch (Exception e) {
+            return "Error updating additional cost : " + e.getMessage();
+        }
+
+    }
+
+    // when payment is done by cust from website
+    @PostMapping(value = "/paymentbycust")
+    public String addPaymentByCust(@RequestBody Payment payment) {
+
+        try {
+            payment.setAddeddatetime(LocalDateTime.now());
+            payment.setAddeduserid(-10);
+            paymentDao.save(payment);
+            return "OK";
+        } catch (Exception e) {
+            return "Error updating additional cost : " + e.getMessage();
+        }
+
+    }
+
 }

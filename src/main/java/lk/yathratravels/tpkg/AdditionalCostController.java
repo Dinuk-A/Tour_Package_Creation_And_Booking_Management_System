@@ -69,6 +69,4 @@ public class AdditionalCostController {
 
     }
 
-    //thing of adding a delete endpoint, but not sure if needed yet 💥💥💥
-
 }

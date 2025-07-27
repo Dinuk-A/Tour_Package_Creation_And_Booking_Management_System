@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
+
+<head>
+
+    <!-- link tpkg js -->
+    <script src="controllerJSs/payment.js"></script>
+
+    <style>
+        .img-preview {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+    <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
+
+    <main id="mainAreaID" class="main min-vh-100 mx-auto">
+
+        <!-- Tabs navigation panel -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- for table side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tablePaymentHolderDiv" role="tab"
+                    aria-controls="tablePaymentHolderDiv" aria-selected="true">Table</a>
+            </li>
+            <!-- for form side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formPaymentHolderDiv" role="tab"
+                    aria-controls="formPaymentHolderDiv" aria-selected="false" onclick="setPaymentStatusAuto()">Form</a>
+            </li>
+        </ul>
+
+        <!-- Tabs content -->
+        <div class="tab-content mt-1" id="myTabContent">
+
+            <!-- Table tab  -->
+            <div id="tablePaymentHolderDiv" class="tab-pane fade show active table-container p-4 rounded-3"
+                role="tabpanel" aria-labelledby="table-tab">
+                <!-- a table will be dynamically generated in here -->
+            </div>
+
+            <!-- Form tab -->
+            <div class="tab-pane fade" id="formPaymentHolderDiv" role="tabpanel" aria-labelledby="form-tab">
+                <div class="card mx-auto" style="width: 1100px;">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">Payment Management Form</h3>
+                    </div>
+                    <div class="card-body" style="background-color: ivory;">
+
+                        <!-- form starts -->
+                        <form id="formPayment" class="" onsubmit="return false">
+
+                            <!-- Basic Info -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Basic Booking Information</legend>
+
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <div class="row mb-2">
+                                            <div class="col-3">
+                                                <label for="selectBookingCode" class="fw-bold">Booking Code <span
+                                                        class="text-danger"> * </span>: </label>
+                                                <select id="selectBookingCode" class="form-control form-select"
+                                                    onchange="dynamicSelectValidator(this , 'payment','bookingcode_id')"
+                                                    required>
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-5">
+                                                <label for="inputPaymentCode" class="fw-bold form-label mb-0">Payment
+                                                    Code <span><small class="text-info">(This will be generated
+                                                            automatically)</small></span>
+                                                    :</label>
+                                                <input id="inputPaymentCode" type="text"
+                                                    class="test form-control form-input" disabled
+                                                    onkeyup="inputValidatorText(this,'','payment','paymentcode')"
+                                                    required>
+                                            </div>
+
+                                            <div class="col-4">
+                                                <label for="selectBookedPackage" class="fw-bold">Booked Package <span
+                                                        class="text-danger"> * </span>: </label>
+                                                <select id="selectBookedPackage" class="form-control form-select"
+                                                    onchange="dynamicSelectValidator(this , 'payment','bookedpackage_id')"
+                                                    required>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <div class="col-6">
+                                                <label for="inputClientName" class="fw-bold form-label mb-0"> Client
+                                                    Name <span class="text-danger"> * </span>
+                                                    :</label>
+                                                <input id="inputClientName" type="text" class="form-control form-input"
+                                                    disabled
+                                                    onkeyup="inputValidatorText(this,'','payment','clientname')"
+                                                    required>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <label class="fw-bold  mb-0" for="inputClientContact">Client Contact
+                                                    <span class="text-danger"> * </span>:</label>
+                                                <input id="inputClientContact" type="text"
+                                                    class="form-control form-input" disabled
+                                                    onkeyup="inputValidatorText(this,'','payment','clientcontact')"
+                                                    required>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                            </fieldset>
+
+                            <!-- payment Info -->
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Payment Information</legend>
+
+                                <div class="row">
+
+                                    <div class="col-md-8">
+                                        <div class="row mb-2">
+                                            <div class="col-5">
+                                                <label class="fw-bold  mb-0" for="inputTotalAmount">Total Amount <span
+                                                        class="text-danger"> * </span>:</label>
+
+                                                <div class="input-group">
+                                                    <span class="input-group-text p-1 pb-0">
+                                                        <h6 class="my-auto">LKR</h6>
+                                                    </span>
+                                                    <input type="text" id="inputTotalAmount"
+                                                        class="form-control form-input w-85 p-1 text-center" disabled
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','payment','totalamount')"
+                                                        onblur="insertDecimals(this);">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-7">
+                                                <label class="fw-bold  mb-0" for="inputPaidAmount">Paid Amount <span
+                                                        class="text-danger"> * </span>:</label>
+
+                                                <div class="input-group">
+                                                    <span class="input-group-text p-1 pb-0">
+                                                        <h6 class="my-auto">LKR</h6>
+                                                    </span>
+                                                    <input type="text" id="inputPaidAmount"
+                                                        class="form-control form-input w-85 p-1 text-center"
+                                                        placeholder="100.00"
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','payment','paidamount')"
+                                                        onblur="insertDecimals(this);">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <div class="col-5">
+                                                <label class="fw-bold  mb-0" for="inputBalanceAmount">Balance Amount
+                                                    <span class="text-danger"> * </span>:</label>
+
+                                                <div class="input-group">
+                                                    <span class="input-group-text p-1 pb-0">
+                                                        <h6 class="my-auto">LKR</h6>
+                                                    </span>
+                                                    <input type="text" id="inputBalanceAmount"
+                                                        class="form-control form-input w-85 p-1 text-center" disabled
+                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','payment','balanceamount')"
+                                                        onblur="insertDecimals(this);">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- photo -->
+                                    <div class="col-md-4 mx-auto">
+                                        <div class="row mx-auto d-flex align-items-center">
+                                            <div class="col-7 ">
+                                                <img id="previewSlipImg" src="images/slip.png" alt="Preview"
+                                                    class="img-thumbnail"
+                                                    style="height:150px; width: 150px; border:2px solid #ced4da">
+                                                <!-- use accepts 💥💥💥 -->
+                                                <input type="file" class="d-none" id="fileInputSlipPhoto"
+                                                    onchange="imgValidatorVehiclePic(this,'payment','vehi_photo',previewSlipImg)">
+
+                                            </div>
+                                            <div class="col-5">
+                                                <button type="button" class="btn btn-primary w-100 mb-2"
+                                                    onclick="fileInputSlipPhoto.click();">Select Image</button>
+
+                                                <button type="button" class="btn btn-danger"
+                                                    onclick="clearVehicleImg();">Clear Image</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </fieldset>
+
+                            <fieldset class="border border-dark p-4 mb-4 bg-light">
+                                <legend class="float-none w-auto px-2 text-primary">Status & Note</legend>
+                                <div class="row">
+
+                                    <div class="col-6">
+                                        <div class="row mb-1">
+                                            <div class="col-12">
+                                                <label for="selectPaymentStatus" class="fw-bold form-label mb-0">
+                                                    Status <span class="text-danger"> * </span>
+                                                    :</label>
+
+                                                <select id="selectPaymentStatus" class="form-control form-select"
+                                                    required
+                                                    onchange="staticSelectValidator(this , 'payment' , 'payment_status')">
+                                                    <option value="" selected disabled>Please Select Status </option>
+                                                    <option value="ifDeleted" class="d-none"> Deleted </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label for="inputNote" class="fw-bold">Additional Information</label>
+                                        <textarea id="inputNote" class="form-control" rows="5"
+                                            placeholder="Enter Any Additional Information"
+                                            onkeyup="inputValidatorText(this,'','payment','note')"></textarea>
+                                    </div>
+
+
+                                </div>
+                            </fieldset>
+
+
+                            <!-- Form Buttons -->
+                            <div class="row mt-3 mb-2">
+
+                                <div class="col-4">
+                                    <button type="reset" class="btn-clear fw-bold" onclick="refreshPaymentForm();">Reset
+                                        Form</button>
+                                </div>
+
+                                <div class="col-8 text-end">
+                                    <button type="button" id="paymentUpdateBtn" class=" btn-update fw-bold "
+                                        onclick="updatePayment()">Update Entry</button>
+
+                                    <button type="submit" id="paymentAddBtn" class="btn-add fw-bold"
+                                        onclick="addNewPayment()">Add Entry</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Modal to display full details of a row -->
+        <div class="modal fade py-5" id="infoModalVehicle" tabindex="-1" aria-labelledby="infoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content shadow-lg rounded-4">
+                    <!-- Modal Header -->
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="infoModalLabel">Yathra Vehicle Record</h5>
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body bg-light">
+                        <div class="container">
+                            <!-- Row 1 -->
+                            <div class="row mb-4 align-items-start">
+                                <!-- Photo -->
+                                <div class="col-md-4">
+                                    <img id="modalVehiPic" src="images/vehicle.png" alt="Vehicle"
+                                        class="img-thumbnail shadow-sm"
+                                        style="width: 100%; max-width: 180px; height: auto;">
+                                </div>
+
+                                <!-- Type, Name, Number Plate -->
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-primary mb-0">Vehicle Type:</p>
+                                    <p id="modalVehiType" class="mb-2"></p>
+
+                                    <p class="fw-bold text-primary mb-0">Model Name:</p>
+                                    <p id="modalVehiModalName" class="mb-2"></p>
+
+                                    <p class="fw-bold text-primary mb-0">Number Plate:</p>
+                                    <p id="modalVehiNumberPlate" class="mb-2"></p>
+                                </div>
+
+                                <!-- Cost Per KM -->
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-primary mb-0">Cost Per Kilometer:</p>
+                                    <p id="modalVehiCostPerKM" class="mb-2"></p>
+                                </div>
+                            </div>
+
+                            <!-- Row 2 -->
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-primary mb-0">Passenger Seat Count:</p>
+                                    <p id="modalVehiPassengerSeatCount" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-primary mb-0">Max Luggage Capacity:</p>
+                                    <p id="modalVehiLuggageCapacity" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-primary mb-0">Last Service Date:</p>
+                                    <p id="modalVehiLSDate" class="mb-2"></p>
+                                </div>
+                            </div>
+
+                            <!-- Row 3 -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-primary mb-0">Vehicle Status:</p>
+                                    <p id="modalVehiStatus" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-primary mb-0">Additional Information:</p>
+                                    <p id="modalVehiNote" class="mb-2"></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-danger mb-0 d-none" id="modalVehiIfDeleted"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer d-flex justify-content-between bg-light">
+                        <button class="btn-print fw-bold" onclick="printVehicleRecord()">
+                            Print Record
+                        </button>
+                        <div>
+                            <button id="modalVehiEditBtn" class="btn-edit me-2 fw-bold"
+                                onclick="refillVehicleForm(window['currentObject'])">
+                                Edit Entry
+                            </button>
+                            <button id="modalVehiDeleteBtn" class="btn-delete fw-bold"
+                                onclick="deleteVehicleRecord(window['currentObject'])">
+                                Delete Entry
+                            </button>
+                            <button id="modalVehiRecoverBtn" class="btn-restore d-none fw-bold"
+                                onclick="restoreVehicleRecord()">
+                                Restore Entry
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</body>
+
+</html>
