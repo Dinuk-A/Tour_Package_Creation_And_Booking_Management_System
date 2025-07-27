@@ -685,15 +685,15 @@ const refillTpkgForm = (tpkgObj) => {
         //show start day on availability check section
         showTourStartDate();
 
-        // update total travellers
-        updateTotalTravellers();
+        // update total travellers, without refilling the suitable vehhi type
+        updateTotalTravellersForRefillOnly();
 
         // preferred vehicle type 💥
-        fillDataIntoDynamicSelectsRefillByName(
+        fillDataIntoDynamicSelects(
             tpkgVehitype,
             'Please Select Vehicle Type',
             vehiTypes,
-            'vehiclename',
+            'name',
             tpkgObj.pref_vehi_type
         );
 
@@ -1844,7 +1844,7 @@ const getVehicleTypesByMinSeats = async () => {
 // debounced version to limit query calls  
 const debouncedGetVehicleTypesByMinSeats = debounce(getVehicleTypesByMinSeats, 300);
 
-// to calculate total travellers  
+// to calculate total travellers and refill the suitable vehi types
 const updateTotalTravellers = () => {
     const localAdult = parseInt(document.getElementById('tpkgLocalAdultCount').value) || 0;
     const localChild = parseInt(document.getElementById('tpkgLocalChildCount').value) || 0;
@@ -1857,6 +1857,19 @@ const updateTotalTravellers = () => {
 
     //function to update the predered vehicle type select input
     debouncedGetVehicleTypesByMinSeats();
+
+}
+
+//without selecting the suitable vehi type
+const updateTotalTravellersForRefillOnly = () => {
+    const localAdult = parseInt(document.getElementById('tpkgLocalAdultCount').value) || 0;
+    const localChild = parseInt(document.getElementById('tpkgLocalChildCount').value) || 0;
+    const foreignAdult = parseInt(document.getElementById('tpkgForeignAdultCount').value) || 0;
+    const foreignChild = parseInt(document.getElementById('tpkgForeignChildCount').value) || 0;
+
+    const total = localAdult + localChild + foreignAdult + foreignChild;
+
+    document.getElementById('tpkgTotalTravellers').value = total;
 
 }
 
