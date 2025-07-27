@@ -246,58 +246,7 @@ const refreshTpkgForm = async () => {
     document.getElementById('yathraGuideCB').disabled = true;
     document.getElementById('rentalGuideCB').disabled = true;
 
-    // reset additionalcost table 
-    document.getElementById("additionalCostTableBody").innerHTML = "";
-
-    //reset additionalCost inner form
-    refreshAddiCostForm();
-
-    //reset additional cost add btn
-    document.getElementById('addCostAddBtn').disabled = false;
-
-    //reset total costs section 
-    document.getElementById('totalTktCostGroup').classList.remove('d-none');
-    document.getElementById('totalTktCostMsg').classList.add('d-none');
-
-    document.getElementById('totalVehiParkCostGroup').classList.remove('d-none');
-    document.getElementById('totalVehicleParkingCostMsg').classList.add('d-none');
-
-    document.getElementById('totalLunchCostGroup').classList.remove('d-none');
-    document.getElementById('totalLunchCostMsg').classList.add('d-none');
-
-    document.getElementById('totalVehiCostGroup').classList.remove('d-none');
-    document.getElementById('totalVehicleCostMsg').classList.add('d-none');
-
-    document.getElementById('totalStayCostGroup').classList.remove('d-none');
-    document.getElementById('totalStayCostMsg').classList.add('d-none');
-
-    document.getElementById('totalDriverCostGroup').classList.remove('d-none');
-    document.getElementById('totalDriverCostMsg').classList.add('d-none');
-
-    document.getElementById('totalGuideCostGroup').classList.remove('d-none');
-    document.getElementById('totalGuideCostMsg').classList.add('d-none');
-
-    document.getElementById('finalTotalCost').value = '';
-    document.getElementById('pkgSellingPrice').value = '';
-
-    //discount section
-    const noneCb = document.getElementById('discountNone');
-    const loyalityCb = document.getElementById('discountLoyality');
-    const offpeakCb = document.getElementById('discountOffpeak');
-
-    noneCb.disabled = false;
-    noneCb.checked = true;
-
-    loyalityCb.checked = false;
-    offpeakCb.checked = false;
-
-    loyalityCb.disabled = true;
-    offpeakCb.disabled = true;
-
-    //reset final price section
-    const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
-    pkgFinalPriceShowInput.value = '';
-    pkgFinalPriceShowInput.style.border = "1px solid #ced4da";
+    resetTotalCostInputsAndAddiCostTable();
 
     //set status auto
     const tpkgStatusSelectElement = document.getElementById('tpSelectStatus');
@@ -1376,6 +1325,86 @@ const validateAdultTravellerCounts = () => {
     }
 }
 
+//reset cost inputs section
+const resetTotalCostInputsAndAddiCostTable = () => {
+    // reset additionalcost table 
+    document.getElementById("additionalCostTableBody").innerHTML = "";
+
+    //reset additionalCost inner form
+    refreshAddiCostForm();
+
+    //reset additional cost add btn
+    document.getElementById('addCostAddBtn').disabled = false;
+
+    // Array of input field IDs to reset
+    const inputTagsIds = [
+
+        'totalTktCostInput',
+        'totalVehicleParkingCost',
+        'totalLunchCostForAll',
+        'totalVehiCostInput',
+        'totalStayCostInput',
+        'totalDriverCostInput',
+        'totalGuideCostInput',
+        'totalAdditionalCosts',
+        'pkgStartingPrice'
+
+    ];
+
+    //clear out any previous styles
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+    //reset total costs section 
+    document.getElementById('totalTktCostGroup').classList.remove('d-none');
+    document.getElementById('totalTktCostMsg').classList.add('d-none');
+
+    document.getElementById('totalVehiParkCostGroup').classList.remove('d-none');
+    document.getElementById('totalVehicleParkingCostMsg').classList.add('d-none');
+
+    document.getElementById('totalLunchCostGroup').classList.remove('d-none');
+    document.getElementById('totalLunchCostMsg').classList.add('d-none');
+
+    document.getElementById('totalVehiCostGroup').classList.remove('d-none');
+    document.getElementById('totalVehicleCostMsg').classList.add('d-none');
+
+    document.getElementById('totalStayCostGroup').classList.remove('d-none');
+    document.getElementById('totalStayCostMsg').classList.add('d-none');
+
+    document.getElementById('totalDriverCostGroup').classList.remove('d-none');
+    document.getElementById('totalDriverCostMsg').classList.add('d-none');
+
+    document.getElementById('totalGuideCostGroup').classList.remove('d-none');
+    document.getElementById('totalGuideCostMsg').classList.add('d-none');
+
+    document.getElementById('finalTotalCost').value = '';
+    document.getElementById('pkgSellingPrice').value = '';
+
+    //discount section
+    const noneCb = document.getElementById('discountNone');
+    const loyalityCb = document.getElementById('discountLoyality');
+    const offpeakCb = document.getElementById('discountOffpeak');
+
+    noneCb.disabled = false;
+    noneCb.checked = true;
+
+    loyalityCb.checked = false;
+    offpeakCb.checked = false;
+
+    loyalityCb.disabled = true;
+    offpeakCb.disabled = true;
+
+    //reset final price section
+    const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
+    pkgFinalPriceShowInput.value = '';
+    pkgFinalPriceShowInput.style.border = "1px solid #ced4da";
+}
+
 //get user permission before refill tpkg by inq when there are already data
 const getUserPermissionForRefill = async () => {
 
@@ -1391,9 +1420,10 @@ const getUserPermissionForRefill = async () => {
             pkgTitleInput.value = "";
             pkgTitleInput.style.border = "1px solid #ced4da";
 
-            //reset costs section 💥💥
-            //reset addicost table 💥💥
+            //reset costs section 
+            resetTotalCostInputsAndAddiCostTable();
 
+            //then refill
             fillDataFromInq();
         }
     } else {
