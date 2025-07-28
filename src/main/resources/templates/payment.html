@@ -63,13 +63,23 @@
 
                             <!-- Basic Info -->
                             <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Basic Booking Information</legend>
+                                <legend class="float-none w-auto px-2 text-primary">Basic Information</legend>
 
                                 <div class="row">
 
                                     <div class="col-md-12">
                                         <div class="row mb-2">
-                                            <div class="col-3">
+
+                                            <div class="col-md-3">
+                                                <label for="inputPaymentCode" class="fw-bold form-label mb-0">Payment
+                                                    Code <span><small class="text-info">(This will be generated
+                                                            automatically)</small></span>
+                                                    :</label>
+                                                <input id="inputPaymentCode" type="text"
+                                                    class="test form-control form-input" disabled>
+                                            </div>
+
+                                            <div class="col-md-3">
                                                 <label for="selectBookingCode" class="fw-bold">Booking Code <span
                                                         class="text-danger"> * </span>: </label>
                                                 <select id="selectBookingCode" class="form-control form-select"
@@ -78,23 +88,10 @@
                                                 </select>
                                             </div>
 
-                                            <div class="col-md-5">
-                                                <label for="inputPaymentCode" class="fw-bold form-label mb-0">Payment
-                                                    Code <span><small class="text-info">(This will be generated
-                                                            automatically)</small></span>
-                                                    :</label>
-                                                <input id="inputPaymentCode" type="text"
-                                                    class="test form-control form-input" disabled
-                                                    onkeyup="inputValidatorText(this,'','payment','paymentcode')"
-                                                    required>
-                                            </div>
-
-                                            <div class="col-4">
+                                            <div class="col-md-6">
                                                 <label for="selectBookedPackage" class="fw-bold">Booked Package <span
                                                         class="text-danger"> * </span>: </label>
-                                                <select id="selectBookedPackage" class="form-control form-select"
-                                                    onchange="dynamicSelectValidator(this , 'payment','bookedpackage_id')"
-                                                    required>
+                                                <select id="selectBookedPackage" class="form-control form-select">
                                                 </select>
                                             </div>
                                         </div>
@@ -105,21 +102,16 @@
                                                     Name <span class="text-danger"> * </span>
                                                     :</label>
                                                 <input id="inputClientName" type="text" class="form-control form-input"
-                                                    disabled
-                                                    onkeyup="inputValidatorText(this,'','payment','clientname')"
-                                                    required>
+                                                    disabled>
                                             </div>
 
                                             <div class="col-6">
                                                 <label class="fw-bold  mb-0" for="inputClientContact">Client Contact
                                                     <span class="text-danger"> * </span>:</label>
                                                 <input id="inputClientContact" type="text"
-                                                    class="form-control form-input" disabled
-                                                    onkeyup="inputValidatorText(this,'','payment','clientcontact')"
-                                                    required>
+                                                    class="form-control form-input" disabled>
                                             </div>
                                         </div>
-
 
                                     </div>
 
@@ -131,24 +123,13 @@
 
                                 <div class="row">
 
+                                    <!-- payment inputs -->
                                     <div class="col-md-8">
+
                                         <div class="row mb-2">
-                                            <div class="col-5">
-                                                <label class="fw-bold  mb-0" for="inputTotalAmount">Total Amount <span
-                                                        class="text-danger"> * </span>:</label>
 
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6 class="my-auto">LKR</h6>
-                                                    </span>
-                                                    <input type="text" id="inputTotalAmount"
-                                                        class="form-control form-input w-85 p-1 text-center" disabled
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','payment','totalamount')"
-                                                        onblur="insertDecimals(this);">
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-7">
+                                            <!-- paid amount -->
+                                            <div class="col-md-4">
                                                 <label class="fw-bold  mb-0" for="inputPaidAmount">Paid Amount <span
                                                         class="text-danger"> * </span>:</label>
 
@@ -163,9 +144,44 @@
                                                         onblur="insertDecimals(this);">
                                                 </div>
                                             </div>
+
+                                            <!-- date -->
+                                            <div class="col-md-3">
+                                                <label class="fw-bold mb-0" for="inputPaidDate">Paid Date <span class="text-danger"> * </span>:</label>
+                                                <input type="date" id="inputPaidDate" class="form-control form-input p-1 text-center" required>
+                                            </div>                                            
+
+                                            <!-- payment method -->
+                                            <div class="col-md-5">
+                                                <label class="fw-bold mb-0" for="inputPaymentMethod">Payment Method <span class="text-danger"> * </span>:</label>
+                                                <select id="inputPaymentMethod" class="form-select form-input p-1 text-center" required>
+                                                    <option value="" disabled selected>Select Method</option>
+                                                    <option value="Cash">Cash</option>
+                                                    <option value="Bank Transfer">Bank Transfer</option>
+                                                    <option value="Card">Card</option>
+                                                    <option value="Online">Online</option>
+                                                </select>
+                                            </div>
+                                            
+
                                         </div>
 
+                                        <!-- other auto calc amounts -->
                                         <div class="row mb-2">
+
+                                            <div class="col-5">
+                                                <label class="fw-bold  mb-0" for="inputTotalAmount">Total Amount <span
+                                                        class="text-danger"> * </span>:</label>
+
+                                                <div class="input-group">
+                                                    <span class="input-group-text p-1 pb-0">
+                                                        <h6 class="my-auto">LKR</h6>
+                                                    </span>
+                                                    <input type="text" id="inputTotalAmount"
+                                                        class="form-control form-input w-85 p-1 text-center" disabled>
+                                                </div>
+                                            </div>
+
                                             <div class="col-5">
                                                 <label class="fw-bold  mb-0" for="inputBalanceAmount">Balance Amount
                                                     <span class="text-danger"> * </span>:</label>
@@ -175,12 +191,12 @@
                                                         <h6 class="my-auto">LKR</h6>
                                                     </span>
                                                     <input type="text" id="inputBalanceAmount"
-                                                        class="form-control form-input w-85 p-1 text-center" disabled
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','payment','balanceamount')"
-                                                        onblur="insertDecimals(this);">
+                                                        class="form-control form-input w-85 p-1 text-center" disabled>
                                                 </div>
                                             </div>
+
                                         </div>
+
                                     </div>
 
                                     <!-- photo -->
@@ -190,6 +206,7 @@
                                                 <img id="previewSlipImg" src="images/slip.png" alt="Preview"
                                                     class="img-thumbnail"
                                                     style="height:150px; width: 150px; border:2px solid #ced4da">
+
                                                 <!-- use accepts 💥💥💥 -->
                                                 <input type="file" class="d-none" id="fileInputSlipPhoto"
                                                     onchange="imgValidatorVehiclePic(this,'payment','vehi_photo',previewSlipImg)">
@@ -204,6 +221,8 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                </div>
 
                             </fieldset>
 
