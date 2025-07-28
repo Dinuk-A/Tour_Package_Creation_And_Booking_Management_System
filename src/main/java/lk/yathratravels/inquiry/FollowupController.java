@@ -110,6 +110,8 @@ public class FollowupController {
                 flwup.getInquiry_id().setInq_status("Working");
             }
 
+            inqDao.save(flwup.getInquiry_id());
+
             return "OK";
 
         } catch (Exception e) {
@@ -246,4 +248,3 @@ public class FollowupController {
     }
 
 }
-

@@ -732,6 +732,10 @@ const checkManualInqErrors = () => {
         errors = errors + " Please Select The Client's Preferred Contact Method  \n";
     }
 
+    if (inquiry.is_startdate_confirmed == true && inquiry.inq_apprx_start_date == null) {
+        errors = errors + " Please Choose The Start Date  \n";
+    }
+
     //for success inq (must check traveller count, start date)
     if (inquiry.inq_status == "Confirmed") {
         if (inquiry.inq_apprx_start_date == null || inquiry.is_startdate_confirmed !== true) {
@@ -1068,7 +1072,6 @@ const enableInqEditing = () => {
     //   "inqForeignChildCount",
     // "inqLocalChildCount",
     const inputIds = [
-        "inqMainEnquiry",
         "prefContMethodPkgRelForm",
         "inqApproxStartDate",
         "inqLocalAdultCount",
@@ -1639,6 +1642,8 @@ const submitOnlyManualFollowup = async () => {
                     //show previous responses list
                     refillAllPrevResponses();
 
+                    document.getElementById('inqStatus').value = inqObj.inq_status;
+
                     //enable add new response button
                     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
                     addNewResponseRowBtn.disabled = false;
@@ -1695,13 +1700,22 @@ const handleStartDateStatusChange = () => {
     const startDateUncertain = document.getElementById('startDateUnconfirmed');
     const startDateInput = document.getElementById('inqApproxStartDate');
 
-    if (startDateSure.checked) {
-        inquiry.is_startdate_confirmed = true;
-        startDateInput.style.border = "2px solid lime";
+    //IF A DATE IS CHOSEN
+    if (inquiry.inq_apprx_start_date != null) {
 
-    } else if (startDateUncertain.checked) {
-        inquiry.is_startdate_confirmed = false;
-        startDateInput.style.border = "2px solid orange";
+        if (startDateSure.checked) {
+            inquiry.is_startdate_confirmed = true;
+            startDateInput.style.border = "2px solid lime";
+
+        } else if (startDateUncertain.checked) {
+            inquiry.is_startdate_confirmed = false;
+            startDateInput.style.border = "2px solid orange";
+        }
+
+    } else if (inquiry.inq_apprx_start_date == null) {
+        //IF NO VALUE IN DATE FIELD
+        inquiry.is_startdate_confirmed = null;
+        showAlertModal('err', 'Set a date first')
     }
 }
 

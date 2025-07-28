@@ -113,7 +113,7 @@ public class InqController {
     @GetMapping(value = "/inq/personal/active", params = { "empid" }, produces = "application/json")
     public List<Inq> getOnlyActivePersonalAssignedInquiries(@RequestParam("empid") Integer empid) {
 
-        return inqDao.getOnlyActiveInqsByAssignedEmp(empid);
+        return inqDao.getOnlyWorkingInqsByAssignedEmp(empid);
     }
 
     // get only the active ones

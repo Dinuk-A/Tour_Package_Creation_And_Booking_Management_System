@@ -425,7 +425,6 @@ const generateModuleList = async () => {
     }
 };
 
-
 //define fn ckeckerror
 const checkPriviFormErrors = () => {
 
