@@ -5,3 +5,5 @@ kasun3   12345   ass_mgr
 skr123    12345     Executive
 nisal    12345      Executive
 thisali    12345    Executive
+
+dinuka98    12345    admin 

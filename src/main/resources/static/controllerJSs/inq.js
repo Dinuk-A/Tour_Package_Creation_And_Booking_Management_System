@@ -847,25 +847,9 @@ const openModal = async (inqObj) => {
         existingClientRegId.classList.remove('d-none');
         existingClientRegId.textContent = `Customer ID: ${custsByEmail[0].clientcode}`;
 
-        //        const passportInputWrapper = document.querySelector('#inqClientPassportNumorNIC').closest('.col-6');
-        //        passportInputWrapper.classList.remove('d-none');
-        //        document.getElementById('inqClientPassportNumorNIC').value = custsByEmail[0].passportornic || '';
-        //
-        //        const additionalContactWrapper = document.querySelector('#inqAdditionalContact').closest('.col-3');
-        //        additionalContactWrapper.classList.remove('d-none');
-        //        document.getElementById('inqAdditionalContact').value = custsByEmail[0].contacttwo || '';
-
     } else {
         existingClientNotice.classList.add('d-none');
         existingClientRegId.classList.add('d-none');
-
-        //        const passportInputWrapper = document.querySelector('#inqClientPassportNumorNIC').closest('.col-6');
-        //        passportInputWrapper.classList.add('d-none');
-        //        document.getElementById('inqClientPassportNumorNIC').value = '';
-        //
-        //        const additionalContactWrapper = document.querySelector('#inqAdditionalContact').closest('.col-3');
-        //        additionalContactWrapper.classList.add('d-none');
-        //        document.getElementById('inqAdditionalContact').value = '';
     }
 
     document.getElementById('inqCodeInput').value = inqObj.inqcode;
@@ -885,52 +869,100 @@ const openModal = async (inqObj) => {
     document.getElementById('inqMainEnquiry').value = inqObj.main_inq_msg;
     document.getElementById('inqApproxStartDate').value = inqObj.inq_apprx_start_date;
 
-    if (inqObj.inq_apprx_start_date != null || inqObj.inq_apprx_start_date != undefined) {
-        document.getElementById('startDateConfirmed').disabled = false;
-        document.getElementById('startDateUnconfirmed').disabled = false;
+    const startDateConfirmedEl = document.getElementById('startDateConfirmed');
+    const startDateUnconfirmedEl = document.getElementById('startDateUnconfirmed');
+
+    if (inqObj.inq_apprx_start_date) {
+        startDateConfirmedEl.disabled = false;
+        startDateUnconfirmedEl.disabled = false;
+    } else {
+        startDateConfirmedEl.disabled = true;
+        startDateUnconfirmedEl.disabled = true;
     }
 
-    if (inqObj.is_startdate_confirmed == true) {
-        document.getElementById('startDateConfirmed').checked = true;
-    } else if (inqObj.is_startdate_confirmed == false || inqObj.is_startdate_confirmed == null) {
-        document.getElementById('startDateUnconfirmed').checked = true;
+    if (inqObj.is_startdate_confirmed === true) {
+        startDateConfirmedEl.checked = true;
+    } else {
+        startDateUnconfirmedEl.checked = true;
     }
 
-    //this happens only once, when opening fresh inqs
+    /*  //this happens only once, when opening fresh inqs
+      if (inqObj.inq_adults != null && inqObj.inq_adults != 0) {
+          if (inquiry.nationality_id.countryname == "Sri Lanka") {
+  
+              document.getElementById('inqLocalAdultCount').value = inqObj.inq_adults;
+              inquiry.inq_local_adults = inqObj.inq_adults;
+              oldInquiry.inq_local_adults = inqObj.inq_adults;
+              inquiry.inq_adults = null;
+  
+              document.getElementById('inqLocalChildCount').value = inqObj.inq_kids;
+              inquiry.inq_local_kids = inqObj.inq_kids;
+              oldInquiry.inq_local_kids = inqObj.inq_kids;
+              inquiry.inq_kids = null;
+  
+          } else {
+  
+              document.getElementById('inqForeignAdultCount').value = inqObj.inq_adults;
+              inquiry.inq_foreign_adults = inqObj.inq_adults;
+              oldInquiry.inq_foreign_adults = inqObj.inq_adults;
+              inquiry.inq_adults = null;
+  
+              document.getElementById('inqForeignChildCount').value = inqObj.inq_kids;
+              inquiry.inq_foreign_kids = inqObj.inq_kids;
+              oldInquiry.inq_foreign_kids = inqObj.inq_kids;
+              inquiry.inq_kids = null;
+  
+          }
+          //if (inqObj.inq_adults == 0)
+      } else {
+          //|| 0 for all
+          document.getElementById('inqLocalAdultCount').value = inqObj.inq_local_adults;
+          document.getElementById('inqLocalChildCount').value = inqObj.inq_local_kids;
+          document.getElementById('inqForeignAdultCount').value = inqObj.inq_foreign_adults;
+          document.getElementById('inqForeignChildCount').value = inqObj.inq_foreign_kids;
+      }
+      */
+
+    const localAdultInput = document.getElementById('inqLocalAdultCount');
+    const localChildInput = document.getElementById('inqLocalChildCount');
+    const foreignAdultInput = document.getElementById('inqForeignAdultCount');
+    const foreignChildInput = document.getElementById('inqForeignChildCount');
+
+    // this happens only once, when opening fresh inqs
     if (inqObj.inq_adults != null && inqObj.inq_adults != 0) {
         if (inquiry.nationality_id.countryname == "Sri Lanka") {
 
-            document.getElementById('inqLocalAdultCount').value = inqObj.inq_adults;
+            localAdultInput.value = inqObj.inq_adults;
             inquiry.inq_local_adults = inqObj.inq_adults;
             oldInquiry.inq_local_adults = inqObj.inq_adults;
             inquiry.inq_adults = null;
 
-            document.getElementById('inqLocalChildCount').value = inqObj.inq_kids;
+            localChildInput.value = inqObj.inq_kids;
             inquiry.inq_local_kids = inqObj.inq_kids;
             oldInquiry.inq_local_kids = inqObj.inq_kids;
             inquiry.inq_kids = null;
 
         } else {
 
-            document.getElementById('inqForeignAdultCount').value = inqObj.inq_adults;
+            foreignAdultInput.value = inqObj.inq_adults;
             inquiry.inq_foreign_adults = inqObj.inq_adults;
             oldInquiry.inq_foreign_adults = inqObj.inq_adults;
             inquiry.inq_adults = null;
 
-            document.getElementById('inqForeignChildCount').value = inqObj.inq_kids;
+            foreignChildInput.value = inqObj.inq_kids;
             inquiry.inq_foreign_kids = inqObj.inq_kids;
             oldInquiry.inq_foreign_kids = inqObj.inq_kids;
             inquiry.inq_kids = null;
 
         }
-        //if (inqObj.inq_adults == 0)
     } else {
-        //|| 0 for all
-        document.getElementById('inqLocalAdultCount').value = inqObj.inq_local_adults;
-        document.getElementById('inqLocalChildCount').value = inqObj.inq_local_kids;
-        document.getElementById('inqForeignAdultCount').value = inqObj.inq_foreign_adults;
-        document.getElementById('inqForeignChildCount').value = inqObj.inq_foreign_kids;
+        // || 0 for all
+        localAdultInput.value = inqObj.inq_local_adults;
+        localChildInput.value = inqObj.inq_local_kids;
+        foreignAdultInput.value = inqObj.inq_foreign_adults;
+        foreignChildInput.value = inqObj.inq_foreign_kids;
     }
+
 
     if (inqObj.inq_guideneed === true) {
         document.getElementById('guideYes').checked = true;
@@ -1149,9 +1181,18 @@ const showInqValueChanges = () => {
         updates = updates + "Estimated Start Date changed from " + oldInquiry.inq_apprx_start_date + " to " + inquiry.inq_apprx_start_date + "\n";
     }
 
-    if (inquiry.is_startdate_confirmed !== oldInquiry.is_startdate_confirmed) {
-        updates += `Start Date Confirmation changed from ${oldInquiry.is_startdate_confirmed ? "Confirmed" : "Not Confirmed"} to ${inquiry.is_startdate_confirmed ? "Confirmed" : "Not Confirmed"}\n`;
+    //if (inquiry.is_startdate_confirmed !== oldInquiry.is_startdate_confirmed) {
+    //    updates += `Start Date Confirmation changed from ${oldInquiry.is_startdate_confirmed ? "Confirmed" : "Not Confirmed"} to ${inquiry.is_startdate_confirmed ? "Confirmed" : "Not Confirmed"}\n`;
+    //}
+
+    if (
+        inquiry.is_startdate_confirmed !== oldInquiry.is_startdate_confirmed &&
+        inquiry.is_startdate_confirmed !== null &&
+        oldInquiry.is_startdate_confirmed !== null
+    ) {
+        updates += `Start Date Confirmation changed from ${oldInquiry.is_startdate_confirmed} to ${inquiry.is_startdate_confirmed}\n`;
     }
+
 
     if (inquiry.inq_guideneed !== oldInquiry.inq_guideneed) {
         updates += `Guide Requirement changed from ${oldInquiry.inq_guideneed ? "Yes" : "No"} to ${inquiry.inq_guideneed ? "Yes" : "No"}\n`;
@@ -1555,6 +1596,19 @@ const refillAllPrevResponses = async () => {
             rowDiv.appendChild(col8);
             rowDiv.appendChild(col4);
 
+            if (res.is_package_quoted && res.last_sent_tpkg) {
+                const pkgInfoDiv = document.createElement("div");
+                pkgInfoDiv.classList.add("mt-2", "pt-2", "border-top", "w-100", "text-muted", "small");
+
+                const pkgTitle = res.last_sent_tpkg.pkgtitle || "Unknown Title";
+                const pkgCode = res.last_sent_tpkg.pkgcode || "Unknown Code";
+
+                pkgInfoDiv.innerHTML = `<i class="bi bi-box-seam"></i> Quoted Package: <span class="fw-semibold">${pkgTitle}</span> (${pkgCode})`;
+
+                rowDiv.appendChild(pkgInfoDiv);
+            }
+
+
             // Wrap in card box
             boxDiv.appendChild(rowDiv);
             colDiv.appendChild(boxDiv);
@@ -1694,7 +1748,7 @@ const handleChildInputAvailability = () => {
 };
 
 //to mark if start date is sure ot not
-const handleStartDateStatusChange = () => {
+const handleStartDateStatusChangeOri = () => {
 
     const startDateSure = document.getElementById('startDateConfirmed');
     const startDateUncertain = document.getElementById('startDateUnconfirmed');
@@ -1718,6 +1772,32 @@ const handleStartDateStatusChange = () => {
         showAlertModal('err', 'Set a date first')
     }
 }
+
+const handleStartDateStatusChange = () => {
+    const startDateSure = document.getElementById('startDateConfirmed');
+    const startDateUncertain = document.getElementById('startDateUnconfirmed');
+    const startDateInput = document.getElementById('inqApproxStartDate');
+    const selectedDate = startDateInput.value;
+
+    if (selectedDate) {
+        // Date is selected
+        if (startDateSure.checked) {
+            inquiry.is_startdate_confirmed = true;
+            startDateInput.style.border = "2px solid lime";
+        } else if (startDateUncertain.checked) {
+            inquiry.is_startdate_confirmed = false;
+            startDateInput.style.border = "2px solid orange";
+        }
+    } else {
+        // No date selected
+        inquiry.is_startdate_confirmed = null;
+        showAlertModal('err', 'Set a date first');
+
+        startDateSure.checked = false;
+        startDateUncertain.checked = false;
+    }
+}
+
 
 //changes based on dates
 const enableDateStatusRadios = () => {

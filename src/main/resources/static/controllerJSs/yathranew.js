@@ -21,15 +21,15 @@ const refreshYathraWebSite = async (openReusableModalForCardsReadMore) => {
     packageCardsList.innerHTML = "";
     packageList.forEach(pkg => {
 
-        // Create column div
+        //  column div
         let columnDiv = document.createElement('div');
         columnDiv.className = "col-md-4 col-lg-3 mb-4";
 
-        // Create card div
+        // e card div
         let cardDiv = document.createElement('div');
         cardDiv.className = "card h-100 shadow-sm";
 
-        // Create image tag
+        // image tag
         let imageTag = document.createElement('img');
         imageTag.className = "card-img-top";
         if (pkg.img1 != null) {
@@ -39,21 +39,26 @@ const refreshYathraWebSite = async (openReusableModalForCardsReadMore) => {
         }
         imageTag.alt = 'Tour package image';
 
-        // Create card body
+        // card body
         let cardBodyDiv = document.createElement('div');
         cardBodyDiv.className = "card-body d-flex flex-column";
 
-        // Create card title
+        //  card title
         let cardTitleHeadTag = document.createElement('h5');
         cardTitleHeadTag.className = "card-title";
         cardTitleHeadTag.innerText = pkg.pkgtitle;
 
-        // Create card text (short description)
+        // card text (short description)
         let cardParagraphTag = document.createElement('p');
         cardParagraphTag.className = "card-text";
         cardParagraphTag.innerText = pkg.web_description;
 
-        // Create "Read more" button
+        //starting price per person
+        let startingPriceDiv = document.createElement('div');
+        startingPriceDiv.className = "mb-2 text-danger fw-bold fs-5";
+        startingPriceDiv.innerText = `Starting From: ${Number(pkg.pkgstartingprice).toFixed(2)}`;
+
+        //  Read more button
         let cardReadMoreButton = document.createElement('button');
         cardReadMoreButton.setAttribute('type', 'button');
         cardReadMoreButton.className = 'btn btn-primary mt-auto';
@@ -65,6 +70,7 @@ const refreshYathraWebSite = async (openReusableModalForCardsReadMore) => {
         // Append elements
         cardBodyDiv.appendChild(cardTitleHeadTag);
         cardBodyDiv.appendChild(cardParagraphTag);
+        cardBodyDiv.appendChild(startingPriceDiv);
         cardBodyDiv.appendChild(cardReadMoreButton);
 
         cardDiv.appendChild(imageTag);
@@ -271,7 +277,7 @@ const openReusableModalForCardsReadMore = (package) => {
     ForDPlansAccordions.innerHTML = "";
     pkgname.innerText = package.pkgtitle;
     pkgDescription.innerText = package.web_description;
-    pkgStartingPrice.innerHTML = `LKR ${package.pkgstartingprice}`;
+    pkgStartingPrice.innerHTML = `LKR ${Number(package.pkgstartingprice).toFixed(2)}`;
 
     //for images
     //img1 will be the cover photo...populated in js
@@ -617,6 +623,7 @@ const openModalForPkgInqs = () => {
 
 //check errors in user side form
 const checkGenInqErrors = () => {
+
     let genInqFormErrors = '';
 
     if (inquiry.clientname == null) {
@@ -639,6 +646,17 @@ const checkGenInqErrors = () => {
     }
     if (inquiry.is_startdate_confirmed == true && inquiry.inq_apprx_start_date == null) {
         genInqFormErrors += "Please enter the approximate tour start date.\n";
+    }
+
+    if (
+        inquiry.inq_adults !== null && inquiry.inq_kids !== null &&
+        inquiry.inq_adults == 0 && inquiry.inq_kids == 0
+    ) {
+        genInqFormErrors += "At least one adult or child must be included in the inquiry.\n";
+    }
+
+    if (inquiry.inq_adults == null && inquiry.inq_kids !== null) {
+        genInqFormErrors += "Please enter number of adults before specifying kids.\n";
     }
 
     return genInqFormErrors;
@@ -683,6 +701,29 @@ const handleNeedGuideCB = () => {
         inquiry.inq_guideneed = false;
     }
 }
+
+// handle trv coubt sure or not
+const handleTravellerCountOpts = () => {
+    const groupFamilyInputs = document.getElementById('groupFamilyInputs');
+    const countUnknown = document.getElementById('travellerCountUnknown');
+    const countKnown = document.getElementById('travellerCountKnown');
+
+    if (countUnknown.checked) {
+        groupFamilyInputs.classList.add('d-none');
+
+        document.getElementById('adultsCount').value = '';
+        document.getElementById('kidsCount').value = '';
+
+        adultsCount.style.border = "1px solid #ced4da";
+        kidsCount.style.border = "1px solid #ced4da";
+
+        inquiry.inq_adults = null;
+        inquiry.inq_kids = null;
+    } else if (countKnown.checked) {
+        groupFamilyInputs.classList.remove('d-none');
+    }
+}
+
 
 //handle start date     
 const handleApproxDatesOpts = () => {
