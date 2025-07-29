@@ -53,6 +53,9 @@ public class Booking {
     @Column(name = "total_paid")
     private BigDecimal total_paid;
 
+    @Column(name = "due_balance")
+    private BigDecimal due_balance;
+
     @Column(name = "booking_status")
     private String booking_status;
 

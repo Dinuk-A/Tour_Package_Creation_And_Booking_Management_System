@@ -2,12 +2,24 @@ window.addEventListener('load', () => {
 
     buildPaymentTable();
     refreshPaymentForm();
+    refreshSearchSection();
 
 })
 
 document.addEventListener("DOMContentLoaded", function () {
     controlSidebarLinks();
 });
+
+//clear out the form everytime a user switches to table tab
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
+        if (event.target.id === 'table-tab') {
+            console.log("Switching to table tab - clearing form");
+            refreshPaymentForm();
+        }
+    });
+});
+
 
 //global var to store id of the table
 let sharedTableId = "mainTablePayment";
@@ -58,17 +70,20 @@ const showRelatedBookingCode = (payObj) => {
     //booking_id.bookingcode
     if (payObj && payObj.booking_id && payObj.booking_id.bookingcode) {
         return payObj.booking_id.bookingcode;
+    } else {
+        return 'N/A';
     }
-    return '';
 }
 
 // to support the table creation
 const showClientName = (payObj) => {
-    //booking_id.tpkg.basedinq.clientname
-    if (payObj && payObj.booking_id && payObj.booking_id.tpkg && payObj.booking_id.tpkg.basedinq && payObj.booking_id.tpkg.basedinq.clientname) {
-        return payObj.booking_id.tpkg.basedinq.clientname;
+
+    if (payObj && payObj.booking_id && payObj.booking_id.client && payObj.booking_id.client && payObj.booking_id.client.fullname) {
+        return payObj.booking_id.client.fullname;
+    } else {
+        return 'N/A';
     }
-    return '';
+
 }
 
 //globally saved to use with search
@@ -78,7 +93,7 @@ let allUnpaidBookings = [];
 const refreshPaymentForm = async () => {
 
     payment = new Object();
-    document.getElementById('formPayment').reset();
+    //document.getElementById('formPayment').reset(); is hidden in search refresh fn
 
     try {
         allUnpaidBookings = await ajaxGetReq("/booking/unpaid")
@@ -99,7 +114,7 @@ const refreshPaymentForm = async () => {
         'inputPaidAmount',
         'inputPaymentMethod',
         'inputPaidDate',
-        'selectPaymentStatus',
+        //'selectPaymentStatus',
         'inputNote'
     ];
 
@@ -111,6 +126,8 @@ const refreshPaymentForm = async () => {
             field.value = '';
         }
     });
+
+
 
     // Reset the preview image for the payment slip
     const previewSlipImgEle = document.getElementById('previewSlipImg');
@@ -129,6 +146,22 @@ const refreshPaymentForm = async () => {
     paymentAddBtnEle.style.cursor = 'pointer';
 
     restrictFutureDates();
+
+}
+
+// fn to reset the search section
+const refreshSearchSection = () => {
+
+    document.getElementById('formPayment').reset();
+
+    const searchTypeSelect = document.getElementById("searchType");
+    searchTypeSelect.value = '';
+    searchTypeSelect.style.border = "1px solid #ced4da";
+
+    const searchValueInput = document.getElementById("searchValue");
+    searchValueInput.value = '';
+    searchValueInput.disabled = true;
+    searchValueInput.style.border = "1px solid #ced4da";
 
 }
 
@@ -174,7 +207,7 @@ const imgValidatorSlipPic = (fileInputID, object, imgProperty, previewId) => {
 }
 
 //clear uploaded image (not delete)
-const clearEmpImg = () => {
+const clearPayImg = () => {
 
     if (payment.trx_proof != null) {
 
@@ -193,6 +226,134 @@ const clearEmpImg = () => {
     }
 }
 
+//    let userConfirm = confirm("Are you sure to refill the form with this booking details?");
+//
+//    if (userConfirm) {
+//        fillDataByBookinId(bookingSelectEle);
+//    } else {
+//        showAlertModal("inf", "User Cancelled The Task");
+//    }
+
+//fn to handle the booking select change event
+const handleUserConfirmToRefill = (bookingSelectEle) => {
+
+    //handle if already data is filled
+    if ((payment.booking_id && payment.booking_id._id) || payment.paid_amount != null) {
+        const userConfirm = confirm("You've already started filling payment details. Changing the booking will reset those values. Do you want to continue?");
+        if (!userConfirm) {
+            showAlertModal("inf", "User Cancelled The Task");
+            return;
+        } else {
+            // Reset the payment object
+            payment.paid_amount = null;
+            paymeent.paid_date = null;
+            payment.payment_method = null;
+            payment.trx_proof = null;
+
+            // Reset the preview image for the payment slip
+            const previewSlipImgEle = document.getElementById('previewSlipImg');
+            previewSlipImgEle.src = 'images/slip.png';
+            previewSlipImgEle.style.border = "1px solid #ced4da";
+            document.getElementById('fileInputSlipPhoto').files = null;
+
+            // Reset the form fields
+            const inputTagsIds = [
+                'inputPaidAmount',
+                'inputPaidDate',
+                'inputPaymentMethod',
+            ];
+
+            inputTagsIds.forEach((fieldID) => {
+                const field = document.getElementById(fieldID);
+                if (field) {
+                    field.style.border = "1px solid #ced4da";
+                    field.value = '';
+                }
+            });
+
+            fillDataByBookinId(bookingSelectEle);
+            enableInputs();
+        }
+    } else {
+        fillDataByBookinId(bookingSelectEle);
+        enableInputs();
+    }
+}
+
+//fill booking related inputs
+const fillDataByBookinId = (bookingSelectEle) => {
+
+    const rawBookingId = bookingSelectEle.value;
+    const bookingValue = JSON.parse(rawBookingId);
+
+    console.log("Selected Booking Value: ", bookingValue);
+
+    if (bookingValue && bookingValue.id) {
+
+        document.getElementById('inputClientName').value = bookingValue.client.fullname || '';
+        document.getElementById('inputClientEmail').value = bookingValue.client.email || '';
+        document.getElementById('inputClientContact').value = bookingValue.client.contactone || '';
+        document.getElementById('inputClientPassport').value = bookingValue.client.passportnumornic || '';
+        document.getElementById('inputTotalAmount').value = bookingValue.final_price || '';
+        document.getElementById('inputBalanceAmount').value = bookingValue.due_balance || '';
+
+    } else {
+        showAlertModal("err", "Selected booking not found.");
+    }
+};
+
+// enable inputs after booking selection
+const enableInputs = () => {
+    inputPaidAmount.disabled = false;
+    inputPaymentMethod.disabled = false;
+    inputPaidDate.disabled = false;
+}
+
+// validate paid amount input (not used)
+const validatePaidAmountLimit = (inputTagId) => {
+    const value = inputTagId.value.trim();
+    if (value === "") return;
+
+    const numericValue = parseFloat(value);
+    const dueBalance = parseFloat(payment.booking_id?.due_balance || 0);
+
+    if (numericValue > dueBalance) {
+        inputTagId.style.border = "2px solid red";
+        
+        payment.paid_amount = null;
+    }
+}
+
+// validate paid amount input
+const validatePaidAmount = (inputTag) => {
+    const pattern = /^(?:[1-9][0-9]{4,})(?:\.[0-9]{1,2})?$/;
+    const min = 10000;
+    const max = payment.booking_id.due_balance;
+
+    const value = inputTag.value.trim();
+
+    if (value !== "") {
+        const num = parseFloat(value);
+
+        if (pattern.test(value) && num >= min && num <= max) {
+            inputTag.style.border = "2px solid lime";
+            payment.paid_amount = value;
+        } else {
+            inputTag.style.border = "2px solid red";
+            payment.paid_amount = null;
+            showAlertModal("err", "Paid amount cannot exceed the due balance (LKR " + max.toFixed(2) + ").");
+        }
+    } else {
+        payment.paid_amount = null;
+
+        if (inputTag.required) {
+            inputTag.style.border = "2px solid red";
+        } else {
+            inputTag.style.border = "2px solid #ced4da";
+        }
+    }
+};
+
 //check errors before submitting
 const checkPayFormErrors = () => {
 
@@ -210,11 +371,11 @@ const checkPayFormErrors = () => {
         errors += "Please select a valid paid date.\n";
     }
 
-    if (!payment.pay_status || payment.pay_status.trim() === '') {
-        errors += "Please select a valid payment status.\n";
-    }
+    //if (!payment.pay_status || payment.pay_status.trim() === '') {
+    //    errors += "Please select a valid payment status.\n";
+    //}
 
-    if (!payment.booking_id || !payment.booking_id._id) {
+    if (!payment.booking_id || !payment.booking_id.id) {
         errors += "Please select a valid booking.\n";
     }
 
@@ -232,7 +393,7 @@ const addNewPayment = async () => {
         if (userConfirm) {
             try {
                 // Await the response from the AJAX request
-                const postServerResponse = await ajaxPPDRequest("/payment", "POST", payment);
+                const postServerResponse = await ajaxPPDRequest("/paymentbyemp", "POST", payment);
 
                 if (postServerResponse === 'OK') {
                     showAlertModal('suc', 'Saved Successfully');
@@ -266,13 +427,13 @@ const openModal = (paymentObj) => {
     document.getElementById('modalPayBookingCode').innerText = paymentObj.booking_id.bookingcode || 'N/A';
 
     // Client info
-    const relatedInquiry = paymentObj.booking_id.tpkg.basedinq || {};
+    const relatedClient = paymentObj.booking_id.client || {};
 
-    if (relatedInquiry) {
-        document.getElementById('modalClientName').innerText = relatedInquiry.clientname || 'N/A';
-        document.getElementById('modalClientContact').innerText = relatedInquiry.contactnum || 'N/A';
-        document.getElementById('modalClientEmail').innerText = relatedInquiry.email || 'N/A';
-        document.getElementById('modalClientPassport').innerText = relatedInquiry.passportnumornic || 'N/A';
+    if (relatedClient) {
+        document.getElementById('modalClientName').innerText = relatedClient.fullname || 'N/A';
+        document.getElementById('modalClientContact').innerText = relatedClient.contactone || 'N/A';
+        document.getElementById('modalClientEmail').innerText = relatedClient.email || 'N/A';
+        document.getElementById('modalClientPassport').innerText = relatedClient.passportnumornic || 'N/A';
     }
 
     // Transaction Proof Image
@@ -309,15 +470,6 @@ const openModal = (paymentObj) => {
     $('#infoModalPayment').modal('show');
 };
 
-//clear out the form everytime a user switches to table tab
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('myTab').addEventListener('shown.bs.tab', function (event) {
-        if (event.target.id === 'table-tab') {
-            console.log("Switching to table tab - clearing form");
-            refreshPaymentForm();
-        }
-    });
-});
 
 
 // ***********************search related fns ***************
@@ -344,7 +496,7 @@ const searchBookings = () => {
     const value = document.getElementById("searchValue").value.trim().toLowerCase();
 
     if (!type || !value) {
-        showAlertModal("err","Please select a type and enter a value to search.");
+        showAlertModal("err", "Please select a type and enter a value to search.");
         return;
     }
 
@@ -378,5 +530,6 @@ const searchBookings = () => {
     const selectBookingEle = document.getElementById("selectBooking");
     fillDataIntoDynamicSelects(selectBookingEle, 'Select Booking', filtered, 'bookingcode');
     selectBookingEle.disabled = false;
+    selectBookingEle.style.border = "1px solid orange";
 
 }

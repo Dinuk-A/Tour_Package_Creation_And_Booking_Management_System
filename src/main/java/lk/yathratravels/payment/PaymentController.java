@@ -116,7 +116,7 @@ public class PaymentController {
             String nextPaymentCode = paymentDao.getNextPaymentCode();
 
             if (nextPaymentCode.equals(null) || nextPaymentCode.equals("")) {
-                payment.setPaymentcode("PAY000001");
+                payment.setPaymentcode("TRX000001");
             } else {
                 payment.setPaymentcode(nextPaymentCode);
             }
@@ -136,6 +136,16 @@ public class PaymentController {
     public String addPaymentByCust(@RequestBody Payment payment) {
 
         try {
+
+            // generate nextPaymentCode
+            String nextPaymentCode = paymentDao.getNextPaymentCode();
+
+            if (nextPaymentCode.equals(null) || nextPaymentCode.equals("")) {
+                payment.setPaymentcode("TRX000001");
+            } else {
+                payment.setPaymentcode(nextPaymentCode);
+            }
+
             payment.setAddeddatetime(LocalDateTime.now());
             payment.setAddeduserid(-10);
             paymentDao.save(payment);
