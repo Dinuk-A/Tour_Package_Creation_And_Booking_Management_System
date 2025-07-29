@@ -44,7 +44,6 @@ const buildPaymentTable = async () => {
 
 }
 
-
 // to support the table creation
 const showPaidAmount = (payObj) => {
 
@@ -72,6 +71,9 @@ const showClientName = (payObj) => {
     return '';
 }
 
+//globally saved to use with search
+let allUnpaidBookings = [];
+
 // refreshes the payment form
 const refreshPaymentForm = async () => {
 
@@ -79,7 +81,7 @@ const refreshPaymentForm = async () => {
     document.getElementById('formPayment').reset();
 
     try {
-        const allUnpaidBookings = await ajaxGetReq("/booking/unpaid")
+        allUnpaidBookings = await ajaxGetReq("/booking/unpaid")
         fillDataIntoDynamicSelects(selectBooking, 'Select Booking', allUnpaidBookings, 'bookingcode');
     } catch (error) {
         console.error("Failed to fetch Bookings : ", error);
@@ -271,7 +273,7 @@ const openModal = (paymentObj) => {
         document.getElementById('modalClientContact').innerText = relatedInquiry.contactnum || 'N/A';
         document.getElementById('modalClientEmail').innerText = relatedInquiry.email || 'N/A';
         document.getElementById('modalClientPassport').innerText = relatedInquiry.passportnumornic || 'N/A';
-    } 
+    }
 
     // Transaction Proof Image
     if (paymentObj.trx_proof) {
@@ -316,3 +318,65 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+
+// ***********************search related fns ***************
+const getSearchType = (searchSelectEle) => {
+
+    const searchValueEle = document.getElementById("searchValue");
+
+    if (searchSelectEle.value != null) {
+        searchSelectEle.style.border = "1px solid lime";
+        searchValueEle.disabled = false;
+    }
+    else {
+        searchSelectEle.style.border = "1px solid #ced4da";
+        searchValueEle.disabled = true;
+        searchValueEle.value = '';
+        searchValueEle.style.border = "1px solid #ced4da";
+    }
+}
+
+//fn for search button
+const searchBookings = () => {
+
+    const type = document.getElementById("searchType").value;
+    const value = document.getElementById("searchValue").value.trim().toLowerCase();
+
+    if (!type || !value) {
+        showAlertModal("err","Please select a type and enter a value to search.");
+        return;
+    }
+
+    let filtered = allUnpaidBookings.filter(booking => {
+
+        // Skip bookings without client info
+        if (!booking.client) return false;
+
+        let target = "";
+
+        switch (type) {
+            case "contact":
+                target = booking.client.contactone || "";
+                break;
+            case "email":
+                target = booking.client.email || "";
+                break;
+            case "nic":
+                target = booking.client.passportornic || "";
+                break;
+            default:
+                return false;
+        }
+
+        return target.toLowerCase().includes(value);
+
+    });
+
+    console.log("Filtered Bookings: ", filtered);
+
+    const selectBookingEle = document.getElementById("selectBooking");
+    fillDataIntoDynamicSelects(selectBookingEle, 'Select Booking', filtered, 'bookingcode');
+    selectBookingEle.disabled = false;
+
+}
