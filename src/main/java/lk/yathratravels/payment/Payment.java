@@ -32,8 +32,8 @@ public class Payment {
     @Column(name = "paymentcode")
     private String paymentcode;
 
-    @Column(name = "payingamount")
-    private BigDecimal payingamount;
+    @Column(name = "paid_amount")
+    private BigDecimal paid_amount;
 
     @Column(name = "note")
     private String note;
@@ -41,8 +41,8 @@ public class Payment {
     @Column(name = "payment_method")
     private String payment_method;
 
-    @Column(name = "payment_date")
-    private LocalDate payment_date;
+    @Column(name = "paid_date")
+    private LocalDate paid_date;
 
     // pay slip or ss
     @Column(name = "trx_proof")

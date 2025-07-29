@@ -4,6 +4,8 @@
 <head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
 
 <head>
+    <!-- link payment css -->
+    <!--<link rel="stylesheet" href="css/payment.css">-->
 
     <!-- link tpkg js -->
     <script src="controllerJSs/payment.js"></script>
@@ -75,7 +77,7 @@
                                             <!-- type -->
                                             <div class="col-md-3">
                                                 <label>Search by</label>
-                                                <select id="searchType" class="form-select">
+                                                <select id="searchType" class="form-select" onchange="getSearchType();">
                                                     <option selected disabled value="">Please Select Type</option>
                                                     <option value="contact">Contact Number</option>
                                                     <option value="email">Email</option>
@@ -111,11 +113,11 @@
 
                                             <!--  Booking ID -->
                                             <div class="col-md-3">
-                                                <label for="selectBookingCode" class="fw-bold">Booking ID <span
+                                                <label for="selectBooking" class="fw-bold">Booking ID <span
                                                         class="text-danger"> * </span>: </label>
-                                                <select id="selectBookingCode" class="form-control form-select"
+                                                <select id="selectBooking" class="form-control form-select"
                                                     onchange="dynamicSelectValidator(this , 'payment','booking_id');"
-                                                    required>
+                                                    required disabled>
                                                 </select>
                                             </div>
 
@@ -233,7 +235,7 @@
                                                     <input type="text" id="inputPaidAmount"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder="100.00"
-                                                        onkeyup="inputValidatorText(this,'','payment','payingamount')"
+                                                        onkeyup="inputValidatorText(this,'','payment','paid_amount')"
                                                         onblur="insertDecimals(this);" disabled>
                                                     <!-- ^(?!0+$)\\d+(\\.\\d{1,2})? -->
                                                 </div>
@@ -262,7 +264,8 @@
                                                 <label class="fw-bold mb-0" for="inputPaidDate">Paid Date <span
                                                         class="text-danger"> * </span>:</label>
                                                 <input type="date" disabled id="inputPaidDate"
-                                                    class="form-control form-input p-1 text-center" required  onchange="inputValidatorText(this, '^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$' ,'payment' , 'paid_date')">
+                                                    class="form-control form-input p-1 text-center" required
+                                                    onchange="inputValidatorText(this, '' ,'payment' , 'paid_date')">
                                             </div>
                                         </div>
 
@@ -278,7 +281,7 @@
 
                                                 <!-- use accepts 💥💥💥 -->
                                                 <input type="file" class="d-none" id="fileInputSlipPhoto"
-                                                    onchange="imgValidatorVehiclePic(this,'payment','vehi_photo',previewSlipImg)">
+                                                    onchange="imgValidatorSlipPic(this,'payment','trx_proof',previewSlipImg)">
 
                                             </div>
                                             <div class="col-5">
@@ -296,7 +299,7 @@
                             </fieldset>
 
                             <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Notes</legend>
+                                <legend class="float-none w-auto px-2 text-primary">Additional Information</legend>
                                 <div class="row">
 
                                     <div class="col-4">
@@ -328,7 +331,8 @@
                             <div class="row mt-3 mb-2">
 
                                 <div class="col-4">
-                                    <button id="resetPayFormBtn" type="reset" class="btn-clear fw-bold" onclick="refreshPaymentForm();">Reset
+                                    <button id="resetPayFormBtn" type="reset" class="btn-clear fw-bold"
+                                        onclick="refreshPaymentForm();">Reset
                                         Form</button>
                                 </div>
 
@@ -343,20 +347,19 @@
                         </form>
 
                     </div>
-
                 </div>
             </div>
 
         </div>
 
-        <!-- Modal to display full details of a row 💥💥 -->
-        <div class="modal fade py-5" id="infoModalVehicle" tabindex="-1" aria-labelledby="infoModalLabel"
+        <!-- Modal to display full details of a payment record -->
+        <div class="modal fade py-5" id="infoModalPayment" tabindex="-1" aria-labelledby="infoModalPaymentLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content shadow-lg rounded-4">
                     <!-- Modal Header -->
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="infoModalLabel">Yathra Vehicle Record</h5>
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="infoModalPaymentLabel">Payment Information</h5>
                         <button type="button" class="btn-close text-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
@@ -364,87 +367,96 @@
                     <!-- Modal Body -->
                     <div class="modal-body bg-light">
                         <div class="container">
+
                             <!-- Row 1 -->
                             <div class="row mb-4 align-items-start">
-                                <!-- Photo -->
+                                <!-- Proof Image -->
                                 <div class="col-md-4">
-                                    <img id="modalVehiPic" src="images/vehicle.png" alt="Vehicle"
+                                    <img id="modalPayProof" src="images/slip.png" alt="Transaction Proof"
                                         class="img-thumbnail shadow-sm"
-                                        style="width: 100%; max-width: 180px; height: auto;">
+                                        style="width: 100%; max-width: 140px; height: auto;">
                                 </div>
 
-                                <!-- Type, Name, Number Plate -->
                                 <div class="col-md-4">
-                                    <p class="fw-bold text-primary mb-0">Vehicle Type:</p>
-                                    <p id="modalVehiType" class="mb-2"></p>
-
-                                    <p class="fw-bold text-primary mb-0">Model Name:</p>
-                                    <p id="modalVehiModalName" class="mb-2"></p>
-
-                                    <p class="fw-bold text-primary mb-0">Number Plate:</p>
-                                    <p id="modalVehiNumberPlate" class="mb-2"></p>
+                                    <p class="fw-bold text-success mb-0">Payment ID:</p>
+                                    <p id="modalPayCode" class="mb-2"></p>
                                 </div>
 
-                                <!-- Cost Per KM -->
+                                <!-- Paid Amount & Date -->
                                 <div class="col-md-4">
-                                    <p class="fw-bold text-primary mb-0">Cost Per Kilometer:</p>
-                                    <p id="modalVehiCostPerKM" class="mb-2"></p>
+                                    <p class="fw-bold text-success mb-0">Amount Paid:</p>
+                                    <p id="modalPayAmount" class="mb-2"></p>
+
+                                    <p class="fw-bold text-success mb-0">Paid Date:</p>
+                                    <p id="modalPayDate" class="mb-2"></p>
+                                </div>
+
+                                <!-- Method & Booking Code -->
+                                <div class="col-md-4">
+                                    <p class="fw-bold text-success mb-0">Payment Method:</p>
+                                    <p id="modalPayMethod" class="mb-2"></p>
+
+                                    <p class="fw-bold text-success mb-0">Booking Code:</p>
+                                    <p id="modalPayBookingCode" class="mb-2"></p>
                                 </div>
                             </div>
 
-                            <!-- Row 2 -->
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <p class="fw-bold text-primary mb-0">Passenger Seat Count:</p>
-                                    <p id="modalVehiPassengerSeatCount" class="mb-2"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold text-primary mb-0">Max Luggage Capacity:</p>
-                                    <p id="modalVehiLuggageCapacity" class="mb-2"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold text-primary mb-0">Last Service Date:</p>
-                                    <p id="modalVehiLSDate" class="mb-2"></p>
-                                </div>
-                            </div>
-
-                            <!-- Row 3 -->
+                            <!-- Row 2: Status & Note -->
                             <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <p class="fw-bold text-primary mb-0">Vehicle Status:</p>
-                                    <p id="modalVehiStatus" class="mb-2"></p>
+                                <div class="col-md-6">
+                                    <p class="fw-bold text-success mb-0">Payment Status:</p>
+                                    <p id="modalPayStatus" class="mb-2"></p>
                                 </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold text-primary mb-0">Additional Information:</p>
-                                    <p id="modalVehiNote" class="mb-2"></p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p class="fw-bold text-danger mb-0 d-none" id="modalVehiIfDeleted"></p>
+                                <div class="col-md-6">
+                                    <p class="fw-bold text-success mb-0">Internal Note:</p>
+                                    <p id="modalPayNote" class="mb-2"></p>
                                 </div>
                             </div>
+
+                            <!-- Row 3: Client Info -->
+                            <fieldset class="border rounded-3 p-3 mb-3">
+                                <legend class="float-none w-auto px-2 fs-6 text-success">Client Information</legend>
+                                <div class="row mb-2">
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold mb-0">Client Name:</label>
+                                        <p id="modalClientName" class="mb-1"></p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold mb-0">Contact No:</label>
+                                        <p id="modalClientContact" class="mb-1"></p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold mb-0">Email Address:</label>
+                                        <p id="modalClientEmail" class="mb-1"></p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold mb-0">Passport No:</label>
+                                        <p id="modalClientPassport" class="mb-1"></p>
+                                    </div>
+                                </div>
+                            </fieldset>
+
                         </div>
                     </div>
 
-
-
                     <!-- Modal Footer -->
                     <div class="modal-footer d-flex justify-content-between bg-light">
-                        <button class="btn-print fw-bold" onclick="printVehicleRecord()">
-                            Print Record
+                        <button class="btn-print fw-bold" onclick="printPaymentRecord()">
+                            Print Payment
                         </button>
                         <div>
-                            <button id="modalVehiEditBtn" class="btn-edit me-2 fw-bold"
-                                onclick="refillVehicleForm(window['currentObject'])">
+                            <!--<button id="modalPayEditBtn" class="btn-edit me-2 fw-bold"
+                                onclick="refillPaymentForm(window['currentPayment'])">
                                 Edit Entry
-                            </button>
-                            <button id="modalVehiDeleteBtn" class="btn-delete fw-bold"
-                                onclick="deleteVehicleRecord(window['currentObject'])">
+                            </button>-->
+                            <!--<button id="modalPayDeleteBtn" class="btn-delete fw-bold"
+                                onclick="deletePaymentRecord(window['currentPayment'])">
                                 Delete Entry
                             </button>
-                            <button id="modalVehiRecoverBtn" class="btn-restore d-none fw-bold"
-                                onclick="restoreVehicleRecord()">
+                            <button id="modalPayRecoverBtn" class="btn-restore d-none fw-bold"
+                                onclick="restorePaymentRecord()">
                                 Restore Entry
-                            </button>
+                            </button>-->
                         </div>
                     </div>
                 </div>

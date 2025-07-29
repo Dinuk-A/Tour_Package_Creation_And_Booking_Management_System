@@ -35,7 +35,7 @@ const buildEmployeeTable = async () => {
             searching: false, // Remove the search bar
             info: false, // Show entries count
             pageLength: 10, // Number of rows per page
-            ordering: false  ,// Remove up and down arrows
+            ordering: false,// Remove up and down arrows
             lengthChange: false // Disable ability to change the number of rows
             // dom: 't', // Just show the table (t) with no other controls
         });
@@ -185,9 +185,10 @@ const restrictBirthDays = () => {
 
 //set the status as auto every time when a new form is opened
 const setEmpStatusAuto = () => {
-    document.getElementById('selectEmployeementStatus').value = 'Working';
-    document.getElementById('selectEmployeementStatus').style.border = '2px solid lime';
-    document.getElementById('selectEmployeementStatus').children[2].setAttribute('class', 'd-none');
+    const selectEmployeementStatusEle = document.getElementById('selectEmployeementStatus');
+    selectEmployeementStatusEle.value = 'Working';
+    selectEmployeementStatusEle.style.border = '2px solid lime';
+    selectEmployeementStatusEle.children[2].setAttribute('class', 'd-none');
     employee.emp_status = 'Working';
 }
 

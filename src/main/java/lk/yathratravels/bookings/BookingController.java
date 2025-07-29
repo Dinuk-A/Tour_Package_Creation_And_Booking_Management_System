@@ -91,6 +91,21 @@ public class BookingController {
         return bookingDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
+    // get unpaid new bookings (where is_full_payment_complete is false or null)
+    @GetMapping(value = "/booking/unpaid", produces = "application/json")
+    public List<Booking> getUnpaidBookings() {
+        
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//
+//        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "BOOKING");
+//
+//        if (!privilegeLevelForLoggedUser.getPrvselect()) {
+//            return new ArrayList<>();
+//        }
+
+        return bookingDao.getUnpaidNewBookings();
+    }
+
     // update a booking (assign vehicles, personnel, etc)
     @PutMapping(value = "/booking")
     @Transactional

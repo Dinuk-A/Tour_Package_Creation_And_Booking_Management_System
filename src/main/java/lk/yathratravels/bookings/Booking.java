@@ -56,6 +56,9 @@ public class Booking {
     @Column(name = "booking_status")
     private String booking_status;
 
+    @Column(name = "is_full_payment_complete")
+    private Boolean is_full_payment_complete;
+
     @ManyToOne
     @JoinColumn(name = "client", referencedColumnName = "id")
     private Client client;
