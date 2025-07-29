@@ -63,41 +63,77 @@
 
                             <!-- Basic Info -->
                             <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Basic Information</legend>
+                                <legend class="float-none w-auto px-2 text-primary">Booking Information</legend>
 
                                 <div class="row">
 
                                     <div class="col-md-12">
-                                        <div class="row mb-2">
 
-                                            <div class="col-md-3">
-                                                <label for="inputPaymentCode" class="fw-bold form-label mb-0">Payment
-                                                    Code <span><small class="text-info">(This will be generated
-                                                            automatically)</small></span>
-                                                    :</label>
-                                                <input id="inputPaymentCode" type="text"
-                                                    class="test form-control form-input" disabled>
-                                            </div>
+                                        <!-- Filter Fields -->
+                                        <div class="row mb-3">
 
+                                            <!-- type -->
                                             <div class="col-md-3">
-                                                <label for="selectBookingCode" class="fw-bold">Booking Code <span
-                                                        class="text-danger"> * </span>: </label>
-                                                <select id="selectBookingCode" class="form-control form-select"
-                                                    onchange="dynamicSelectValidator(this , 'payment','bookingcode_id')"
-                                                    required>
+                                                <label>Search by</label>
+                                                <select id="searchType" class="form-select">
+                                                    <option selected disabled value="">Please Select Type</option>
+                                                    <option value="contact">Contact Number</option>
+                                                    <option value="email">Email</option>
+                                                    <option value="nic">NIC/Passport</option>
                                                 </select>
                                             </div>
 
-                                            <div class="col-md-6">
-                                                <label for="selectBookedPackage" class="fw-bold">Booked Package <span
-                                                        class="text-danger"> * </span>: </label>
-                                                <select id="selectBookedPackage" class="form-control form-select">
-                                                </select>
+                                            <!-- value -->
+                                            <div class="col-md-5">
+                                                <label>Value</label>
+                                                <input type="text" id="searchValue" class="form-control"
+                                                    placeholder="Enter contact/email/NIC/Passport">
+                                            </div>
+
+                                            <!-- button -->
+                                            <div class="col-md-4 d-flex align-items-end">
+                                                <button id="searchBookingsBtn" class="btn btn-primary w-100"
+                                                    onclick="searchBookings();">Search
+                                                    Bookings</button>
                                             </div>
                                         </div>
 
                                         <div class="row mb-2">
-                                            <div class="col-6">
+
+                                            <!-- payment code -->
+                                            <!--<div class="col-md-3" id="payCodeDiv">
+                                                <label for="inputPaymentCode" class="fw-bold form-label mb-0">Payment
+                                                    Code <span><small class="text-info">(auto-generated)</small></span>
+                                                    :</label>
+                                                <input id="inputPaymentCode" type="text"
+                                                    class="test form-control form-input" disabled>
+                                            </div>-->
+
+                                            <!--  Booking ID -->
+                                            <div class="col-md-3">
+                                                <label for="selectBookingCode" class="fw-bold">Booking ID <span
+                                                        class="text-danger"> * </span>: </label>
+                                                <select id="selectBookingCode" class="form-control form-select"
+                                                    onchange="dynamicSelectValidator(this , 'payment','booking_id');"
+                                                    required>
+                                                </select>
+                                            </div>
+
+                                            <!-- Booked Package -->
+                                            <div class="col-md-9">
+                                                <label for="selectBookedPackage" class="fw-bold">Booked Package <span
+                                                        class="text-danger"> * </span>: </label>
+                                                <select disabled id="selectBookedPackage"
+                                                    class="form-control form-select">
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- client info -->
+                                        <div class="row mb-2">
+
+                                            <!-- name -->
+                                            <div class="col-5">
                                                 <label for="inputClientName" class="fw-bold form-label mb-0"> Client
                                                     Name <span class="text-danger"> * </span>
                                                     :</label>
@@ -105,12 +141,37 @@
                                                     disabled>
                                             </div>
 
-                                            <div class="col-6">
+                                            <!-- email -->
+                                            <div class="col-4">
+                                                <label for="inputClientEmail" class="fw-bold form-label mb-0">
+                                                    Client Email <span class="text-danger"> * </span>:
+                                                </label>
+                                                <input id="inputClientEmail" type="text" class="form-control form-input"
+                                                    disabled>
+                                            </div>
+
+                                            <!-- contact -->
+                                            <div class="col-3">
                                                 <label class="fw-bold  mb-0" for="inputClientContact">Client Contact
                                                     <span class="text-danger"> * </span>:</label>
                                                 <input id="inputClientContact" type="text"
                                                     class="form-control form-input" disabled>
                                             </div>
+
+                                        </div>
+
+                                        <!-- Client Info Row 2 -->
+                                        <div class="row mb-1">
+
+                                            <!-- Client Passport -->
+                                            <div class="col-6">
+                                                <label for="inputClientPassport" class="fw-bold form-label mb-0">
+                                                    Client Passport/NIC Number <span class="text-danger"> * </span>:
+                                                </label>
+                                                <input id="inputClientPassport" type="text"
+                                                    class="form-control form-input" disabled>
+                                            </div>
+
                                         </div>
 
                                     </div>
@@ -126,52 +187,12 @@
                                     <!-- payment inputs -->
                                     <div class="col-md-8">
 
-                                        <div class="row mb-2">
-
-                                            <!-- paid amount -->
-                                            <div class="col-md-4">
-                                                <label class="fw-bold  mb-0" for="inputPaidAmount">Paid Amount <span
-                                                        class="text-danger"> * </span>:</label>
-
-                                                <div class="input-group">
-                                                    <span class="input-group-text p-1 pb-0">
-                                                        <h6 class="my-auto">LKR</h6>
-                                                    </span>
-                                                    <input type="text" id="inputPaidAmount"
-                                                        class="form-control form-input w-85 p-1 text-center"
-                                                        placeholder="100.00"
-                                                        onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','payment','paidamount')"
-                                                        onblur="insertDecimals(this);">
-                                                </div>
-                                            </div>
-
-                                            <!-- date -->
-                                            <div class="col-md-3">
-                                                <label class="fw-bold mb-0" for="inputPaidDate">Paid Date <span class="text-danger"> * </span>:</label>
-                                                <input type="date" id="inputPaidDate" class="form-control form-input p-1 text-center" required>
-                                            </div>                                            
-
-                                            <!-- payment method -->
-                                            <div class="col-md-5">
-                                                <label class="fw-bold mb-0" for="inputPaymentMethod">Payment Method <span class="text-danger"> * </span>:</label>
-                                                <select id="inputPaymentMethod" class="form-select form-input p-1 text-center" required>
-                                                    <option value="" disabled selected>Select Method</option>
-                                                    <option value="Cash">Cash</option>
-                                                    <option value="Bank Transfer">Bank Transfer</option>
-                                                    <option value="Card">Card</option>
-                                                    <option value="Online">Online</option>
-                                                </select>
-                                            </div>
-                                            
-
-                                        </div>
-
-                                        <!-- other auto calc amounts -->
+                                        <!-- auto calc amounts -->
                                         <div class="row mb-2">
 
                                             <div class="col-5">
-                                                <label class="fw-bold  mb-0" for="inputTotalAmount">Total Amount <span
-                                                        class="text-danger"> * </span>:</label>
+                                                <label class="fw-bold  mb-0" for="inputTotalAmount">Package Total Amount
+                                                    <span class="text-danger"> * </span>:</label>
 
                                                 <div class="input-group">
                                                     <span class="input-group-text p-1 pb-0">
@@ -183,7 +204,7 @@
                                             </div>
 
                                             <div class="col-5">
-                                                <label class="fw-bold  mb-0" for="inputBalanceAmount">Balance Amount
+                                                <label class="fw-bold  mb-0" for="inputBalanceAmount">Remaining Balance
                                                     <span class="text-danger"> * </span>:</label>
 
                                                 <div class="input-group">
@@ -195,6 +216,54 @@
                                                 </div>
                                             </div>
 
+                                        </div>
+
+                                        <!-- current payment inputs row 1-->
+                                        <div class="row mb-2">
+
+                                            <!-- paid amount -->
+                                            <div class="col-md-6">
+                                                <label class="fw-bold  mb-0" for="inputPaidAmount">Paid Amount <span
+                                                        class="text-danger"> * </span>:</label>
+
+                                                <div class="input-group">
+                                                    <span class="input-group-text p-1 pb-0">
+                                                        <h6 class="my-auto">LKR</h6>
+                                                    </span>
+                                                    <input type="text" id="inputPaidAmount"
+                                                        class="form-control form-input w-85 p-1 text-center"
+                                                        placeholder="100.00"
+                                                        onkeyup="inputValidatorText(this,'','payment','payingamount')"
+                                                        onblur="insertDecimals(this);" disabled>
+                                                    <!-- ^(?!0+$)\\d+(\\.\\d{1,2})? -->
+                                                </div>
+                                            </div>
+
+                                            <!-- payment method -->
+                                            <div class="col-md-4">
+                                                <label class="fw-bold mb-0" for="inputPaymentMethod">Payment Method
+                                                    <span class="text-danger"> * </span>:</label>
+                                                <select disabled id="inputPaymentMethod"
+                                                    class="form-select form-input p-1 text-center" required
+                                                    onchange="staticSelectValidator(this , 'payment' , 'payment_method')">
+                                                    <option value="" disabled selected>Select Method</option>
+                                                    <option value="Cash">Cash</option>
+                                                    <option value="Bank Transfer">Bank Transfer</option>
+                                                    <option value="Card">Card</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- current payment inputs row 2-->
+                                        <div class="row mb-2">
+                                            <!-- paid date -->
+                                            <div class="col-md-3">
+                                                <label class="fw-bold mb-0" for="inputPaidDate">Paid Date <span
+                                                        class="text-danger"> * </span>:</label>
+                                                <input type="date" disabled id="inputPaidDate"
+                                                    class="form-control form-input p-1 text-center" required  onchange="inputValidatorText(this, '^[0-9]{4}[-][0-9]{2}[-][0-9]{2}$' ,'payment' , 'paid_date')">
+                                            </div>
                                         </div>
 
                                     </div>
@@ -227,26 +296,23 @@
                             </fieldset>
 
                             <fieldset class="border border-dark p-4 mb-4 bg-light">
-                                <legend class="float-none w-auto px-2 text-primary">Status & Note</legend>
+                                <legend class="float-none w-auto px-2 text-primary">Notes</legend>
                                 <div class="row">
 
-                                    <div class="col-6">
-                                        <div class="row mb-1">
-                                            <div class="col-12">
-                                                <label for="selectPaymentStatus" class="fw-bold form-label mb-0">
-                                                    Status <span class="text-danger"> * </span>
-                                                    :</label>
+                                    <div class="col-4">
+                                        <label for="selectPaymentStatus" class="fw-bold form-label mb-0">
+                                            Status <span class="text-danger"> * </span>
+                                            :</label>
 
-                                                <select id="selectPaymentStatus" class="form-control form-select"
-                                                    required
-                                                    onchange="staticSelectValidator(this , 'payment' , 'payment_status')">
-                                                    <option value="" selected disabled>Please Select Status </option>
-                                                    <option value="ifDeleted" class="d-none"> Deleted </option>
-                                                </select>
-                                            </div>
-                                        </div>
-
+                                        <select id="selectPaymentStatus" class="form-control form-select" required
+                                            onchange="staticSelectValidator(this , 'payment' , 'pay_status')">
+                                            <option value="" selected disabled>Please Select Status </option>
+                                            <option value="verified"> Verified </option>
+                                            <option value="refunded" class="d-none"> Refunded </option>
+                                        </select>
                                     </div>
+
+                                    <div class="col-2"></div>
 
                                     <div class="col-6">
                                         <label for="inputNote" class="fw-bold">Additional Information</label>
@@ -255,16 +321,14 @@
                                             onkeyup="inputValidatorText(this,'','payment','note')"></textarea>
                                     </div>
 
-
                                 </div>
                             </fieldset>
-
 
                             <!-- Form Buttons -->
                             <div class="row mt-3 mb-2">
 
                                 <div class="col-4">
-                                    <button type="reset" class="btn-clear fw-bold" onclick="refreshPaymentForm();">Reset
+                                    <button id="resetPayFormBtn" type="reset" class="btn-clear fw-bold" onclick="refreshPaymentForm();">Reset
                                         Form</button>
                                 </div>
 
@@ -285,7 +349,7 @@
 
         </div>
 
-        <!-- Modal to display full details of a row -->
+        <!-- Modal to display full details of a row 💥💥 -->
         <div class="modal fade py-5" id="infoModalVehicle" tabindex="-1" aria-labelledby="infoModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -389,5 +453,6 @@
 
     </main>
 </body>
+
 
 </html>

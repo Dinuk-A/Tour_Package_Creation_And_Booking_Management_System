@@ -1,6 +1,7 @@
 package lk.yathratravels.payment;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
@@ -37,15 +38,15 @@ public class Payment {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "payment_method")
+    private String payment_method;
+
+    @Column(name = "payment_date")
+    private LocalDate payment_date;
+
     // pay slip or ss
     @Column(name = "trx_proof")
-    private byte[] trx_proof;
-
-    @Column(name = "addeddatetime")
-    private LocalDateTime addeddatetime;
-
-    @Column(name = "addeduserid")
-    private Integer addeduserid;
+    private byte[] trx_proof; 
 
     @Column(name = "pay_status")
     private String pay_status;
@@ -54,6 +55,12 @@ public class Payment {
     @ManyToOne
     @JoinColumn(name = "booking_id", referencedColumnName = "id")
     private Booking booking_id;
+
+    @Column(name = "addeddatetime")
+    private LocalDateTime addeddatetime;
+
+    @Column(name = "addeduserid")
+    private Integer addeduserid;
 
 }
 
