@@ -2,6 +2,8 @@ window.addEventListener('load', () => {
 
     buildBookingTable();
     refreshBookingForm();
+    fetchCustomTpkgs();
+    fetchConfirmedInquiries();
 
 });
 
@@ -9,8 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
     controlSidebarLinks();
 });
 
+
+
 //global vars
 let vehiTypes = [];
+let allTpkgs = [];
+let allInquiries = [];
 
 //main refresh fn
 const refreshBookingForm = async () => {
@@ -45,7 +51,7 @@ const refreshBookingForm = async () => {
         'inputPackagePrice',
         'inputAdvancementAmount',
         'inputTotalPaidAmount',
-        'inputBalance',
+        'inputDueBalance',
         'bookingStartDate',
         'bookingEndDate',
     ];
@@ -100,6 +106,25 @@ const refreshBookingForm = async () => {
     //document.getElementById('assignedDrivers').innerHTML = '';
     //document.getElementById('assignedGuides').innerHTML = '';
 
+}
+
+//fetch all custom tpkgs
+const fetchCustomTpkgs = async () => {
+
+    try {
+        allTpkgs = await ajaxGetReq("/tpkg/custom/completed");
+    } catch (error) {
+        console.error("Failed to fetch custom tpkgs:", error);
+    }
+}
+
+//fetch all confirmed inquiries
+const fetchConfirmedInquiries = async () => {
+    try {
+        allInquiries = await ajaxGetReq("/inq/confirmed");
+    } catch (error) {
+        console.error("Failed to fetch confirmed inqs:", error);
+    }
 }
 
 //global var to store id of the table
@@ -217,23 +242,27 @@ const openModal = async (bookingObj) => {
     console.log("bookingObj ", bookingObj);
 
     document.getElementById('inputBookingCode').value = booking.bookingcode || '';
-/**
- * selectBookedPackage
- * selectBasedInquiry
- * inputClientName
- * inputClientPassport
- * inputClientEmail
- * inputClientContact
- * inputClientContact2
- * inputPackagePrice
- * inputAdvancementAmount
- * inputTotalPaidAmount
- * inputBalance
- * bookingStartDate
- * bookingEndDate
- * selectBookingStatus
- * inputNote
- */
+    document.getElementById('bookingStartDate').value = booking.startdate || '';
+    document.getElementById('bookingEndDate').value = booking.enddate || '';
+    document.getElementById('inputClientName').value = booking.client ? booking.client.fullname : '';
+    document.getElementById('inputClientPassport').value = booking.client ? booking.client.passportornic : '';
+    document.getElementById('inputClientEmail').value = booking.client ? booking.client.email : '';
+    document.getElementById('inputClientContact').value = booking.client ? booking.client.contactone : '';
+    document.getElementById('inputClientContact2').value = booking.client ? booking.client.contacttwo : '';
+    document.getElementById('inputPackagePrice').value = booking.final_price != null ? booking.final_price.toFixed(2) : '';
+    document.getElementById('inputAdvancementAmount').value = booking.advancement_amount != null ? booking.advancement_amount.toFixed(2) : '';
+    document.getElementById('inputTotalPaidAmount').value = booking.total_paid != null ? booking.total_paid.toFixed(2) : '';
+    document.getElementById('inputDueBalance').value = booking.due_balance != null ? booking.due_balance.toFixed(2) : '';
+    document.getElementById('inputNote').value = booking.note || '';
+    document.getElementById('selectBookingStatus').value = booking.booking_status || '';
+    document.getElementById('selectPaymentStatus').value = booking.payment_status || '';
+
+    fillDataIntoDynamicSelects(selectBookedPackage, 'Please Select Package', allTpkgs, 'pkgcode', booking.tpkg.pkgcode);
+    fillDataIntoDynamicSelects(selectBasedInquiry, 'Please Select Inquiry', allInquiries, 'inqcode', booking.tpkg.basedinq.inqcode);
+
+    //to get available resources
+    const tourStartDate = booking.startdate;
+    const tourEndDate = booking.enddate;
 
     //fill available drivers
     try {
@@ -251,7 +280,7 @@ const openModal = async (bookingObj) => {
         console.error("Error fetching available guides:", error);
     }
 
-     //fill available vehis
+    //fill available vehis
     try {
         const availableVehiclesByDates = await ajaxGetReq("vehi/availablevehiclesbydatesonly/" + tourStartDate + "/" + tourEndDate);
         fillMultDataIntoDynamicSelectsRefillById(availableVehicles, "Please Choose A Vehicle", availableVehiclesByDates, 'numberplate', 'vehiclename');

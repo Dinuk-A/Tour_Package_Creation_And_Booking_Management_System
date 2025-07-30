@@ -255,14 +255,14 @@
                                                     </div>
 
                                                     <div class="col-3">
-                                                        <label class="fw-bold  mb-0" for="inputBalance">Balance <span
+                                                        <label class="fw-bold  mb-0" for="inputDueBalance">Balance <span
                                                                 class="text-danger"> * </span>:</label>
 
                                                         <div class="input-group">
                                                             <span class="input-group-text p-1 pb-0">
                                                                 <h6 class="my-auto">LKR</h6>
                                                             </span>
-                                                            <input type="text" id="inputBalance"
+                                                            <input type="text" id="inputDueBalance"
                                                                 class="form-control form-input w-85 p-1 text-center"
                                                                 disabled
                                                                 onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','booking','balance')"
@@ -813,6 +813,7 @@
                                         <div class="row">
 
                                             <div class="col-6">
+
                                                 <div class="row mb-1">
                                                     <div class="col-12">
                                                         <label for="selectBookingStatus"
@@ -821,7 +822,7 @@
                                                             :</label>
 
                                                         <select id="selectBookingStatus"
-                                                            class="form-control form-select" required
+                                                            class="form-control form-select" 
                                                             onchange="staticSelectValidator(this , 'booking' , 'booking_status')">
                                                             <option value="" selected disabled>Please Select Status
                                                             </option>
@@ -835,6 +836,24 @@
                                                         </select>
                                                     </div>
                                                 </div>
+
+                                                <div class="row mb-1">
+                                                    <div class="col-12">
+                                                        <label for="selectPaymentStatus" class="fw-bold form-label mb-0">
+                                                            Payment Status <span class="text-danger"> * </span> :
+                                                        </label>
+                                                
+                                                        <select id="selectPaymentStatus"
+                                                                class="form-control form-select" 
+                                                                onchange="staticSelectValidator(this, 'booking', 'payment_status')">
+                                                            <option value="" selected disabled>Please Select Payment Status</option>
+                                                            <option value="Payment_Pending">Payment Pending</option>
+                                                            <option value="Partially_Paid">Partially Paid</option>
+                                                            <option value="Advance_Paid">Advance Paid</option>
+                                                            <option value="Fully_Paid">Fully Paid</option>
+                                                        </select>
+                                                    </div>
+                                                </div>                                                
 
                                             </div>
 

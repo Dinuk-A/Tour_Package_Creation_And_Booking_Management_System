@@ -122,6 +122,12 @@ public class InqController {
         return inqDao.getOnlyActiveInqs();
     }
 
+    // get only the confirmed ones
+    @GetMapping(value = "/inq/confirmed", produces = "application/json")
+    public List<Inq> getOnlyConfirmedInquiries() {
+        return inqDao.getOnlyConfirmedInqs();
+    }
+
     // inqs from website
     @PostMapping(value = "/inquiryfromweb")
     public String saveInqFromWeb(@RequestBody Inq inq) {

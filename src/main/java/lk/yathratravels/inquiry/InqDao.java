@@ -16,11 +16,15 @@ public interface InqDao extends JpaRepository<Inq, Integer> {
     public List<Inq> returnPersonalInqsByEmpId(Integer empid);
 
     // get only active inqs
-    @Query(value = "SELECT * from newyathra.inquiry as inq where inq.inq_status not in ('Closed', 'Dropped','Deleted','Success')", nativeQuery = true)
+    @Query(value = "SELECT * FROM newyathra.inquiry AS inq WHERE inq.inq_status NOT IN ('Confirmed', 'Closed') AND (inq.deleted_inq IS NULL OR inq.deleted_inq = false)", nativeQuery = true)
     public List<Inq> getOnlyActiveInqs();
+
+    // get only confirmed inqs
+    @Query(value = "SELECT * FROM newyathra.inquiry AS inq WHERE inq.inq_status = 'Confirmed' AND (inq.deleted_inq IS NULL OR inq.deleted_inq = false)", nativeQuery = true)
+    public List<Inq> getOnlyConfirmedInqs();
 
     // get only active inqs + by emp id
     @Query(value = "SELECT * from newyathra.inquiry as inq where inq.inq_status in ('Working') and inq.assigned_empid=?1", nativeQuery = true)
     public List<Inq> getOnlyWorkingInqsByAssignedEmp(Integer empId);
-    
+
 }
