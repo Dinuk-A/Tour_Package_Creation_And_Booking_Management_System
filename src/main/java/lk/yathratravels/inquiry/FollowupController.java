@@ -1,6 +1,7 @@
 package lk.yathratravels.inquiry;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import lk.yathratravels.client.ClientDao;
 import lk.yathratravels.client.ClientService;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.tpkg.PriceModsDao;
 import lk.yathratravels.tpkg.TourPkg;
 import lk.yathratravels.user.UserDao;
 
@@ -56,6 +58,9 @@ public class FollowupController {
 
     @Autowired
     private BookingDao bookingDao;
+
+    @Autowired
+    private PriceModsDao priceModsDao;
 
     // get all followups
     @GetMapping(value = "/followup/all", produces = "application/json")
@@ -241,11 +246,17 @@ public class FollowupController {
                 newBooking.setFinal_price(lastSentPkg.getPkgfinalprice());
                 newBooking.setTotal_paid(BigDecimal.valueOf(0.00));
 
-                //due balance is also equal to initial total price when adding as a new
+                // due balance is also equal to initial total price when adding as a new
                 newBooking.setDue_balance(lastSentPkg.getPkgfinalprice());
 
-                //calculate advancement based on price config's profit
-                
+                // calculate advancement based on price config's profit
+                BigDecimal profitMargin = priceModsDao.getCompanyProfitMargin();
+                if (profitMargin == null) {
+                    profitMargin = BigDecimal.ZERO;
+                }
+                BigDecimal advanceAmount = lastSentPkg.getPkgfinalprice().multiply(profitMargin).setScale(2,
+                        RoundingMode.HALF_UP);
+                newBooking.setAdvancement_amount(advanceAmount);
 
                 // statuses
                 newBooking.setBooking_status("New");
@@ -263,16 +274,6 @@ public class FollowupController {
 
                 bookingDao.save(newBooking);
 
-                // if (lastSentPkg != null) {
-                // newBooking.setTpkg(lastSentPkg);
-                // } else {
-                // System.out.println("No quoted tour package found for inquiry ID: " +
-                // mainInquiry.getId());
-                // }
-
-                // newBooking.setFinal_price(lastSentPkg != null ?
-                // lastSentPkg.getPkgfinalprice() : 0.0);
-
             }
 
             return "OK";
@@ -283,4 +284,13 @@ public class FollowupController {
 
     }
 
+    // if (lastSentPkg != null) {
+    // newBooking.setTpkg(lastSentPkg);
+    // } else {
+    // System.out.println("No quoted tour package found for inquiry ID: " +
+    // mainInquiry.getId());
+    // }
+
+    // newBooking.setFinal_price(lastSentPkg != null ?
+    // lastSentPkg.getPkgfinalprice() : 0.0);
 }

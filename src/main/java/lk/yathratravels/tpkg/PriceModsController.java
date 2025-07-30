@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -73,17 +74,22 @@ public class PriceModsController {
     // Get latest price modifier ✅✅✅
     @GetMapping(value = "/pricemods/all", produces = "application/json")
     public PriceMods getLatestPriceModifier() {
-
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        // Privilege privilegeLevelForLoggedUser =
-        // privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
-        //
-        // if (!privilegeLevelForLoggedUser.getPrvselect()) {
-        // return null;
-        // }
-
         return priceModsDao.findLatestEntry();
     }
+
+    // Get proft value only
+    @GetMapping(value = "/pricemods/profitmargin", produces = "application/json")
+    public BigDecimal getCompanyProfitMarginOnly() {
+        return priceModsDao.getCompanyProfitMargin();
+    }
+
+    // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    // Privilege privilegeLevelForLoggedUser =
+    // privilegeService.getPrivileges(auth.getName(), "PRICE_MODIFIERS");
+    //
+    // if (!privilegeLevelForLoggedUser.getPrvselect()) {
+    // return null;
+    // }
 
     // Get all price modifiers 💥💥💥not used
     @GetMapping(value = "/pricemods/all/original", produces = "application/json")
