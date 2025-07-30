@@ -2575,9 +2575,9 @@ const refillDayPlanForm = async (dpObj) => {
 
 }
 
-// Check if visiting places have changed
+// check if visiting places have changed
 const vplacesChanged = () => {
-    // If the length of visiting places is different, return true
+    // if the length of vplaces is different, return true directly
     if (dayplan.vplaces.length !== oldDayplan.vplaces.length) {
         return true;
     }

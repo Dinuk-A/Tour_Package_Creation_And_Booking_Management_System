@@ -14,6 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
 //global vars
 let vehiTypes = [];
 let allTpkgs = [];
+let availableVehiclesByDates = [];
+let availabledriversByDates = [];
+let availableGuidesByDates = [];
 //let allInquiries = [];
 
 //main refresh fn
@@ -265,7 +268,7 @@ const openModal = async (bookingObj) => {
     //fill available vehis
     internalVehicleRB.checked = true;
     try {
-        const availableVehiclesByDates = await ajaxGetReq("vehi/availablevehiclesbydatesonly/" + tourStartDate + "/" + tourEndDate);
+        availableVehiclesByDates = await ajaxGetReq("vehi/availablevehiclesbydatesonly/" + tourStartDate + "/" + tourEndDate);
         fillMultDataIntoDynamicSelectsRefillById(availableVehicles, "Please Choose A Vehicle", availableVehiclesByDates, 'numberplate', 'vehiclename');
     } catch (error) {
         console.error("Error fetching available vehicles:", error);
@@ -274,7 +277,7 @@ const openModal = async (bookingObj) => {
     //fill available drivers
     internalDriverRB.checked = true;
     try {
-        const availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + tourStartDate + "/" + tourEndDate);
+        availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + tourStartDate + "/" + tourEndDate);
         fillMultDataIntoDynamicSelectsRefillById(availableDrivers, "Please Choose A Driver", availabledriversByDates, 'emp_code', 'fullname');
     } catch (error) {
         console.error("Error fetching available drivers:", error);
@@ -283,7 +286,7 @@ const openModal = async (bookingObj) => {
     //fill available guides
     internalGuideRB.checked = true;
     try {
-        const availableGuidesByDates = await ajaxGetReq("emp/availableguidesbydates/" + tourStartDate + "/" + tourEndDate);
+        availableGuidesByDates = await ajaxGetReq("emp/availableguidesbydates/" + tourStartDate + "/" + tourEndDate);
         fillMultDataIntoDynamicSelectsRefillById(availableGuides, "Please Choose A Driver", availableGuidesByDates, 'emp_code', 'fullname');
     } catch (error) {
         console.error("Error fetching available guides:", error);
@@ -345,7 +348,7 @@ const openModal = async (bookingObj) => {
         renderAssignedInternalGuides();
     }
 
-     //booking.externalPersonnels(guides)
+    //booking.externalPersonnels(guides)
     if (
         booking.externalPersonnels &&
         booking.externalPersonnels.some(person => person.role === "Guide")
@@ -362,25 +365,80 @@ const openModal = async (bookingObj) => {
 
 }
 
+// check differences before updating
+const showBookingValueChanges = () => {
+
+    let updates = "";
+
+    if (booking.startdate !== oldBooking.startdate) {
+        updates += `Tour Start Date changed from ${oldBooking.startdate} to ${booking.startdate}\n`;
+    }
+
+    if (intVehiclesChanged()) {
+        updates += `Assigned internal vehicles have been updated\n`;
+    }
+
+    if (externalVehiclesChanged()) {
+        updates += "Assigned external vehicles have been updated\n";
+    }
+
+    if (intDriversChanged()) {
+        updates += `Assigned internal drivers have been updated\n`;
+    }
+
+    if (intGuidesChanged()) {
+        updates += `Assigned internal guides have been updated\n`;
+    }
+
+    if (externalPersonnelsChanged("Driver")) {
+        updates += "Assigned external drivers have been updated\n";
+    }
+
+    if (externalPersonnelsChanged("Guide")) {
+        updates += "Assigned external guides have been updated\n";
+    }
+
+    //note
+    if (booking.note !== oldBooking.note) {
+        updates += `Note changed from "${oldBooking.note}" to "${booking.note}"\n`;
+    }
+
+    return updates
+}
+
 //update a booking record
 const updateBooking = async () => {
 
-    try {
-        let putServiceResponse = await ajaxPPDRequest("/booking", "PUT", booking);
-        if (putServiceResponse === "OK") {
-            showAlertModal('suc', 'Saved Successfully');
-            refreshBookingForm();
-            buildBookingTable();
-            var myTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
-            myTableTab.show();
+    let updates = showBookingValueChanges();
 
+    if (updates === "") {
+        showAlertModal('war', "No changes detected to update");
+    } else {
+        const userConfirm = confirm("Are you sure to update ? \n" + updates);
+        if (userConfirm) {
+            try {
+                let putServiceResponse = await ajaxPPDRequest("/booking", "PUT", booking);
+                if (putServiceResponse === "OK") {
+                    showAlertModal('suc', 'Saved Successfully');
+                    refreshBookingForm();
+                    buildBookingTable();
+                    var myTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+                    myTableTab.show();
+
+                } else {
+                    showAlertModal('err', "Update Failed \n" + putServiceResponse);
+                }
+
+            } catch (error) {
+                showAlertModal('err', 'An error occurred: ' + error.responseText);
+            }
         } else {
-            showAlertModal('err', "Update Failed \n" + putServiceResponse);
+            showAlertModal('inf', "User cancelled the task");
         }
-
-    } catch (error) {
-        showAlertModal('err', 'An error occurred: ' + error.responseText);
     }
+
+
+
 }
 
 
@@ -580,11 +638,26 @@ const renderAssignedInternalVehicles = () => {
 
         removeBtn.addEventListener("click", () => {
 
+            // Remove the vehicle from assigned list
             booking.int_vehicles = booking.int_vehicles.filter(v => v.numberplate !== vehicle.numberplate);
+
             vehiRow.remove();
+
+            // if it's not already there
+            if (!availableVehiclesByDates.some(v => v.id === vehicle.id)) {
+                availableVehiclesByDates.push(vehicle);
+            }
+
+            fillMultDataIntoDynamicSelectsRefillById(availableVehicles, "Please Choose A Vehicle", availableVehiclesByDates, 'numberplate', 'vehiclename', vehicle.id);
             console.log("internal vehis: ", booking.int_vehicles);
 
         });
+
+        /* same as
+         v => {
+    return v.numberplate !== vehicle.numberplate;
+}
+ */
 
         btnCol.appendChild(removeBtn);
 
@@ -713,7 +786,6 @@ const updateExternalVehicle = () => {
     }
 }
 
-
 //+++++++++++++++++for driver handling+++++++++++++++++++++
 //handle radio changes driver
 const handleDriverTypeChange = (selectedType) => {
@@ -785,8 +857,17 @@ const renderAssignedInternalDrivers = () => {
         removeBtn.innerText = "Remove";
 
         removeBtn.addEventListener("click", () => {
+
             booking.int_drivers = booking.int_drivers.filter(d => d.emp_code !== driver.emp_code);
+
             driverRow.remove();
+
+            // If this driver is not already in the available list
+            if (!availabledriversByDates.some(d => d.emp_code === driver.emp_code)) {
+                availabledriversByDates.push(driver);
+            }
+
+            fillMultDataIntoDynamicSelectsRefillById(availableDrivers, "Please Choose A Driver", availabledriversByDates, 'emp_code', 'fullname', driver.emp_code);
             console.log("internal drivers: ", booking.int_drivers);
         });
 
@@ -1090,8 +1171,17 @@ const renderAssignedInternalGuides = () => {
         removeBtn.innerText = "Remove";
 
         removeBtn.addEventListener("click", () => {
+
             booking.int_guides = booking.int_guides.filter(g => g.emp_code !== guide.emp_code);
+
             guideRow.remove();
+
+            if (!availableGuidesByDates.some(g => g.emp_code === guide.emp_code)) {
+                availableGuidesByDates.push(guide);
+            }
+
+            fillMultDataIntoDynamicSelectsRefillById(availableGuides, "Please Choose A Guide", availableGuidesByDates, 'emp_code', 'fullname', guide.emp_code);
+
             console.log("internal guides: ", booking.int_guides);
         });
 
@@ -1326,7 +1416,7 @@ const updateExternalGuide = () => {
     }
 }
 
-//for 2nd contact num field
+//for 2nd contact num field (for external ones)
 const sameContactError = (thisElement, otherElement) => {
 
     if (thisElement.value === otherElement.value) {
@@ -1350,6 +1440,83 @@ const sameContactError = (thisElement, otherElement) => {
     //}
 
 }
+
+// check if assigned int vehicles list have changed
+const intVehiclesChanged = () => {
+    if (booking.int_vehicles.length !== oldBooking.int_vehicles.length) return true;
+
+    for (let i = 0; i < booking.int_vehicles.length; i++) {
+        let newId = booking.int_vehicles[i]?.id || null;
+        let oldId = oldBooking.int_vehicles[i]?.id || null;
+
+        if (newId !== oldId) return true;
+    }
+
+    return false;
+};
+
+// check if assigned int drivers list have changed
+const intDriversChanged = () => {
+    if (booking.int_drivers.length !== oldBooking.int_drivers.length) return true;
+
+    for (let i = 0; i < booking.int_drivers.length; i++) {
+        let newId = booking.int_drivers[i]?.id || null;
+        let oldId = oldBooking.int_drivers[i]?.id || null;
+
+        if (newId !== oldId) return true;
+    }
+
+    return false;
+};
+
+// check if assigned int guides list have changed
+const intGuidesChanged = () => {
+    if (booking.int_guides.length !== oldBooking.int_guides.length) return true;
+
+    for (let i = 0; i < booking.int_guides.length; i++) {
+        let newId = booking.int_guides[i]?.id || null;
+        let oldId = oldBooking.int_guides[i]?.id || null;
+
+        if (newId !== oldId) return true;
+    }
+
+    return false;
+};
+
+// check if assigned external vehicles list have changed
+const externalVehiclesChanged = () => {
+    if (booking.externalVehicles.length !== oldBooking.externalVehicles.length) return true;
+
+    for (let i = 0; i < booking.externalVehicles.length; i++) {
+        let newId = booking.externalVehicles[i]?.id || null;
+        let oldId = oldBooking.externalVehicles[i]?.id || null;
+
+        if (newId !== oldId) return true;
+    }
+
+    return false;
+};
+
+// check if assigned external personnels list have changed(common fn)
+const externalPersonnelsChanged = (role) => {
+
+    const currentList = booking.externalPersonnels.filter(p => p.role === role);
+    const oldList = oldBooking.externalPersonnels.filter(p => p.role === role);
+
+    if (currentList.length !== oldList.length) return true;
+
+    for (let i = 0; i < currentList.length; i++) {
+        let newId = currentList[i]?.id || null;
+        let oldId = oldList[i]?.id || null;
+
+        if (newId !== oldId) return true;
+    }
+
+    return false;
+};
+
+
+
 
 
 
