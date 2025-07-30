@@ -240,7 +240,12 @@ public class FollowupController {
                 // initial prices
                 newBooking.setFinal_price(lastSentPkg.getPkgfinalprice());
                 newBooking.setTotal_paid(BigDecimal.valueOf(0.00));
-                newBooking.setDue_balance(BigDecimal.valueOf(0.00));
+
+                //due balance is also equal to initial total price when adding as a new
+                newBooking.setDue_balance(lastSentPkg.getPkgfinalprice());
+
+                //calculate advancement based on price config's profit
+                
 
                 // statuses
                 newBooking.setBooking_status("New");

@@ -91,27 +91,26 @@
 
                                                 <div class="row mb-2">
 
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <label for="inputBookingCode"
                                                             class="fw-bold form-label mb-0">Booking
                                                             ID<span class="text-danger"> * </span> :</label>
                                                         <input id="inputBookingCode" type="text"
-                                                            class="  form-control form-input" disabled
-                                                            onkeyup="inputValidatorText(this,'','booking','bookingcode')"
-                                                            required>
+                                                            class="  form-control form-input" disabled>
                                                     </div>
 
-                                                    <div class="col-6">
+                                                    <div class="col-8">
                                                         <label for="selectBookedPackage" class="fw-bold">Booked Package
                                                             <span class="text-danger"> * </span>: </label>
                                                         <select id="selectBookedPackage"
-                                                            class="form-control form-select" disabled
-                                                            onchange="dynamicSelectValidator(this , 'booking','bookedpackage_id')"
-                                                            required>
+                                                            class="form-control form-select" disabled>
                                                         </select>
                                                     </div>
 
-                                                    <div class="col-3">
+                                                    <!-- onchange="dynamicSelectValidator(this , 'booking','tpkg')" -->
+                                                    <!--onkeyup="inputValidatorText(this,'','booking','bookingcode')"-->
+
+                                                    <!--<div class="col-3">
                                                         <label for="selectBasedInquiry" class="fw-bold">Based Inquiry
                                                             <span class="text-danger"> * </span>: </label>
                                                         <select id="selectBasedInquiry" class="form-control form-select"
@@ -119,7 +118,7 @@
                                                             onchange="dynamicSelectValidator(this , 'booking','basedinquiry_id')"
                                                             required>
                                                         </select>
-                                                    </div>
+                                                    </div>-->
 
                                                 </div>
 
@@ -476,9 +475,9 @@
                                                         </div>
 
                                                         <!-- selected external vehis -->
-                                                        <div class="p-3 border border-success rounded bg-light">
+                                                        <div class="p-3 border border-secondary  rounded bg-light">
                                                             <label for="selectedExtVehis"
-                                                                class="form-label fw-bold text-success">Assigned Rented
+                                                                class="form-label fw-bold text-secondary ">Assigned Rented
                                                                 Vehicles</label>
                                                             <div class="row g-2" id="selectedExtVehis">
                                                                 <!-- external vehicles will be inserted here -->
@@ -642,9 +641,9 @@
                                                         </div>
 
                                                         <!-- Assigned External Drivers -->
-                                                        <div class="p-3 border border-success rounded bg-light w-100">
+                                                        <div class="p-3 border border-secondary  rounded bg-light w-100">
                                                             <label for="selectedExtDrivers"
-                                                                class="form-label fw-bold text-success">Assigned Rented
+                                                                class="form-label fw-bold text-secondary ">Assigned External
                                                                 Drivers</label>
                                                             <div class="row g-2" id="selectedExtDrivers">
                                                                 <!-- external drivers will be inserted here -->
@@ -784,10 +783,10 @@
                                                     </div>
 
                                                     <!-- Assigned External Guides -->
-                                                    <div class="p-3 border border-success rounded bg-light w-100">
+                                                    <div class="p-3 border border-secondary  rounded bg-light w-100">
                                                         <label for="selectedExtGuides"
-                                                            class="form-label fw-bold text-success">
-                                                            Assigned Freelance Guides
+                                                            class="form-label fw-bold text-secondary ">
+                                                            Assigned External Guides
                                                         </label>
                                                         <div class="row g-2" id="selectedExtGuides">
                                                             <!-- external guides will be inserted here -->
@@ -822,12 +821,12 @@
                                                             :</label>
 
                                                         <select id="selectBookingStatus"
-                                                            class="form-control form-select" 
+                                                            class="form-control form-select"
                                                             onchange="staticSelectValidator(this , 'booking' , 'booking_status')">
                                                             <option value="" selected disabled>Please Select Status
                                                             </option>
-                                                            <option value="Pending_Payment">Pending Payment</option>
-                                                            <option value="Confirmed">Confirmed</option>
+                                                            <option value="New">New Booking</option>
+                                                            <option value="Confirmed">Confirmed </option>
                                                             <option value="Cancelled">Cancelled</option>
                                                             <option value="Completed">Completed</option>
                                                             <option value="Rescheduled">Rescheduled</option>
@@ -839,21 +838,23 @@
 
                                                 <div class="row mb-1">
                                                     <div class="col-12">
-                                                        <label for="selectPaymentStatus" class="fw-bold form-label mb-0">
+                                                        <label for="selectPaymentStatus"
+                                                            class="fw-bold form-label mb-0">
                                                             Payment Status <span class="text-danger"> * </span> :
                                                         </label>
-                                                
+
                                                         <select id="selectPaymentStatus"
-                                                                class="form-control form-select" 
-                                                                onchange="staticSelectValidator(this, 'booking', 'payment_status')">
-                                                            <option value="" selected disabled>Please Select Payment Status</option>
+                                                            class="form-control form-select"
+                                                            onchange="staticSelectValidator(this, 'booking', 'payment_status')">
+                                                            <option value="" selected disabled>Please Select Payment
+                                                                Status</option>
                                                             <option value="Payment_Pending">Payment Pending</option>
                                                             <option value="Partially_Paid">Partially Paid</option>
                                                             <option value="Advance_Paid">Advance Paid</option>
                                                             <option value="Fully_Paid">Fully Paid</option>
                                                         </select>
                                                     </div>
-                                                </div>                                                
+                                                </div>
 
                                             </div>
 

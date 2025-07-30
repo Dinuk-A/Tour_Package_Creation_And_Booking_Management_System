@@ -3,7 +3,7 @@ window.addEventListener('load', () => {
     buildBookingTable();
     refreshBookingForm();
     fetchCustomTpkgs();
-    fetchConfirmedInquiries();
+    //fetchConfirmedInquiries();
 
 });
 
@@ -11,12 +11,10 @@ document.addEventListener("DOMContentLoaded", function () {
     controlSidebarLinks();
 });
 
-
-
 //global vars
 let vehiTypes = [];
 let allTpkgs = [];
-let allInquiries = [];
+//let allInquiries = [];
 
 //main refresh fn
 const refreshBookingForm = async () => {
@@ -119,13 +117,13 @@ const fetchCustomTpkgs = async () => {
 }
 
 //fetch all confirmed inquiries
-const fetchConfirmedInquiries = async () => {
-    try {
-        allInquiries = await ajaxGetReq("/inq/confirmed");
-    } catch (error) {
-        console.error("Failed to fetch confirmed inqs:", error);
-    }
-}
+//const fetchConfirmedInquiries = async () => {
+//    try {
+//        allInquiries = await ajaxGetReq("/inq/confirmed");
+//    } catch (error) {
+//        console.error("Failed to fetch confirmed inqs:", error);
+//    }
+//}
 
 //global var to store id of the table
 let sharedTableId = "mainTableBooking";
@@ -257,14 +255,24 @@ const openModal = async (bookingObj) => {
     document.getElementById('selectBookingStatus').value = booking.booking_status || '';
     document.getElementById('selectPaymentStatus').value = booking.payment_status || '';
 
-    fillDataIntoDynamicSelects(selectBookedPackage, 'Please Select Package', allTpkgs, 'pkgcode', booking.tpkg.pkgcode);
-    fillDataIntoDynamicSelects(selectBasedInquiry, 'Please Select Inquiry', allInquiries, 'inqcode', booking.tpkg.basedinq.inqcode);
+    fillMultDataIntoDynamicSelects(selectBookedPackage, 'Please Select Package', allTpkgs, 'pkgcode', 'pkgtitle', booking.tpkg.pkgcode);
+    //fillDataIntoDynamicSelects(selectBasedInquiry, 'Please Select Inquiry', allInquiries, 'inqcode', booking.tpkg.basedinq.inqcode);
 
     //to get available resources
     const tourStartDate = booking.startdate;
     const tourEndDate = booking.enddate;
 
+    //fill available vehis
+    internalVehicleRB.checked = true;
+    try {
+        const availableVehiclesByDates = await ajaxGetReq("vehi/availablevehiclesbydatesonly/" + tourStartDate + "/" + tourEndDate);
+        fillMultDataIntoDynamicSelectsRefillById(availableVehicles, "Please Choose A Vehicle", availableVehiclesByDates, 'numberplate', 'vehiclename');
+    } catch (error) {
+        console.error("Error fetching available vehicles:", error);
+    }
+
     //fill available drivers
+    internalDriverRB.checked = true;
     try {
         const availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + tourStartDate + "/" + tourEndDate);
         fillMultDataIntoDynamicSelectsRefillById(availableDrivers, "Please Choose A Driver", availabledriversByDates, 'emp_code', 'fullname');
@@ -273,6 +281,7 @@ const openModal = async (bookingObj) => {
     }
 
     //fill available guides
+    internalGuideRB.checked = true;
     try {
         const availableGuidesByDates = await ajaxGetReq("emp/availableguidesbydates/" + tourStartDate + "/" + tourEndDate);
         fillMultDataIntoDynamicSelectsRefillById(availableGuides, "Please Choose A Driver", availableGuidesByDates, 'emp_code', 'fullname');
@@ -280,13 +289,9 @@ const openModal = async (bookingObj) => {
         console.error("Error fetching available guides:", error);
     }
 
-    //fill available vehis
-    try {
-        const availableVehiclesByDates = await ajaxGetReq("vehi/availablevehiclesbydatesonly/" + tourStartDate + "/" + tourEndDate);
-        fillMultDataIntoDynamicSelectsRefillById(availableVehicles, "Please Choose A Vehicle", availableVehiclesByDates, 'numberplate', 'vehiclename');
-    } catch (error) {
-        console.error("Error fetching available vehicles:", error);
-    }
+
+
+
 
     let myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myInqFormTab.show();
