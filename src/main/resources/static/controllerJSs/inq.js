@@ -1338,6 +1338,20 @@ const refreshInqFollowupSection = () => {
 
 }
 
+// set the same quoted pkg's id to main inquiry
+const setSameForMainInq = (selectElement) => {
+
+    const selectedValue = selectElement.value;
+
+    if (selectedValue !== "Please Select Package") {
+        const selectedPkg = JSON.parse(selectedValue);
+        inquiry.lastquotedpkgid = selectedPkg.id;
+    } else {
+        inquiry.lastquotedpkgid = null;
+    }
+
+}
+
 // some changes based on inq stts updates
 const changesBasedOnInqStts = (statusSelectElement) => {
 
@@ -1376,6 +1390,10 @@ const checkInqSuccessErrors = () => {
         errors += "Please enter the client's passport number or NIC \n";
     }
 
+    if (inquiry.lastquotedpkgid == null || inquiry.lastquotedpkgid === "") {
+        errors += "Please select a package for this inquiry (in followup section) \n";
+    }
+
     if (inquiry.inq_apprx_start_date == null) {
         errors += "Please choose a confirmed start date \n"
     }
@@ -1386,7 +1404,6 @@ const checkInqSuccessErrors = () => {
     if (foreignAdults === 0 && localAdults === 0) {
         errors += "Please add the traveller count \n";
     }
-
 
     if (inquiry.inq_guideneed == null) {
         errors += "Please choose whether a guide is needed or not \n";
@@ -1690,7 +1707,7 @@ const submitOnlyManualFollowup = async () => {
             try {
                 let postServiceResponse = await ajaxPPDRequest("/followuponly", "POST", followup);
                 if (postServiceResponse === "OK") {
-                    showAlertModal('suc', "Successfully Added");
+                    showAlertModal('suc', "Followup Successfully Added");
 
                     //hide followup form section
                     document.getElementById('manualResponseAddingSection').innerHTML = '';
@@ -1698,7 +1715,7 @@ const submitOnlyManualFollowup = async () => {
                     //show previous responses list
                     refillAllPrevResponses();
 
-                    document.getElementById('inqStatus').value = inqObj.inq_status;
+                    document.getElementById('inqStatus').value = inquiry.inq_status;
 
                     //enable add new response button
                     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');

@@ -38,6 +38,9 @@ public class Inq {
     @Column(name = "intrstdpkgid")
     private Integer intrstdpkgid;
 
+    @Column(name = "lastquotedpkgid")
+    private Integer lastquotedpkgid;
+
     @Column(name = "main_inq_msg")
     private String main_inq_msg;
 

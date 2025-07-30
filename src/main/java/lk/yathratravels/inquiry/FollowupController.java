@@ -1,5 +1,6 @@
 package lk.yathratravels.inquiry;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import lk.yathratravels.bookings.BookingDao;
 import lk.yathratravels.bookings.BookingService;
 import lk.yathratravels.client.Client;
 import lk.yathratravels.client.ClientDao;
+import lk.yathratravels.client.ClientService;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
 import lk.yathratravels.tpkg.TourPkg;
@@ -45,6 +47,9 @@ public class FollowupController {
 
     @Autowired
     private BookingService bookingService;
+
+    @Autowired
+    private ClientService clientService;
 
     @Autowired
     private ClientDao clientDao;
@@ -199,27 +204,59 @@ public class FollowupController {
                 if (clientOpt.isPresent()) {
                     finalClient = clientOpt.get();
                 } else {
+
                     Client newClient = new Client();
+                    clientService.assignNextClientCode(newClient);
                     newClient.setFullname(mainInquiry.getClientname());
                     newClient.setPassportornic(mainInquiry.getPassportnumornic());
                     newClient.setContactone(mainInquiry.getContactnum());
                     newClient.setContacttwo(mainInquiry.getContactnumtwo());
                     newClient.setEmail(mainInquiry.getEmail());
-                    newClient.setNote(mainInquiry.getNote());
-                    newClient.setCli_status("Active");
+                    newClient.setCli_status("New");
                     newClient.setNationality_id(mainInquiry.getNationality_id());
+                    newClient.setAddeddatetime(LocalDateTime.now());
+                    newClient.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
 
                     finalClient = clientDao.save(newClient);
+
+                    System.out.println("New Client Created: ");
                 }
 
                 System.out.println("Creating a Booking ");
+
                 Booking newBooking = new Booking();
 
-                newBooking.setClient(finalClient);
+                // code
                 bookingService.assignNextBookingCode(newBooking);
 
+                // get the last sent tour package for this inquiry (needed for start,end dates +
+                // more)
                 TourPkg lastSentPkg = followupDao.getLastSentTourPackage(mainInquiry.getId());
+
+                // newBooking.setStartdate(mainInquiry.getInq_apprx_start_date());
+                newBooking.setStartdate(lastSentPkg.getTourstartdate());
+                newBooking.setEnddate(lastSentPkg.getTourenddate());
+
+                // initial prices
+                newBooking.setFinal_price(lastSentPkg.getPkgfinalprice());
+                newBooking.setTotal_paid(BigDecimal.valueOf(0.00));
+                newBooking.setDue_balance(BigDecimal.valueOf(0.00));
+
+                // statuses
+                newBooking.setBooking_status("New");
+                newBooking.setPayment_status("Not Paid");
+                newBooking.setIs_full_payment_complete(false);
+
+                // client
+                newBooking.setClient(finalClient);
+
+                // tpkg (fetched above)
                 newBooking.setTpkg(lastSentPkg);
+
+                newBooking.setAddeddatetime(LocalDateTime.now());
+                newBooking.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+                bookingDao.save(newBooking);
 
                 // if (lastSentPkg != null) {
                 // newBooking.setTpkg(lastSentPkg);
@@ -228,14 +265,8 @@ public class FollowupController {
                 // mainInquiry.getId());
                 // }
 
-                newBooking.setStartdate(mainInquiry.getInq_apprx_start_date());
-                newBooking.setBooking_status("Pending");
-                newBooking.setEnddate(lastSentPkg.getTourenddate());
                 // newBooking.setFinal_price(lastSentPkg != null ?
                 // lastSentPkg.getPkgfinalprice() : 0.0);
-                newBooking.setFinal_price(lastSentPkg.getPkgfinalprice());
-
-                bookingDao.save(newBooking);
 
             }
 

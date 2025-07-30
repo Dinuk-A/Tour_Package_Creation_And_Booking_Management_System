@@ -59,6 +59,9 @@ public class Booking {
     @Column(name = "booking_status")
     private String booking_status;
 
+    @Column(name = "payment_status")
+    private String payment_status;
+
     @Column(name = "is_full_payment_complete")
     private Boolean is_full_payment_complete;
 
@@ -83,11 +86,11 @@ public class Booking {
     private Set<Employee> int_guides;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "booking_id") 
+    @JoinColumn(name = "booking_id")
     private List<ExtPersonnel> externalPersonnels;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "booking_id") 
+    @JoinColumn(name = "booking_id")
     private List<ExtVehicles> externalVehicles;
 
     // common 6

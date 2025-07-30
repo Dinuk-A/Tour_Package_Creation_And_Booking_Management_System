@@ -9,6 +9,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface ClientDao extends JpaRepository<Client, Integer> {
 
+    // create next clientcode
+    @Query(value = "SELECT CONCAT('CL', LPAD(SUBSTRING(MAX(c.clientcode), 3) + 1, 5, '0')) FROM client AS c", nativeQuery = true)
+    public String getNextClientCode();
+
     // Find client by exact email
     @Query("select c from Client c where c.email = ?1")
     List<Client> findClientsByEmail(String email);
@@ -20,7 +24,7 @@ public interface ClientDao extends JpaRepository<Client, Integer> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.client.id = :clientId AND b.booking_status = 'Completed'")
     int countCompletedBookingsByClientJPQL(@Param("clientId") Integer clientId);
 
-    //same with native
+    // same with native
     @Query(value = "SELECT COUNT(*) FROM booking WHERE client = ?1 AND booking_status = 'Completed'", nativeQuery = true)
     int countCompletedBookingsByClientNative(Integer clientId);
 
