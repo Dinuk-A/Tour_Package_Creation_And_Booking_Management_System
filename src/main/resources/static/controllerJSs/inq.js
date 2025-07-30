@@ -1345,21 +1345,23 @@ const changesBasedOnInqStts = (statusSelectElement) => {
     const updateBtn = document.getElementById('manualInqUpdateBtn');
     const convToBknBtn = document.getElementById('convertToBookingBtn');
     //const pptOrNicCol = document.getElementById('colPptOrNic');
-    //const pptOrNicField = document.getElementById('inqClientPassportNumorNIC');
+    const pptOrNicField = document.getElementById('inqClientPassportNumorNIC');
 
     if (value === "Confirmed") {
         convToBknBtn.classList.remove('d-none');
         updateBtn.classList.add('d-none');
         //pptOrNicCol.classList.remove('d-none');
-        //pptOrNicField.disabled = false;
+        pptOrNicField.disabled = false;
     } else if (value === "Closed") {
         updateBtn.textContent = "Close Inquiry";
         updateBtn.classList.remove('d-none');
         convToBknBtn.classList.add('d-none');
+        pptOrNicField.disabled = true;
     } else {
         updateBtn.textContent = "Update Entry";
         updateBtn.classList.remove('d-none');
         convToBknBtn.classList.add('d-none');
+        pptOrNicField.disabled = true;
     }
 
 }

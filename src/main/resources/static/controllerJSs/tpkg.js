@@ -1308,10 +1308,14 @@ const setTpkgStartDateToFuture = () => {
 
 //***********************✅TPKG FORM CODE✅********************** 
 
+
 //for first 2 radio buttons to choose package type   
 const changesTpkgCustomOrTemp = () => {
 
     const selectBasedInq = document.getElementById('tpkgBasedInq');
+
+    const titleSuffix = document.getElementById('pkgTitleSuffix');
+    titleSuffix.innerText = '';
 
     //if a custom package
     if (customTP.checked) {
@@ -1695,6 +1699,10 @@ const fillDataFromInq = async () => {
 
     if (tpkg.basedinq?.id != null) {
 
+        //SUFFIX FOR TITLE
+        const titleSuffix = document.getElementById('pkgTitleSuffix');
+        titleSuffix.innerText = `for ${tpkg.basedinq.inqcode}`;
+
         //approx start date
         if (tpkg.basedinq.inq_apprx_start_date != null && tpkg.basedinq.is_startdate_confirmed == true) {
             const startDateInput = document.getElementById('tpStartDateInput');
@@ -2012,13 +2020,6 @@ const addNewTpkg = async () => {
                 //bind addiCost array with the tpkg obj 💥💥💥
                 //console.log("tpkg.addiCostList:", tpkg.addiCostList);
 
-                //bind the based inq id only, not whole obj
-                if (tpkg.basedinq && tpkg.basedinq.id) {
-                    tpkg.basedinq = tpkg.basedinq.id;
-                } else {
-                    tpkg.basedinq = null;
-                }
-
                 //remove null days from dayplans list
                 //tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
 
@@ -2026,6 +2027,19 @@ const addNewTpkg = async () => {
                     tpkg.dayplans = tpkg.dayplans.filter(dp => dp !== null);
                 } else {
                     tpkg.dayplans = [];
+                }
+
+                //bind the based inq id only, not whole obj
+                if (tpkg.basedinq && tpkg.basedinq.id) {
+
+                    //set full name with suffix
+                    tpkg.pkgtitle = tpkg.pkgtitle + " for " + tpkg.basedinq.inqcode;
+
+                    // if the basedinq is a custom inquiry, then set the id only
+                    tpkg.basedinq = tpkg.basedinq.id;
+
+                } else {
+                    tpkg.basedinq = null;
                 }
 
 
@@ -4772,7 +4786,7 @@ const addAddiCostToTable = () => {
 
 // show all the info in an alert in once
 const showNote = (addiCostObj) => {
-    showAlertModal('inf' , addiCostObj.costname + "\n" + addiCostObj.amount + "\n" + addiCostObj.note );
+    showAlertModal('inf', addiCostObj.costname + "\n" + addiCostObj.amount + "\n" + addiCostObj.note);
 }
 
 //refill the same form with the data of the selected row

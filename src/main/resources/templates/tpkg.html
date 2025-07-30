@@ -200,10 +200,21 @@
                                                 <label for="inputPkgTitle" class="form-label fw-bold mb-0"> Package
                                                     Title
                                                     <span class="text-danger"> * </span> :</label>
-                                                <input id="inputPkgTitle" type="text" class="form-control"
+                                                <!--<input id="inputPkgTitle" type="text" class="form-control"
                                                     placeholder="Enter A Title for The Package"
                                                     onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')"
-                                                    name="fakeName">
+                                                    name="fakeName">-->
+                                                <div class="input-group" id="inputPkgTitleGroup">
+                                                    <input id="inputPkgTitle" type="text" class="form-control"
+                                                        placeholder="Enter A Title for The Package"
+                                                        onkeyup="inputValidatorText(this,'','tpkg' , 'pkgtitle')"
+                                                        name="fakeName">
+
+                                                    <span class="input-group-text p-1">
+                                                        <h6 id="pkgTitleSuffix" class="my-auto">&nbsp;</h6>
+                                                    </span>
+                                                </div>
+
                                             </div>
 
                                             <!-- code -->
@@ -1232,7 +1243,8 @@
                                                                 </span>
                                                                 <input type="number" id="additionalCostAmount"
                                                                     class="form-control form-input p-1"
-                                                                    onkeyup="inputValidatorText(this,'','addiCost','amount');" onblur="insertDecimals(this);">
+                                                                    onkeyup="inputValidatorText(this,'','addiCost','amount');"
+                                                                    onblur="insertDecimals(this);">
                                                             </div>
 
                                                         </div>
