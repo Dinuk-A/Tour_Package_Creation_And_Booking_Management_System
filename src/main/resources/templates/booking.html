@@ -279,7 +279,8 @@
                                                     Payment Status <span class="text-danger"> * </span> :
                                                 </label>
 
-                                                <select disabled id="selectPaymentStatus" class="form-control form-select"
+                                                <select disabled id="selectPaymentStatus"
+                                                    class="form-control form-select"
                                                     onchange="staticSelectValidator(this, 'booking', 'payment_status')">
                                                     <option value="" selected disabled>Please Select Payment
                                                         Status</option>
@@ -508,7 +509,7 @@
                                                     </div>
 
                                                     <!-- vehicle preference msg -->
-                                                    <div class="row my-2 d-none" id="vehiclePreferenceMsg">
+                                                    <div class="row my-2" id="vehiclePreferenceMsg">
                                                         <div class="col-12">
                                                             <div class="alert alert-info mb-0 py-2 px-3">
                                                                 <strong>Transport method preferred by customer:</strong>
@@ -673,6 +674,17 @@
                                                             </div>
                                                         </div>
 
+                                                        <!-- driver preference msg -->
+                                                        <div class="row my-2" id="driverPreferenceMsg">
+                                                            <div class="col-12">
+                                                                <div class="alert alert-info mb-0 py-2 px-3">
+                                                                    <strong>Driver preference:</strong>
+                                                                    <span id="preferredDriverInfo"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
                                                     </div>
                                                 </div>
 
@@ -815,6 +827,17 @@
                                                             <!-- external guides will be inserted here -->
                                                         </div>
                                                     </div>
+
+                                                    <!-- guide preference msg -->
+                                                    <div class="row my-2" id="guidePreferenceMsg">
+                                                        <div class="col-12">
+                                                            <div class="alert alert-info mb-0 py-2 px-3">
+                                                                <strong>Guide preference:</strong>
+                                                                <span id="preferredGuideInfo"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
 
                                                 </div>
 

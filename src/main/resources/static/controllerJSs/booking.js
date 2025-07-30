@@ -289,8 +289,69 @@ const openModal = async (bookingObj) => {
         console.error("Error fetching available guides:", error);
     }
 
+    //show pref transport method 
+    const prefTrprtMsg = document.getElementById('preferredTransportMethod');
+    prefTrprtMsg.innerText = booking.tpkg.pref_vehi_type ? ` ${booking.tpkg.pref_vehi_type}` : 'No preferred transport method specified';
 
+    // Show guide preference
+    const guidePrefMsg = document.getElementById('preferredGuideInfo');
 
+    if (booking.tpkg.is_guide_needed) {
+        const guideType = booking.tpkg.is_company_guide ? 'Company Guide' : 'External Guide';
+        guidePrefMsg.innerText = ` ${guideType} requested`;
+    } else {
+        guidePrefMsg.innerText = 'No guide requested';
+    }
+
+    // Show driver preference
+    const driverPrefMsg = document.getElementById('preferredDriverInfo');
+    const driverType = booking.tpkg.is_company_driver ? 'Company Driver' : 'External Driver';
+    driverPrefMsg.innerText = ` ${driverType} requested`;
+
+    //refill assigned resources if they exist
+    /*
+     booking.externalPersonnels = [];
+    booking.externalVehicles = [];
+
+    booking.int_vehicles = [];
+    booking.int_drivers = [];
+    booking.int_guides = []; */
+
+    //render internal vehicles
+    if (booking.int_vehicles && booking.int_vehicles.length > 0) {
+        renderAssignedInternalVehicles();
+    }
+
+    // booking.externalVehicles 
+    if (booking.externalVehicles && booking.externalVehicles.length > 0) {
+        renderAssignedExternalVehicles();
+    }
+
+    //booking.int_drivers
+    if (booking.int_drivers && booking.int_drivers.length > 0) {
+        renderAssignedInternalDrivers();
+    }
+
+    //booking.externalPersonnels(drivers)
+    if (
+        booking.externalPersonnels &&
+        booking.externalPersonnels.some(person => person.role === "Driver")
+    ) {
+        renderAssignedExtDrivers();
+    }
+
+    //booking.int_guides
+    if (booking.int_guides && booking.int_guides.length > 0) {
+        renderAssignedInternalGuides();
+    }
+
+     //booking.externalPersonnels(guides)
+    if (
+        booking.externalPersonnels &&
+        booking.externalPersonnels.some(person => person.role === "Guide")
+    ) {
+        renderAssignedExtGuides();
+    }
 
 
     let myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
@@ -303,13 +364,16 @@ const openModal = async (bookingObj) => {
 
 //update a booking record
 const updateBooking = async () => {
-    //booking
-    console.log("before update ", booking);
+
     try {
         let putServiceResponse = await ajaxPPDRequest("/booking", "PUT", booking);
         if (putServiceResponse === "OK") {
             showAlertModal('suc', 'Saved Successfully');
-            console.log("after update ", booking);
+            refreshBookingForm();
+            buildBookingTable();
+            var myTableTab = new bootstrap.Tab(document.getElementById('table-tab'));
+            myTableTab.show();
+
         } else {
             showAlertModal('err', "Update Failed \n" + putServiceResponse);
         }
