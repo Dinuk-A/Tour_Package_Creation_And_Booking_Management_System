@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "ext_personnel")
 @Data
@@ -45,6 +47,7 @@ public class ExtPersonnel {
 
     @ManyToOne
     @JoinColumn(name = "booking_id", referencedColumnName = "id")
+    @JsonIgnore
     private Booking booking;
 
 }

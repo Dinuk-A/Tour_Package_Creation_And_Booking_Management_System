@@ -378,7 +378,7 @@ const showBookingValueChanges = () => {
         updates += `Assigned internal vehicles have been updated\n`;
     }
 
-    if (externalVehiclesChanged()) {
+    if (is_ext_vehi_edited || externalVehiclesChanged()) {
         updates += "Assigned external vehicles have been updated\n";
     }
 
@@ -390,11 +390,11 @@ const showBookingValueChanges = () => {
         updates += `Assigned internal guides have been updated\n`;
     }
 
-    if (externalPersonnelsChanged("Driver")) {
+    if (is_ext_drv_edited || externalPersonnelsChanged("Driver")) {
         updates += "Assigned external drivers have been updated\n";
     }
 
-    if (externalPersonnelsChanged("Guide")) {
+    if (is_ext_gui_edited || externalPersonnelsChanged("Guide")) {
         updates += "Assigned external guides have been updated\n";
     }
 
@@ -770,6 +770,7 @@ const updateExternalVehicle = () => {
                     showAlertModal('suc', "Successfully Updated");
                     renderAssignedExternalVehicles();
                     resetExtVehicleInputs();
+                    is_ext_vehi_edited = true; 
                 } else {
                     showAlertModal('err', 'Vehicle not found for update');
                 }
@@ -1064,6 +1065,11 @@ const checkExtDriverDuplications = () => {
     return isAlreadySelected;
 }
 
+//track if the external person/vehi form is being edited
+let is_ext_vehi_edited = false;
+let is_ext_drv_edited = false;
+let is_ext_gui_edited = false;
+
 //update ext driver
 const updateExternalDriver = () => {
     const errors = checkExtDriverFormErrors();
@@ -1083,6 +1089,7 @@ const updateExternalDriver = () => {
                     showAlertModal('suc', "Successfully Updated");
                     renderAssignedExtDrivers();
                     resetExtDriverInputs();
+                    is_ext_drv_edited = true; 
                 } else {
                     showAlertModal('err', 'Driver not found for update');
                 }
@@ -1400,6 +1407,7 @@ const updateExternalGuide = () => {
                     showAlertModal('suc', "Successfully Updated");
                     renderAssignedExtGuides();
                     resetExtGuideInputs();
+                    is_ext_gui_edited = true; 
                 } else {
                     showAlertModal('err', 'Guide not found for update');
                 }

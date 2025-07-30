@@ -1,5 +1,7 @@
 package lk.yathratravels.bookings;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lk.yathratravels.vehicle.VehicleType;
 import lombok.AllArgsConstructor;
@@ -58,6 +60,7 @@ public class ExtVehicles {
 
     @ManyToOne
     @JoinColumn(name = "booking_id", referencedColumnName = "id")
+    @JsonIgnore
     private Booking booking;
 
 }

@@ -274,6 +274,7 @@
 
                                         <!-- status -->
                                         <div class="row mb-1">
+
                                             <div class="col-6">
                                                 <label for="selectPaymentStatus" class="fw-bold form-label mb-0">
                                                     Payment Status <span class="text-danger"> * </span> :
@@ -290,6 +291,14 @@
                                                     <option value="Fully_Paid">Fully Paid</option>
                                                 </select>
                                             </div>
+
+                                            <!-- button for add surcharge amount -->
+                                            <div class="col-6">
+                                                <button type="button" class="btn btn-primary w-100">
+                                                    Add Surcharge Amount
+                                                  </button>
+                                            </div>
+
                                         </div>
 
 
@@ -327,12 +336,12 @@
 
                                                     <div class="col-1"></div>
 
-                                                    <!--<div class="col-3">
+                                                    <div class="col-3">
                                                         <button type="button" class="btn btn-primary mt-4"
-                                                            onclick="getAvailableCompanyDrivers(); getAvailableGuideList();">
-                                                            Get Available Resources
+                                                            onclick="enableDates();">
+                                                            Change Tour Dates
                                                         </button>
-                                                    </div>-->
+                                                    </div>
 
                                                 </div>
                                             </div>
@@ -909,8 +918,8 @@
                                             <button type="button" id="bookingUpdateBtn" class=" btn-update fw-bold "
                                                 onclick="updateBooking()">Update Booking</button>
 
-                                            <button type="submit" id="bookingAddBtn" class="d-none btn-add fw-bold"
-                                                onclick="addNewBooking()">Add Entry</button>
+                                            <button type="submit" id="bookingAddBtn" class=" btn-add fw-bold"
+                                                onclick="finalizeBooking()">Finalize Booking</button>
                                         </div>
                                     </div>
 
