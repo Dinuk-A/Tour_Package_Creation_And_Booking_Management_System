@@ -1,5 +1,6 @@
 package lk.yathratravels.payment;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lk.yathratravels.bookings.Booking;
+import lk.yathratravels.bookings.BookingDao;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
 import lk.yathratravels.tpkg.AdditionalCost;
@@ -40,6 +43,9 @@ public class PaymentController {
 
     @Autowired
     private PaymentDao paymentDao;
+
+    @Autowired
+    private BookingDao bookingDao;
 
     // display payment UI
     @RequestMapping(value = "/payment", method = RequestMethod.GET)
@@ -98,6 +104,47 @@ public class PaymentController {
         return paymentDao.findAll(Sort.by(Direction.DESC, "id"));
     }
 
+    // get NEXT payment code
+    private void assignNextPaymentCode(Payment payment) {
+        String nextPaymentCode = paymentDao.getNextPaymentCode();
+        if (nextPaymentCode == null || nextPaymentCode.equals("")) {
+            payment.setPaymentcode("TRX000001");
+        } else {
+            payment.setPaymentcode(nextPaymentCode);
+        }
+    }
+
+    // changes in bookings entity common fn
+    private void updateBookingPayments(Payment payment) {
+        Booking booking = payment.getBooking_id();
+        if (booking == null)
+            return;
+
+        // get values or default to 0
+        BigDecimal existingTotalPaid = booking.getTotal_paid() != null ? booking.getTotal_paid() : BigDecimal.ZERO;
+        BigDecimal paymentAmount = payment.getPaid_amount() != null ? payment.getPaid_amount()
+                : BigDecimal.ZERO;
+
+        // calulate new total paid = existing_total_paid + new payment_amount
+        BigDecimal newTotalPaid = existingTotalPaid.add(paymentAmount);
+        booking.setTotal_paid(newTotalPaid);
+
+        // calculate new due balance = final_price - total_paid
+        BigDecimal finalPrice = booking.getFinal_price() != null ? booking.getFinal_price() : BigDecimal.ZERO;
+        BigDecimal newDueBalance = finalPrice.subtract(newTotalPaid);
+        booking.setDue_balance(newDueBalance);
+
+        // check if full payment is complete, then set the flag is_full_payment_complete
+        if (newDueBalance.doubleValue() <= 0.0) {
+            booking.setIs_full_payment_complete(true);
+        } else {
+            booking.setIs_full_payment_complete(false);
+        }
+
+        bookingDao.save(booking);
+
+    }
+
     // when payment added by an employee
     @PostMapping(value = "/paymentbyemp")
     public String addPaymentByEmp(@RequestBody Payment payment) {
@@ -111,19 +158,16 @@ public class PaymentController {
         }
 
         try {
-
             // generate nextPaymentCode
-            String nextPaymentCode = paymentDao.getNextPaymentCode();
-
-            if (nextPaymentCode.equals(null) || nextPaymentCode.equals("")) {
-                payment.setPaymentcode("TRX000001");
-            } else {
-                payment.setPaymentcode(nextPaymentCode);
-            }
+            assignNextPaymentCode(payment);
 
             payment.setAddeddatetime(LocalDateTime.now());
             payment.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
             paymentDao.save(payment);
+
+            // changes in bookings entity
+            updateBookingPayments(payment);
+
             return "OK";
         } catch (Exception e) {
             return "Error updating additional cost : " + e.getMessage();
@@ -138,17 +182,15 @@ public class PaymentController {
         try {
 
             // generate nextPaymentCode
-            String nextPaymentCode = paymentDao.getNextPaymentCode();
-
-            if (nextPaymentCode.equals(null) || nextPaymentCode.equals("")) {
-                payment.setPaymentcode("TRX000001");
-            } else {
-                payment.setPaymentcode(nextPaymentCode);
-            }
+            assignNextPaymentCode(payment);
 
             payment.setAddeddatetime(LocalDateTime.now());
             payment.setAddeduserid(-10);
             paymentDao.save(payment);
+
+            // changes in bookings entity
+            updateBookingPayments(payment);
+
             return "OK";
         } catch (Exception e) {
             return "Error updating additional cost : " + e.getMessage();
