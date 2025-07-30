@@ -187,8 +187,8 @@
                                         <legend class="float-none w-auto px-2 text-primary">Financial Information
                                         </legend>
 
-                                        <div class="row">
-
+                                        <!-- amounts -->
+                                        <div class="row mb-2">
                                             <div class="col-md-12">
                                                 <div class="row mb-2">
 
@@ -269,8 +269,28 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
+                                        </div>
+
+                                        <!-- status -->
+                                        <div class="row mb-1">
+                                            <div class="col-6">
+                                                <label for="selectPaymentStatus" class="fw-bold form-label mb-0">
+                                                    Payment Status <span class="text-danger"> * </span> :
+                                                </label>
+
+                                                <select disabled id="selectPaymentStatus" class="form-control form-select"
+                                                    onchange="staticSelectValidator(this, 'booking', 'payment_status')">
+                                                    <option value="" selected disabled>Please Select Payment
+                                                        Status</option>
+                                                    <option value="Payment_Pending">Payment Pending</option>
+                                                    <option value="Partially_Paid">Partially Paid</option>
+                                                    <option value="Advance_Paid">Advancement Paid</option>
+                                                    <option value="Fully_Paid">Fully Paid</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
 
                                     </fieldset>
 
@@ -477,7 +497,8 @@
                                                         <!-- selected external vehis -->
                                                         <div class="p-3 border border-secondary  rounded bg-light">
                                                             <label for="selectedExtVehis"
-                                                                class="form-label fw-bold text-secondary ">Assigned Rented
+                                                                class="form-label fw-bold text-secondary ">Assigned
+                                                                Rented
                                                                 Vehicles</label>
                                                             <div class="row g-2" id="selectedExtVehis">
                                                                 <!-- external vehicles will be inserted here -->
@@ -641,9 +662,11 @@
                                                         </div>
 
                                                         <!-- Assigned External Drivers -->
-                                                        <div class="p-3 border border-secondary  rounded bg-light w-100">
+                                                        <div
+                                                            class="p-3 border border-secondary  rounded bg-light w-100">
                                                             <label for="selectedExtDrivers"
-                                                                class="form-label fw-bold text-secondary ">Assigned External
+                                                                class="form-label fw-bold text-secondary ">Assigned
+                                                                External
                                                                 Drivers</label>
                                                             <div class="row g-2" id="selectedExtDrivers">
                                                                 <!-- external drivers will be inserted here -->
@@ -820,7 +843,7 @@
                                                             Status <span class="text-danger"> * </span>
                                                             :</label>
 
-                                                        <select id="selectBookingStatus"
+                                                        <select disabled id="selectBookingStatus"
                                                             class="form-control form-select"
                                                             onchange="staticSelectValidator(this , 'booking' , 'booking_status')">
                                                             <option value="" selected disabled>Please Select Status
@@ -832,26 +855,6 @@
                                                             <option value="Rescheduled">Rescheduled</option>
                                                             <option value="Refunded">Refunded</option>
                                                             <option value="ifDeleted" class="d-none"> Deleted </option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-1">
-                                                    <div class="col-12">
-                                                        <label for="selectPaymentStatus"
-                                                            class="fw-bold form-label mb-0">
-                                                            Payment Status <span class="text-danger"> * </span> :
-                                                        </label>
-
-                                                        <select id="selectPaymentStatus"
-                                                            class="form-control form-select"
-                                                            onchange="staticSelectValidator(this, 'booking', 'payment_status')">
-                                                            <option value="" selected disabled>Please Select Payment
-                                                                Status</option>
-                                                            <option value="Payment_Pending">Payment Pending</option>
-                                                            <option value="Partially_Paid">Partially Paid</option>
-                                                            <option value="Advance_Paid">Advance Paid</option>
-                                                            <option value="Fully_Paid">Fully Paid</option>
                                                         </select>
                                                     </div>
                                                 </div>

@@ -164,7 +164,7 @@ const buildBookingTable = async () => {
 const showBookingStatus = (bookingObj) => {
 
     if (bookingObj.deleted_booking == null || bookingObj.deleted_booking == false) {
-        if (bookingObj.booking_status == "Pending Payment") {
+        if (bookingObj.booking_status == "New") {
             return `
                 <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
                    style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
