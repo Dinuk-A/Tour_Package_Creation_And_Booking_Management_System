@@ -156,9 +156,9 @@ const buildAllInqTable = async () => {
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
-            { displayType: 'text', displayingPropertyOrFn: 'inqsrc', colHeadName: 'Source' },
+            { displayType: 'function', displayingPropertyOrFn: showInquirySource, colHeadName: 'Source' },
             { displayType: 'function', displayingPropertyOrFn: showRecievedTimeStamp, colHeadName: 'Recieved Time' },
-            { displayType: 'text', displayingPropertyOrFn: 'inq_status', colHeadName: 'Status' },
+            { displayType: 'function', displayingPropertyOrFn: showInquiryStatus, colHeadName: 'Status' },
             { displayType: 'function', displayingPropertyOrFn: showAssignedEmployee, colHeadName: 'Assigned to' }
         ]
 
@@ -182,9 +182,9 @@ const buildPersonalInqTable = async () => {
 
         const tableColumnInfo = [
             { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
-            { displayType: 'text', displayingPropertyOrFn: 'inqsrc', colHeadName: 'Source' },
+            { displayType: 'function', displayingPropertyOrFn: showInquirySource, colHeadName: 'Source' },
             { displayType: 'function', displayingPropertyOrFn: showRecievedTimeStamp, colHeadName: 'Recieved Time' },
-            { displayType: 'text', displayingPropertyOrFn: 'inq_status', colHeadName: 'Status' }
+            { displayType: 'function', displayingPropertyOrFn: showInquiryStatus, colHeadName: 'Status' }
         ]
 
         createTable(tableHolderDiv, sharedTableIdPersonalTbl, assignedInqs, tableColumnInfo);
@@ -203,6 +203,89 @@ const buildPersonalInqTable = async () => {
         console.error("Failed to build personal inq table:", error);
     }
 }
+
+//to fill table with inq stts
+const showInquiryStatus = (inqObj) => {
+    if (inqObj.inq_status === "New") {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #34495e; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               New Inquiry
+            </p>`;
+    } else if (inqObj.inq_status === "Assigned") {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #2980b9; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Assigned to Employee
+            </p>`;
+    } else if (inqObj.inq_status === "Working") {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #16a085; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Processing Inquiry
+            </p>`;
+    } else if (inqObj.inq_status === "Confirmed") {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #27ae60; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Client Confirmed Booking
+            </p>`;
+    } else if (inqObj.inq_status === "Closed") {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #7f8c8d; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Inquiry Closed
+            </p>`;
+    } else if (inqObj.inq_status === "ifDeleted") {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #c0392b; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Deleted
+            </p>`;
+    } else {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #95a5a6; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Unknown Status
+            </p>`;
+    }
+};
+
+// /to fill table with inq source
+const showInquirySource = (inqObj) => {
+    if (inqObj.inqsrc === "Website") {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #2c3e50; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Website
+            </p>`;
+    } else if (inqObj.inqsrc === "Phone Call") {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #8e44ad; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Phone Call
+            </p>`;
+    } else if (inqObj.inqsrc === "Email") {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #2980b9; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Email
+            </p>`;
+    } else if (inqObj.inqsrc === "In-person") {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #d35400; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               In-person
+            </p>`;
+    } else {
+        return `
+            <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+               style="background-color: #7f8c8d; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+               Unknown Source
+            </p>`;
+    }
+};
+
 
 //filter by inq status , common fn for both tABLES
 const applyInquiryStatusFilter = () => {
@@ -234,9 +317,9 @@ const applyInquiryStatusFilter = () => {
 const renderPersonalInquiryTableByFilters = (filteredInquiries) => {
     const tableColumnInfo = [
         { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
-        { displayType: 'text', displayingPropertyOrFn: 'inqsrc', colHeadName: 'Source' },
+        { displayType: 'function', displayingPropertyOrFn: showInquirySource, colHeadName: 'Source' },
         { displayType: 'function', displayingPropertyOrFn: showRecievedTimeStamp, colHeadName: 'Recieved Time' },
-        { displayType: 'text', displayingPropertyOrFn: 'inq_status', colHeadName: 'Status' }
+        { displayType: 'function', displayingPropertyOrFn: showInquiryStatus, colHeadName: 'Status' }
     ];
 
     $(sharedTableIdPersonalTbl).empty();
@@ -263,9 +346,9 @@ const renderPersonalInquiryTableByFilters = (filteredInquiries) => {
 const renderAllInqTableByFilters = (filteredInquiries) => {
     const tableColumnInfo = [
         { displayType: 'text', displayingPropertyOrFn: 'inqcode', colHeadName: 'Code' },
-        { displayType: 'text', displayingPropertyOrFn: 'inqsrc', colHeadName: 'Source' },
+        { displayType: 'function', displayingPropertyOrFn: showInquirySource, colHeadName: 'Source' },
         { displayType: 'function', displayingPropertyOrFn: showRecievedTimeStamp, colHeadName: 'Recieved Time' },
-        { displayType: 'text', displayingPropertyOrFn: 'inq_status', colHeadName: 'Status' },
+        { displayType: 'function', displayingPropertyOrFn: showInquiryStatus, colHeadName: 'Status' },
         { displayType: 'function', displayingPropertyOrFn: showAssignedEmployee, colHeadName: 'Assigned to' }
     ];
 

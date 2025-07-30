@@ -87,7 +87,8 @@ const showEmpDesignation = (empObj) => {
            ${designation}
         </p>`;
 };
-
+ 
+////fn to show employee status in table
 const showEmployeeStatus = (empObj) => {
 
     if (empObj.deleted_emp == null || empObj.deleted_emp == false) {

@@ -50,6 +50,9 @@ public class Booking {
     @Column(name = "final_price")
     private BigDecimal final_price;
 
+    @Column(name = "advancement_amount")
+    private BigDecimal advancement_amount;
+
     @Column(name = "total_paid")
     private BigDecimal total_paid;
 
@@ -60,7 +63,8 @@ public class Booking {
     private String booking_status;
 
     @Column(name = "payment_status")
-    private String payment_status;
+    private String payment_status;  
+    // "Pending", "Partially_Paid", "Fully_Paid" , "Advance_Paid"
 
     @Column(name = "is_full_payment_complete")
     private Boolean is_full_payment_complete;

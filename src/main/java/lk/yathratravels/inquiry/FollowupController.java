@@ -244,7 +244,7 @@ public class FollowupController {
 
                 // statuses
                 newBooking.setBooking_status("New");
-                newBooking.setPayment_status("Not Paid");
+                newBooking.setPayment_status("Payment_Pending");
                 newBooking.setIs_full_payment_complete(false);
 
                 // client
