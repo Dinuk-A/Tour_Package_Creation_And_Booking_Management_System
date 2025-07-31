@@ -193,7 +193,7 @@
                                         <!-- auto calc amounts -->
                                         <div class="row mb-2">
 
-                                            <div class="col-5">
+                                            <div class="col-4">
                                                 <label class="fw-bold  mb-0" for="inputTotalAmount">Package Total Amount
                                                     <span class="text-danger"> * </span>:</label>
 
@@ -206,7 +206,21 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-5">
+                                            <div class="col-4">
+                                                <label class="fw-bold mb-0" for="inputAdvancementAmount">Advancement
+                                                    Amount
+                                                    <span class="text-danger"> * </span>:</label>
+
+                                                <div class="input-group">
+                                                    <span class="input-group-text p-1 pb-0">
+                                                        <h6 class="my-auto">LKR</h6>
+                                                    </span>
+                                                    <input type="text" id="inputAdvancementAmount"
+                                                        class="form-control form-input w-85 p-1 text-center" disabled>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-4">
                                                 <label class="fw-bold  mb-0" for="inputBalanceAmount">Remaining Balance
                                                     <span class="text-danger"> * </span>:</label>
 
@@ -234,11 +248,22 @@
                                                         <h6 class="my-auto">LKR</h6>
                                                     </span>
                                                     <input type="number" id="inputPaidAmount"
-                                                        class="form-control form-input w-85 p-1 text-center"
-                                                        placeholder="100.00"
-                                                        onkeyup="validatePaidAmount(this)"
-                                                        onblur="insertDecimals(this);" disabled>
+                                                        class="form-control form-control-lg form-input w-85 p-1 text-center"
+                                                        placeholder="10000.00" 
+                                                        onblur="validatePaidAmount(this); insertDecimals(this);" disabled>
                                                 </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- current payment inputs row 2-->
+                                        <div class="row mb-2">
+                                            <!-- paid date -->
+                                            <div class="col-md-4">
+                                                <label class="fw-bold mb-0" for="inputPaidDate">Paid Date <span
+                                                        class="text-danger"> * </span>:</label>
+                                                <input type="date" disabled id="inputPaidDate"
+                                                    class="form-control form-input p-1 text-center" required
+                                                    onchange="inputValidatorText(this, '' ,'payment' , 'paid_date')">
                                             </div>
 
                                             <!-- payment method -->
@@ -247,25 +272,12 @@
                                                     <span class="text-danger"> * </span>:</label>
                                                 <select disabled id="inputPaymentMethod"
                                                     class="form-select form-input p-1 text-center" required
-                                                    onchange="staticSelectValidator(this , 'payment' , 'payment_method')">
+                                                    onchange="staticSelectValidator(this , 'payment' , 'payment_method'); changesBasedMethod(this);">
                                                     <option value="" disabled selected>Select Method</option>
                                                     <option value="Cash">Cash</option>
-                                                    <option value="Bank Transfer">Bank Transfer</option>
-                                                    <option value="Card">Card</option>
+                                                    <option value="Bank_Transfer">Bank Transfer</option>
+                                                    <!--<option value="Card">Card</option>-->
                                                 </select>
-                                            </div>
-
-                                        </div>
-
-                                        <!-- current payment inputs row 2-->
-                                        <div class="row mb-2">
-                                            <!-- paid date -->
-                                            <div class="col-md-3">
-                                                <label class="fw-bold mb-0" for="inputPaidDate">Paid Date <span
-                                                        class="text-danger"> * </span>:</label>
-                                                <input type="date" disabled id="inputPaidDate"
-                                                    class="form-control form-input p-1 text-center" required
-                                                    onchange="inputValidatorText(this, '' ,'payment' , 'paid_date')">
                                             </div>
                                         </div>
 
@@ -285,11 +297,12 @@
 
                                             </div>
                                             <div class="col-5">
-                                                <button type="button" class="btn btn-primary w-100 mb-2"
-                                                    onclick="fileInputSlipPhoto.click();">Select Image</button>
+                                                <button disabled type="button" class="btn btn-primary w-100 mb-2"
+                                                    onclick="fileInputSlipPhoto.click();" id="selectImgBtn">Select
+                                                    Image</button>
 
-                                                <button type="button" class="btn btn-danger"
-                                                    onclick="clearPayImg();">Clear Image</button>
+                                                <button disabled type="button" class="btn btn-danger"
+                                                    onclick="clearPayImg();" id="clearImgBtn">Clear Image</button>
                                             </div>
                                         </div>
                                     </div>

@@ -116,6 +116,7 @@ public class PaymentController {
 
     // changes in bookings entity common fn
     private void updateBookingPayments(Payment payment) {
+
         Booking booking = payment.getBooking_id();
         if (booking == null)
             return;
@@ -139,6 +140,39 @@ public class PaymentController {
             booking.setIs_full_payment_complete(true);
         } else {
             booking.setIs_full_payment_complete(false);
+        }
+
+        // update paymnt status of a new booking when paying for first time
+        if (booking.getPayment_status() == null || booking.getPayment_status().isEmpty()
+                || booking.getPayment_status().equals("Payment_Pending")) {
+            booking.setPayment_status("Partially_Paid");
+        }
+
+        /// check if advancement amount is paid
+        if (booking.getAdvancement_amount() != null
+                && booking.getAdvancement_amount().doubleValue() > 0.0) {
+
+            if (newTotalPaid.doubleValue() >= booking.getAdvancement_amount().doubleValue()) {
+                booking.setPayment_status("Advance_Paid");
+            }
+
+        }
+
+        /*
+         * if (newDueBalance.doubleValue() <= 0.0) {
+         * booking.setBooking_status("Fully_Paid");
+         * } else if (booking.getAdvancement_amount() != null
+         * && booking.getAdvancement_amount().doubleValue() > 0.0
+         * && newTotalPaid.doubleValue() >=
+         * booking.getAdvancement_amount().doubleValue()) {
+         * booking.setBooking_status("Advance_Paid");
+         * }
+         * 
+         */
+
+        // check if all payments are done
+        if (newDueBalance.doubleValue() <= 0.0) {
+            booking.setPayment_status("Fully_Paid");
         }
 
         bookingDao.save(booking);

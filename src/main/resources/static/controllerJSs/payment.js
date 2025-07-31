@@ -59,8 +59,8 @@ const buildPaymentTable = async () => {
 // to support the table creation
 const showPaidAmount = (payObj) => {
 
-    if (payObj && payObj.paying_amount) {
-        return `LKR ${payObj.paying_amount.toFixed(2)}`;
+    if (payObj && payObj.paid_amount) {
+        return `LKR ${payObj.paid_amount.toFixed(2)}`;
     }
 
 }
@@ -124,6 +124,7 @@ const refreshPaymentForm = async () => {
         'inputClientPassport',
         'inputTotalAmount',
         'inputBalanceAmount',
+        'inputAdvancementAmount',
         'inputPaidAmount',
         'inputPaymentMethod',
         'inputPaidDate',
@@ -139,8 +140,6 @@ const refreshPaymentForm = async () => {
             field.value = '';
         }
     });
-
-
 
     // Reset the preview image for the payment slip
     const previewSlipImgEle = document.getElementById('previewSlipImg');
@@ -183,6 +182,32 @@ const restrictFutureDates = () => {
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('inputPaidDate').setAttribute('max', today);
 };
+
+//changesBasedMethod
+const changeBasedMethod = (selectEle) => {
+
+    const selectImgBtn = document.getElementById('selectImgBtn');
+    const clearImgBtn = document.getElementById('clearImgBtn');
+
+    if (selectEle.value == "Bank_Transfer") {
+
+        selectImgBtn.disabled = false;        
+        clearImgBtn.disabled = false;
+       
+    } else  {
+
+        selectImgBtn.disabled = true;
+        clearImgBtn.disabled = true;
+
+        //clear the image if it was previously uploaded
+        payment.trx_proof = null;
+        const previewSlipImgEle = document.getElementById('previewSlipImg');
+        previewSlipImgEle.src = 'images/slip.png';
+        previewSlipImgEle.style.border = "1px solid #ced4da";
+        document.getElementById('fileInputSlipPhoto').files = null;
+
+    }
+}
 
 //validate and bind
 // onchange="imgValidatorSlipPic(this,'payment','trx_proof',previewSlipImg)"
@@ -299,12 +324,15 @@ const fillDataByBookinId = (bookingSelectEle) => {
         document.getElementById('inputClientEmail').value = bookingValue.client.email || '';
         document.getElementById('inputClientContact').value = bookingValue.client.contactone || '';
         document.getElementById('inputClientPassport').value = bookingValue.client.passportornic || '';
-        document.getElementById('inputTotalAmount').value = bookingValue.final_price || '';
-        document.getElementById('inputBalanceAmount').value = bookingValue.due_balance || '';
+        document.getElementById('inputTotalAmount').value = bookingValue.final_price.toFixed(2);
+        document.getElementById('inputBalanceAmount').value = bookingValue.due_balance.toFixed(2);
+        document.getElementById('inputAdvancementAmount').value = bookingValue.advancement_amount.toFixed(2);      
 
         let fakeArray = [];
         fakeArray.push(bookingValue.tpkg);
         fillMultDataIntoDynamicSelects(selectBookedPackage, 'Please Select Package', fakeArray, 'pkgcode', 'pkgtitle', bookingValue.tpkg.pkgcode);
+
+        payment.booking_id = bookingValue; 
 
     } else {
         showAlertModal("err", "Selected booking not found.");
@@ -318,50 +346,30 @@ const enableInputs = () => {
     inputPaidDate.disabled = false;
 }
 
-// validate paid amount input (not used)
-const validatePaidAmountLimit = (inputTagId) => {
-    const value = inputTagId.value.trim();
-    if (value === "") return;
 
-    const numericValue = parseFloat(value);
-    const dueBalance = parseFloat(payment.booking_id?.due_balance || 0);
-
-    if (numericValue > dueBalance) {
-        inputTagId.style.border = "2px solid red";
-
-        payment.paid_amount = null;
-    }
-}
 
 // validate paid amount input
 const validatePaidAmount = (inputTag) => {
-    const pattern = /^(?:[1-9][0-9]{4,})(?:\.[0-9]{1,2})?$/;
-    const min = 10000;
-    const max = payment.booking_id.due_balance;
-
     const value = inputTag.value.trim();
+    const num = parseFloat(value);
+    const min = 10000;
+    const max = parseFloat(document.getElementById('inputBalanceAmount').value) || 0;
 
     if (value !== "") {
-        const num = parseFloat(value);
-
-        if (pattern.test(value) && num >= min && num <= max) {
+        if (!isNaN(num) && num >= min && num <= max) {
             inputTag.style.border = "2px solid lime";
-            payment.paid_amount = value;
+            payment.paid_amount = num.toFixed(2); // optional: format
         } else {
             inputTag.style.border = "2px solid red";
             payment.paid_amount = null;
-            showAlertModal("err", "Paid amount cannot exceed the due balance (LKR " + max.toFixed(2) + ").");
+            showAlertModal("err", "Paid amount must be between LKR " + min + " and " + max.toFixed(2));
         }
     } else {
         payment.paid_amount = null;
-
-        if (inputTag.required) {
-            inputTag.style.border = "2px solid red";
-        } else {
-            inputTag.style.border = "2px solid #ced4da";
-        }
+        inputTag.style.border = inputTag.required ? "2px solid red" : "2px solid #ced4da";
     }
 };
+
 
 //check errors before submitting
 const checkPayFormErrors = () => {
@@ -374,6 +382,13 @@ const checkPayFormErrors = () => {
 
     if (!payment.payment_method || payment.payment_method.trim() === '') {
         errors += "Please select a valid payment method.\n";
+    }
+
+    //trx_proof is required only for bank transfer
+    if (!payment.payment_method || payment.payment_method.trim() === 'Bank_Transfer') {
+        if (!payment.trx_proof || payment.trx_proof.trim() === '') {
+            errors += "Please upload a valid transaction proof slip image/screnshot.\n";
+        }
     }
 
     if (!payment.paid_date || payment.paid_date.trim() === '') {
@@ -550,19 +565,19 @@ const printPaymentRecord = (paymentObj) => {
         return;
     }
 
-    const paymentCode = paymentObj.paymentcode || 'N/A';
-    const paidAmount = paymentObj.paid_amount || 'N/A';
-    const paidDate = paymentObj.paid_date || 'N/A';
-    const paymentMethod = paymentObj.payment_method || 'N/A';
-    const bookingCode = paymentObj.booking_id?.bookingcode || 'N/A';
+    const paymentCode = paymentObj.paymentcode;
+    const paidAmount = Number(paymentObj.paid_amount).toFixed(2);
+    const paidDate = paymentObj.paid_date;
+    const paymentMethod = paymentObj.payment_method;
+    const bookingCode = paymentObj.booking_id?.bookingcode;
 
     const client = paymentObj.booking_id?.client || {};
     const clientName = client.fullname || 'N/A';
     const clientContact = client.contactone || 'N/A';
     const clientEmail = client.email || 'N/A';
-    const clientNIC = client.passportnumornic || 'N/A';
+    const clientNIC = client.passportornic || 'N/A';
 
-    const trxProofSrc = paymentObj.trx_proof ? atob(paymentObj.trx_proof) : 'images/slip.png';
+    //const trxProofSrc = paymentObj.trx_proof ? atob(paymentObj.trx_proof) : 'images/slip.png';
 
     const printableContent = `
     <div class="container-fluid my-3 p-3 border border-dark rounded shadow-sm" style="font-family: Arial, sans-serif; max-width: 800px;">
@@ -632,4 +647,51 @@ const printPaymentRecord = (paymentObj) => {
         printWindow.print();
         setTimeout(() => printWindow.close(), 1000);
     };
+};
+
+
+// validate paid amount input (not used)
+const validatePaidAmountLimit = (inputTagId) => {
+    const value = inputTagId.value.trim();
+    if (value === "") return;
+
+    const numericValue = parseFloat(value);
+    const dueBalance = parseFloat(payment.booking_id?.due_balance || 0);
+
+    if (numericValue > dueBalance) {
+        inputTagId.style.border = "2px solid red";
+
+        payment.paid_amount = null;
+    }
+}
+
+// validate paid amount input (not used)
+const validatePaidAmountOri = (inputTag) => {
+    const pattern = /^(?:[1-9][0-9]{4,})(?:\.[0-9]{1,2})?$/;
+    const min = 10000;
+    //const max = payment.booking_id.due_balance;
+    const max = document.getElementById('inputBalanceAmount').value ? parseFloat(document.getElementById('inputBalanceAmount').value) : 0;
+
+    const value = inputTag.value.trim();
+
+    if (value !== "") {
+        const num = parseFloat(value);
+
+        if (pattern.test(value) && num >= min && num <= max) {
+            inputTag.style.border = "2px solid lime";
+            payment.paid_amount = value;
+        } else {
+            inputTag.style.border = "2px solid red";
+            payment.paid_amount = null;
+            showAlertModal("err", "Paid amount cannot exceed the due balance (LKR " + max.toFixed(2) + ").");
+        }
+    } else {
+        payment.paid_amount = null;
+
+        if (inputTag.required) {
+            inputTag.style.border = "2px solid red";
+        } else {
+            inputTag.style.border = "2px solid #ced4da";
+        }
+    }
 };
