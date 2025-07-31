@@ -294,11 +294,39 @@
 
                                             <!-- button for add surcharge amount -->
                                             <div class="col-6">
-                                                <button type="button" class="btn btn-primary w-100">
+                                                <button type="button" class="btn btn-primary w-100"
+                                                    data-bs-toggle="modal" data-bs-target="#surchargeModal">
                                                     Add Surcharge Amount
                                                 </button>
                                             </div>
 
+                                        </div>
+
+                                       <!-- surcharge inner table row -->
+                                        <div class="row mb-2">
+                                            <div class="col-6">                                               
+                                                <div class="card mx-auto mb-3 shadow-sm">
+                                                    <div class="card-header fw-bold">
+                                                        Surcharge List
+                                                    </div>
+                                                    <div class="card-body px-1 py-3">
+                                                        <table class="table table-bordered mb-0">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th>ID</th>
+                                                                    <th>Reason</th>
+                                                                    <th>Amount (LKR)</th>
+                                                                    <th class="text-center">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="surchargeTableBody">
+                                                                <!-- Rows will be dynamically added here -->
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                         </div>
 
 
@@ -936,11 +964,11 @@
 
         </div>
 
-        <!-- Bootstrap Modal -->
+        <!-- surcharge fee Modal -->
         <div class="modal fade" id="surchargeModal" tabindex="-1" aria-labelledby="surchargeModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
+            aria-hidden="true"   data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" >
 
                     <!-- Modal Header -->
                     <div class="modal-header">
@@ -976,13 +1004,17 @@
                     <!-- Modal Footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-success" onclick="saveSurcharge()">Save</button>
+                        <button id="updateSurCBtn" type="button" class="btn btn-primary"
+                            onclick="updateSurchargeFee()">Update</button>
+                        <button id="addSurCBtn" type="button" class="btn btn-success"
+                            onclick="saveSurchargeFee()">Save</button>
                     </div>
-
                 </div>
             </div>
         </div>
 
+
+        <!-- not used -->
         <!-- Modal to display full details of a row -->
         <div class="modal fade py-5" id="infoModalVehicle" tabindex="-1" aria-labelledby="infoModalLabel"
             aria-hidden="true">

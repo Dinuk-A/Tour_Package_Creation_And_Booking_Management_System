@@ -3,6 +3,7 @@ window.addEventListener('load', () => {
     buildBookingTable();
     refreshBookingForm();
     fetchCustomTpkgs();
+    refreshSurchargeForm();
     //fetchConfirmedInquiries();
 
 });
@@ -25,7 +26,7 @@ const refreshBookingForm = async () => {
     booking = new Object;
     externalPersonnels = new Object;
     externalVehicles = new Object;
-    booking.latecharges = new Array();
+    booking.surchargeList = new Array();
     booking.externalPersonnels = [];
     booking.externalVehicles = [];
 
@@ -771,7 +772,7 @@ const updateExternalVehicle = () => {
                     showAlertModal('suc', "Successfully Updated");
                     renderAssignedExternalVehicles();
                     resetExtVehicleInputs();
-                    is_ext_vehi_edited = true; 
+                    is_ext_vehi_edited = true;
                 } else {
                     showAlertModal('err', 'Vehicle not found for update');
                 }
@@ -1090,7 +1091,7 @@ const updateExternalDriver = () => {
                     showAlertModal('suc', "Successfully Updated");
                     renderAssignedExtDrivers();
                     resetExtDriverInputs();
-                    is_ext_drv_edited = true; 
+                    is_ext_drv_edited = true;
                 } else {
                     showAlertModal('err', 'Driver not found for update');
                 }
@@ -1389,7 +1390,7 @@ const checkExtGuideDuplications = () => {
 }
 
 //change the start and end dates (if customer says)
-const enableDates =()=>{
+const enableDates = () => {
     //update the tpkg's start and end days when save(backend)
 }
 
@@ -1413,7 +1414,7 @@ const updateExternalGuide = () => {
                     showAlertModal('suc', "Successfully Updated");
                     renderAssignedExtGuides();
                     resetExtGuideInputs();
-                    is_ext_gui_edited = true; 
+                    is_ext_gui_edited = true;
                 } else {
                     showAlertModal('err', 'Guide not found for update');
                 }
@@ -1528,6 +1529,138 @@ const externalPersonnelsChanged = (role) => {
 
     return false;
 };
+
+//************SURCHARGE RELATED✅✅✅✅*********** */
+//refresh the surcharge form
+const refreshSurchargeForm = () => {
+
+    surcharge = new Object();
+
+    document.getElementById('updateSurCBtn').disabled = true;
+    document.getElementById('updateSurCBtn').style.cursor = 'not-allowed';
+
+    const inputTagsIds = [
+        'inputSurchargeReason',
+        'inputSurchargeAmount'
+    ]
+    inputTagsIds.forEach((fieldID) => {
+        const field = document.getElementById(fieldID);
+        if (field) {
+            field.style.border = "1px solid #ced4da";
+            field.value = '';
+        }
+    });
+
+}
+
+//check errors in surcharge form 
+const checkSurchargeFormErrors = () => {
+
+    let errors = "";
+
+    if (surcharge.reason == null || surcharge.reason.trim() === "") {
+        errors += "Reason cannot be empty \n";
+    }
+
+    if (surcharge.amount == null || surcharge.amount <= 0) {
+        errors += "Please enter a valid amount greater than 0 \n";
+    }
+
+    return errors;
+}
+
+//add new
+const saveSurchargeFee = () => {
+    const errors = checkSurchargeFormErrors();
+
+    if (errors === "") {
+        const userConfirm = confirm("Are you sure to add this surcharge?");
+        if (userConfirm) {
+            booking.surchargeList.push({ ...surcharge });
+            createSurchargeTable();
+            refreshSurchargeForm();
+            showAlertModal('suc', 'Surcharge added successfully');
+
+            const surchargeModalElement = document.getElementById('surchargeModal');
+            const modalInstance = bootstrap.Modal.getInstance(surchargeModalElement);
+            modalInstance.hide();
+        }
+    } else {
+        showAlertModal('err', 'Form has some errors \n' + errors);
+    }
+}
+
+//fill table
+const createSurchargeTable = () => {
+    const tbody = document.getElementById('surchargeTableBody');
+    tbody.innerHTML = '';
+
+    booking.surchargeList.forEach((surcharge, index) => {
+        const row = document.createElement('tr');
+        row.classList.add('no-hover');
+
+        const idCell = document.createElement('td');
+        idCell.innerText = index + 1;
+        row.appendChild(idCell);
+
+        const reasonCell = document.createElement('td');
+        reasonCell.innerText = surcharge.reason;
+        row.appendChild(reasonCell);
+
+        const amountCell = document.createElement('td');
+        amountCell.innerText = `LKR ${parseFloat(surcharge.amount).toFixed(2)}`;
+        row.appendChild(amountCell);
+
+        const actionCell = document.createElement('td');
+        actionCell.className = 'text-center';
+
+        const btnGroup = document.createElement('div');
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'btn btn-sm btn-outline-secondary me-1';
+        editBtn.innerText = 'Edit';
+        editBtn.onclick = () => refillSurchargeForm(surcharge);
+        btnGroup.appendChild(editBtn);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-sm btn-outline-danger';
+        deleteBtn.innerText = 'Delete';
+        deleteBtn.onclick = () => {
+            booking.surchargeList.splice(index, 1);
+            createSurchargeTable();
+            //updateTotalSurcharge(); 
+            //refreshSurchargeForm(); 
+        };
+        btnGroup.appendChild(deleteBtn);
+
+        actionCell.appendChild(btnGroup);
+        row.appendChild(actionCell);
+
+        tbody.appendChild(row);
+    });
+};
+
+//refill form
+let editingSurchargeRow = null;
+
+const refillSurchargeForm = (surchargeObj) => {
+    refreshSurchargeForm();
+
+    document.getElementById('inputSurchargeReason').value = surchargeObj.reason;
+    document.getElementById('inputSurchargeAmount').value = surchargeObj.amount;
+
+    surcharge.reason = surchargeObj.reason;
+    surcharge.amount = surchargeObj.amount;
+
+    document.getElementById('updateSurCBtn').disabled = true;
+    document.getElementById('addSurCBtn').disabled = false;
+
+    editingSurchargeRow = surchargeObj;
+
+    const surchargeModal = new bootstrap.Modal(document.getElementById('surchargeModal'));
+    surchargeModal.show();
+};
+
 
 
 
