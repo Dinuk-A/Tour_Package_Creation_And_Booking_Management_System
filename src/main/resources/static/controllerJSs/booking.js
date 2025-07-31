@@ -84,13 +84,6 @@ const refreshBookingForm = async () => {
         }
     });
 
-    //selectBookedPackage
-    //selectBasedInquiry
-    //availableVehicles
-    //availableDrivers
-    //availableGuides
-
-    //get vehicle types 
 
     try {
         vehiTypes = await ajaxGetReq('/vehitypes/all');
@@ -239,6 +232,14 @@ const showBookedPkg = (bookingObj) => {
 //refill function
 const openModal = async (bookingObj) => {
 
+    //hide until pay statue is adv paid
+    //also disable 6 cbs
+    //availableVehiclesContainer
+    //availableDriversContainer
+    //availableGuidesContainer
+
+    //bookingStartDate minimum day is today + 5
+
     booking = JSON.parse(JSON.stringify(bookingObj));
     oldBooking = JSON.parse(JSON.stringify(bookingObj));
 
@@ -271,13 +272,11 @@ const openModal = async (bookingObj) => {
         createSurchargeTable();
     }
 
-
     //to get available resources
     const tourStartDate = booking.startdate;
     const tourEndDate = booking.enddate;
 
     //fill available vehis
-    internalVehicleRB.checked = true;
     try {
         availableVehiclesByDates = await ajaxGetReq("vehi/availablevehiclesbydatesonly/" + tourStartDate + "/" + tourEndDate);
         fillMultDataIntoDynamicSelectsRefillById(availableVehicles, "Please Choose A Vehicle", availableVehiclesByDates, 'numberplate', 'vehiclename');
@@ -286,7 +285,6 @@ const openModal = async (bookingObj) => {
     }
 
     //fill available drivers
-    internalDriverRB.checked = true;
     try {
         availabledriversByDates = await ajaxGetReq("emp/availabledriversbydates/" + tourStartDate + "/" + tourEndDate);
         fillMultDataIntoDynamicSelectsRefillById(availableDrivers, "Please Choose A Driver", availabledriversByDates, 'emp_code', 'fullname');
@@ -295,7 +293,6 @@ const openModal = async (bookingObj) => {
     }
 
     //fill available guides
-    internalGuideRB.checked = true;
     try {
         availableGuidesByDates = await ajaxGetReq("emp/availableguidesbydates/" + tourStartDate + "/" + tourEndDate);
         fillMultDataIntoDynamicSelectsRefillById(availableGuides, "Please Choose A Driver", availableGuidesByDates, 'emp_code', 'fullname');
@@ -496,8 +493,7 @@ const handleStartDateChange = () => {
 }
 
 // Reset internal assigned resources when dates change
-const resetIntAssignedResources  =()=>{
-
+const resetIntAssignedResources = () => {
     booking.int_vehicles = [];
     booking.int_drivers = [];
     booking.int_guides = [];
@@ -505,6 +501,11 @@ const resetIntAssignedResources  =()=>{
     renderAssignedInternalVehicles();
     renderAssignedInternalDrivers();
     renderAssignedInternalGuides();
+
+    //removed one from right side must appear on leftside
+    fillMultDataIntoDynamicSelectsRefillById(availableVehicles, "Please Choose A Vehicle", availableVehiclesByDates, 'numberplate', 'vehiclename');
+    fillMultDataIntoDynamicSelectsRefillById(availableDrivers, "Please Choose A Driver", availabledriversByDates, 'emp_code', 'fullname');
+    fillMultDataIntoDynamicSelectsRefillById(availableGuides, "Please Choose A Driver", availableGuidesByDates, 'emp_code', 'fullname');
 
 }
 
