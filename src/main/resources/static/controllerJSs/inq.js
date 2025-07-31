@@ -563,7 +563,6 @@ const printInquirySummary = async (inqObj) => {
         return;
     }
 
-
     const clientFullName = `${inqObj.clienttitle || ''} ${inqObj.clientname || ''}`.trim();
     const contactNum = inqObj.contactnum || 'N/A';
     const email = inqObj.email || 'N/A';

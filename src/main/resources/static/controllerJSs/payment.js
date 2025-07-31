@@ -86,6 +86,19 @@ const showClientName = (payObj) => {
 
 }
 
+//global vars
+//let allTpkgs = [];
+
+//fetch all custom tpkgs
+//const fetchCustomTpkgs = async () => {
+//
+//    try {
+//        allTpkgs = await ajaxGetReq("/tpkg/custom/completed");
+//    } catch (error) {
+//        console.error("Failed to fetch custom tpkgs:", error);
+//    }
+//}
+
 //globally saved to use with search
 let allUnpaidBookings = [];
 
@@ -226,14 +239,6 @@ const clearPayImg = () => {
     }
 }
 
-//    let userConfirm = confirm("Are you sure to refill the form with this booking details?");
-//
-//    if (userConfirm) {
-//        fillDataByBookinId(bookingSelectEle);
-//    } else {
-//        showAlertModal("inf", "User Cancelled The Task");
-//    }
-
 //fn to handle the booking select change event
 const handleUserConfirmToRefill = (bookingSelectEle) => {
 
@@ -293,9 +298,13 @@ const fillDataByBookinId = (bookingSelectEle) => {
         document.getElementById('inputClientName').value = bookingValue.client.fullname || '';
         document.getElementById('inputClientEmail').value = bookingValue.client.email || '';
         document.getElementById('inputClientContact').value = bookingValue.client.contactone || '';
-        document.getElementById('inputClientPassport').value = bookingValue.client.passportnumornic || '';
+        document.getElementById('inputClientPassport').value = bookingValue.client.passportornic || '';
         document.getElementById('inputTotalAmount').value = bookingValue.final_price || '';
         document.getElementById('inputBalanceAmount').value = bookingValue.due_balance || '';
+
+        let fakeArray = [];
+        fakeArray.push(bookingValue.tpkg);
+        fillMultDataIntoDynamicSelects(selectBookedPackage, 'Please Select Package', fakeArray, 'pkgcode', 'pkgtitle', bookingValue.tpkg.pkgcode);
 
     } else {
         showAlertModal("err", "Selected booking not found.");
@@ -319,7 +328,7 @@ const validatePaidAmountLimit = (inputTagId) => {
 
     if (numericValue > dueBalance) {
         inputTagId.style.border = "2px solid red";
-        
+
         payment.paid_amount = null;
     }
 }
@@ -464,7 +473,7 @@ const openModal = (paymentObj) => {
      }
      */
 
-    //window['currentPayment'] = paymentObj;
+    window['currentObject'] = paymentObj;
 
     // Show modal
     $('#infoModalPayment').modal('show');
@@ -533,3 +542,94 @@ const searchBookings = () => {
     selectBookingEle.style.border = "1px solid orange";
 
 }
+
+//print a recipt
+const printPaymentRecord = (paymentObj) => {
+    if (!paymentObj) {
+        alert('No payment data available to print.');
+        return;
+    }
+
+    const paymentCode = paymentObj.paymentcode || 'N/A';
+    const paidAmount = paymentObj.paid_amount || 'N/A';
+    const paidDate = paymentObj.paid_date || 'N/A';
+    const paymentMethod = paymentObj.payment_method || 'N/A';
+    const bookingCode = paymentObj.booking_id?.bookingcode || 'N/A';
+
+    const client = paymentObj.booking_id?.client || {};
+    const clientName = client.fullname || 'N/A';
+    const clientContact = client.contactone || 'N/A';
+    const clientEmail = client.email || 'N/A';
+    const clientNIC = client.passportnumornic || 'N/A';
+
+    const trxProofSrc = paymentObj.trx_proof ? atob(paymentObj.trx_proof) : 'images/slip.png';
+
+    const printableContent = `
+    <div class="container-fluid my-3 p-3 border border-dark rounded shadow-sm" style="font-family: Arial, sans-serif; max-width: 800px;">
+        <h2 class="text-center text-success mb-4">Payment Receipt</h2>
+        <hr class="border border-dark border-2">
+
+        <div class="row mb-3">
+            <div class="col-md-6"><strong>Payment Code:</strong> ${paymentCode}</div>
+            <div class="col-md-6"><strong>Booking Code:</strong> ${bookingCode}</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6"><strong>Paid Amount:</strong> LKR ${paidAmount}</div>
+            <div class="col-md-6"><strong>Paid Date:</strong> ${paidDate}</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6"><strong>Payment Method:</strong> ${paymentMethod}</div>
+        </div>
+
+        <hr>
+
+        <h5 class="text-primary mb-3">Client Details</h5>
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Name:</strong> ${clientName}</div>
+            <div class="col-md-6"><strong>Contact:</strong> ${clientContact}</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6"><strong>Email:</strong> ${clientEmail}</div>
+            <div class="col-md-6"><strong>NIC / Passport:</strong> ${clientNIC}</div>
+        </div>
+          
+        <p class="text-center text-muted small mt-4">Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+    </div>`;
+
+    const printableTitle = `Receipt_${(paymentCode || 'Payment').replace(/\s+/g, '_')}`;
+
+    const printWindow = window.open('', '', 'width=1000,height=700');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>${printableTitle}</title>
+            <link rel="stylesheet" href="../libs/bootstrap-5.2.3/css/bootstrap.min.css">
+            <style>
+                body {
+                    margin: 0;
+                    padding: 10px;
+                    background-color: #f8f9fa;
+                    font-family: Arial, sans-serif;
+                }
+                @media print {
+                    body {
+                        background-color: white;
+                        margin: 0;
+                        padding: 0;
+                    }
+                }
+            </style>
+        </head>
+        <body>${printableContent}</body>
+        </html>
+    `);
+    printWindow.document.close();
+
+    printWindow.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+        setTimeout(() => printWindow.close(), 1000);
+    };
+};
