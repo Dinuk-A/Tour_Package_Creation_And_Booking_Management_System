@@ -26,6 +26,8 @@ import org.springframework.data.domain.Sort.Direction;
 
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
+import lk.yathratravels.tpkg.TourPkg;
+import lk.yathratravels.tpkg.TourPkgDao;
 import lk.yathratravels.user.Role;
 import lk.yathratravels.user.User;
 import lk.yathratravels.user.UserDao;
@@ -40,6 +42,9 @@ public class BookingController {
 
     @Autowired
     private BookingDao bookingDao;
+
+    @Autowired
+    private TourPkgDao tourPkgDao;
 
     // display booking UI
     @RequestMapping(value = "/booking", method = RequestMethod.GET)
@@ -139,6 +144,17 @@ public class BookingController {
                 fee.setBooking(booking);
             }
 
+            // update start and end dates of original tpkg
+            TourPkg tpkg = booking.getTpkg();
+
+            //not working 💥💥💥
+            if (booking.getStartdate() != null && booking.getEnddate() != null) {
+                tpkg.setTourstartdate(booking.getStartdate());
+                tpkg.setTourenddate(booking.getEnddate());
+                System.out.println("updating days in tpkg");
+                //tourPkgDao.save(tpkg);
+            }
+
             bookingDao.save(booking);
 
             return "OK";
@@ -159,3 +175,72 @@ public class BookingController {
     }
 
 }
+
+// delete one surcharge
+/*
+ * @PutMapping(value = "/booking")
+ * 
+ * @Transactional
+ * public String updateBooking(@RequestBody Booking booking) {
+ * 
+ * Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+ * 
+ * Privilege privilegeLevelForLoggedUser =
+ * privilegeService.getPrivileges(auth.getName(), "BOOKING");
+ * 
+ * if (!privilegeLevelForLoggedUser.getPrvupdate()) {
+ * return "Update Not Completed; You Dont Have Permission";
+ * }
+ * 
+ * try {
+ * booking.setLastmodifieddatetime(LocalDateTime.now());
+ * booking.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId
+ * ());
+ * 
+ * // Handle external vehicles
+ * for (ExtVehicles vehi : booking.getExternalVehicles()) {
+ * vehi.setBooking(booking);
+ * }
+ * 
+ * // Handle external personnel
+ * for (ExtPersonnel personnel : booking.getExternalPersonnels()) {
+ * personnel.setBooking(booking);
+ * }
+ * 
+ * // Handle surcharge fees completely manually
+ * // Step 1: Delete all existing surcharge fees for this booking
+ * List<SurchargeFee> existingFees =
+ * surchargeFeeRepository.findByBookingId(booking.getId());
+ * surchargeFeeRepository.deleteAll(existingFees);
+ * 
+ * // Step 2: Save new surcharge fees
+ * List<SurchargeFee> newSurcharges = new ArrayList<>();
+ * for (SurchargeFee fee : booking.getSurchargeList()) {
+ * fee.setId(null); // Ensure it's treated as new
+ * fee.setAddeddatetime(LocalDateTime.now());
+ * fee.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+ * fee.setBooking(booking);
+ * newSurcharges.add(fee);
+ * System.out.println("Adding Surcharge Fee: " + fee.getReason() + " - " +
+ * fee.getAmount());
+ * }
+ * 
+ * // Clear the surcharge list to avoid Hibernate managing it
+ * booking.setSurchargeList(new ArrayList<>());
+ * 
+ * // Save booking first
+ * Booking savedBooking = bookingDao.save(booking);
+ * 
+ * // Then save surcharge fees separately
+ * for (SurchargeFee fee : newSurcharges) {
+ * fee.setBooking(savedBooking);
+ * surchargeFeeRepository.save(fee);
+ * }
+ * 
+ * return "OK";
+ * } catch (Exception e) {
+ * e.printStackTrace();
+ * return "Update Not Completed Because :" + e.getMessage();
+ * }
+ * }
+ */

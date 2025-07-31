@@ -302,9 +302,9 @@
 
                                         </div>
 
-                                       <!-- surcharge inner table row -->
+                                        <!-- surcharge inner table row -->
                                         <div class="row mb-2">
-                                            <div class="col-6">                                               
+                                            <div class="col-6">
                                                 <div class="card mx-auto mb-3 shadow-sm">
                                                     <div class="card-header fw-bold">
                                                         Surcharge List
@@ -343,12 +343,11 @@
 
                                                     <div class="col-4">
                                                         <label for="bookingStartDate"
-                                                            class="fw-bold form-label mb-0">Start
-                                                            Date
+                                                            class="fw-bold form-label mb-0">Start Date
                                                             <span class="text-danger"> * </span> : </label>
                                                         <input id="bookingStartDate" type="date"
                                                             class="  form-control form-input" disabled
-                                                            onchange="inputValidatorText(this, '' ,'booking' , 'starrtdate');"
+                                                            onchange="handleStartDateChange();"
                                                             onkeydown="return false">
                                                     </div>
 
@@ -365,8 +364,8 @@
                                                     <div class="col-1"></div>
 
                                                     <div class="col-3">
-                                                        <button type="button" class="btn btn-primary mt-4"
-                                                            onclick="enableDates();">
+                                                        <button id="enableDaysBtn" type="button"
+                                                            class="btn btn-primary mt-4" onclick="enableDates();">
                                                             Change Tour Dates
                                                         </button>
                                                     </div>
@@ -966,9 +965,9 @@
 
         <!-- surcharge fee Modal -->
         <div class="modal fade" id="surchargeModal" tabindex="-1" aria-labelledby="surchargeModalLabel"
-            aria-hidden="true"   data-bs-backdrop="static" data-bs-keyboard="false">
+            aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content" >
+                <div class="modal-content">
 
                     <!-- Modal Header -->
                     <div class="modal-header">

@@ -446,7 +446,65 @@ const updateBooking = async () => {
         }
     }
 
+}
 
+
+//change the start and end dates (if customer says)
+//update the tpkg's start and end days when save(backend)
+const enableDates = () => {
+
+    let userConfirm = confirm("If you change the dates, it will reset the assigned internal resources \nAre you sure to continue ?");
+    if (userConfirm) {
+        const startDateEle = document.getElementById('bookingStartDate');
+        startDateEle.disabled = false;
+    } else {
+        return
+    }
+
+}
+
+//handle start date changes
+const handleStartDateChange = () => {
+
+    const startDateEle = document.getElementById('bookingStartDate');
+    const endDateEle = document.getElementById('bookingEndDate');
+    const totalDaysCountInTpkg = booking.tpkg.totaldays;
+
+    const startDateValue = startDateEle.value;
+    if (!startDateValue || isNaN(totalDaysCountInTpkg)) {
+        return;
+    }
+
+    const startDate = new Date(startDateValue);
+
+    // Add (totalDaysCountInTpkg - 1) days to get the end date
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + totalDaysCountInTpkg - 1);
+
+    // Format as yyyy-mm-dd
+    const formattedEndDate = endDate.toISOString().split('T')[0];
+
+    // Update the end date field
+    endDateEle.value = formattedEndDate;
+
+    booking.startdate = startDateValue;
+    booking.enddate = formattedEndDate;
+
+    //reset internal resources
+    resetIntAssignedResources();
+
+}
+
+// Reset internal assigned resources when dates change
+const resetIntAssignedResources  =()=>{
+
+    booking.int_vehicles = [];
+    booking.int_drivers = [];
+    booking.int_guides = [];
+
+    renderAssignedInternalVehicles();
+    renderAssignedInternalDrivers();
+    renderAssignedInternalGuides();
 
 }
 
@@ -1396,10 +1454,6 @@ const checkExtGuideDuplications = () => {
     return isAlreadySelected;
 }
 
-//change the start and end dates (if customer says)
-const enableDates = () => {
-    //update the tpkg's start and end days when save(backend)
-}
 
 //update ext driver
 const updateExternalGuide = () => {
