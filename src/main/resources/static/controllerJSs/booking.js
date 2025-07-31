@@ -232,14 +232,6 @@ const showBookedPkg = (bookingObj) => {
 //refill function
 const openModal = async (bookingObj) => {
 
-    //hide until pay statue is adv paid
-    //also disable 6 cbs
-    //availableVehiclesContainer
-    //availableDriversContainer
-    //availableGuidesContainer
-
-    //bookingStartDate minimum day is today + 5
-
     booking = JSON.parse(JSON.stringify(bookingObj));
     oldBooking = JSON.parse(JSON.stringify(bookingObj));
 
@@ -248,8 +240,15 @@ const openModal = async (bookingObj) => {
 
     console.log("bookingObj ", bookingObj);
 
+    //minimum day is today + 5
+    const bookingStartDateInput = document.getElementById('bookingStartDate');
+    const today = new Date();
+    today.setDate(today.getDate() + 5);
+    const minDate = today.toISOString().split('T')[0];
+    bookingStartDateInput.min = minDate;
+
     document.getElementById('inputBookingCode').value = booking.bookingcode || '';
-    document.getElementById('bookingStartDate').value = booking.startdate || '';
+    bookingStartDateInput.value = booking.startdate || '';
     document.getElementById('bookingEndDate').value = booking.enddate || '';
     document.getElementById('inputClientName').value = booking.client ? booking.client.fullname : '';
     document.getElementById('inputClientPassport').value = booking.client ? booking.client.passportornic : '';
@@ -267,10 +266,17 @@ const openModal = async (bookingObj) => {
     fillMultDataIntoDynamicSelects(selectBookedPackage, 'Please Select Package', allTpkgs, 'pkgcode', 'pkgtitle', booking.tpkg.pkgcode);
     //fillDataIntoDynamicSelects(selectBasedInquiry, 'Please Select Inquiry', allInquiries, 'inqcode', booking.tpkg.basedinq.inqcode);
 
+    //create surcharge list 
     if (booking.surchargeList && booking.surchargeList.length > 0) {
-        //create surcharge list 
         createSurchargeTable();
     }
+
+    document.getElementById('availableVehiclesContainer').classList.add("d-none");
+    document.getElementById('availableDriversContainer').classList.add("d-none");
+    document.getElementById('availableGuidesContainer').classList.add("d-none");
+
+    //check if this booking can be assigned with resources
+    checkAssignability(booking);
 
     //to get available resources
     const tourStartDate = booking.startdate;
@@ -365,6 +371,28 @@ const openModal = async (bookingObj) => {
     let firstTab = new bootstrap.Tab(document.getElementById('bookingStep1-tab'));
     firstTab.show();
 
+}
+
+//disable enable fields based on advancement is paid or not
+const checkAssignability = (bookingObj) => {
+
+    if (bookingObj.payment_status === "Advance_Paid" || bookingObj.payment_status === "Fully_Paid") {
+
+        //enable
+        document.getElementById('internalVehicleRB').disabled = false;
+        document.getElementById('externalVehicleRB').disabled = false;
+        document.getElementById('internalDriverRB').disabled = false;
+        document.getElementById('externalDriverRB').disabled = false;
+        document.getElementById('internalGuideRB').disabled = false;
+        document.getElementById('externalGuideRB').disabled = false;
+
+        //unhide
+        document.getElementById('availableVehiclesContainer').classList.remove("d-none");
+        document.getElementById('availableDriversContainer').classList.remove("d-none");
+        document.getElementById('availableGuidesContainer').classList.remove("d-none");
+
+
+    }
 }
 
 // check differences before updating
@@ -877,6 +905,7 @@ const handleDriverTypeChange = (selectedType) => {
 
 //add int driver
 const addIntDrv = () => {
+
     const selectedValue = document.getElementById('availableDrivers').value;
     const selectedDriver = JSON.parse(selectedValue);
 
@@ -891,9 +920,18 @@ const addIntDrv = () => {
     if (isAlreadySelected) {
         showAlertModal('err', 'This driver is already selected')
     } else {
-        booking.int_drivers.push(selectedDriver);
-        renderAssignedInternalDrivers();
-        console.log("drivers ", booking.int_drivers);
+        const totalVehicles = (booking.int_vehicles?.length || 0) + (booking.externalVehicles?.length || 0);
+        const internalDrivers = booking.int_drivers.length;
+        const externalDrivers = (booking.externalPersonnels || []).filter(p => p.role === "Driver").length;
+        const totalDrivers = internalDrivers + externalDrivers;
+
+        if (totalVehicles > 0 && totalDrivers >= totalVehicles) {
+            showAlertModal('err', 'Cannot assign more drivers than available vehicles.');
+        } else {
+            booking.int_drivers.push(selectedDriver);
+            renderAssignedInternalDrivers();
+            console.log("drivers ", booking.int_drivers);
+        }
     }
 }
 
@@ -983,24 +1021,47 @@ const checkExtDriverFormErrors = () => {
     return errors;
 };
 
+const isDuplicateNewAddingExternalDriver = () => {
+    return booking.externalPersonnels.some(person =>
+        person.role === "Driver" && person.nic === externalPersonnels.nic
+    );
+};
+
 //for add ext driver btn
 const addExternalDriver = () => {
     const errors = checkExtDriverFormErrors();
     if (errors == "") {
-        const userConfirm = confirm("Are you sure to add ? \n  " + externalPersonnels.fullname);
-        if (userConfirm) {
-            externalPersonnels.role = "Driver";
-            booking.externalPersonnels.push({ ...externalPersonnels });
-            console.log(booking);
 
-            resetExtDriverInputs();
-            externalPersonnels = {};
-            renderAssignedExtDrivers();
+        // duplication check based on NIC
+        if (isDuplicateNewAddingExternalDriver()) {
+            showAlertModal("err", "This external driver is already added.");
+            return;
+        }
+
+        const totalVehicles = (booking.int_vehicles?.length || 0) + (booking.externalVehicles?.length || 0);
+        const internalDrivers = booking.int_drivers.length;
+        const externalDrivers = (booking.externalPersonnels || []).filter(p => p.role === "Driver").length;
+        const totalDrivers = internalDrivers + externalDrivers;
+
+        if (totalVehicles > 0 && totalDrivers >= totalVehicles) {
+            showAlertModal('err', 'Cannot assign more drivers than available vehicles.');
+        } else {
+            const userConfirm = confirm("Are you sure to add ? \n  " + externalPersonnels.fullname);
+            if (userConfirm) {
+                externalPersonnels.role = "Driver";
+                booking.externalPersonnels.push({ ...externalPersonnels });
+                console.log(booking);
+
+                resetExtDriverInputs();
+                externalPersonnels = {};
+                renderAssignedExtDrivers();
+            }
         }
     } else {
         showAlertModal("err", "Form has some errors \n " + errors);
     }
-}
+};
+
 
 //reset ext driver add form
 const resetExtDriverInputs = () => {
@@ -1302,10 +1363,23 @@ const checkExtGuideFormErrors = () => {
     return errors;
 };
 
-//add
+const isDuplicateNewAddingExternalGuide = () => {
+    return booking.externalPersonnels.some(person =>
+        person.role === "Guide" && person.nic === externalPersonnels.nic
+    );
+};
+
+//add ext guide
 const addExternalGuide = () => {
     const errors = checkExtGuideFormErrors();
     if (errors == "") {
+
+        // duplication check
+        if (isDuplicateNewAddingExternalGuide()) {
+            showAlertModal("err", "This external guide is already added.");
+            return;
+        }
+
         const userConfirm = confirm("Are you sure to add ? \n " + externalPersonnels.fullname);
         if (userConfirm) {
             externalPersonnels.role = "Guide";
@@ -1429,6 +1503,7 @@ const refillExtGuideForm = (guideObj) => {
 
 // check ext driver duplications
 const checkExtGuideDuplications = () => {
+
     let isAlreadySelected = false;
 
     const extGuideNICValue = document.getElementById('extGuideNIC').value.trim();
