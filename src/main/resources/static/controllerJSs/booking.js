@@ -243,6 +243,7 @@ const openModal = async (bookingObj) => {
     oldBooking = JSON.parse(JSON.stringify(bookingObj));
 
     booking.surchargeList = booking.surchargeList || [];
+    console.log("booking.surchargeList ", booking.surchargeList);
 
     console.log("bookingObj ", bookingObj);
 
@@ -264,6 +265,12 @@ const openModal = async (bookingObj) => {
 
     fillMultDataIntoDynamicSelects(selectBookedPackage, 'Please Select Package', allTpkgs, 'pkgcode', 'pkgtitle', booking.tpkg.pkgcode);
     //fillDataIntoDynamicSelects(selectBasedInquiry, 'Please Select Inquiry', allInquiries, 'inqcode', booking.tpkg.basedinq.inqcode);
+
+    if (booking.surchargeList && booking.surchargeList.length > 0) {
+        //create surcharge list 
+        createSurchargeTable();
+    }
+
 
     //to get available resources
     const tourStartDate = booking.startdate;

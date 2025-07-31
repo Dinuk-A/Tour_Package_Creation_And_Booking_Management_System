@@ -94,14 +94,15 @@ public class BookingController {
     // get unpaid new bookings (where is_full_payment_complete is false or null)
     @GetMapping(value = "/booking/unpaid", produces = "application/json")
     public List<Booking> getUnpaidBookings() {
-        
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//
-//        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "BOOKING");
-//
-//        if (!privilegeLevelForLoggedUser.getPrvselect()) {
-//            return new ArrayList<>();
-//        }
+
+        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //
+        // Privilege privilegeLevelForLoggedUser =
+        // privilegeService.getPrivileges(auth.getName(), "BOOKING");
+        //
+        // if (!privilegeLevelForLoggedUser.getPrvselect()) {
+        // return new ArrayList<>();
+        // }
 
         return bookingDao.getUnpaidNewBookings();
     }
@@ -129,6 +130,13 @@ public class BookingController {
 
             for (ExtPersonnel personnel : booking.getExternalPersonnels()) {
                 personnel.setBooking(booking);
+            }
+
+            for (SurchargeFee fee : booking.getSurchargeList()) {
+                fee.setAddeddatetime(LocalDateTime.now());
+                fee.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+                System.out.println("Adding Surcharge Fee: " + fee.getReason() + " - " + fee.getAmount());
+                fee.setBooking(booking);
             }
 
             bookingDao.save(booking);

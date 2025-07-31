@@ -97,6 +97,10 @@ public class Booking {
     @JoinColumn(name = "booking_id")
     private List<ExtVehicles> externalVehicles;
 
+    @OneToMany(cascade = CascadeType.ALL ,  orphanRemoval = true)
+    @JoinColumn(name = "booking_id")
+    private List<SurchargeFee> surchargeList;
+
     // common 6
     @Column(name = "addeddatetime")
     private LocalDateTime addeddatetime;
