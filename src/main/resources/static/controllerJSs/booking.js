@@ -25,6 +25,7 @@ const refreshBookingForm = async () => {
     booking = new Object;
     externalPersonnels = new Object;
     externalVehicles = new Object;
+    booking.latecharges = new Array();
     booking.externalPersonnels = [];
     booking.externalVehicles = [];
 
@@ -1385,6 +1386,11 @@ const checkExtGuideDuplications = () => {
 
     console.log(booking.externalPersonnels);
     return isAlreadySelected;
+}
+
+//change the start and end dates (if customer says)
+const enableDates =()=>{
+    //update the tpkg's start and end days when save(backend)
 }
 
 //update ext driver
