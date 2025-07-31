@@ -242,6 +242,8 @@ const openModal = async (bookingObj) => {
     booking = JSON.parse(JSON.stringify(bookingObj));
     oldBooking = JSON.parse(JSON.stringify(bookingObj));
 
+    booking.surchargeList = booking.surchargeList || [];
+
     console.log("bookingObj ", bookingObj);
 
     document.getElementById('inputBookingCode').value = booking.bookingcode || '';
@@ -1576,7 +1578,7 @@ const saveSurchargeFee = () => {
     if (errors === "") {
         const userConfirm = confirm("Are you sure to add this surcharge?");
         if (userConfirm) {
-            booking.surchargeList.push({ ...surcharge });
+            booking.surchargeList.push(surcharge);
             createSurchargeTable();
             refreshSurchargeForm();
             showAlertModal('suc', 'Surcharge added successfully');
@@ -1647,13 +1649,15 @@ const refillSurchargeForm = (surchargeObj) => {
     refreshSurchargeForm();
 
     document.getElementById('inputSurchargeReason').value = surchargeObj.reason;
-    document.getElementById('inputSurchargeAmount').value = surchargeObj.amount;
+    document.getElementById('inputSurchargeAmount').value = surchargeObj.amount.toFixed(2); ;
 
     surcharge.reason = surchargeObj.reason;
     surcharge.amount = surchargeObj.amount;
 
-    document.getElementById('updateSurCBtn').disabled = true;
-    document.getElementById('addSurCBtn').disabled = false;
+    document.getElementById('updateSurCBtn').disabled = false;
+    document.getElementById('updateSurCBtn').style.cursor = 'pointer';
+    document.getElementById('addSurCBtn').disabled = true;
+    document.getElementById('addSurCBtn').style.cursor = 'not-allowed';
 
     editingSurchargeRow = surchargeObj;
 
