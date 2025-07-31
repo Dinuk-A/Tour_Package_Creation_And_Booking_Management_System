@@ -316,14 +316,6 @@ const openModal = async (bookingObj) => {
     driverPrefMsg.innerText = ` ${driverType} requested`;
 
     //refill assigned resources if they exist
-    /*
-     booking.externalPersonnels = [];
-    booking.externalVehicles = [];
-
-    booking.int_vehicles = [];
-    booking.int_drivers = [];
-    booking.int_guides = []; */
-
     //render internal vehicles
     if (booking.int_vehicles && booking.int_vehicles.length > 0) {
         renderAssignedInternalVehicles();
@@ -360,6 +352,8 @@ const openModal = async (bookingObj) => {
         renderAssignedExtGuides();
     }
 
+    //save globally for use when updating
+    setBasePrices();
 
     let myInqFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
     myInqFormTab.show();
@@ -376,6 +370,10 @@ const showBookingValueChanges = () => {
 
     if (booking.startdate !== oldBooking.startdate) {
         updates += `Tour Start Date changed from ${oldBooking.startdate} to ${booking.startdate}\n`;
+    }
+
+    if (surchargeListChanged()) {
+        updates += "Surcharges have been updated\n";
     }
 
     if (intVehiclesChanged()) {
@@ -1458,6 +1456,28 @@ const sameContactError = (thisElement, otherElement) => {
 
 }
 
+// for surcharge fee list
+const surchargeListChanged = () => {
+    if (!booking.surchargeList || !oldBooking.surchargeList) return true;
+
+    if (booking.surchargeList.length !== oldBooking.surchargeList.length) return true;
+
+    for (let i = 0; i < booking.surchargeList.length; i++) {
+        const newItem = booking.surchargeList[i];
+        const oldItem = oldBooking.surchargeList[i];
+
+        if (
+            newItem.costName !== oldItem.costName ||
+            newItem.amount !== oldItem.amount
+        ) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+
 // check if assigned int vehicles list have changed
 const intVehiclesChanged = () => {
     if (booking.int_vehicles.length !== oldBooking.int_vehicles.length) return true;
@@ -1580,6 +1600,7 @@ const saveSurchargeFee = () => {
         if (userConfirm) {
             booking.surchargeList.push(surcharge);
             createSurchargeTable();
+            updateOtherTotalAmounts();
             refreshSurchargeForm();
             showAlertModal('suc', 'Surcharge added successfully');
 
@@ -1630,8 +1651,8 @@ const createSurchargeTable = () => {
         deleteBtn.onclick = () => {
             booking.surchargeList.splice(index, 1);
             createSurchargeTable();
-            //updateTotalSurcharge(); 
-            //refreshSurchargeForm(); 
+            updateOtherTotalAmounts();
+            refreshSurchargeForm();
         };
         btnGroup.appendChild(deleteBtn);
 
@@ -1642,6 +1663,58 @@ const createSurchargeTable = () => {
     });
 };
 
+// Store base prices globally 
+let basePackagePrice = 0;
+let baseDueBalance = 0;
+
+//call once when refilled
+const setBasePrices = () => {
+    const packagePriceEle = document.getElementById('inputPackagePrice');
+    const dueBalanceEle = document.getElementById('inputDueBalance');
+
+    basePackagePrice = parseFloat(packagePriceEle.value) || 0;
+    baseDueBalance = parseFloat(dueBalanceEle.value) || 0;
+};
+
+//add the newly added value to the totalPrice and due balance
+const updateOtherTotalAmounts = () => {
+
+    const packagePriceEle = document.getElementById('inputPackagePrice');
+    const dueBalanceEle = document.getElementById('inputDueBalance');
+
+    /**const getTotalSurchargeAmount = () => {
+    return booking.surchargeList.reduce((total, item) => {
+        return total + parseFloat(item.amount);
+    }, 0);
+};
+ */
+
+    let totalSurcharge = 0;
+    for (let i = 0; i < booking.surchargeList.length; i++) {
+        totalSurcharge += parseFloat(booking.surchargeList[i].amount);
+    }
+    console.log("Total surcharge amount:", totalSurcharge);
+
+    //    const currentPkgPrice = parseFloat(packagePriceEle.value) || 0;
+    //    const newPkgPrice = currentPkgPrice + totalSurcharge;
+    //    packagePriceEle.value = newPkgPrice.toFixed(2);
+    //    booking.final_price = newPkgPrice;
+    //
+    //    const currentDueBalance = parseFloat(dueBalanceEle.value) || 0;
+    //    const newDueBalance = currentDueBalance + totalSurcharge;
+    //    dueBalanceEle.value = newDueBalance.toFixed(2);
+    //    booking.due_balance = newDueBalance;
+
+    const newPkgPrice = basePackagePrice + totalSurcharge;
+    packagePriceEle.value = newPkgPrice.toFixed(2);
+    booking.final_price = newPkgPrice;
+
+    const newDueBalance = baseDueBalance + totalSurcharge;
+    dueBalanceEle.value = newDueBalance.toFixed(2);
+    booking.due_balance = newDueBalance;
+
+}
+
 //refill form
 let editingSurchargeRow = null;
 
@@ -1649,7 +1722,7 @@ const refillSurchargeForm = (surchargeObj) => {
     refreshSurchargeForm();
 
     document.getElementById('inputSurchargeReason').value = surchargeObj.reason;
-    document.getElementById('inputSurchargeAmount').value = surchargeObj.amount.toFixed(2); ;
+    document.getElementById('inputSurchargeAmount').value = parseFloat(surchargeObj.amount).toFixed(2);
 
     surcharge.reason = surchargeObj.reason;
     surcharge.amount = surchargeObj.amount;
@@ -1663,6 +1736,41 @@ const refillSurchargeForm = (surchargeObj) => {
 
     const surchargeModal = new bootstrap.Modal(document.getElementById('surchargeModal'));
     surchargeModal.show();
+};
+
+//update a single row in surcharge table
+const updateSingleSurchargeFee = () => {
+    const reason = document.getElementById('inputSurchargeReason').value.trim();
+    const amount = parseFloat(document.getElementById('inputSurchargeAmount').value);
+
+    const errors = checkSurchargeFormErrors();
+
+    if (errors === '') {
+        const userConfirm = confirm("Are you sure you want to update this surcharge?");
+        if (userConfirm) {
+            editingSurchargeRow.reason = reason;
+            editingSurchargeRow.amount = amount;
+
+            createSurchargeTable();
+            refreshSurchargeForm();
+            updateOtherTotalAmounts();
+
+            editingSurchargeRow = null;
+
+            document.getElementById('addSurCBtn').style.cursor = 'pointer';
+            document.getElementById('addSurCBtn').disabled = false;
+
+            document.getElementById('updateSurCBtn').style.cursor = 'not-allowed';
+            document.getElementById('updateSurCBtn').disabled = true;
+
+            const surchargeModal = bootstrap.Modal.getInstance(document.getElementById('surchargeModal'));
+            surchargeModal.hide();
+
+            console.log("updateSingleSurchargeFee success");
+        }
+    } else {
+        alert('Form Has Following Errors \n \n' + errors);
+    }
 };
 
 
