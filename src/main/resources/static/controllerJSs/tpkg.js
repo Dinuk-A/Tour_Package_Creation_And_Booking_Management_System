@@ -895,7 +895,8 @@ const unpublishTpkgRecord = async () => {
             tpkg = window.currentObject;
             tpkg.tpkg_status = "Inactive";
 
-            let putServiceResponse = await ajaxPPDRequest("/tpkg", "PUT", tpkg);
+            let putServiceResponse = await ajaxPPDRequest("/tpkgunpublish", "PUT", tpkg);
+            //let putServiceResponse = await ajaxPPDRequest("/tpkg", "PUT", tpkg);
 
             if (putServiceResponse === "OK") {
 

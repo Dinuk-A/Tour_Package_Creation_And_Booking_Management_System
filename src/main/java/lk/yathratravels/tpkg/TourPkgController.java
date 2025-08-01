@@ -157,6 +157,12 @@ public class TourPkgController {
                 ac.setTourPkg(tpkg);
             }
 
+            //if is emplate + status == live on website
+            //all days will be status == used on a web pkg start.mid.last all
+
+            //else all status == used in a package 
+
+            
             daoTPkg.save(tpkg);
 
             return "OK";
@@ -185,6 +191,35 @@ public class TourPkgController {
                 ac.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
                 ac.setTourPkg(tpkg);
             }
+
+            daoTPkg.save(tpkg);
+            return "OK";
+        } catch (Exception e) {
+            return "Update Not Completed Because :" + e.getMessage();
+        }
+
+    }
+
+    @PutMapping(value = "/tpkgunpublish")
+    public String unpublishWebTourPkg(@RequestBody TourPkg tpkg) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Privilege privilegeLevelForLoggedUser = privilegeService.getPrivileges(auth.getName(), "TOUR_PACKAGE");
+
+        if (!privilegeLevelForLoggedUser.getPrvupdate()) {
+            return "You do not have permission to edit a tour package.";
+        }
+
+        try {
+            tpkg.setLastmodifieddatetime(LocalDateTime.now());
+            tpkg.setLastmodifieduserid(userDao.getUserByUsername(auth.getName()).getId());
+
+            //for (AdditionalCost ac : tpkg.getAddiCostList()) {
+            //    ac.setAddeddatetime(LocalDateTime.now());
+            //    ac.setAddeduserid(userDao.getUserByUsername(auth.getName()).getId());
+            //    ac.setTourPkg(tpkg);
+            //}
+
+
 
             daoTPkg.save(tpkg);
             return "OK";
