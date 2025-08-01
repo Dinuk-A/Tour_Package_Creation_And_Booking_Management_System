@@ -53,6 +53,9 @@ public class DayPlan {
     @Column(name = "deleted_dp")
     private Boolean deleted_dp;
 
+    @Column(name = "is_liveonweb")
+    private Boolean is_liveonweb;
+
     @Column(name = "is_template")
     private Boolean is_template;
 

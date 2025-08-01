@@ -258,7 +258,7 @@ const refreshDayPlanForm = async () => {
     } catch (error) {
         console.error('failed to fetch provinces,districts and stays')
     }
-  
+
     document.getElementById('formDayPlan').reset();
 
     document.getElementById('dayTypeMsgForTemplate').classList.add("d-none");
@@ -944,7 +944,7 @@ const changesBasedDPType = () => {
         //custom day
 
         dayplan.is_template = false;
-        dpBasedInq.disabled = false;     
+        dpBasedInq.disabled = false;
 
         titleInput.disabled = true;
         titleInput.value = "";
@@ -1995,14 +1995,18 @@ const resetModal = () => {
     document.getElementById('modalDPIfDeleted').innerText = '';
     document.getElementById('modalDPIfDeleted').classList.add('d-none');
 
+    const editBtn = document.getElementById('modalDPEditBtn');
+    const deleteBtn = document.getElementById('modalDPDeleteBtn')
+    const recoverBtn = document.getElementById('modalDPRecoverBtn');
+
     // Enable and show edit/delete buttons
-    document.getElementById('modalDPEditBtn').disabled = false;
-    document.getElementById('modalDPDeleteBtn').disabled = false;
-    document.getElementById('modalDPEditBtn').classList.remove('d-none');
-    document.getElementById('modalDPDeleteBtn').classList.remove('d-none');
+    editBtn.disabled = false;
+    deleteBtn.disabled = false;
+    editBtn.classList.remove('d-none');
+    deleteBtn.classList.remove('d-none');
 
     // Hide the recover button
-    document.getElementById('modalDPRecoverBtn').classList.add('d-none');
+    recoverBtn.classList.add('d-none');
 
 }
 
@@ -2016,6 +2020,8 @@ const openModal = (dpObj) => {
     }
 
     resetModal();
+
+
 
     if (dpObj.is_template) {
         document.getElementById('tempInfoDisRow').classList.remove('d-none');
@@ -2063,16 +2069,56 @@ const openModal = (dpObj) => {
     document.getElementById('modalDPNote').innerText = dpObj.note || 'N/A';
     document.getElementById('modalDPStatus').innerText = dpObj.dp_status || 'N/A';
 
+    //buttons
+    const editBtn = document.getElementById('modalDPEditBtn');
+    const deleteBtn = document.getElementById('modalDPDeleteBtn');
+    const recoverBtn = document.getElementById('modalDPRecoverBtn');
+
     if (dpObj.deleted_dp) {
+
         document.getElementById('modalDPIfDeleted').classList.remove('d-none');
         document.getElementById('modalDPIfDeleted').innerHTML =
             'This is a deleted record. <br>Deleted at ' +
             new Date(dpObj.deleteddatetime).toLocaleString();
-        document.getElementById('modalDPEditBtn').disabled = true;
-        document.getElementById('modalDPDeleteBtn').disabled = true;
-        document.getElementById('modalDPEditBtn').classList.add('d-none');
-        document.getElementById('modalDPDeleteBtn').classList.add('d-none');
-        document.getElementById('modalDPRecoverBtn').classList.remove('d-none');
+
+        editBtn.disabled = true;
+        deleteBtn.disabled = true;
+        editBtn.classList.add('d-none');
+        deleteBtn.classList.add('d-none');
+        recoverBtn.classList.remove('d-none');
+    }
+
+    //control buttons
+    if (dpObj.is_template) {
+
+        //get logged user roles
+        const rolesRaw = document.getElementById('userRolesArraySection').textContent;
+        console.log("Raw roles text:", rolesRaw);
+        roles = JSON.parse(rolesRaw);
+        console.log("Parsed roles:", roles);
+
+        if (roles.includes("System_Admin") || roles.includes("Manager") || roles.includes("Assistant Manager")) {
+
+            editBtn.disabled = false;
+            deleteBtn.disabled = false;
+            recoverBtn.disabled = false;
+
+            editBtn.style.cursor = 'pointer';
+            deleteBtn.style.cursor = 'pointer';
+            recoverBtn.style.cursor = 'pointer';
+        } else {
+
+            editBtn.disabled = true;
+            deleteBtn.disabled = true;
+            recoverBtn.disabled = true;
+
+            editBtn.style.cursor = 'not-allowed';
+            deleteBtn.style.cursor = 'not-allowed';
+            recoverBtn.style.cursor = 'not-allowed';
+        }
+
+    } else {
+
     }
 
     // Show the modal
@@ -2213,372 +2259,377 @@ let basedInqClientAndCode = null;
 // refill the form to update a record
 const refillDayPlanForm = async (dpObj) => {
 
-    const elementIds = ['dayStep2-tab', 'dayStep3-tab', 'dayStep4-tab', 'dayStep5-tab'];
-
-    elementIds.forEach((elementId) => {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.classList.remove('disabled');
-        }
-    })
-
-    //emptyArray = [];
-    //let allStays = [];
-    //let allProvinces = [];
-    //let allDistricts = [];
-
-    //try {
-    //    allStays = await ajaxGetReq('/stay/all');
-    //    allProvinces = await ajaxGetReq("/province/all");
-    //    allDistricts = await ajaxGetReq("/district/all");
-    //} catch (error) {
-    //    console.error('failed to fetch provinces,districts and stays')
-    //}
-
-    //💥💥💥
-    if (dpObj.dp_status == "Completed") {
-        showAlertModal('err', "Tour for this day plan is already completed, hence cant edit")
+    if (dpObj.is_template && dpObj.is_liveonweb == true) {
+        showAlertModal('war', 'This day plan is used in a template package thats live on website\n Unpublish the template tour package first to edit this.')
     } else {
 
-        dayplan = JSON.parse(JSON.stringify(dpObj));
-        oldDayplan = JSON.parse(JSON.stringify(dpObj));
+        const elementIds = ['dayStep2-tab', 'dayStep3-tab', 'dayStep4-tab', 'dayStep5-tab'];
 
-        //cant edit these
-        dpTemplate.disabled = true;
-        dpNotTemplate.disabled = true;
-        firstDayCB.disabled = true;
-        middleDayCB.disabled = true;
-        lastDayCB.disabled = true;
-        dpBasedInq.disabled = true;
-
-        if (dpObj.is_template) {
-            generalPickupCB.disabled = true;
-            accommodationsPickupCB.disabled = true;
-            manualPickupCB.disabled = true;
-        }
-
-        //based inquiry
-        if (dayplan.dp_basedinq != null) {
-            try {
-                basedInqClientAndCode = await ajaxGetReq("/inq/codeandclient?id=" + dayplan.dp_basedinq);
-            } catch (error) {
-                console.error("Failed to fetch inquiry by ID:", error);
-            }
-            fakeInqArray = [];
-            fakeInqArray.push(basedInqClientAndCode);
-            fillMultDataIntoDynamicSelectsRefillById(dpBasedInq, 'Please select based inquiry', fakeInqArray, 'inqcode', 'clientname', dayplan.dp_basedinq);
-            dpBasedInq.disabled = true;
-        }
-
-        if (dpObj.is_takepackedlunch) {
-            packedLunchYes.checked = true;
-        } else if (!dpObj.is_takepackedlunch) {
-            packedLunchNo.checked = true;
-        }
-
-        //if the pickup point was an airport or manual location
-        if (dpObj.pickuppoint != null) {
-
-            const airportSelect = document.getElementById('airportSelect');
-            const airportPickRow = document.getElementById('generalPickupOptions');
-            const airportPickupCB = document.getElementById('generalPickupCB');
-            const manualPickupRow = document.getElementById('manualPickupOptions');
-            const manualPickupInput = document.getElementById('manualLocationPickup');
-            const manualPickupGCoordsInput = document.getElementById('geoCoords');
-            const manualPickupCBVar = document.getElementById('manualPickupCB');
-            const stayPickupRow = document.getElementById('accommodationPickupOptions');
-
-            airportPickRow.style.display = 'none';
-            manualPickupRow.style.display = 'none';
-            stayPickupRow.style.display = 'none';
-
-            switch (dpObj.pickuppoint) {
-                case "BIA":
-                    airportSelect.selectedIndex = 1;
-                    airportPickRow.style.display = 'block';
-                    airportPickupCB.checked = true;
-                    break;
-                case "MATTALA":
-                    airportSelect.selectedIndex = 2;
-                    airportPickRow.style.display = 'block';
-                    airportPickupCB.checked = true;
-                    break;
-                case "RATMALANA":
-                    airportSelect.selectedIndex = 3;
-                    airportPickRow.style.display = 'block';
-                    airportPickupCB.checked = true;
-                    break;
-                case "JAFFNA":
-                    airportSelect.selectedIndex = 4;
-                    airportPickRow.style.display = 'block';
-                    airportPickupCB.checked = true;
-                    break;
-                default:
-                    airportSelect.selectedIndex = 0;
-                    manualPickupRow.style.display = 'block';
-                    manualPickupInput.value = dpObj.pickuppoint;
-                    manualPickupGCoordsInput.value = dpObj.pick_manual_gcoords;
-                    manualPickupCBVar.checked = true;
-                    break;
-            }
-
-            //enable the 3 radios
-            const radioIds = [
-                'generalPickupCB',
-                'accommodationsPickupCB',
-                'manualPickupCB'
-            ];
-
-            radioIds.forEach((radioId) => {
-                const radioCB = document.getElementById(radioId);
-                if (radioCB) {
-                    radioCB.disabled = false;
-                }
-            });
-
-        }
-
-        //if pickup point was a stay
-        if (dpObj.pickup_stay_id != null) {
-
-            //enable the 3 radios
-            const radioIds = [
-                'generalPickupCB',
-                'accommodationsPickupCB',
-                'manualPickupCB'
-            ];
-
-            radioIds.forEach((radioId) => {
-                const radioCB = document.getElementById(radioId);
-                if (radioCB) {
-                    radioCB.disabled = false;
-                }
-            });
-
-            try {
-
-                fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.pickup_stay_id.district_id.province_id.name);
-                fillDataIntoDynamicSelects(pickupDistrictSelect, 'Please Select The District', allDistricts, 'name', dpObj.pickup_stay_id.district_id.name);
-
-                //call these manually here , using dpObj.pickup_stay_id.district_id.province_id 💥💥💥
-                //await getDistByProvince(pickupProvinceSelect, pickupDistrictSelect);
-                //await getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect);
-
-                fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Please Select Accomodation', allStays, 'name', dpObj.pickup_stay_id.name);
-
-            } catch (error) {
-                console.error('error fetching previous start stay info')
-            }
-
-            const stayPickupRow = document.getElementById('accommodationPickupOptions');
-            stayPickupRow.style.display = 'block';
-
-            const stayPickupCb = document.getElementById('accommodationsPickupCB');
-            stayPickupCb.checked = true;
-        }
-
-        //if droppoint is an airport or manual location
-        if (dpObj.droppoint != null) {
-
-            const airportDropCBVar = document.getElementById('generalDropOffCB');
-            const airportDropRow = document.getElementById('generalDropOffOptions');
-            const airportSelect = document.getElementById('airportSelectDropOff');
-
-            const manualDropCBVar = document.getElementById('manualDropOffCB');
-            const manualDropRow = document.getElementById('manualDropOffOptions');
-            const manualDropInput = document.getElementById('manualLocationDropOff');
-            const manualDropGCoordsInput = document.getElementById('geoCoordsDropOff');
-
-            const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions');
-
-            airportDropRow.style.display = 'none';
-            manualDropRow.style.display = 'none';
-            dropOffAccommodationRow.style.display = 'none';
-
-            switch (dpObj.droppoint) {
-                case "BIA":
-                    airportSelect.selectedIndex = 1;
-                    airportDropRow.style.display = 'block';
-                    airportDropCBVar.checked = true;
-                    break;
-                case "MATTALA":
-                    airportSelect.selectedIndex = 2;
-                    airportDropRow.style.display = 'block';
-                    airportDropCBVar.checked = true;
-                    break;
-                case "RATMALANA":
-                    airportSelect.selectedIndex = 3;
-                    airportDropRow.style.display = 'block';
-                    airportDropCBVar.checked = true;
-                    break;
-                case "JAFFNA":
-                    airportSelect.selectedIndex = 4;
-                    airportDropRow.style.display = 'block';
-                    airportDropCBVar.checked = true;
-                    break;
-                default:
-                    airportSelect.selectedIndex = 0;
-                    manualDropRow.style.display = 'block';
-                    manualDropInput.value = dpObj.droppoint;
-                    manualDropGCoordsInput.value = dpObj.drop_manual_gcoords;
-                    manualDropCBVar.checked = true;
-                    break;
-            }
-
-            //enable the 3 radios
-            const radioIds = [
-                'generalDropOffCB',
-                'accommodationsDropOffCB',
-                'manualDropOffCB'
-            ];
-
-            radioIds.forEach((radioId) => {
-                const radioCB = document.getElementById(radioId);
-                if (radioCB) {
-                    radioCB.disabled = false;
-                }
-            });
-        }
-
-        //if droppoint is a stay
-        if (dpObj.drop_stay_id != null) {
-
-            //enable the 3 radios
-            const radioIds = [
-                'generalDropOffCB',
-                'accommodationsDropOffCB',
-                'manualDropOffCB'
-            ];
-
-            radioIds.forEach((radioId) => {
-                const radioCB = document.getElementById(radioId);
-                if (radioCB) {
-                    radioCB.disabled = false;
-                }
-            });
-
-            try {
-
-                fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
-                fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDistricts, 'name', dpObj.drop_stay_id.district_id.name);
-
-                fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select Accomodation', allStays, 'name', dpObj.drop_stay_id.name);
-                fillDataIntoDynamicSelects(altStay1Select, 'Please Select Accomodation', allStays, 'name', dpObj.alt_stay_1_id.name);
-                fillDataIntoDynamicSelects(altStay2Select, 'Please Select Accomodation', allStays, 'name', dpObj.alt_stay_2_id.name);
-
-                //await getDistByProvince(dropOffProvinceSelect, dropOffDistrictSelect);
-
-                //await getStayByDistrict(dropOffDistrictSelect, dropOffAccommodationSelect);
-                //await getStayByDistrict(dropOffDistrictSelect, altStay1Select);
-                //await getStayByDistrict(dropOffDistrictSelect, altStay2Select);
-
-            } catch (error) {
-                console.error('error fetching previous end stay info');
-            }
-
-            const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions');
-            dropOffAccommodationRow.style.display = 'block';
-
-            const dropOffAccommodationCB = document.getElementById('accommodationsDropOffCB');
-            dropOffAccommodationCB.checked = true;
-
-            const manualDropRow = document.getElementById('manualDropOffOptions');
-            manualDropRow.style.display = 'none';
-
-        }
-
-        document.getElementById('dpTotalKMcount').value = dpObj.totalkmcount;
-        document.getElementById('dpTitle').value = dpObj.daytitle;
-        document.getElementById('dpCode').value = dpObj.dayplancode;
-        document.getElementById('dpCodeRow').classList.remove('d-none');
-        document.getElementById('dpSelectStatus').value = dpObj.dp_status;
-        document.getElementById('dpNote').value = dpObj.note;
-        document.getElementById('dpTotalVehiParkingCost').value = 'LKR ' + dpObj.totalvehiparkcost.toFixed(2);
-        document.getElementById('dpTotalForeignChildTktCost').value = 'LKR ' + dpObj.foreignchildtktcost.toFixed(2);
-        document.getElementById('dpTotalForeignAdultTktCost').value = 'LKR ' + dpObj.foreignadulttktcost.toFixed(2);
-        document.getElementById('dpTotalLocalChildTktCost').value = 'LKR ' + dpObj.localchildtktcost.toFixed(2);
-        document.getElementById('dpTotalLocalAdultTktCost').value = 'LKR ' + dpObj.localadulttktcost.toFixed(2);
-
-        if (dpObj.dayplancode.substring(0, 2) == "FD") {
-            firstDayCB.checked = true;
-
-        } else if (dpObj.dayplancode.substring(0, 2) == "MD") {
-            middleDayCB.checked = true;
-
-        } else if (dpObj.dayplancode.substring(0, 2) == "LD") {
-            lastDayCB.checked = true;
-        }
-
-        if (dpObj.is_template) {
-            dpTemplate.checked = true;
-        } else if (!dpObj.is_template) {
-            dpNotTemplate.checked = true;
-        }
-
-        if (oldDayplan.lunchplace_id != null) {
-
-            try {
-                const lhs = await ajaxGetReq("/lunchplace/all");
-                fillDataIntoDynamicSelects(selectDPLunch, '', lhs, 'name', dpObj.lunchplace_id.name);
-
-                //const allProvinces = await ajaxGetReq("/province/all");
-                fillDataIntoDynamicSelects(selectLPProv, 'Select Province', allProvinces, 'name', dpObj.lunchplace_id.district_id.province_id.name);
-
-                //const allDistricts = await ajaxGetReq("/district/all");
-                fillDataIntoDynamicSelects(selectLPDist, 'Select District', allDistricts, 'name', dpObj.lunchplace_id.district_id.name);
-
-            } catch (error) {
-                console.error('error fetching previous lunch place info')
-            }
-        }
-
-        const selectIdsToEnable = [
-            'pickupDistrictSelect',
-            'pickupAccommodationSelect',
-            'dropOffDistrictSelect',
-            'dropOffAccommodationSelect',
-            'altStay1Select',
-            'altStay2Select'
-        ]
-
-        selectIdsToEnable.forEach(selectId => {
-            const selectElement = document.getElementById(selectId);
-            if (selectElement) {
-                selectElement.disabled = false;
-                selectElement.style.border = '1px solid #ced4da';
+        elementIds.forEach((elementId) => {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.classList.remove('disabled');
             }
         })
 
-        fillDataIntoDynamicSelects(selectedVPs, '', dpObj.vplaces, 'name');
+        //emptyArray = [];
+        //let allStays = [];
+        //let allProvinces = [];
+        //let allDistricts = [];
 
-        dpUpdateBtn.disabled = false;
-        dpUpdateBtn.style.cursor = "pointer";
+        //try {
+        //    allStays = await ajaxGetReq('/stay/all');
+        //    allProvinces = await ajaxGetReq("/province/all");
+        //    allDistricts = await ajaxGetReq("/district/all");
+        //} catch (error) {
+        //    console.error('failed to fetch provinces,districts and stays')
+        //}
 
-        dpAddBtn.disabled = true;
-        dpAddBtn.style.cursor = "not-allowed";
+        //💥💥💥
+        if (dpObj.dp_status == "Completed") {
+            showAlertModal('err', "Tour for this day plan is already completed, hence cant edit")
+        } else {
 
-        dpResetBtn.classList.add("d-none");
+            dayplan = JSON.parse(JSON.stringify(dpObj));
+            oldDayplan = JSON.parse(JSON.stringify(dpObj));
 
-        const dyPlanStatusSelectElement = document.getElementById('dpSelectStatus');
-        dyPlanStatusSelectElement.style.border = '1px solid #ced4da';
+            //cant edit these
+            dpTemplate.disabled = true;
+            dpNotTemplate.disabled = true;
+            firstDayCB.disabled = true;
+            middleDayCB.disabled = true;
+            lastDayCB.disabled = true;
+            dpBasedInq.disabled = true;
 
-        //handle lunch overall
-        if (dpObj.is_template) {
-            selectLPProv.disabled = true;
-            packedLunchYes.checked = false;
-            packedLunchNo.checked = false;
-            packedLunchYes.disabled = true;
-            packedLunchNo.disabled = true;
+            if (dpObj.is_template) {
+                generalPickupCB.disabled = true;
+                accommodationsPickupCB.disabled = true;
+                manualPickupCB.disabled = true;
+            }
+
+            //based inquiry
+            if (dayplan.dp_basedinq != null) {
+                try {
+                    basedInqClientAndCode = await ajaxGetReq("/inq/codeandclient?id=" + dayplan.dp_basedinq);
+                } catch (error) {
+                    console.error("Failed to fetch inquiry by ID:", error);
+                }
+                fakeInqArray = [];
+                fakeInqArray.push(basedInqClientAndCode);
+                fillMultDataIntoDynamicSelectsRefillById(dpBasedInq, 'Please select based inquiry', fakeInqArray, 'inqcode', 'clientname', dayplan.dp_basedinq);
+                dpBasedInq.disabled = true;
+            }
+
+            if (dpObj.is_takepackedlunch) {
+                packedLunchYes.checked = true;
+            } else if (!dpObj.is_takepackedlunch) {
+                packedLunchNo.checked = true;
+            }
+
+            //if the pickup point was an airport or manual location
+            if (dpObj.pickuppoint != null) {
+
+                const airportSelect = document.getElementById('airportSelect');
+                const airportPickRow = document.getElementById('generalPickupOptions');
+                const airportPickupCB = document.getElementById('generalPickupCB');
+                const manualPickupRow = document.getElementById('manualPickupOptions');
+                const manualPickupInput = document.getElementById('manualLocationPickup');
+                const manualPickupGCoordsInput = document.getElementById('geoCoords');
+                const manualPickupCBVar = document.getElementById('manualPickupCB');
+                const stayPickupRow = document.getElementById('accommodationPickupOptions');
+
+                airportPickRow.style.display = 'none';
+                manualPickupRow.style.display = 'none';
+                stayPickupRow.style.display = 'none';
+
+                switch (dpObj.pickuppoint) {
+                    case "BIA":
+                        airportSelect.selectedIndex = 1;
+                        airportPickRow.style.display = 'block';
+                        airportPickupCB.checked = true;
+                        break;
+                    case "MATTALA":
+                        airportSelect.selectedIndex = 2;
+                        airportPickRow.style.display = 'block';
+                        airportPickupCB.checked = true;
+                        break;
+                    case "RATMALANA":
+                        airportSelect.selectedIndex = 3;
+                        airportPickRow.style.display = 'block';
+                        airportPickupCB.checked = true;
+                        break;
+                    case "JAFFNA":
+                        airportSelect.selectedIndex = 4;
+                        airportPickRow.style.display = 'block';
+                        airportPickupCB.checked = true;
+                        break;
+                    default:
+                        airportSelect.selectedIndex = 0;
+                        manualPickupRow.style.display = 'block';
+                        manualPickupInput.value = dpObj.pickuppoint;
+                        manualPickupGCoordsInput.value = dpObj.pick_manual_gcoords;
+                        manualPickupCBVar.checked = true;
+                        break;
+                }
+
+                //enable the 3 radios
+                const radioIds = [
+                    'generalPickupCB',
+                    'accommodationsPickupCB',
+                    'manualPickupCB'
+                ];
+
+                radioIds.forEach((radioId) => {
+                    const radioCB = document.getElementById(radioId);
+                    if (radioCB) {
+                        radioCB.disabled = false;
+                    }
+                });
+
+            }
+
+            //if pickup point was a stay
+            if (dpObj.pickup_stay_id != null) {
+
+                //enable the 3 radios
+                const radioIds = [
+                    'generalPickupCB',
+                    'accommodationsPickupCB',
+                    'manualPickupCB'
+                ];
+
+                radioIds.forEach((radioId) => {
+                    const radioCB = document.getElementById(radioId);
+                    if (radioCB) {
+                        radioCB.disabled = false;
+                    }
+                });
+
+                try {
+
+                    fillDataIntoDynamicSelects(pickupProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.pickup_stay_id.district_id.province_id.name);
+                    fillDataIntoDynamicSelects(pickupDistrictSelect, 'Please Select The District', allDistricts, 'name', dpObj.pickup_stay_id.district_id.name);
+
+                    //call these manually here , using dpObj.pickup_stay_id.district_id.province_id 💥💥💥
+                    //await getDistByProvince(pickupProvinceSelect, pickupDistrictSelect);
+                    //await getStayByDistrict(pickupDistrictSelect, pickupAccommodationSelect);
+
+                    fillDataIntoDynamicSelects(pickupAccommodationSelect, 'Please Select Accomodation', allStays, 'name', dpObj.pickup_stay_id.name);
+
+                } catch (error) {
+                    console.error('error fetching previous start stay info')
+                }
+
+                const stayPickupRow = document.getElementById('accommodationPickupOptions');
+                stayPickupRow.style.display = 'block';
+
+                const stayPickupCb = document.getElementById('accommodationsPickupCB');
+                stayPickupCb.checked = true;
+            }
+
+            //if droppoint is an airport or manual location
+            if (dpObj.droppoint != null) {
+
+                const airportDropCBVar = document.getElementById('generalDropOffCB');
+                const airportDropRow = document.getElementById('generalDropOffOptions');
+                const airportSelect = document.getElementById('airportSelectDropOff');
+
+                const manualDropCBVar = document.getElementById('manualDropOffCB');
+                const manualDropRow = document.getElementById('manualDropOffOptions');
+                const manualDropInput = document.getElementById('manualLocationDropOff');
+                const manualDropGCoordsInput = document.getElementById('geoCoordsDropOff');
+
+                const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions');
+
+                airportDropRow.style.display = 'none';
+                manualDropRow.style.display = 'none';
+                dropOffAccommodationRow.style.display = 'none';
+
+                switch (dpObj.droppoint) {
+                    case "BIA":
+                        airportSelect.selectedIndex = 1;
+                        airportDropRow.style.display = 'block';
+                        airportDropCBVar.checked = true;
+                        break;
+                    case "MATTALA":
+                        airportSelect.selectedIndex = 2;
+                        airportDropRow.style.display = 'block';
+                        airportDropCBVar.checked = true;
+                        break;
+                    case "RATMALANA":
+                        airportSelect.selectedIndex = 3;
+                        airportDropRow.style.display = 'block';
+                        airportDropCBVar.checked = true;
+                        break;
+                    case "JAFFNA":
+                        airportSelect.selectedIndex = 4;
+                        airportDropRow.style.display = 'block';
+                        airportDropCBVar.checked = true;
+                        break;
+                    default:
+                        airportSelect.selectedIndex = 0;
+                        manualDropRow.style.display = 'block';
+                        manualDropInput.value = dpObj.droppoint;
+                        manualDropGCoordsInput.value = dpObj.drop_manual_gcoords;
+                        manualDropCBVar.checked = true;
+                        break;
+                }
+
+                //enable the 3 radios
+                const radioIds = [
+                    'generalDropOffCB',
+                    'accommodationsDropOffCB',
+                    'manualDropOffCB'
+                ];
+
+                radioIds.forEach((radioId) => {
+                    const radioCB = document.getElementById(radioId);
+                    if (radioCB) {
+                        radioCB.disabled = false;
+                    }
+                });
+            }
+
+            //if droppoint is a stay
+            if (dpObj.drop_stay_id != null) {
+
+                //enable the 3 radios
+                const radioIds = [
+                    'generalDropOffCB',
+                    'accommodationsDropOffCB',
+                    'manualDropOffCB'
+                ];
+
+                radioIds.forEach((radioId) => {
+                    const radioCB = document.getElementById(radioId);
+                    if (radioCB) {
+                        radioCB.disabled = false;
+                    }
+                });
+
+                try {
+
+                    fillDataIntoDynamicSelects(dropOffProvinceSelect, 'Please Select The Province', allProvinces, 'name', dpObj.drop_stay_id.district_id.province_id.name);
+                    fillDataIntoDynamicSelects(dropOffDistrictSelect, 'Please Select The District', allDistricts, 'name', dpObj.drop_stay_id.district_id.name);
+
+                    fillDataIntoDynamicSelects(dropOffAccommodationSelect, 'Please Select Accomodation', allStays, 'name', dpObj.drop_stay_id.name);
+                    fillDataIntoDynamicSelects(altStay1Select, 'Please Select Accomodation', allStays, 'name', dpObj.alt_stay_1_id.name);
+                    fillDataIntoDynamicSelects(altStay2Select, 'Please Select Accomodation', allStays, 'name', dpObj.alt_stay_2_id.name);
+
+                    //await getDistByProvince(dropOffProvinceSelect, dropOffDistrictSelect);
+
+                    //await getStayByDistrict(dropOffDistrictSelect, dropOffAccommodationSelect);
+                    //await getStayByDistrict(dropOffDistrictSelect, altStay1Select);
+                    //await getStayByDistrict(dropOffDistrictSelect, altStay2Select);
+
+                } catch (error) {
+                    console.error('error fetching previous end stay info');
+                }
+
+                const dropOffAccommodationRow = document.getElementById('accommodationDropOffOptions');
+                dropOffAccommodationRow.style.display = 'block';
+
+                const dropOffAccommodationCB = document.getElementById('accommodationsDropOffCB');
+                dropOffAccommodationCB.checked = true;
+
+                const manualDropRow = document.getElementById('manualDropOffOptions');
+                manualDropRow.style.display = 'none';
+
+            }
+
+            document.getElementById('dpTotalKMcount').value = dpObj.totalkmcount;
+            document.getElementById('dpTitle').value = dpObj.daytitle;
+            document.getElementById('dpCode').value = dpObj.dayplancode;
+            document.getElementById('dpCodeRow').classList.remove('d-none');
+            document.getElementById('dpSelectStatus').value = dpObj.dp_status;
+            document.getElementById('dpNote').value = dpObj.note;
+            document.getElementById('dpTotalVehiParkingCost').value = 'LKR ' + dpObj.totalvehiparkcost.toFixed(2);
+            document.getElementById('dpTotalForeignChildTktCost').value = 'LKR ' + dpObj.foreignchildtktcost.toFixed(2);
+            document.getElementById('dpTotalForeignAdultTktCost').value = 'LKR ' + dpObj.foreignadulttktcost.toFixed(2);
+            document.getElementById('dpTotalLocalChildTktCost').value = 'LKR ' + dpObj.localchildtktcost.toFixed(2);
+            document.getElementById('dpTotalLocalAdultTktCost').value = 'LKR ' + dpObj.localadulttktcost.toFixed(2);
+
+            if (dpObj.dayplancode.substring(0, 2) == "FD") {
+                firstDayCB.checked = true;
+
+            } else if (dpObj.dayplancode.substring(0, 2) == "MD") {
+                middleDayCB.checked = true;
+
+            } else if (dpObj.dayplancode.substring(0, 2) == "LD") {
+                lastDayCB.checked = true;
+            }
+
+            if (dpObj.is_template) {
+                dpTemplate.checked = true;
+            } else if (!dpObj.is_template) {
+                dpNotTemplate.checked = true;
+            }
+
+            if (oldDayplan.lunchplace_id != null) {
+
+                try {
+                    const lhs = await ajaxGetReq("/lunchplace/all");
+                    fillDataIntoDynamicSelects(selectDPLunch, '', lhs, 'name', dpObj.lunchplace_id.name);
+
+                    //const allProvinces = await ajaxGetReq("/province/all");
+                    fillDataIntoDynamicSelects(selectLPProv, 'Select Province', allProvinces, 'name', dpObj.lunchplace_id.district_id.province_id.name);
+
+                    //const allDistricts = await ajaxGetReq("/district/all");
+                    fillDataIntoDynamicSelects(selectLPDist, 'Select District', allDistricts, 'name', dpObj.lunchplace_id.district_id.name);
+
+                } catch (error) {
+                    console.error('error fetching previous lunch place info')
+                }
+            }
+
+            const selectIdsToEnable = [
+                'pickupDistrictSelect',
+                'pickupAccommodationSelect',
+                'dropOffDistrictSelect',
+                'dropOffAccommodationSelect',
+                'altStay1Select',
+                'altStay2Select'
+            ]
+
+            selectIdsToEnable.forEach(selectId => {
+                const selectElement = document.getElementById(selectId);
+                if (selectElement) {
+                    selectElement.disabled = false;
+                    selectElement.style.border = '1px solid #ced4da';
+                }
+            })
+
+            fillDataIntoDynamicSelects(selectedVPs, '', dpObj.vplaces, 'name');
+
+            dpUpdateBtn.disabled = false;
+            dpUpdateBtn.style.cursor = "pointer";
+
+            dpAddBtn.disabled = true;
+            dpAddBtn.style.cursor = "not-allowed";
+
+            dpResetBtn.classList.add("d-none");
+
+            const dyPlanStatusSelectElement = document.getElementById('dpSelectStatus');
+            dyPlanStatusSelectElement.style.border = '1px solid #ced4da';
+
+            //handle lunch overall
+            if (dpObj.is_template) {
+                selectLPProv.disabled = true;
+                packedLunchYes.checked = false;
+                packedLunchNo.checked = false;
+                packedLunchYes.disabled = true;
+                packedLunchNo.disabled = true;
+            }
+
+            $("#infoModalDayPlan").modal("hide");
+
+            var myDPFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
+            myDPFormTab.show();
+
+            var step1Tab = new bootstrap.Tab(document.getElementById('dayStep1-tab'));
+            step1Tab.show();
+
         }
-
-        $("#infoModalDayPlan").modal("hide");
-
-        var myDPFormTab = new bootstrap.Tab(document.getElementById('form-tab'));
-        myDPFormTab.show();
-
-        var step1Tab = new bootstrap.Tab(document.getElementById('dayStep1-tab'));
-        step1Tab.show();
-
     }
 
 }
@@ -2715,23 +2766,29 @@ const updateDayPlan = async () => {
 
 //fn for delete button to delete a record
 const deleteDayPlanRecord = async (dpObj) => {
-    const userConfirm = confirm("Are you sure to delete the dayplan " + dpObj.dayplancode + " ?");
-    if (userConfirm) {
-        try {
-            const deleteServerResponse = await ajaxPPDRequest("/dayplan", "DELETE", dpObj);
 
-            if (deleteServerResponse === 'OK') {
-                showAlertModal('suc', 'Record Deleted');
-                $('#infoModalDayPlan').modal('hide');
-                window.location.reload();
-            } else {
-                showAlertModal('err', 'Delete Failed' + deleteServerResponce);
-            }
-        } catch (error) {
-            showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
-        }
+    if (dpObj.is_liveonweb == true) {
+        showAlertModal('war', 'This day plan is used in a template package thats live on website\n Unpublish the template tour package to delete this.')
     } else {
-        showAlertModal('inf', "User cancelled the task")
+
+        const userConfirm = confirm("Are you sure to delete the dayplan " + dpObj.dayplancode + " ?");
+        if (userConfirm) {
+            try {
+                const deleteServerResponse = await ajaxPPDRequest("/dayplan", "DELETE", dpObj);
+
+                if (deleteServerResponse === 'OK') {
+                    showAlertModal('suc', 'Record Deleted');
+                    $('#infoModalDayPlan').modal('hide');
+                    window.location.reload();
+                } else {
+                    showAlertModal('err', 'Delete Failed' + deleteServerResponce);
+                }
+            } catch (error) {
+                showAlertModal('err', 'An error occurred: ' + (error.responseText || error.statusText || error.message));
+            }
+        } else {
+            showAlertModal('inf', "User cancelled the task")
+        }
     }
 }
 
