@@ -168,9 +168,9 @@ document.addEventListener("DOMContentLoaded", () => {
 //set status auto
 const setTpkgStatus = () => {
     const tpkgStatusSelectElement = document.getElementById('tpSelectStatus');
-    tpkg.tpkg_status = "Draft";
-    tpkgStatusSelectElement.value = "Draft";
-    tpkgStatusSelectElement.style.border = "2px solid lime";
+    tpkg.tpkg_status = "Finalized";
+    tpkgStatusSelectElement.value = "Finalized";
+    tpkgStatusSelectElement.style.border = "2px solid lime";   
 
     //hide options from 3 to 5
     for (let i = 3; i <= 5; i++) {
@@ -178,6 +178,10 @@ const setTpkgStatus = () => {
             tpkgStatusSelectElement.children[i].classList.add('d-none');
         }
     }
+
+    tpkgStatusSelectElement.children[1].classList.add('d-none');
+
+    tpkgStatusSelectElement.disabled = true;
 }
 
 //to reset & ready the main form   
@@ -581,8 +585,18 @@ const openModalTpkg = (tpkgObj) => {
     $('#infoModalTpkg').modal('show');
 };
 
+//const fetchInqById = async (idValue) => {
+//    try {
+//        let basedInqClientAndCode = await ajaxGetReq("/inq/codeandclient/?id="+ idValue);
+//    } catch (error) {
+//        console.error("Failed to fetch inquiry by ID:", error);
+//    }
+//}
+
+let basedInqClientAndCode = null;
+
 //refill the TPKG
-const refillTpkgForm = (tpkgObj) => {
+const refillTpkgForm = async (tpkgObj) => {
 
     console.log("Refilling Template Package Form with data:", tpkgObj);
 
@@ -606,7 +620,15 @@ const refillTpkgForm = (tpkgObj) => {
 
         //based inquiry
         if (tpkg.basedinq != null) {
-            fillMultDataIntoDynamicSelectsRefillById(tpkgBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname', tpkg.basedinq);
+
+            try {
+                basedInqClientAndCode = await ajaxGetReq("/inq/codeandclient?id=" + tpkg.basedinq);
+            } catch (error) {
+                console.error("Failed to fetch inquiry by ID:", error);
+            }
+            fakeInqArray = [];
+            fakeInqArray.push(basedInqClientAndCode);
+            fillMultDataIntoDynamicSelectsRefillById(tpkgBasedInq, 'Please select based inquiry', fakeInqArray, 'inqcode', 'clientname', tpkg.basedinq);
             tpkgBasedInq.disabled = true;
         }
 
@@ -3851,7 +3873,7 @@ const refillSelectedDayPlan = async (dpObj) => {
     let arrayVPlacesLength = dpObj.vplaces.length;
 
     //IF EDITING A NEW/TEMP DP, LUNCH DETAILS NOT FILLED DP (IN TPKG)
-    if (arrayVPlacesLength>0 && dpObj.is_takepackedlunch == null && dpObj.lunchplace_id?.id == null) {
+    if (arrayVPlacesLength > 0 && dpObj.is_takepackedlunch == null && dpObj.lunchplace_id?.id == null) {
         console.log("no lunch info ");
 
         //then get middle visiting place        

@@ -101,6 +101,11 @@ public class InqController {
         // return inqDao.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
+    @GetMapping(value = "/inq/codeandclient", params = { "id" }, produces = "application/json")
+    public Inq getClientNameAndCode(@RequestParam("id") Integer id) {
+        return inqDao.getClientnameAndCodeById(id);
+    }
+
     @GetMapping(value = "/inq/personal", params = { "empid" }, produces = "application/json")
     public List<Inq> getPersonalAssignedInquiries(@RequestParam("empid") Integer empid) {
 

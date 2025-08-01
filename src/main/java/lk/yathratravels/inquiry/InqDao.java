@@ -27,4 +27,8 @@ public interface InqDao extends JpaRepository<Inq, Integer> {
     @Query(value = "SELECT * from newyathra.inquiry as inq where inq.inq_status in ('Working') and inq.assigned_empid=?1", nativeQuery = true)
     public List<Inq> getOnlyWorkingInqsByAssignedEmp(Integer empId);
 
+    // get client and code by id
+    @Query("SELECT new Inq(i.id, i.clientname, i.inqcode) FROM Inq i WHERE i.id = ?1")
+    Inq getClientnameAndCodeById(Integer id);
+
 }

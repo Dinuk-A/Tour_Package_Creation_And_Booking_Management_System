@@ -2208,6 +2208,7 @@ const printDayPlanRecordNew = (dpObj) => {
     };
 };
 
+let basedInqClientAndCode = null;
 
 // refill the form to update a record
 const refillDayPlanForm = async (dpObj) => {
@@ -2258,7 +2259,14 @@ const refillDayPlanForm = async (dpObj) => {
 
         //based inquiry
         if (dayplan.dp_basedinq != null) {
-            fillMultDataIntoDynamicSelectsRefillById(dpBasedInq, 'Please select based inquiry', allActiveInqs, 'inqcode', 'clientname', dayplan.dp_basedinq);
+            try {
+                basedInqClientAndCode = await ajaxGetReq("/inq/codeandclient?id=" + dayplan.dp_basedinq);
+            } catch (error) {
+                console.error("Failed to fetch inquiry by ID:", error);
+            }
+            fakeInqArray = [];
+            fakeInqArray.push(basedInqClientAndCode);
+            fillMultDataIntoDynamicSelectsRefillById(dpBasedInq, 'Please select based inquiry', fakeInqArray, 'inqcode', 'clientname', dayplan.dp_basedinq);
             dpBasedInq.disabled = true;
         }
 

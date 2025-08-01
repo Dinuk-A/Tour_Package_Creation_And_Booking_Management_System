@@ -1630,6 +1630,7 @@ const updateSystemInqWithFollowup = async () => {
                     handleTableCreation();
                     var followupTab = new bootstrap.Tab(document.getElementById('inqStep3-tab'));
                     followupTab.show();
+                    manualInqUpdateBtn.disabled = true;
                 } else {
                     showAlertModal('err', "Update Failed \n" + putServiceResponse);
                 }

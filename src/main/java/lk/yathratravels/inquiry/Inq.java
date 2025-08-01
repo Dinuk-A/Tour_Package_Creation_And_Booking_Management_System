@@ -144,4 +144,14 @@ public class Inq {
     @Column(name = "deleteduserid")
     private Integer deleteduserid;
 
+    /**
+     * @param clientname
+     * @param inqcode
+     */
+    public Inq(Integer id,String clientname, String inqcode) {
+        this.id = id;
+        this.clientname = clientname;
+        this.inqcode = inqcode;
+    }
+
 }
