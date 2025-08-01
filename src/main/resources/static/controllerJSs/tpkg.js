@@ -2009,8 +2009,8 @@ const checkTpkgFormErrors = () => {
 }
 
 //check errors for drafts
-const checkTpkgDraftErrors =() =>{
-    let errors="";
+const checkTpkgDraftErrors = () => {
+    let errors = "";
 
     if (!tpkg.pkgtitle) {
         errors += "Title cannot be empty \n";
@@ -3492,6 +3492,13 @@ const refillMidDaysPickupLocations = async () => {
         }
     }
 
+    pickupDistrictSelect.disabled = true;
+    pickupProvinceSelect.disabled = true;
+    pickupAccommodationSelect.disabled = true;
+
+    manualLocationPickup.disabled = true;
+    geoCoords.disabled = true;
+
 }
 
 //refill last day pickup loc from prev last midday's drop loc
@@ -3546,6 +3553,13 @@ const refillLastDayPickupFromPrevLastMidday = async () => {
         manualLocationPickup.style.border = '2px solid lime';
         geoCoords.style.border = '2px solid lime';
     }
+
+    pickupDistrictSelect.disabled = true;
+    pickupProvinceSelect.disabled = true;
+    pickupAccommodationSelect.disabled = true;
+
+    manualLocationPickup.disabled = true;
+    geoCoords.disabled = true;
 
 }
 
@@ -3627,8 +3641,6 @@ const refillSelectedDayPlan = async (dpObj) => {
 
         airportPickupCB.disabled = true;
         airportSelect.disabled = true;
-
-
 
         //if this dp is chosen from final day select box
     } else if (selectedDayTypeToEdit === "final") {
@@ -3794,6 +3806,12 @@ const refillSelectedDayPlan = async (dpObj) => {
 
     }
 
+    //all selected visiting places
+    fillDataIntoDynamicSelects(selectedVPs, 'Selected Visiting Places', dpObj.vplaces, 'name');
+    fillDataIntoDynamicSelects(selectVPDist, 'Please Select The District', allDists, 'name');
+    fillDataIntoDynamicSelects(selectVPProv, 'Please Select The Province', allProvinces, 'name');
+
+    //IF EDITING AN ALREADY LUNCH DETAILS FILLED DP (IN TPKG)
     //if packed lunch is taken
     if (dpObj.is_takepackedlunch) {
 
@@ -3803,7 +3821,6 @@ const refillSelectedDayPlan = async (dpObj) => {
         selectLPDist.disabled = true;
         selectDPLunch.disabled = true;
 
-        //fill the selects with /all data
         try {
 
             fillDataIntoDynamicSelects(selectLPProv, 'Please Select The Province', allProvinces, 'name');
@@ -3831,10 +3848,50 @@ const refillSelectedDayPlan = async (dpObj) => {
         }
     }
 
-    //all selected visiting places
-    fillDataIntoDynamicSelects(selectedVPs, '', dpObj.vplaces, 'name');
-    fillDataIntoDynamicSelects(selectVPDist, 'Please Select The District', allDists, 'name');
-    fillDataIntoDynamicSelects(selectVPProv, 'Please Select The Province', allProvinces, 'name');
+    let arrayVPlacesLength = dpObj.vplaces.length;
+
+    //IF EDITING A NEW/TEMP DP, LUNCH DETAILS NOT FILLED DP (IN TPKG)
+    if (arrayVPlacesLength>0 && dpObj.is_takepackedlunch == null && dpObj.lunchplace_id?.id == null) {
+        console.log("no lunch info ");
+
+        //then get middle visiting place        
+        let midIndex = Math.floor(arrayVPlacesLength / 2);
+        let midElement = (dpObj.vplaces).at(midIndex);
+        let distIdOfMidEle = midElement.district_id.id;
+
+        //  let lastElement = (dpObj.vplaces).at(-1);
+        //let provIdOfLastEle = lastElement.district_id.province_id.id;
+
+        let distName = midElement.district_id.name;
+        let provName = midElement.district_id.province_id.name;
+
+        fillDataIntoDynamicSelects(selectLPProv, 'Please Select The Province', allProvinces, 'name', provName);
+        fillDataIntoDynamicSelects(selectLPDist, 'Please Select The District', allDistricts, 'name', distName);
+        try {
+            lunchByDist = await ajaxGetReq("/lunchplace/bydistrict/" + distIdOfMidEle);
+            fillDataIntoDynamicSelects(selectDPLunch, 'Please Select The Hotel', lunchByDist, 'name');
+            selectDPLunch.disabled = false
+        } catch (error) {
+            console.error('getLunchAndHotelAuto lunch fails');
+        }
+        const inputTagsToEnable = [
+            'selectLPProv',
+            'selectLPDist',
+        ];
+
+        inputTagsToEnable.forEach((element) => {
+
+            const el = document.getElementById(element);
+
+            if (el) {
+                el.disabled = false;
+                el.style.border = "2px solid orange";
+            }
+        });
+
+
+    }
+
 
     //other input fields
     const dayPlanTitle = document.getElementById('dpTitle');
@@ -4476,7 +4533,9 @@ const loadExistingMDs = async (selectElement) => {
     if (tpkg.is_custompkg == true && tpkg.basedinq != null) {
 
         resetSelectElements(selectElement, "Please Select Mid Day Plans");
-        const selectedInquiry = tpkg.basedinq.inqcode;
+
+        //const selectedInquiry = tpkg.basedinq.inqcode;
+        const selectedInquiry = tpkg.basedinq.id;
 
         try {
             const onlyMidDaysByBasedInq = await ajaxGetReq("/dayplan/onlymiddays/bydpbasedinq/" + selectedInquiry);
@@ -4511,7 +4570,8 @@ const loadExistingLDs = async (selectElementId) => {
 
     if (tpkg.is_custompkg == true && tpkg.basedinq != null) {
 
-        const selectedInquiry = tpkg.basedinq.inqcode;
+        //const selectedInquiry = tpkg.basedinq.inqcode;
+        const selectedInquiry = tpkg.basedinq.id;
 
         try {
             resetSelectElements(selectElementId, "Please Select");
