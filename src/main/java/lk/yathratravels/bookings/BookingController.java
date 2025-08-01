@@ -127,7 +127,13 @@ public class BookingController {
         }
     }
 
-    //get booking count
+    //in dashboard
+    @GetMapping(value = "/booking/assignmentspending", produces = "application/json")
+    public List<Booking> getPendingAssignments() {
+        return bookingDao.getAllPendingAssignments();
+    }
+
+    // get booking count
     @GetMapping(value = "/completed/count", params = { "clientid" }, produces = "application/json")
     public int countCompletedBookingsByClient(@RequestParam("clientid") Integer clientId) {
         return clientDao.countCompletedBookingsByClientNative(clientId);

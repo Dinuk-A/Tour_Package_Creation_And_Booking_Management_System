@@ -147,6 +147,12 @@ public class InqController {
         return inqDao.getOnlyConfirmedInqs();
     }
 
+    // get only the new unassigned ones
+    @GetMapping(value = "/inq/new/unassigned", produces = "application/json")
+    public List<Inq> getOnlyNewInquiries() {
+        return inqDao.getOnlyNewUnAssignedInqs();
+    }
+
     // inqs from website
     @PostMapping(value = "/inquiryfromweb")
     public String saveInqFromWeb(@RequestBody Inq inq) {

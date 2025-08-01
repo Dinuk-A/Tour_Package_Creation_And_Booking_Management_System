@@ -1,13 +1,40 @@
 window.addEventListener('load', () => {
 
-    loadRescheduledInquiriesForToday();
-    showCurrentlyActiveInquiries();
+    handleCardVisibility();
 
 })
 
 document.addEventListener("DOMContentLoaded", function () {
     controlSidebarLinks();
 });
+
+//based on logged user role
+const handleCardVisibility = () => {
+
+    //get logged user roles
+    const rolesRaw = document.getElementById('userRolesArraySection').textContent;
+    console.log("Raw roles text:", rolesRaw);
+    roles = JSON.parse(rolesRaw);
+    console.log("Parsed roles:", roles);
+
+    //changes for higher users
+    if (roles.includes("System_Admin") || roles.includes("Manager") || roles.includes("Assistant Manager")) {
+        document.getElementById('inqSummaryCard').style.display = 'none';
+        document.getElementById('unassignedInqCard').style.display = 'block';
+        document.getElementById('pendingAssignCard').style.display = 'block';
+
+        loadUnassignedInquiries();
+        loadPendingAssignmentBookings();
+
+    } else if (roles.includes("Executive")) {
+        document.getElementById('inqSummaryCard').style.display = 'block';
+        document.getElementById('unassignedInqCard').style.display = 'none';
+        document.getElementById('pendingAssignCard').style.display = 'none';
+
+        loadRescheduledInquiriesForToday();
+        showCurrentlyActiveInquiries();
+    }
+}
 
 // fn to load rescheduled inquiries for today
 const loadRescheduledInquiriesForToday = async () => {
@@ -71,4 +98,26 @@ const showCurrentlyActiveInquiries = async () => {
         console.error("Failed to fetch inquiry counts:", error);
     }
 };
+
+// fn to load unassigned inquiries count
+const loadUnassignedInquiries = async () => {
+    try {
+        const unassignedInquiries = await ajaxGetReq("/inq/new/unassigned");
+        document.getElementById("unassignedInqCount").innerText = unassignedInquiries.length;
+    } catch (error) {
+        console.error("Failed to fetch unassigned inquiries:", error);
+    }
+};
+
+// fn to load pending assignment bookings count
+const loadPendingAssignmentBookings = async () => {
+    try {
+        const pendingBookings = await ajaxGetReq("/booking/assignmentspending");
+        document.getElementById("pendingAssignCount").innerText = pendingBookings.length;
+    } catch (error) {
+        console.error("Failed to fetch pending assignment bookings:", error);
+    }
+};
+
+
 

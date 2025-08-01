@@ -23,6 +23,10 @@ public interface InqDao extends JpaRepository<Inq, Integer> {
     @Query(value = "SELECT * FROM newyathra.inquiry AS inq WHERE inq.inq_status = 'Confirmed' AND (inq.deleted_inq IS NULL OR inq.deleted_inq = false)", nativeQuery = true)
     public List<Inq> getOnlyConfirmedInqs();
 
+    // get only new inqs
+    @Query(value = "SELECT * FROM newyathra.inquiry AS inq WHERE inq.inq_status = 'New' AND (inq.deleted_inq IS NULL OR inq.deleted_inq = false)", nativeQuery = true)
+    public List<Inq> getOnlyNewUnAssignedInqs();
+
     // get currently working inqs + by emp id
     @Query(value = "SELECT * from newyathra.inquiry as inq where inq.inq_status in ('Working') and inq.assigned_empid=?1", nativeQuery = true)
     public List<Inq> getOnlyWorkingInqsByAssignedEmp(Integer empId);
