@@ -21,10 +21,55 @@
 
     <main id="mainAreaID" class="main min-vh-100">
 
-        <div id="rescheduledInqSection" class="card p-3 shadow-sm mb-4 d-none">
-            <h5 class="text-primary mb-2"> Inquiry Followups Rescheduled for Today</h5>
-            <ul id="rescheduledInqList" class="mb-0"></ul>
+        <!-- resceduled followups reminder -->
+        <!--<div id="rescheduledInqSection" class="card p-3 shadow-sm mb-4 mx-auto"
+            style="max-width: 500px; border-left: 5px solid #0d6efd;">
+
+            <h6 class="text-primary mb-2 fw-bold">
+                <i class="bi bi-calendar-event"></i> Follow-ups Scheduled for Today
+            </h6>
+
+            <ul id="rescheduledInqList" class="mb-0 small list-group list-group-flush">
+                
+            </ul>
+        </div>-->
+
+        <div id="inqSummaryCard" class="card p-3 shadow-sm mb-4 "
+            style="max-width: 500px; border: 5px solid #0d6efd; cursor: pointer;" onclick="window.location.href='http://localhost:8081/inq'">
+
+            <h6 class="text-primary mb-3 fw-bold">
+                <i class="bi bi-list-task"></i> Your Inquiry Summary
+            </h6>
+
+            <div class="d-flex justify-content-between mb-3">
+                <div>
+                    <p class="mb-1 text-success fw-semibold">Currently Working</p>
+                    <p id="workingInqCount" class="fs-4 fw-bold mb-0 text-dark">0</p>
+                </div>
+                <div>
+                    <p class="mb-1 text-warning fw-semibold">Newly Assigned</p>
+                    <p id="newAssignedCount" class="fs-4 fw-bold mb-0 text-dark">0</p>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- Rescheduled follow-ups -->
+            <div id="rescheduledInqSection" class="d-none">
+                <h6 class="text-primary mb-2 fw-bold">
+                    <i class="bi bi-calendar-event"></i> Follow-ups Scheduled for Today
+                </h6>
+
+                <ul id="rescheduledInqList" class="mb-0 small list-group list-group-flush">
+                    <!-- dynamically filled -->
+                </ul>
+            </div>
+
         </div>
+
+
+        <!-- new inquiries card -->
+
 
 
         <!-- Cards -->

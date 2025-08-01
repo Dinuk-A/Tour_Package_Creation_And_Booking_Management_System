@@ -115,10 +115,18 @@ public class InqController {
         return inqDao.returnPersonalInqsByEmpId(empid);
     }
 
+    //currently working ones
     @GetMapping(value = "/inq/personal/active", params = { "empid" }, produces = "application/json")
     public List<Inq> getOnlyActivePersonalAssignedInquiries(@RequestParam("empid") Integer empid) {
 
         return inqDao.getOnlyWorkingInqsByAssignedEmp(empid);
+    }
+
+    //assigned to an emp, but hasnt started working
+    @GetMapping(value = "/inq/personal/notstarted", params = { "empid" }, produces = "application/json")
+    public List<Inq> getNotStartedWorkingInqs(@RequestParam("empid") Integer empid) {
+
+        return inqDao.getNotStartedInqsByAssignedEmp(empid);
     }
 
     // for dashboard
