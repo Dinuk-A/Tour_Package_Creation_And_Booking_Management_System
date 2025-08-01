@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Switching to table tab - clearing form");
             refreshInquiryForm();
             refreshInqFollowupSection();
-            document.getElementById('inqStatusFilter').value = 'All'; 
+            document.getElementById('inqStatusFilter').value = 'All';
 
         }
     });
@@ -1442,24 +1442,40 @@ const changesBasedOnInqStts = (statusSelectElement) => {
     const value = statusSelectElement.value;
     const updateBtn = document.getElementById('manualInqUpdateBtn');
     const convToBknBtn = document.getElementById('convertToBookingBtn');
-    //const pptOrNicCol = document.getElementById('colPptOrNic');
     const pptOrNicField = document.getElementById('inqClientPassportNumorNIC');
+    const contactOneInput = document.getElementById('inqContactOne');
+    const emailInput = document.getElementById('inqClientEmail');
 
     if (value === "Confirmed") {
+
         convToBknBtn.classList.remove('d-none');
         updateBtn.classList.add('d-none');
-        //pptOrNicCol.classList.remove('d-none');
         pptOrNicField.disabled = false;
+
+        if (contactOneInput.value.trim() === "") {
+            contactOneInput.disabled = false;
+        }
+
+        if (emailInput.value.trim() === "") {
+            emailInput.disabled = false;
+        }
+
     } else if (value === "Closed") {
         updateBtn.textContent = "Close Inquiry";
         updateBtn.classList.remove('d-none');
         convToBknBtn.classList.add('d-none');
         pptOrNicField.disabled = true;
+
+        contactOneInput.disabled = true;
+        emailInput.disabled = true;
     } else {
         updateBtn.textContent = "Update Entry";
         updateBtn.classList.remove('d-none');
         convToBknBtn.classList.add('d-none');
         pptOrNicField.disabled = true;
+
+        contactOneInput.disabled = true;
+        emailInput.disabled = true;
     }
 
 }
@@ -1468,6 +1484,16 @@ const changesBasedOnInqStts = (statusSelectElement) => {
 const checkInqSuccessErrors = () => {
 
     let errors = "";
+
+    if (inquiry.contactnum == null || inquiry.contactnum.trim().toUpperCase() === "N/A" ||
+    inquiry.contactnum.trim() === "" ) {
+        errors += "Please enter the client's contact number \n";
+    }
+
+    if (inquiry.email == null || inquiry.email.trim().toUpperCase() === "N/A" ||
+    inquiry.email.trim() === "" ) {
+        errors += "Please enter the client's Email \n";
+    }
 
     if (inquiry.passportnumornic == null || inquiry.passportnumornic.trim() === "" ||
         inquiry.passportnumornic.trim().toUpperCase() === "N/A") {

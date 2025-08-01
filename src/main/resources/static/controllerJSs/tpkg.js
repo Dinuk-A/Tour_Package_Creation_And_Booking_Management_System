@@ -602,7 +602,7 @@ const refillTpkgForm = (tpkgObj) => {
     changesTpkgCustomOrTemp();
 
     //for custom pkgs
-    if (tpkgObj.is_custompkg === true) {
+    if (tpkgObj.is_custompkg === true && tpkg.tpkg_status != "Draft") {
 
         //based inquiry
         if (tpkg.basedinq != null) {
@@ -2008,10 +2008,32 @@ const checkTpkgFormErrors = () => {
     return errors;
 }
 
+//check errors for drafts
+const checkTpkgDraftErrors =() =>{
+    let errors="";
+
+    if (!tpkg.pkgtitle) {
+        errors += "Title cannot be empty \n";
+    }
+
+    if (tpkg.is_custompkg == null) {
+        errors += "Type cannot be undefined \n";
+    }
+
+    return errors;
+}
+
+
 //add a tpkg
 const addNewTpkg = async () => {
 
-    const errors = checkTpkgFormErrors();
+    let errors = "";
+    if (tpkg.tpkg_status === "Draft") {
+        errors = checkTpkgDraftErrors();
+    } else {
+        errors = checkTpkgFormErrors();
+    }
+
     if (errors == "") {
         const userConfirm = confirm("Are you sure you want to add this package?");
         if (userConfirm) {
@@ -4409,7 +4431,8 @@ const loadExistingFDs = async (selectElementId) => {
     //using existing days are for custom pkgs only
     if (tpkg.is_custompkg == true && tpkg.basedinq != null) {
 
-        const selectedInquiry = tpkg.basedinq.inqcode;
+        const selectedInquiry = tpkg.basedinq.id;
+        //const selectedInquiry = tpkg.basedinq.inqcode;
 
         try {
             const onlyFirstDaysByInq = await ajaxGetReq("/dayplan/onlyfirstdays/bydpbasedinq/" + selectedInquiry);
