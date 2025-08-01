@@ -2092,9 +2092,7 @@ const openModal = async (dpObj) => {
     } catch (error) {
         console.error("Failed to fetch modifier info:", error);
     }
-    document.getElementById("modalDPDateModified").innerText = dpObj.lastmodifieddatetime || 'N/A';
-
-
+    document.getElementById("modalDPDateModified").innerText = dpObj.lastmodifieddatetime.replace('T', ' ') || 'N/A';
 
     //buttons
     const editBtn = document.getElementById('modalDPEditBtn');

@@ -81,6 +81,9 @@ public class Inq {
     @Column(name = "recievedtime")
     private LocalTime recievedtime;
 
+    @Column(name = "rescheduled_date")
+    private LocalDate rescheduled_date;
+
     // in system form ✅
     @ManyToOne
     @JoinColumn(name = "assigned_empid", referencedColumnName = "id")

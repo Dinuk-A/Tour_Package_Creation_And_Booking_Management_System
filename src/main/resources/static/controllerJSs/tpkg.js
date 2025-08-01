@@ -427,8 +427,15 @@ const resetModalTpkg = () => {
     }
 };
 
+//common fn for handle dates
+const formatDateToReadableTpkg = (dateTimeString) => {
+    const dateObj = new Date(dateTimeString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return dateObj.toLocaleDateString('en-US', options);
+}
+
 //open modal to show all the info
-const openModalTpkg = (tpkgObj) => {
+const openModalTpkg = async(tpkgObj) => {
 
     resetModalTpkg();
 
@@ -554,14 +561,18 @@ const openModalTpkg = (tpkgObj) => {
 
             editBtn.disabled = false;
             deleteBtn.disabled = false;
+            unpublishBtn.disabled = false;
             editBtn.style.cursor = "pointer";
             deleteBtn.style.cursor = "pointer";
+            unpublishBtn.style.cursor = "pointer";
         } else {
 
             editBtn.disabled = true;
             deleteBtn.disabled = true;
+            unpublishBtn.disabled = true;
             editBtn.style.cursor = "not-allowed";
             deleteBtn.style.cursor = "not-allowed";
+            unpublishBtn.style.cursor = "not-allowed";
         }
 
         //based on status, show/hide buttons
@@ -581,19 +592,41 @@ const openModalTpkg = (tpkgObj) => {
 
     }
 
+    //creted and last modified user info
+     //get created emp's name and emp code
+     try {
+        let createdEmp = await ajaxGetReq("/empinfo/byuserid?userid=" + tpkgObj.addeduserid);
+        document.getElementById("createdEmpName").innerText = createdEmp.fullname;
+        document.getElementById("createdEmpCode").innerText = createdEmp.emp_code;
+
+    } catch (error) {
+        console.error("fetch failed for emp info by userid: ", error);
+    }
+    document.getElementById("modaTpkgPDateCreated").innerText = formatDateToReadableTpkg(tpkgObj.addeddatetime);
+
+    //last modified user
+    try {
+        let modifiedEmp = await ajaxGetReq("/empinfo/byuserid?userid=" + tpkgObj.lastmodifieduserid);
+        document.getElementById("modifiedEmpName").innerText = modifiedEmp.fullname || 'N/A';
+        document.getElementById("modifiedEmpCode").innerText = modifiedEmp.emp_code || 'N/A';
+    } catch (error) {
+        console.error("Failed to fetch modifier info:", error);
+    }
+    document.getElementById("modalTpkgDateModified").innerText = tpkgObj.lastmodifieddatetime.replace('T', ' ') || 'N/A';
+
     // Show modal
     $('#infoModalTpkg').modal('show');
 };
 
 //const fetchInqById = async (idValue) => {
 //    try {
-//        let basedInqClientAndCode = await ajaxGetReq("/inq/codeandclient/?id="+ idValue);
+//        let basedInqClientAndCodeTpkg = await ajaxGetReq("/inq/codeandclient/?id="+ idValue);
 //    } catch (error) {
 //        console.error("Failed to fetch inquiry by ID:", error);
 //    }
 //}
 
-let basedInqClientAndCode = null;
+let basedInqClientAndCodeTpkg = null;
 
 //refill the TPKG
 const refillTpkgForm = async (tpkgObj) => {
@@ -622,12 +655,12 @@ const refillTpkgForm = async (tpkgObj) => {
         if (tpkg.basedinq != null) {
 
             try {
-                basedInqClientAndCode = await ajaxGetReq("/inq/codeandclient?id=" + tpkg.basedinq);
+                basedInqClientAndCodeTpkg = await ajaxGetReq("/inq/codeandclient?id=" + tpkg.basedinq);
             } catch (error) {
                 console.error("Failed to fetch inquiry by ID:", error);
             }
             fakeInqArray = [];
-            fakeInqArray.push(basedInqClientAndCode);
+            fakeInqArray.push(basedInqClientAndCodeTpkg);
             fillMultDataIntoDynamicSelectsRefillById(tpkgBasedInq, 'Please select based inquiry', fakeInqArray, 'inqcode', 'clientname', tpkg.basedinq);
             tpkgBasedInq.disabled = true;
         }

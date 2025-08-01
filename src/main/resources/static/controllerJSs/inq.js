@@ -92,6 +92,19 @@ const handleDateFields = () => {
 
 }
 
+//handle followup rescheduled date
+const handleNextFollowupRescheduledDate = () => {
+    
+    const followupDateInput = document.getElementById('followupDateInput');
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const formattedTomorrow = tomorrow.toISOString().split('T')[0];
+
+    followupDateInput.setAttribute('min', formattedTomorrow);
+}
+
+
 //to minmize the api calls, get all emps at once, then collect and show the empid and name from that list
 let allEmployeesMap = {};
 const loadAllEmployees = async () => {
@@ -1410,7 +1423,7 @@ const checkAtLeastOneAdultPresent = () => {
 }
 
 //refresh the inquiry followup section and reset all fields
-const refreshInqFollowupSection = () => {
+const refreshInqFollowupSection = () => {    
 
     followup = new Object();
 
@@ -1419,6 +1432,8 @@ const refreshInqFollowupSection = () => {
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
     addNewResponseRowBtn.disabled = false;
     addNewResponseRowBtn.style.cursor = "pointer";
+
+    handleNextFollowupRescheduledDate();
 
 }
 
@@ -1812,6 +1827,7 @@ const submitOnlyManualFollowup = async () => {
 
         if (userConfirm) {
 
+            inquiry.rescheduled_date = followup.next_followup_datetime;
             followup.inquiry_id = inquiry;
 
             console.log("Follow up object: ", followup);

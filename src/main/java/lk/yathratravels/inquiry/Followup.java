@@ -1,7 +1,5 @@
 package lk.yathratravels.inquiry;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +12,8 @@ import lk.yathratravels.tpkg.TourPkg;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "followup")
@@ -50,8 +50,8 @@ public class Followup {
     @Column(name = "is_next_followup_required")
     private Boolean is_next_followup_required;
 
-    @Column(name = "next_followup_datetime")
-    private LocalDateTime next_followup_datetime;
+    @Column(name = "next_followup_date")
+    private LocalDate next_followup_date;
 
 }
 

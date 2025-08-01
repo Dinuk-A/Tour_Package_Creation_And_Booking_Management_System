@@ -106,11 +106,11 @@ public class InqController {
         return inqDao.getClientnameAndCodeById(id);
     }
 
+    // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    // user dao and auth eke logged userge USER obj samanada kiyala
+
     @GetMapping(value = "/inq/personal", params = { "empid" }, produces = "application/json")
     public List<Inq> getPersonalAssignedInquiries(@RequestParam("empid") Integer empid) {
-
-        // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        // user dao and auth eke logged userge USER obj samanada kiyala
 
         return inqDao.returnPersonalInqsByEmpId(empid);
     }
@@ -119,6 +119,12 @@ public class InqController {
     public List<Inq> getOnlyActivePersonalAssignedInquiries(@RequestParam("empid") Integer empid) {
 
         return inqDao.getOnlyWorkingInqsByAssignedEmp(empid);
+    }
+
+    // for dashboard
+    @GetMapping(value = "/inq/personal/rescheduled/today", params = { "empid" }, produces = "application/json")
+    public List<Inq> getRescheduledInquiriesForToday(@RequestParam("empid") Integer empid) {
+        return inqDao.getRescheduledWorkingInquiriesForTodayByEmployee(empid);
     }
 
     // get only the active ones

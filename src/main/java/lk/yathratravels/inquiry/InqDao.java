@@ -31,4 +31,17 @@ public interface InqDao extends JpaRepository<Inq, Integer> {
     @Query("SELECT new Inq(i.id, i.clientname, i.inqcode) FROM Inq i WHERE i.id = ?1")
     Inq getClientnameAndCodeById(Integer id);
 
+    // @Query(value = "SELECT * FROM newyathra.inquiry " +
+    // "WHERE rescheduled_date = CURRENT_DATE " +
+    // "AND (deleted_inq IS NULL OR deleted_inq = false) " +
+    // "AND assigned_empid = ?1", nativeQuery = true)
+    // List<Inq> getRescheduledInquiriesForTodayByEmployee(Integer empId);
+
+    @Query(value = "SELECT * FROM newyathra.inquiry " +
+            "WHERE rescheduled_date = CURRENT_DATE " +
+            "AND (deleted_inq IS NULL OR deleted_inq = false) " +
+            "AND assigned_empid = ?1 " +
+            "AND inq_status = 'Working'", nativeQuery = true)
+    List<Inq> getRescheduledWorkingInquiriesForTodayByEmployee(Integer empId);
+
 }

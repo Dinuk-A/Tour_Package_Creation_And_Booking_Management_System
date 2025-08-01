@@ -18,14 +18,20 @@
     <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
     <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
     <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
-   
+
     <main id="mainAreaID" class="main min-vh-100">
+
+        <div id="rescheduledInqSection" class="card p-3 shadow-sm mb-4 d-none">
+            <h5 class="text-primary mb-2"> Inquiry Followups Rescheduled for Today</h5>
+            <ul id="rescheduledInqList" class="mb-0"></ul>
+        </div>
+
 
         <!-- Cards -->
         <!--<div class="row">-->
 
-            <!-- new inquiries card -->
-            <!-- <div class="col-md-3">
+        <!-- new inquiries card -->
+        <!-- <div class="col-md-3">
                
                     <div class="card" onclick="customAlert(test, '#fff', '#007bff', buttonTextColor = '#fff')">
                         <div class="card-body position-relative">
@@ -36,8 +42,8 @@
                
             </div> -->
 
-            <!-- in progress inquiries card -->
-            <!--<div class="col-md-3">
+        <!-- in progress inquiries card -->
+        <!--<div class="col-md-3">
                 <a href="http://localhost:8080/inquiryresponse" class="text-decoration-none">
                     <div class="card">
                         <div class="card-body position-relative">
