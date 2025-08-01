@@ -159,7 +159,8 @@
                                                     :</label>
 
                                                 <input id="inqRecievedDate" class="form-control form-input" type="date"
-                                                    onchange="inputValidatorText(this, '' , 'inquiry' , 'recieveddate')" onkeypress="return false">
+                                                    onchange="inputValidatorText(this, '' , 'inquiry' , 'recieveddate')"
+                                                    onkeypress="return false">
                                             </div>
 
                                             <!-- recieved time -->
@@ -281,7 +282,8 @@
                                                 </label>
 
                                                 <input id="inqClientEmail" class="form-control form-input"
-                                                    onkeyup="inputValidatorText(this,'', 'inquiry' , 'email'); debouncedGetClientByEmail(this.value)" onblur="getClientByEmail(this.value)"> 
+                                                    onkeyup="inputValidatorText(this,'', 'inquiry' , 'email'); debouncedGetClientByEmail(this.value)"
+                                                    onblur="getClientByEmail(this.value)">
                                             </div>
 
                                             <!-- Preferred Contact Method -->
@@ -309,7 +311,7 @@
                                                     :</label>
 
                                                 <input id="inqClientPassportNumorNIC" class="form-control form-input"
-                                                    onkeyup="inputValidatorText(this,'', 'inquiry' , 'passportnumornic')">
+                                                    onkeyup="inputValidatorText(this,'^[A-Z][0-9]{6,9}$', 'inquiry' , 'passportnumornic')">
                                             </div>
 
                                             <!--<div class="col-3"></div>-->

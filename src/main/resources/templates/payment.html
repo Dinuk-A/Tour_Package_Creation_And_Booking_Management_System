@@ -39,7 +39,7 @@
             <!-- for form side -->
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#formPaymentHolderDiv" role="tab"
-                    aria-controls="formPaymentHolderDiv" aria-selected="false" onclick="setPaymentStatusAuto()">Form</a>
+                    aria-controls="formPaymentHolderDiv" aria-selected="false">Form</a>
             </li>
         </ul>
 
@@ -272,7 +272,7 @@
                                                     <span class="text-danger"> * </span>:</label>
                                                 <select disabled id="inputPaymentMethod"
                                                     class="form-select form-input p-1 text-center" required
-                                                    onchange="staticSelectValidator(this , 'payment' , 'payment_method'); changesBasedMethod(this);">
+                                                    onchange="staticSelectValidator(this , 'payment' , 'payment_method'); changeBasedPaymentMethod(this);">
                                                     <option value="" disabled selected>Select Method</option>
                                                     <option value="Cash">Cash</option>
                                                     <option value="Bank_Transfer">Bank Transfer</option>

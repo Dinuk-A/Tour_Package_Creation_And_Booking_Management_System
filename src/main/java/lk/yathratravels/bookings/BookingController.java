@@ -112,6 +112,16 @@ public class BookingController {
         return bookingDao.getUnpaidNewBookings();
     }
 
+    // reusable method to get next booking code
+    private void assignNextBookingCode(Booking booking) {
+        String nextBookingCode = bookingDao.getNextBookingCode();
+        if (nextBookingCode == null || nextBookingCode.equals("")) {
+            booking.setBookingcode("BK00001");
+        } else {
+            booking.setBookingcode(nextBookingCode);
+        }
+    }
+
     // update a booking (assign vehicles, personnel, etc)
     @PutMapping(value = "/booking")
     @Transactional
@@ -147,12 +157,16 @@ public class BookingController {
             // update start and end dates of original tpkg
             TourPkg tpkg = booking.getTpkg();
 
-            //not working 💥💥💥
+            // not working 💥💥💥
             if (booking.getStartdate() != null && booking.getEnddate() != null) {
                 tpkg.setTourstartdate(booking.getStartdate());
                 tpkg.setTourenddate(booking.getEnddate());
                 System.out.println("updating days in tpkg");
-                //tourPkgDao.save(tpkg);
+                // tourPkgDao.save(tpkg);
+            }
+
+            if (booking.getBooking_status().equals("Assignment_Pending")) {
+                checkAssignmentCompleteOrNot(booking);
             }
 
             bookingDao.save(booking);
@@ -164,15 +178,50 @@ public class BookingController {
 
     }
 
-    // reusable method to get next booking code
-    private void assignNextBookingCode(Booking booking) {
-        String nextBookingCode = bookingDao.getNextBookingCode();
-        if (nextBookingCode == null || nextBookingCode.equals("")) {
-            booking.setBookingcode("BK00001");
+    //check the assignment status of the booking
+    private void checkAssignmentCompleteOrNot(Booking booking) {
+
+        // Count internal
+        int internalDrivers = booking.getInt_drivers() != null ? booking.getInt_drivers().size() : 0;
+        int internalGuides = booking.getInt_guides() != null ? booking.getInt_guides().size() : 0;
+        int internalVehicles = booking.getInt_vehicles() != null ? booking.getInt_vehicles().size() : 0;
+    
+        // Count external drivers and guides by filtering role
+        long externalDrivers = booking.getExternalPersonnels().stream()
+                .filter(p -> p.getRole() != null && p.getRole().equalsIgnoreCase("Driver"))
+                .count();
+    
+        long externalGuides = booking.getExternalPersonnels().stream()
+                .filter(p -> p.getRole() != null && p.getRole().equalsIgnoreCase("Guide"))
+                .count();
+    
+        int externalVehicles = booking.getExternalVehicles() != null ? booking.getExternalVehicles().size() : 0;
+    
+        int totalDrivers = internalDrivers + (int) externalDrivers;
+        int totalGuides = internalGuides + (int) externalGuides;
+        int totalVehicles = internalVehicles + externalVehicles;
+    
+        TourPkg tpkg = booking.getTpkg();
+        boolean isGuideRequired = tpkg != null && Boolean.TRUE.equals(tpkg.getIs_guide_needed());
+    
+        boolean driverAndVehicleAssigned = totalDrivers > 0 && totalVehicles > 0;
+        boolean guideAssigned = totalGuides > 0;
+    
+        if (isGuideRequired) {
+            if (driverAndVehicleAssigned && guideAssigned) {
+                booking.setBooking_status("Finalized");
+            } else {
+                booking.setBooking_status("Assignment_Pending");
+            }
         } else {
-            booking.setBookingcode(nextBookingCode);
+            if (driverAndVehicleAssigned) {
+                booking.setBooking_status("Finalized");
+            } else {
+                booking.setBooking_status("Assignment_Pending");
+            }
         }
     }
+    
 
 }
 

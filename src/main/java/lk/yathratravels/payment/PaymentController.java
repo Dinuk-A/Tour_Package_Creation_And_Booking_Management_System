@@ -154,6 +154,7 @@ public class PaymentController {
 
             if (newTotalPaid.doubleValue() >= booking.getAdvancement_amount().doubleValue()) {
                 booking.setPayment_status("Advance_Paid");
+                booking.setBooking_status("Assignment_Pending");
             }
 
         }

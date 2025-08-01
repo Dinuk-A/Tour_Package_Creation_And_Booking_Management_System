@@ -157,8 +157,7 @@ const buildBookingTable = async () => {
     }
 
 }
-
-//show in tablle
+// show in table
 const showBookingStatus = (bookingObj) => {
 
     if (bookingObj.deleted_booking == null || bookingObj.deleted_booking == false) {
@@ -198,6 +197,18 @@ const showBookingStatus = (bookingObj) => {
                    style="background-color: #16a085; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                    Refunded
                 </p>`;
+        } else if (bookingObj.booking_status == "Assignment_Pending") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #d35400; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Assignment Pending
+                </p>`;
+        } else if (bookingObj.booking_status == "Finalized") {
+            return `
+                <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
+                   style="background-color: #2ecc71; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                   Finalized
+                </p>`;
         } else {
             return `
                 <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
@@ -213,6 +224,7 @@ const showBookingStatus = (bookingObj) => {
             </p>`;
     }
 };
+
 
 //client code and name
 const showClientInfo = (bookingObj) => {

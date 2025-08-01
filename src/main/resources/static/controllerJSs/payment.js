@@ -184,7 +184,7 @@ const restrictFutureDates = () => {
 };
 
 //changesBasedMethod
-const changeBasedMethod = (selectEle) => {
+const changeBasedPaymentMethod = (selectEle) => {
 
     const selectImgBtn = document.getElementById('selectImgBtn');
     const clearImgBtn = document.getElementById('clearImgBtn');

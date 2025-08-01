@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Switching to table tab - clearing form");
             refreshInquiryForm();
             refreshInqFollowupSection();
+            document.getElementById('inqStatusFilter').value = 'All'; 
+
         }
     });
 });
