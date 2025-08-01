@@ -2010,8 +2010,15 @@ const resetModal = () => {
 
 }
 
+//common fn for handle dates
+const formatDateToReadable = (dateTimeString) => {
+    const dateObj = new Date(dateTimeString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return dateObj.toLocaleDateString('en-US', options);
+}
+
 //fn for edit button to open the modal that shows all the info
-const openModal = (dpObj) => {
+const openModal = async (dpObj) => {
 
     //this is added because we use the dayplan.js inside the tpkg.html too
     const tableDayPlanHolderDivElement = document.getElementById('tableDayPlanHolderDiv');
@@ -2020,8 +2027,6 @@ const openModal = (dpObj) => {
     }
 
     resetModal();
-
-
 
     if (dpObj.is_template) {
         document.getElementById('tempInfoDisRow').classList.remove('d-none');
@@ -2043,7 +2048,6 @@ const openModal = (dpObj) => {
     } else {
         attractionsElement.innerHTML = 'N/A';
     }
-
 
     document.getElementById('modalDPStartLocation').innerText =
         dpObj.pickuppoint || (dpObj.pickup_stay_id && dpObj.pickup_stay_id.name) || 'N/A';
@@ -2068,6 +2072,29 @@ const openModal = (dpObj) => {
 
     document.getElementById('modalDPNote').innerText = dpObj.note || 'N/A';
     document.getElementById('modalDPStatus').innerText = dpObj.dp_status || 'N/A';
+
+    //get created emp's name and emp code
+    try {
+        let createdEmp = await ajaxGetReq("/empinfo/byuserid?userid=" + dpObj.addeduserid);
+        document.getElementById("createdEmpName").innerText = createdEmp.fullname;
+        document.getElementById("createdEmpCode").innerText = createdEmp.emp_code;
+
+    } catch (error) {
+        console.error("fetch failed for emp info by userid: ", error);
+    }
+    document.getElementById("modalDPDateCreated").innerText = formatDateToReadable(dpObj.addeddatetime);
+
+    //last modified user
+    try {
+        let modifiedEmp = await ajaxGetReq("/empinfo/byuserid?userid=" + dpObj.lastmodifieduserid);
+        document.getElementById("modifiedEmpName").innerText = modifiedEmp.fullname || 'N/A';
+        document.getElementById("modifiedEmpCode").innerText = modifiedEmp.emp_code || 'N/A';
+    } catch (error) {
+        console.error("Failed to fetch modifier info:", error);
+    }
+    document.getElementById("modalDPDateModified").innerText = dpObj.lastmodifieddatetime || 'N/A';
+
+
 
     //buttons
     const editBtn = document.getElementById('modalDPEditBtn');
@@ -2116,8 +2143,6 @@ const openModal = (dpObj) => {
             deleteBtn.style.cursor = 'not-allowed';
             recoverBtn.style.cursor = 'not-allowed';
         }
-
-    } else {
 
     }
 
