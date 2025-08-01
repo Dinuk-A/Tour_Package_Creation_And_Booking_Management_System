@@ -25,6 +25,7 @@ public interface ClientDao extends JpaRepository<Client, Integer> {
     int countCompletedBookingsByClientJPQL(@Param("clientId") Integer clientId);
 
     // same with native
+    //called in booking controller
     @Query(value = "SELECT COUNT(*) FROM booking WHERE client = ?1 AND booking_status = 'Completed'", nativeQuery = true)
     int countCompletedBookingsByClientNative(Integer clientId);
 

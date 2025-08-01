@@ -94,7 +94,7 @@ const handleDateFields = () => {
 
 //handle followup rescheduled date
 const handleNextFollowupRescheduledDate = () => {
-    
+
     const followupDateInput = document.getElementById('followupDateInput');
     const today = new Date();
     const tomorrow = new Date(today);
@@ -243,7 +243,7 @@ const showInquiryStatus = (inqObj) => {
         return `
             <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
                style="background-color: #27ae60; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-               Client Confirmed Booking
+               Converted to Booking
             </p>`;
     } else if (inqObj.inq_status === "Closed") {
         return `
@@ -1423,7 +1423,7 @@ const checkAtLeastOneAdultPresent = () => {
 }
 
 //refresh the inquiry followup section and reset all fields
-const refreshInqFollowupSection = () => {    
+const refreshInqFollowupSection = () => {
 
     followup = new Object();
 
@@ -1432,8 +1432,6 @@ const refreshInqFollowupSection = () => {
     const addNewResponseRowBtn = document.getElementById('createNewResponseRowBtn');
     addNewResponseRowBtn.disabled = false;
     addNewResponseRowBtn.style.cursor = "pointer";
-
-    handleNextFollowupRescheduledDate();
 
 }
 
@@ -1501,12 +1499,12 @@ const checkInqSuccessErrors = () => {
     let errors = "";
 
     if (inquiry.contactnum == null || inquiry.contactnum.trim().toUpperCase() === "N/A" ||
-    inquiry.contactnum.trim() === "" ) {
+        inquiry.contactnum.trim() === "") {
         errors += "Please enter the client's contact number \n";
     }
 
     if (inquiry.email == null || inquiry.email.trim().toUpperCase() === "N/A" ||
-    inquiry.email.trim() === "" ) {
+        inquiry.email.trim() === "") {
         errors += "Please enter the client's Email \n";
     }
 
@@ -1741,6 +1739,15 @@ const refillAllPrevResponses = async () => {
             rowDiv.appendChild(col8);
             rowDiv.appendChild(col4);
 
+            if (res.next_followup_date) {
+                const followupSpan = document.createElement("div");
+                followupSpan.classList.add("text-muted");
+                const followupDateObj = new Date(res.next_followup_date);
+                const formattedFollowupDate = followupDateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                followupSpan.innerHTML = `<i class="bi bi-calendar2-event"></i>Next Followup Rescheduled to: ${formattedFollowupDate}`;
+                col4.appendChild(followupSpan);
+            }
+
             if (res.is_package_quoted && res.last_sent_tpkg) {
                 const pkgInfoDiv = document.createElement("div");
                 pkgInfoDiv.classList.add("mt-2", "pt-2", "border-top", "w-100", "text-muted", "small");
@@ -1788,6 +1795,8 @@ const createNewResponseInputSection = async () => {
     packageQuotedNo.checked = true;
     inquiry.is_package_quoted = false;
 
+    handleNextFollowupRescheduledDate();
+
 }
 
 //check manual followup errors
@@ -1827,7 +1836,7 @@ const submitOnlyManualFollowup = async () => {
 
         if (userConfirm) {
 
-            inquiry.rescheduled_date = followup.next_followup_datetime;
+            inquiry.rescheduled_date = followup.next_followup_date;
             followup.inquiry_id = inquiry;
 
             console.log("Follow up object: ", followup);

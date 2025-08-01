@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,6 +25,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
+import lk.yathratravels.client.ClientDao;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
 import lk.yathratravels.tpkg.TourPkg;
@@ -45,6 +47,9 @@ public class BookingController {
 
     @Autowired
     private TourPkgDao tourPkgDao;
+
+    @Autowired
+    private ClientDao clientDao;
 
     // display booking UI
     @RequestMapping(value = "/booking", method = RequestMethod.GET)
@@ -122,6 +127,12 @@ public class BookingController {
         }
     }
 
+    //get booking count
+    @GetMapping(value = "/completed/count", params = { "clientid" }, produces = "application/json")
+    public int countCompletedBookingsByClient(@RequestParam("clientid") Integer clientId) {
+        return clientDao.countCompletedBookingsByClientNative(clientId);
+    }
+
     // update a booking (assign vehicles, personnel, etc)
     @PutMapping(value = "/booking")
     @Transactional
@@ -178,35 +189,35 @@ public class BookingController {
 
     }
 
-    //check the assignment status of the booking
+    // check the assignment status of the booking
     private void checkAssignmentCompleteOrNot(Booking booking) {
 
         // Count internal
         int internalDrivers = booking.getInt_drivers() != null ? booking.getInt_drivers().size() : 0;
         int internalGuides = booking.getInt_guides() != null ? booking.getInt_guides().size() : 0;
         int internalVehicles = booking.getInt_vehicles() != null ? booking.getInt_vehicles().size() : 0;
-    
+
         // Count external drivers and guides by filtering role
         long externalDrivers = booking.getExternalPersonnels().stream()
                 .filter(p -> p.getRole() != null && p.getRole().equalsIgnoreCase("Driver"))
                 .count();
-    
+
         long externalGuides = booking.getExternalPersonnels().stream()
                 .filter(p -> p.getRole() != null && p.getRole().equalsIgnoreCase("Guide"))
                 .count();
-    
+
         int externalVehicles = booking.getExternalVehicles() != null ? booking.getExternalVehicles().size() : 0;
-    
+
         int totalDrivers = internalDrivers + (int) externalDrivers;
         int totalGuides = internalGuides + (int) externalGuides;
         int totalVehicles = internalVehicles + externalVehicles;
-    
+
         TourPkg tpkg = booking.getTpkg();
         boolean isGuideRequired = tpkg != null && Boolean.TRUE.equals(tpkg.getIs_guide_needed());
-    
+
         boolean driverAndVehicleAssigned = totalDrivers > 0 && totalVehicles > 0;
         boolean guideAssigned = totalGuides > 0;
-    
+
         if (isGuideRequired) {
             if (driverAndVehicleAssigned && guideAssigned) {
                 booking.setBooking_status("Finalized");
@@ -221,7 +232,6 @@ public class BookingController {
             }
         }
     }
-    
 
 }
 

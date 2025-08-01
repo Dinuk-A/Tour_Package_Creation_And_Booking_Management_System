@@ -120,6 +120,9 @@ public class FollowupController {
                 flwup.getInquiry_id().setInq_status("Working");
             }
 
+            //get the next followup requied date and save in main inquiry
+            
+
             inqDao.save(flwup.getInquiry_id());
 
             return "OK";

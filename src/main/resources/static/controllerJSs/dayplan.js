@@ -211,11 +211,11 @@ const showDayPlanStatus = (dpObj) => {
                    style="background-color: #f39c12; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
                    Draft
                 </p>`;
-        } else if (dpObj.dp_status == "Confirmed") {
+        } else if (dpObj.dp_status == "Added") {
             return `
                 <p class="text-white text-center px-3 py-1 my-auto d-inline-block"
                    style="background-color: #3498db; border-radius: 0.5rem; font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                   Confirmed
+                   Included to a Package
                 </p>`;
         } else if (dpObj.dp_status == "Completed") {
             return `

@@ -220,7 +220,7 @@
                                                     <span class="text-danger">*</span> :</label>
                                                 <input id="dpTitle" class="form-control"
                                                     placeholder="Enter The Itinerary Title"
-                                                    onkeyup="inputValidatorText(this, '', 'dayplan' , 'daytitle'); checkDPFirstTab();"
+                                                    onkeyup="inputValidatorText(this, '^.{5,50}$', 'dayplan' , 'daytitle'); checkDPFirstTab();"
                                                     disabled>
                                             </div>
 
@@ -806,7 +806,7 @@
                                                     <option value="" selected disabled>Please Select Status </option>
                                                     <option value="Draft"> Draft </option>
                                                     <option value="Finalized"> Finalized </option>
-                                                    <option value="Confirmed">Included in a package </option>
+                                                    <option value="Added">Included in a package </option>
                                                     <option value="Completed"> Tour completed </option>
                                                     <option value="ifDeleted" class="d-none"> Deleted Record </option>
                                                 </select>

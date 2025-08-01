@@ -157,12 +157,24 @@ public class TourPkgController {
                 ac.setTourPkg(tpkg);
             }
 
-            //if is emplate + status == live on website
-            //all days will be status == used on a web pkg start.mid.last all
-
-            //else all status == used in a package 
-
-            
+            //if is_template + status == live on website >>> 
+            //all days will be status == included in a pkg>>> start,mid,last all
+            if (tpkg.getSd_dayplan_id() != null) {
+                tpkg.getSd_dayplan_id().setDp_status("added to a pkg");
+            }
+    
+            // End day
+            if (tpkg.getEd_dayplan_id() != null) {
+                tpkg.getEd_dayplan_id().setDp_status("added to a pkg");
+            }
+    
+            // Middle days
+            if (tpkg.getDayplans() != null && !tpkg.getDayplans().isEmpty()) {
+                for (DayPlan dp : tpkg.getDayplans()) {
+                    dp.setDp_status("added to a pkg");
+                }
+            }
+              
             daoTPkg.save(tpkg);
 
             return "OK";

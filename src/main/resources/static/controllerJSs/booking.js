@@ -136,7 +136,8 @@ const buildBookingTable = async () => {
             { displayType: 'text', displayingPropertyOrFn: 'bookingcode', colHeadName: 'Code' },
             //{ displayType: 'function', displayingPropertyOrFn: showClientInfo, colHeadName: 'Client' },
             //{ displayType: 'function', displayingPropertyOrFn: showClientContacts, colHeadName: 'Contact' },
-            { displayType: 'function', displayingPropertyOrFn: showBookedPkg, colHeadName: 'Package' },
+            { displayType: 'function', displayingPropertyOrFn: showBookedPkg, colHeadName: 'Booked Package' },
+            { displayType: 'function', displayingPropertyOrFn: showBasedInquiry, colHeadName: 'Based Inquiry' },
             { displayType: 'function', displayingPropertyOrFn: showBookingStatus, colHeadName: 'Status' }
         ]
 
@@ -157,6 +158,7 @@ const buildBookingTable = async () => {
     }
 
 }
+
 // show in table
 const showBookingStatus = (bookingObj) => {
 
@@ -239,6 +241,15 @@ const showClientContacts = (bookingObj) => {
 // booked pkg
 const showBookedPkg = (bookingObj) => {
     return `${bookingObj.tpkg.pkgcode} <br> ${bookingObj.tpkg.pkgtitle}`;
+}
+
+// based inquiry
+const showBasedInquiry = (bookingObj) => {
+    if (bookingObj.tpkg.basedinq) {
+        return `${bookingObj.tpkg.basedinq.inqcode} `;
+    } else {
+        return "No Inquiry";
+    }
 }
 
 //refill function
@@ -330,6 +341,8 @@ const openModal = async (bookingObj) => {
         guidePrefMsg.innerText = ` ${guideType} requested`;
     } else {
         guidePrefMsg.innerText = 'No guide requested';
+        internalGuideRB.disabled = true;
+        externalGuideRB.disabled = true;
     }
 
     // Show driver preference
@@ -402,7 +415,6 @@ const checkAssignability = (bookingObj) => {
         document.getElementById('availableVehiclesContainer').classList.remove("d-none");
         document.getElementById('availableDriversContainer').classList.remove("d-none");
         document.getElementById('availableGuidesContainer').classList.remove("d-none");
-
 
     }
 }
