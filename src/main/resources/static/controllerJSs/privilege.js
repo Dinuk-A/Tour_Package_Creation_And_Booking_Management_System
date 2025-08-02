@@ -615,7 +615,7 @@ const updatePrivileges = async () => {
 //fn for DELETE btn
 const deletePriviRecord = async (prvObj) => {
 
-    const userConfirm = confirm('Are you sure to delete ?');
+    const userConfirm = confirm('Are you sure to reset all the privileges ?');
 
     if (userConfirm) {
 

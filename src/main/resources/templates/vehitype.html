@@ -72,7 +72,7 @@
                                             :</label>
                                         <input id="inputVehicleName" type="text" placeholder="Enter Vehicle Type"
                                             class="test form-control form-input"
-                                            onkeyup="inputValidatorText(this,'','vehitype','name')" required>
+                                            onkeyup="inputValidatorText(this,'^[A-Za-z]{2,25}$','vehitype','name')" required>
 
                                     </div>
 
@@ -93,7 +93,7 @@
                                                         </span>
                                                         <input type="number" id="inputInternalAvgCPKMPrice"
                                                             class="form-control form-input p-1 text-center"
-                                                            onkeyup="inputValidatorText(this,'','vehitype','int_avg_cpkm')"
+                                                            onkeyup="inputValidatorText(this,'^(?!0(?:\.00)?$)([1-9]\d{1,2})(?:\.\d{1,2})?$','vehitype','int_avg_cpkm')"
                                                             onblur="insertDecimals(this);" required>
                                                     </div>
                                                 </div>
@@ -108,7 +108,7 @@
                                                         </span>
                                                         <input type="number" id="inputExternalAvgCPKMPPrice"
                                                             class="form-control form-input p-1 text-center"
-                                                            onkeyup="inputValidatorText(this,'','vehitype','ext_avg_cpkm')"
+                                                            onkeyup="inputValidatorText(this,'^(?!0(?:\.00)?$)([1-9]\d{1,2})(?:\.\d{1,2})?$','vehitype','ext_avg_cpkm')"
                                                             onblur="insertDecimals(this);" required>
                                                     </div>
                                                 </div>

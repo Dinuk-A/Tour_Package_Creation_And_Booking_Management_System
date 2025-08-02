@@ -137,7 +137,7 @@ const buildBookingTable = async () => {
             //{ displayType: 'function', displayingPropertyOrFn: showClientInfo, colHeadName: 'Client' },
             //{ displayType: 'function', displayingPropertyOrFn: showClientContacts, colHeadName: 'Contact' },
             { displayType: 'function', displayingPropertyOrFn: showBookedPkg, colHeadName: 'Booked Package' },
-            { displayType: 'function', displayingPropertyOrFn: showBasedInquiry, colHeadName: 'Based Inquiry' },
+            //{ displayType: 'function', displayingPropertyOrFn: showBasedInquiry, colHeadName: 'Based Inquiry' },
             { displayType: 'function', displayingPropertyOrFn: showBookingStatus, colHeadName: 'Status' }
         ]
 
@@ -244,13 +244,23 @@ const showBookedPkg = (bookingObj) => {
 }
 
 // based inquiry
-const showBasedInquiry = (bookingObj) => {
-    if (bookingObj.tpkg.basedinq) {
-        return `${bookingObj.tpkg.basedinq.inqcode} `;
-    } else {
-        return "No Inquiry";
-    }
-}
+//not working, create same for inq /inq/byid?inqId= 💥💥💥
+//const showBasedInquiry = async (bookingObj) => {
+//
+//    if (bookingObj.tpkg.basedinq) {
+//        const pkgId = bookingObj.tpkg.basedinq.id;
+//        let pkgInfo;
+//        try {
+//            pkgInfo = await ajaxGetReq("/tpkg/byid?tpkgId=" + pkgId);
+//        } catch (err) {
+//            console.error("Failed to load package details for ID " + pkgId, err);
+//        }
+//
+//        return `${pkgInfo} `;
+//    } else {
+//        return "No Inquiry";
+//    }
+//}
 
 //refill function
 const openModal = async (bookingObj) => {

@@ -79,7 +79,7 @@
                                                 <input id="inputVehicleName" type="text"
                                                     placeholder="Enter Vehicle Brand/Modal/Year"
                                                     class="test form-control form-input"
-                                                    onkeyup="inputValidatorText(this,'','vehicle','vehiclename')"
+                                                    onkeyup="inputValidatorText(this,'^[a-zA-Z0-9 \-]{3,30}$','vehicle','vehiclename')"
                                                     required>
                                             </div>
                                         </div>
@@ -93,7 +93,7 @@
                                                 <input id="inputNumberPlate" type="text"
                                                     placeholder="Enter Vehicle Number Plate"
                                                     class="form-control form-input"
-                                                    onkeyup="inputValidatorText(this,'','vehicle','numberplate')"
+                                                    onkeyup="inputValidatorText(this,'^[A-Z]{3}\d{4,5}$','vehicle','numberplate')"
                                                     required>
                                             </div>
 
@@ -152,7 +152,7 @@
                                         <input id="inputPassengerSeatCount" type="text"
                                             placeholder="Enter Passengers Seat Count"
                                             class="test form-control form-input"
-                                            onkeyup="inputValidatorText(this,'','vehicle','passengerseats')" required>
+                                            onkeyup="inputValidatorText(this,'^[1-9][0-9]?$','vehicle','passengerseats')" required>
                                     </div>
 
                                     <div class="col-md-8">
@@ -162,7 +162,7 @@
                                         <input id="inputVehiLuggageCapacity" type="text"
                                             placeholder="5-6 Large Bags/ 1-2 Small Bags"
                                             class="test form-control form-input"
-                                            onkeyup="inputValidatorText(this,'','vehicle','luggage_capacity')" required>
+                                            onkeyup="inputValidatorText(this,'^(?!\s*$).{1,40}$','vehicle','luggage_capacity')" required>
                                     </div>
                                 </div>
 
@@ -206,7 +206,7 @@
                                         <label for="inputNote" class="fw-bold">Additional Information</label>
                                         <textarea id="inputNote" class="form-control" rows="5"
                                             placeholder="Enter Any Additional Information"
-                                            onkeyup="inputValidatorText(this,'','vehicle','note')"></textarea>
+                                            onkeyup="inputValidatorText(this,'^(?!\s*$).{1,250}$','vehicle','note')"></textarea>
                                     </div>
 
 
