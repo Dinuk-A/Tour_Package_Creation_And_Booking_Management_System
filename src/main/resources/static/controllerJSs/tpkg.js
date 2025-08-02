@@ -168,9 +168,9 @@ document.addEventListener("DOMContentLoaded", () => {
 //set status auto
 const setTpkgStatus = () => {
     const tpkgStatusSelectElement = document.getElementById('tpSelectStatus');
-    tpkg.tpkg_status = "Finalized";
-    tpkgStatusSelectElement.value = "Finalized";
-    tpkgStatusSelectElement.style.border = "2px solid lime";   
+    tpkg.tpkg_status = "Completed";
+    tpkgStatusSelectElement.value = "Completed";
+    tpkgStatusSelectElement.style.border = "2px solid lime";
 
     //hide options from 3 to 5
     for (let i = 3; i <= 5; i++) {
@@ -181,7 +181,7 @@ const setTpkgStatus = () => {
 
     tpkgStatusSelectElement.children[1].classList.add('d-none');
 
-    tpkgStatusSelectElement.disabled = true;
+    //tpkgStatusSelectElement.disabled = true;
 }
 
 //to reset & ready the main form   
@@ -342,10 +342,9 @@ const refreshTpkgForm = async () => {
     resetTotalCostInputsAndAddiCostTable();
 
     //set status auto
+    setTpkgStatus();
+
     const tpkgStatusSelectElement = document.getElementById('tpSelectStatus');
-    tpkg.tpkg_status = "Draft";
-    tpkgStatusSelectElement.value = "Draft";
-    tpkgStatusSelectElement.style.border = "2px solid lime";
 
     //get logged user roles
     const rolesRaw = document.getElementById('userRolesArraySection').textContent;
@@ -435,9 +434,11 @@ const formatDateToReadableTpkg = (dateTimeString) => {
 }
 
 //open modal to show all the info
-const openModalTpkg = async(tpkgObj) => {
+const openModalTpkg = async (tpkgObj) => {
 
     resetModalTpkg();
+
+    console.log(tpkgObj);
 
     // Show template info if applicable
     //if (!tpkgObj.is_custompkg) {
@@ -592,27 +593,48 @@ const openModalTpkg = async(tpkgObj) => {
 
     }
 
-    //creted and last modified user info
-     //get created emp's name and emp code
-     try {
-        let createdEmp = await ajaxGetReq("/empinfo/byuserid?userid=" + tpkgObj.addeduserid);
-        document.getElementById("createdEmpName").innerText = createdEmp.fullname;
-        document.getElementById("createdEmpCode").innerText = createdEmp.emp_code;
+    console.log(tpkgObj.addeduserid);
 
-    } catch (error) {
-        console.error("fetch failed for emp info by userid: ", error);
+    //creted and last modified user info
+    const addedUserId = tpkgObj.addeduserid;
+    if (addedUserId) {
+        try {
+            const createdEmp = await ajaxGetReq("/empinfo/byuserid?userid=" + addedUserId);
+            document.getElementById("createdEmpName").innerText = createdEmp.fullname;
+            document.getElementById("createdEmpCode").innerText = createdEmp.emp_code;
+        } catch (error) {
+            console.error("Fetch failed for emp info by userid: ", error);
+        }
+    } else {
+        console.warn("addeduserid is null or undefined");
     }
+
     document.getElementById("modaTpkgPDateCreated").innerText = formatDateToReadableTpkg(tpkgObj.addeddatetime);
 
-    //last modified user
-    try {
-        let modifiedEmp = await ajaxGetReq("/empinfo/byuserid?userid=" + tpkgObj.lastmodifieduserid);
-        document.getElementById("modifiedEmpName").innerText = modifiedEmp.fullname || 'N/A';
-        document.getElementById("modifiedEmpCode").innerText = modifiedEmp.emp_code || 'N/A';
-    } catch (error) {
-        console.error("Failed to fetch modifier info:", error);
+    //last modified user   
+    const modifiedUserId = tpkgObj.lastmodifieduserid;
+    if (modifiedUserId) {
+        try {
+            const modifiedEmp = await ajaxGetReq("/empinfo/byuserid?userid=" + modifiedUserId);
+            document.getElementById("modifiedEmpName").innerText = modifiedEmp.fullname || 'N/A';
+            document.getElementById("modifiedEmpCode").innerText = modifiedEmp.emp_code || 'N/A';
+        } catch (error) {
+            console.error("Failed to fetch modifier info:", error);
+        }
+    } else {
+        console.warn("lastmodifieduserid is null or undefined");
+        document.getElementById("modifiedEmpName").innerText = 'N/A';
+        document.getElementById("modifiedEmpCode").innerText = 'N/A';
     }
-    document.getElementById("modalTpkgDateModified").innerText = tpkgObj.lastmodifieddatetime.replace('T', ' ') || 'N/A';
+
+    const modifiedDate = tpkgObj.lastmodifieddatetime;
+
+    if (modifiedDate) {
+        document.getElementById("modalTpkgDateModified").innerText = modifiedDate.replace('T', ' ');
+    } else {
+        document.getElementById("modalTpkgDateModified").innerText = 'N/A';
+    }
+
 
     // Show modal
     $('#infoModalTpkg').modal('show');
@@ -712,6 +734,8 @@ const refillTpkgForm = async (tpkgObj) => {
             midDayCounter++;
         }
 
+        //midDayCounter = midDayCounter + tpkgObj.dayplans.length;
+
         //traevellers counts
         document.getElementById("tpkgLocalAdultCount").value = tpkgObj.localadultcount ?? 0;
         document.getElementById("tpkgLocalChildCount").value = tpkgObj.localchildcount ?? 0;
@@ -805,7 +829,8 @@ const refillTpkgForm = async (tpkgObj) => {
         tpkgFinalDaySelect.disabled = false;
 
         //reset midday counter
-        let midDayCounter = 1;
+        //let midDayCounter = 1;
+        midDayCounter = 1;
 
         //mid days (with templates)   
         for (let i = 0; i < tpkgObj.dayplans.length; i++) {
@@ -913,7 +938,7 @@ const refillTpkgForm = async (tpkgObj) => {
     step1Tab.show();
 
     //reset middle day counter for later use
-    midDayCounter = 1;
+    //midDayCounter = 1;
 
 }
 
@@ -1519,13 +1544,14 @@ const changesTpkgCustomOrTemp = () => {
 }
 
 //handle adult counts
-const validateAdultTravellerCounts = () => {
+const validateAdultTravellerCountsOri = () => {
 
     const localAdultInput = document.getElementById('tpkgLocalAdultCount');
     const foreignAdultInput = document.getElementById('tpkgForeignAdultCount');
 
     const localAdults = parseInt(localAdultInput.value) || 0;
     const foreignAdults = parseInt(foreignAdultInput.value) || 0;
+    const totalAdultsCount = localAdults + foreignAdults;
 
     if (localAdults === 0 && foreignAdults === 0) {
         showAlertModal('war', 'At least one adult traveller is required (local or foreign).');
@@ -1533,13 +1559,57 @@ const validateAdultTravellerCounts = () => {
         foreignAdultInput.style.border = '2px solid red';
         tpkg.foreignadultcount = 0;
         tpkg.localadultcount = 0;
-    } else {
-        localAdultInput.style.border = '2px solid lime';
-        foreignAdultInput.style.border = '2px solid lime';
-        tpkg.foreignadultcount = foreignAdults;
-        tpkg.localadultcount = localAdults;
+    } else if (totalAdultsCount > 0) {
+        if (localAdults > 0 && localAdults < 199) {
+            localAdultInput.style.border = '2px solid lime';
+            tpkg.localadultcount = localAdults;
+        } else if (foreignAdults > 0 && foreignAdults < 199) {
+            foreignAdultInput.style.border = '2px solid lime';
+            tpkg.foreignadultcount = foreignAdults;
+        }
     }
 }
+
+const validateAdultTravellerCounts = () => {
+    const localAdultInput = document.getElementById('tpkgLocalAdultCount');
+    const foreignAdultInput = document.getElementById('tpkgForeignAdultCount');
+
+    const localAdults = parseInt(localAdultInput.value) || 0;
+    const foreignAdults = parseInt(foreignAdultInput.value) || 0;
+    const totalAdults = localAdults + foreignAdults;
+
+    // Reset previous styles
+    localAdultInput.style.border = '';
+    foreignAdultInput.style.border = '';
+
+    if (totalAdults === 0) {
+        showAlertModal('war', 'At least one adult traveller is required (local or foreign).');
+        localAdultInput.style.border = '2px solid red';
+        foreignAdultInput.style.border = '2px solid red';
+        tpkg.localadultcount = 0;
+        tpkg.foreignadultcount = 0;
+        return;
+    }
+
+    // Validate local adults
+    if (localAdults >= 0 && localAdults <= 199) {
+        localAdultInput.style.border = '2px solid lime';
+        tpkg.localadultcount = localAdults;
+    } else {
+        localAdultInput.style.border = '2px solid red';
+        tpkg.localadultcount = 0;
+    }
+
+    // Validate foreign adults
+    if (foreignAdults >= 0 && foreignAdults <= 199) {
+        foreignAdultInput.style.border = '2px solid lime';
+        tpkg.foreignadultcount = foreignAdults;
+    } else {
+        foreignAdultInput.style.border = '2px solid red';
+        tpkg.foreignadultcount = 0;
+    }
+};
+
 
 //adults counts must be >0 in order to fill the child counts  
 const enableChildCountInputs = () => {

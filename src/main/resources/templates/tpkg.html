@@ -488,19 +488,20 @@
                                                         <div class="col-md-2">
                                                             <label for="tpkgLocalAdultCount"
                                                                 class="form-label mb-0 fs-6">Local Adults</label>
-                                                            <input type="number" value="0" class="form-control"
-                                                                id="tpkgLocalAdultCount"
-                                                                onkeyup="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'tpkg', 'localadultcount'); enableChildCountInputs(); validateAdultTravellerCounts(); "
+                                                            <input min="0" max="199" type="number" value="0"
+                                                                class="form-control" id="tpkgLocalAdultCount"
+                                                                onkeyup="inputValidatorText(this, '', 'tpkg', 'localadultcount'); enableChildCountInputs(); validateAdultTravellerCounts(); if(this.value > 199){this.style.border ='2px solid red'} "
                                                                 oninput=" updateTotalTravellers()">
                                                         </div>
+                                                        <!-- ^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$ -->
 
                                                         <!-- Local Children -->
                                                         <div class="col-md-2">
                                                             <label for="tpkgLocalChildCount"
                                                                 class="form-label mb-0 fs-6">Local Children</label>
-                                                            <input type="number" value="0" class="form-control"
-                                                                id="tpkgLocalChildCount" disabled
-                                                                onchange="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'tpkg', 'localchildcount');"
+                                                            <input min="0" max="199" type="number" value="0"
+                                                                class="form-control" id="tpkgLocalChildCount" disabled
+                                                                onkeyup="inputValidatorText(this, '', 'tpkg', 'localchildcount'); if(this.value > 199){this.style.border ='2px solid red'}"
                                                                 oninput="updateTotalTravellers()">
                                                         </div>
 
@@ -508,9 +509,9 @@
                                                         <div class="col-md-2">
                                                             <label for="tpkgForeignAdultCount"
                                                                 class="form-label mb-0 fs-6">Foreign Adults</label>
-                                                            <input type="number" value="0" class="form-control"
-                                                                id="tpkgForeignAdultCount"
-                                                                onkeyup="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'tpkg', 'foreignadultcount'); validateAdultTravellerCounts(); enableChildCountInputs();"
+                                                            <input min="0" max="199" type="number" value="0"
+                                                                class="form-control" id="tpkgForeignAdultCount"
+                                                                onkeyup="inputValidatorText(this, '', 'tpkg', 'foreignadultcount'); if(this.value > 199){this.style.border ='2px solid red'} validateAdultTravellerCounts(); enableChildCountInputs();"
                                                                 oninput="updateTotalTravellers()">
                                                         </div>
 
@@ -518,9 +519,9 @@
                                                         <div class="col-md-2 pe-0">
                                                             <label for="tpkgForeignChildCount"
                                                                 class="form-label mb-0 fs-6">Foreign Children</label>
-                                                            <input type="number" value="0" class="form-control"
-                                                                id="tpkgForeignChildCount" disabled
-                                                                onchange="inputValidatorText(this, '^(?:[0-9]|[1-9][0-9]|1[0-9]{2})$', 'tpkg', 'foreignchildcount');"
+                                                            <input min="0" max="199" type="number" value="0"
+                                                                class="form-control" id="tpkgForeignChildCount" disabled
+                                                                onkeyup="inputValidatorText(this, '', 'tpkg', 'foreignchildcount'); if(this.value > 199){this.style.border ='2px solid red'}"
                                                                 oninput="updateTotalTravellers()">
                                                         </div>
 
