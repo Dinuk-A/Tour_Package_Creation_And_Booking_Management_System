@@ -64,7 +64,7 @@
                                             Name:</label>
                                         <input type="text" placeholder="Enter The Restaurant Name" id="inputLHPlaceName"
                                             class="form-control" required
-                                            onkeyup="inputValidatorText(this,'','lunchplace','name');">
+                                            onkeyup="inputValidatorText(this,'^(?!\s*$)\S[\s\S]{0,29}$','lunchplace','name');">
                                     </div>
 
                                     <!-- Cost Per Head -->
@@ -79,7 +79,7 @@
                                             </span>
                                             <input type="number" placeholder="1500.00" id="inputCostperHead"
                                                 class="form-control" required
-                                                onkeyup="inputValidatorText(this,'','lunchplace','costperhead');"
+                                                onkeyup="inputValidatorText(this,'^(100(\.00)?|[1-9]\d{2,4}(\.\d{2})?)$','lunchplace','costperhead');"
                                                 onblur="insertDecimals(this);">
                                         </div>
                                     </div>
@@ -97,7 +97,7 @@
                                         <label for="inputContactNum" class="form-label fw-bold mb-0">Contact
                                             Number #1:</label>
                                         <input type="tel" id="inputContactNum" placeholder="Enter Primary Contact Number" pattern="[0-9]{10}" class="form-control"
-                                            onkeyup="inputValidatorText(this,'','lunchplace','contactnum');">
+                                            onkeyup="inputValidatorText(this,'^0(?!0{9}$)\d{9}$','lunchplace','contactnum');">
                                     </div>
 
                                     <!-- Contact Number 2 -->
@@ -106,14 +106,14 @@
                                             #2:</label>
                                         <input type="tel" id="inputContactNumTwo"  placeholder="Enter Secondary Contact Number" pattern="[0-9]{10}"
                                             class="form-control"
-                                            onkeyup="inputValidatorText(this,'','lunchplace','contactnumtwo');">
+                                            onkeyup="inputValidatorText(this,'^0(?!0{9}$)\d{9}$','lunchplace','contactnumtwo');">
                                     </div>
 
                                     <!-- Contact Email -->
                                     <div class="col-md-6">
                                         <label for="inputLPEmail" class="form-label fw-bold mb-0">Email:</label>
                                         <input type="tel" id="inputLPEmail"  placeholder="Enter The Email Address" class="form-control"
-                                            onkeyup="inputValidatorText(this,'','lunchplace','email');">
+                                            onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','lunchplace','email');">
                                     </div>
                                 </div>
 

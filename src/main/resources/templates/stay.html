@@ -18,7 +18,7 @@
     <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
     <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
 
-    <main id="mainAreaID" class="main min-vh-100">
+    <main id="mainAreaID" class="main min-vh-100 mx-auto">
 
         <!-- Tabs navigation panel -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -63,10 +63,10 @@
                                 <legend class="float-none w-auto px-2 text-primary">Basic Details</legend>
                                 <div class="row">
                                     <div class="col-7">
-                                        <label for="inputStayName" class="form-label fw-bold mb-0">Name <span
+                                        <label for="inputStayName" class="form-label fw-bold mb-0">Accomodation Name <span
                                                 class="text-danger">*</span> :</label>
                                         <input id="inputStayName" placeholder="Enter The Accomodation Name"
-                                            class="form-control" onkeyup="inputValidatorText(this, '' ,'stay' ,'name')">
+                                            class="form-control" onkeyup="inputValidatorText(this, '^(?!\s*$)\S[\s\S]{0,29}$' ,'stay' ,'name')">
                                     </div>
                                     <div class="col-5">
                                         <label for="selectStayType" class="form-label fw-bold mb-0">Type <span
@@ -126,7 +126,7 @@
                                             <span class="text-danger">*</span> :</label>
                                         <input type="text" class="form-control"
                                             placeholder="Enter Primary Contact Number" id="inputStayContactOne"
-                                            onkeyup="inputValidatorText(this,'','stay','contactnumone')">
+                                            onkeyup="inputValidatorText(this,'^[0][0-9]{9}$','stay','contactnumone')">
                                     </div>
 
                                     <div class="col-3">
@@ -134,14 +134,14 @@
                                             :</label>
                                         <input type="text" class="form-control"
                                             placeholder="Enter Secondary Contact Number" id="inputStayContactTwo"
-                                            onkeyup="inputValidatorText(this,'','stay','contactnumtwo')">
+                                            onkeyup="inputValidatorText(this,'^[0][0-9]{9}$','stay','contactnumtwo')">
                                     </div>
 
                                     <div class="col-6">
                                         <label for="inputStayEmail" class="form-label fw-bold mb-0">Email <span
                                                 class="text-danger">*</span> :</label>
                                         <input type="text" class="form-control" placeholder="Enter The Email Address"
-                                            id="inputStayEmail" onkeyup="inputValidatorText(this,'','stay','email')">
+                                            id="inputStayEmail" onkeyup="inputValidatorText(this,'^[A-Za-z0-9\\-\\_]{4,30}[@][a-z]{3,20}[.][a-z]{2,3}$','stay','email')">
                                     </div>
                                 </div>
                             </fieldset>
@@ -162,7 +162,7 @@
                                             </span>
                                             <input type="text" class="form-control" placeholder="Enter The Base Price"
                                                 id="inputStayBasePrice"
-                                                onkeyup="inputValidatorText(this,'','stay','base_price')"
+                                                onkeyup="inputValidatorText(this,'^(100(\.00)?|[1-9]\d{2,5}(\.\d{2})?)$','stay','base_price')"
                                                 onblur="insertDecimals(this);">
                                         </div>
                                     </div>
@@ -176,7 +176,7 @@
                                             </span>
                                             <input type="text" class="form-control" placeholder="Enter The Incremental Cost"
                                                 id="inputStayIncCost"
-                                                onkeyup="inputValidatorText(this,'','stay','incremental_cost')"
+                                                onkeyup="inputValidatorText(this,'^(100(\.00)?|[1-9]\d{2,5}(\.\d{2})?)$','stay','incremental_cost')"
                                                 onblur="insertDecimals(this);">
                                         </div>
                                     </div>
@@ -190,7 +190,7 @@
                                             </span>
                                             <input type="text" class="form-control" placeholder="Enter The Incremental Cost (Child)"
                                                 id="inputStayIncCostChild"
-                                                onkeyup="inputValidatorText(this,'','stay','incremental_cost_kid')"
+                                                onkeyup="inputValidatorText(this,'^(100(\.00)?|[1-9]\d{2,5}(\.\d{2})?)$','stay','incremental_cost_kid')"
                                                 onblur="insertDecimals(this);">
                                         </div>
                                     </div>
@@ -200,7 +200,7 @@
                                             <span class="text-danger">*</span> :</label>
                                         <input type="text" class="form-control" placeholder="Enter Guest Capacity"
                                             id="inputStayMaxCap"
-                                            onkeyup="inputValidatorText(this,'','stay','maxguestscount')">
+                                            onkeyup="inputValidatorText(this,'^[1-9][0-9][0-9]?$','stay','maxguestscount')">
                                     </div>
                                 
                                 </div>
