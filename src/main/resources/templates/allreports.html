@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
+
+<head>
+
+    <!-- link employee js -->
+    <!--<script src="controllerJSs/allreports.js"></script>    -->
+
+</head>
+
+<body>
+
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+    <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
+    <main id="mainAreaID" class="main mx-auto container mt-4">
+
+        <div class="row g-4">
+
+            <!-- Inquiry statistics -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-primary h-100"
+                    onclick="window.location.href='http://localhost:8081/inqreports'">
+
+                    <div class="card-header bg-primary text-white d-flex align-items-center">
+                        <i class="bi bi-question-circle-fill me-2"></i>
+                        <h5 class="mb-0">Inquiry Statistics</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <p class="text-muted">Inquiry success rate.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package popularity -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-success h-100"
+                    onclick="window.location.href='http://localhost:8081/tpkgreports'">
+                    <div class="card-header bg-success text-white d-flex align-items-center">
+                        <i class="bi bi-bar-chart-fill me-2"></i>
+                        <h5 class="mb-0">Package Popularity</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <p class="text-muted">Most popular packages on website.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- financial report -->
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-danger h-100"
+                    onclick="window.location.href='http://localhost:8081/paymentreports'">
+                        <div class="card-header bg-danger text-white d-flex align-items-center">
+                            <i class="bi bi-currency-dollar me-2"></i>
+                            <h5 class="mb-0">Financial Reports</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <p class="text-muted">Overview of payments.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Booking statistics -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-warning h-100"
+                    onclick="window.location.href='http://localhost:8081/inq'">
+                    <div class="card-header bg-warning text-dark d-flex align-items-center">
+                        <i class="bi bi-calendar-check-fill me-2"></i>
+                        <h5 class="mb-0">Booking Statistics</h5>
+                    </div>
+                    <div class="card-body">
+
+                        <p class="text-muted">Overview of booking activities.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+
+</body>
+
+</html>

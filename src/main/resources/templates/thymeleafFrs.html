@@ -75,7 +75,7 @@
 
         <!-- get all the roles as an array -->
         <div id="userRolesArraySection" th:text="${loggeduserroles}" style="display: none !important;"></div>
-       
+
         <!-- hidden, only need when designation specific elements are there -->
         <div class=" d-md-block ps-2" id="loggedUserDesignationSectionId" th:text="${loggeduserdesignation}"
             style="display: none !important;"></div>
@@ -113,12 +113,12 @@
     </div>
 </header>
 
- <!--<div class="d-flex align-items-center ms-5" style="display: none !important;">
+<!--<div class="d-flex align-items-center ms-5" style="display: none !important;">
             <span style="display: none !important;" th:text="${loggeduserroles}" id="userRolesArraySection"></span>
         </div>-->
 
-  <!-- only the 1st role (hidden, for later use in tourpackage module) -->
-        <!--<div class="d-flex align-items-center ms-5">
+<!-- only the 1st role (hidden, for later use in tourpackage module) -->
+<!--<div class="d-flex align-items-center ms-5">
             <span th:text="${loggeduserrole}" style="visibility: hidden;">role</span>
         </div>-->
 
@@ -215,6 +215,12 @@
         <li class="nav-item" id="paymentManagementLink">
             <a class="nav-link" href="http://localhost:8081/payment">
                 <i class="bi bi-credit-card me-3"></i> <span>Payment Management</span>
+            </a>
+        </li>
+
+        <li class="nav-item" id="reportPageLink">
+            <a class="nav-link" href="http://localhost:8081/allreports">
+                <i class="bi bi-wallet2 me-3"></i> <span>Yathra Reports</span>
             </a>
         </li>
 

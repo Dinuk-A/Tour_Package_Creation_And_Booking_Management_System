@@ -45,6 +45,21 @@ public class AllReportsDataController {
     @Autowired
     private TpkgReportsDao tpkgReportsDao;
 
+    // UI TO SHOW ALL REPORT NAMES IN CARDS
+    @RequestMapping(value = "/allreports", method = RequestMethod.GET)
+    public ModelAndView allReportsUI() throws JsonProcessingException {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        ModelAndView allReportsView = new ModelAndView();
+        allReportsView.setViewName("allreports.html");
+        allReportsView.addObject("loggedUserUN", auth.getName());
+        allReportsView.addObject("title", "Yathra Reports");
+        allReportsView.addObject("moduleName", "Yathra Reports");
+
+        return allReportsView;
+    }
+
     // ++++++++++++++++++++++++++++ INQ REPORTS +++++++++++++++++++++++++++//
 
     // ui for inq report
@@ -185,7 +200,6 @@ public class AllReportsDataController {
         }
     }
 
-    
     @GetMapping("report/inquiries-by-pkg/{startDate}/{endDate}")
     public Map<String, Object> getInquiriesByPackageAndDateRange(@PathVariable("startDate") String startDate,
             @PathVariable("endDate") String endDate) {

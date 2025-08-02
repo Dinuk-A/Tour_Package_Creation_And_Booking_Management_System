@@ -112,7 +112,8 @@ function controlSidebarLinks() {
         show("clientManagementLink");
         show("bookingManagementLink");
         show("paymentManagementLink");
-        show("expensesManagementLink");
+        show("reportPageLink");
+        //show("expensesManagementLink");
 
     } else if (userRoles.includes("Assistant Manager")) {
 
@@ -132,7 +133,8 @@ function controlSidebarLinks() {
         show("clientManagementLink");
         show("bookingManagementLink");
         show("paymentManagementLink");
-        show("expensesManagementLink");
+        show("reportPageLink");
+        //show("expensesManagementLink");
 
     } else if (userRoles.includes("Executive")) {
 
@@ -141,8 +143,9 @@ function controlSidebarLinks() {
         hide("privilegeManagementLink");
         hide("priceConfigsLink");
         hide("paymentManagementLink");
-        hide("expensesManagementLink");
+        //hide("expensesManagementLink");
         hide("vehicleTypeManagementLink");
+        hide("reportPageLink");
 
         show("vehicleManagementLink");
         show("restaurantManagementLink");
@@ -167,8 +170,9 @@ function controlSidebarLinks() {
         hide("itineraryBuilderLink");
         hide("tourPackageBuilderLink");
         hide("paymentManagementLink");
-        hide("expensesManagementLink");
+        //hide("expensesManagementLink");
         hide("vehicleTypeManagementLink");
+        hide("reportPageLink");
 
         // receptionist can access inquiries, view clients, and see booking status
         show("inquiryManagementLink");
@@ -192,7 +196,8 @@ function controlSidebarLinks() {
         hide("clientManagementLink");
         hide("bookingManagementLink");
         hide("paymentManagementLink");
-        hide("expensesManagementLink");
+        hide("reportPageLink");
+        //hide("expensesManagementLink");
     }
 }
 

@@ -15,7 +15,6 @@ public class UpcomingToursDTO {
     private String clientName;
     private String clientContact;
  
-
 }
 
  //public UpcomingToursDTO(String bookingCode, String packageTitle, String clientName, String clientContact) {
