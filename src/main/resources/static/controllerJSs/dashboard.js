@@ -119,5 +119,85 @@ const loadPendingAssignmentBookings = async () => {
     }
 };
 
+const loadUpcomingToursOri = async () => {
+    try {
+        const tours = await ajaxGetReq("/report/upcomingtours");
+
+        const list = document.getElementById("upcomingTourList");
+        list.innerHTML = "";
+
+        if (tours.length === 0) {
+            const noItem = document.createElement("li");
+            noItem.classList.add("list-group-item", "text-muted");
+            noItem.innerText = "No upcoming tours found.";
+            list.appendChild(noItem);
+            return;
+        }
+
+        for (const tour of tours) {
+            const item = document.createElement("li");
+            item.classList.add("list-group-item");
+
+            const content = `
+                <strong>${tour.bookingCode}</strong> | ${tour.packageTitle}<br>
+                <span class="text-muted">Client: ${tour.clientName} | Contact: ${tour.clientContact}</span>
+            `;
+
+            item.innerHTML = content;
+            list.appendChild(item);
+        }
+
+    } catch (err) {
+        console.error("Failed to load upcoming tours", err);
+        document.getElementById("upcomingTourList").innerHTML = `
+            <li class="list-group-item text-danger">Error loading upcoming tours.</li>
+        `;
+    }
+};
+
+//limited to 5
+const loadUpcomingTours = async () => {
+    try {
+        const tours = await ajaxGetReq("/report/upcomingtours");
+
+        const list = document.getElementById("upcomingTourList");
+        list.innerHTML = "";
+
+        if (tours.length === 0) {
+            const noItem = document.createElement("li");
+            noItem.classList.add("list-group-item", "text-muted");
+            noItem.innerText = "No upcoming tours found.";
+            list.appendChild(noItem);
+            return;
+        }
+
+        const limitedTours = tours.slice(0, 5);
+
+        for (const tour of limitedTours) {
+            const item = document.createElement("li");
+            item.classList.add("list-group-item");
+
+            const content = `
+                <strong>${tour.bookingCode}</strong> | ${tour.packageTitle}<br>
+                <span class="text-muted">Client: ${tour.clientName} | Contact: ${tour.clientContact}</span>
+            `;
+
+            item.innerHTML = content;
+            list.appendChild(item);
+        }
+
+    } catch (err) {
+        console.error("Failed to load upcoming tours", err);
+        document.getElementById("upcomingTourList").innerHTML = `
+            <li class="list-group-item text-danger">Error loading upcoming tours.</li>
+        `;
+    }
+};
+
+
+// Call on page load
+window.addEventListener("load", loadUpcomingTours);
+
+
 
 

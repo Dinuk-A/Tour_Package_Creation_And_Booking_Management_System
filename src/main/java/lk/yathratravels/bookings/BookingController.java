@@ -1,5 +1,6 @@
 package lk.yathratravels.bookings;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 
+import lk.yathratravels.Reports.UpcomingToursDTO;
 import lk.yathratravels.client.ClientDao;
 import lk.yathratravels.privilege.Privilege;
 import lk.yathratravels.privilege.PrivilegeServices;
@@ -127,7 +129,7 @@ public class BookingController {
         }
     }
 
-    //in dashboard
+    // in dashboard
     @GetMapping(value = "/booking/assignmentspending", produces = "application/json")
     public List<Booking> getPendingAssignments() {
         return bookingDao.getAllPendingAssignments();
@@ -137,6 +139,20 @@ public class BookingController {
     @GetMapping(value = "/completed/count", params = { "clientid" }, produces = "application/json")
     public int countCompletedBookingsByClient(@RequestParam("clientid") Integer clientId) {
         return clientDao.countCompletedBookingsByClientNative(clientId);
+    }
+
+    // upcoming tours
+    @GetMapping("/report/upcomingtours")
+    public List<UpcomingToursDTO> getUpcomingTours() {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        return bookingDao.findUpcomingTours(tomorrow);
+    }
+
+    // upcoming tours not fully paid and not cancelled/refunded
+    @GetMapping("/report/upcomingtours/unpaid")
+    public List<UpcomingToursDTO> getUpcomingToursNotFullyPaidAndNotCancelled() {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        return bookingDao.findUpcomingToursNotFullyPaidAndNotCancelled(tomorrow);
     }
 
     // update a booking (assign vehicles, personnel, etc)
