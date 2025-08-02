@@ -5,18 +5,18 @@ window.addEventListener('load', () => {
     const startDatePicker = document.getElementById('startDatePickerID');
     const endDatePicker = document.getElementById('endDatePickerID');
 
-    // Set max attributes for the date pickers
+    // Set max date to today
     startDatePicker.setAttribute('max', today);
     endDatePicker.setAttribute('max', today);
 
-    // Reset the end date to today's date each time the start day changes
+    // When start date changes
     startDatePicker.addEventListener('change', function () {
         const startDateValue = this.value;
         endDatePicker.value = today;
         endDatePicker.setAttribute('min', startDateValue);
     });
 
-    // End date cannot go earlier than start date
+    // When end date is earlier than start date
     endDatePicker.addEventListener('change', function () {
         const endDateValue = this.value;
         const startDateValue = startDatePicker.value;
@@ -26,11 +26,12 @@ window.addEventListener('load', () => {
         }
     });
 
-    // Generate report button click event
+    // Generate report button
     document.getElementById('generateReportBtn').addEventListener('click', fillTable);
 });
 
-// Function to fill the table with the report data
+
+// Function to fill the table
 const fillTable = async () => {
     const startDate = startDatePickerID.value;
     const lastDate = endDatePickerID.value;
@@ -38,24 +39,43 @@ const fillTable = async () => {
     if (startDate && lastDate) {
 
         // Show the table
-        document.getElementById('paymentReportTable').classList.remove('d-none');
+        document.getElementById('pkgInquiryReportTable').classList.remove('d-none');
 
-        // Fill date range row
+        // Fill date range heading
         const formattedDateRangeText = `${new Date(startDate).toLocaleDateString()} to ${new Date(lastDate).toLocaleDateString()}`;
         document.getElementById('dateRange').innerText = formattedDateRangeText;
 
         try {
-            //get data by ajax
-            const receivedAmountVar = await ajaxGetReq ("report/sumofpayments/" + startDate + "/" + lastDate);
-            document.getElementById('receivedAmount').innerText = receivedAmountVar.toFixed(2);
+            // Call the backend and get data
+            const reportData = await ajaxGetReq("report/inquiries-by-pkg/" + startDate + "/" + lastDate);
+
+            const labels = reportData.labels; // package IDs
+            const data = reportData.data;     // inquiry counts
+
+            const tableBody = document.getElementById("pkgInquiryReportTableBody");
+            tableBody.innerHTML = ""; 
+
+            for (let i = 0; i < labels.length; i++) {
+                const row = document.createElement("tr");
+
+                const pkgIdCell = document.createElement("td");
+                pkgIdCell.innerText = labels[i];
+
+                const countCell = document.createElement("td");
+                countCell.innerText = data[i];
+
+                row.appendChild(pkgIdCell);
+                row.appendChild(countCell);
+
+                tableBody.appendChild(row);
+            }
 
         } catch (error) {
-            console.error("Error fetching payment data:", error);
+            console.error("Error fetching inquiry data:", error);
+            alert("Failed to load inquiry report.");
         }
-
 
     } else {
         alert('Please select both start date and end date.');
     }
 }
-

@@ -4,16 +4,8 @@
 <head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
 
 <head>
-    <!-- link pay rep css -->
-    <!--<link rel="stylesheet" href="css/inqreport.css">-->
-
-    <!-- link pay rep js -->
-    <script src="controllerJSs/paymentreport.js"></script>
-
-    <style>
-
-    </style>
-
+    <!-- JS for this report -->
+    <script src="controllerJSs/tpkgreport.js"></script>
 </head>
 
 <body>
@@ -24,32 +16,32 @@
 
     <main id="mainAreaID" class="main mx-auto">
 
-        <!-- Tabs navigation panel -->
+        <!-- Tabs navigation -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <!-- for table side -->
+            <!-- Table tab -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableInqReportDiv" role="tab"
-                    aria-controls="tableInqReportDiv" aria-selected="true">Table</a>
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tablePkgInqReportDiv" role="tab"
+                    aria-controls="tablePkgInqReportDiv" aria-selected="true">Table</a>
             </li>
-            <!-- for form side -->
+
+            <!-- Chart tab -->
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#chartInqReportDiv" role="tab"
-                    aria-controls="chartInqReportDiv" aria-selected="false" onclick="setEmpStatusAuto()">Chart</a>
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#chartPkgInqReportDiv" role="tab"
+                    aria-controls="chartPkgInqReportDiv" aria-selected="false">Chart</a>
             </li>
         </ul>
 
         <div class="tab-content mt-1" id="myTabContent">
 
-            <!-- Table tab  -->
-            <div id="tableInqReportDiv" class="tab-pane fade show active table-container p-4 rounded-3" role="tabpanel"
+            <!-- Table tab content -->
+            <div id="tablePkgInqReportDiv" class="tab-pane fade show active table-container p-4 rounded-3" role="tabpanel"
                 aria-labelledby="table-tab">
                 <div class="container mt-0">
 
-                    <!-- heading -->
-                    <h2 class="text-center">Payment Summary</h2>
+                    <h2 class="text-center">Inquiry Count by Template Package</h2>
                     <div class="row justify-content-center mt-4">
 
-                        <!-- 2 date pickers -->
+                        <!-- Date filters -->
                         <div class="col-md-3">
                             <label for="startDatePickerID" class="form-label">Start Date</label>
                             <input type="date" id="startDatePickerID" class="form-control">
@@ -59,45 +51,42 @@
                             <input type="date" id="endDatePickerID" class="form-control">
                         </div>
                         <div class="col-md-2 align-self-end">
-                            <!-- <button id="filterBtn" class="btn btn-primary mt-2" onclick="fillTable();">Filter</button> -->
-
-                            <button id="generateReportBtn" class="btn btn-primary mt-4">Generate Payment Summary</button>
-
+                            <button id="generateReportBtn" class="btn btn-primary mt-4">Generate Inquiry Report</button>
                         </div>
 
-                        <table id="paymentReportTable" class="table table-bordered d-none mt-5">
+                        <!-- Table output -->
+                        <table id="pkgInquiryReportTable" class="table table-bordered d-none mt-5">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>Date Range</th>
-                                    <th>Received Amount (LKR)</th>
+                                    <th colspan="2" class="text-center" id="dateRange"></th>
+                                </tr>
+                                <tr>
+                                    <th>Template Package </th>
+                                    <th>Inquiry Count</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="text-center" id="dateRange"></td>
-                                    <td class="text-center" id="receivedAmount"></td>
-                                </tr>
+                            <tbody id="pkgInquiryReportTableBody">
+                                <!-- Rows will be added via JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- chart -->
-            <div class="tab-pane fade" id="chartInqReportDiv" role="tabpanel" aria-labelledby="form-tab">
+            <!-- Chart tab content  -->
+            <div class="tab-pane fade" id="chartPkgInqReportDiv" role="tabpanel" aria-labelledby="form-tab">
                 <div class="card mx-auto" style="width: 1100px;">
                     <div class="card-header bg-primary text-white text-center">
-                        <h3 class="mb-0">Payment Summary chart</h3>
+                        <h3 class="mb-0">Package Inquiry Chart (Coming Soon)</h3>
                     </div>
                     <div class="card-body" style="background-color: ivory;">
-
+                        <!-- chart will go here in future -->
                     </div>
-
                 </div>
             </div>
 
         </div>
-
     </main>
 
 </body>
