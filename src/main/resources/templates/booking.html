@@ -1000,7 +1000,7 @@
                             </span>
                             <input type="number" id="inputSurchargeAmount"
                                 class="form-control form-input w-85 p-1 text-center"
-                                onkeyup="inputValidatorText(this,'','surcharge','amount')"
+                                onkeyup="inputValidatorText(this,'^(?!0+(?:\.0{1,2})?$)(\d{1,4})(\.\d{1,2})?$','surcharge','amount')"
                                 onblur="insertDecimals(this);">
                         </div>
                     </div>

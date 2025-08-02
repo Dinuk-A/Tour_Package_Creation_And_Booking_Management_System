@@ -162,7 +162,7 @@
                                             </span>
                                             <input type="text" class="form-control" placeholder="Enter The Base Price"
                                                 id="inputStayBasePrice"
-                                                onkeyup="inputValidatorText(this,'^(100(\.00)?|[1-9]\d{2,5}(\.\d{2})?)$','stay','base_price')"
+                                                onkeyup="inputValidatorText(this,'','stay','base_price')"
                                                 onblur="insertDecimals(this);">
                                         </div>
                                     </div>
@@ -176,7 +176,7 @@
                                             </span>
                                             <input type="text" class="form-control" placeholder="Enter The Incremental Cost"
                                                 id="inputStayIncCost"
-                                                onkeyup="inputValidatorText(this,'^(100(\.00)?|[1-9]\d{2,5}(\.\d{2})?)$','stay','incremental_cost')"
+                                                onkeyup="inputValidatorText(this,'','stay','incremental_cost')"
                                                 onblur="insertDecimals(this);">
                                         </div>
                                     </div>
@@ -190,9 +190,10 @@
                                             </span>
                                             <input type="text" class="form-control" placeholder="Enter The Incremental Cost (Child)"
                                                 id="inputStayIncCostChild"
-                                                onkeyup="inputValidatorText(this,'^(100(\.00)?|[1-9]\d{2,5}(\.\d{2})?)$','stay','incremental_cost_kid')"
+                                                onkeyup="inputValidatorText(this,'','stay','incremental_cost_kid')"
                                                 onblur="insertDecimals(this);">
                                         </div>
+                                        <!-- ^(100(\.00)?|[1-9]\d{2,5}(\.\d{2})?)$ -->
                                     </div>
 
                                     <div class="col-3">

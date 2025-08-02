@@ -265,7 +265,7 @@
                                                     <input type="number" id="inputLocalAdultFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorNumber(this,'(?!0+$)\\d+(\\.\\d{1,2})? ','attraction','feelocaladult')"
+                                                        onkeyup="inputValidatorNumber(this,'','attraction','feelocaladult')"
                                                         onblur="insertDecimals(this);">
                                                         <!-- ^(?!0+$)\\d+(\\.\\d{1,2})? -->
                                                 </div>
@@ -286,7 +286,7 @@
                                                     <input type="number" id="inputLocalChildFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0?\.00$)([2-9]\d*|1\d\d*)(\.\d{1,2})?$','attraction','feechildlocal')"
+                                                        onkeyup="inputValidatorText(this,'','attraction','feechildlocal')"
                                                         onblur="insertDecimals(this);">
                                                 </div>
 
@@ -312,7 +312,7 @@
                                                     <input type="number" id="inputForeignAdultFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0?\.00$)([2-9]\d*|1\d\d*)(\.\d{1,2})?$','attraction','feeforeignadult')"
+                                                        onkeyup="inputValidatorText(this,'','attraction','feeforeignadult')"
                                                         onblur="insertDecimals(this);">
                                                 </div>
                                             </div>
@@ -329,7 +329,7 @@
                                                     <input type="number" id="inputForeignChildFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0?\.00$)([2-9]\d*|1\d\d*)(\.\d{1,2})?$','attraction','feechildforeign')"
+                                                        onkeyup="inputValidatorText(this,'','attraction','feechildforeign')"
                                                         onblur="insertDecimals(this);">
                                                 </div>
 
@@ -386,8 +386,9 @@
                                                 <input type="number" id="vehiParkingFeeInput"
                                                     class="form-control form-input p-1 text-center "
                                                     placeholder="150.00"
-                                                    onkeyup="inputValidatorText(this,'^(?!0?\.00$)([2-9]\d*|1\d\d*)(\.\d{1,2})?$','attraction','vehicleparkingfee')"
+                                                    onkeyup="inputValidatorText(this,'','attraction','vehicleparkingfee')"
                                                     onblur="insertDecimals(this);">
+                                                    <!-- ^(?!0+(?:\.0{1,2})?$)(\d{1,3})(\.\d{1,2})?$ -->
 
                                             </div>
                                         </div>
@@ -409,9 +410,10 @@
                                         <div class="input-group mt-1">
                                             <input type="number" class="form-control form-input p-1 text-center"
                                                 id="inputTourDuration" placeholder="1.5"
-                                                onkeyup="inputValidatorText(this,'^(0(\.25|\.50|\.75)?|([1-9]|1[0-2])(\.00|\.25|\.50|\.75)?|12(\.00)?)$','attraction','duration')">
+                                                onkeyup="inputValidatorText(this,'','attraction','duration')">
                                             <span class="input-group-text p-1 pb-0 w-50 text-center">
                                                 <h6 class="my-auto">Hours</h6>
+                                                <!-- ^(0(\.25|\.50|\.75)?|([1-9]|1[0-2])(\.00|\.25|\.50|\.75)?|12(\.00)?)$ -->
                                             </span>
                                         </div>
                                     </div>

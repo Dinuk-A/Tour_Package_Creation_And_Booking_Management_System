@@ -109,7 +109,7 @@ function controlSidebarLinks() {
         show("itineraryBuilderLink");
         show("tourPackageBuilderLink");
         show("inquiryManagementLink");
-        show("clientManagementLink");
+        //show("clientManagementLink");
         show("bookingManagementLink");
         show("paymentManagementLink");
         show("reportPageLink");
@@ -130,7 +130,7 @@ function controlSidebarLinks() {
         show("itineraryBuilderLink");
         show("tourPackageBuilderLink");
         show("inquiryManagementLink");
-        show("clientManagementLink");
+        //show("clientManagementLink");
         show("bookingManagementLink");
         show("paymentManagementLink");
         show("reportPageLink");
@@ -154,7 +154,7 @@ function controlSidebarLinks() {
         show("itineraryBuilderLink");
         show("tourPackageBuilderLink");
         show("inquiryManagementLink");
-        show("clientManagementLink");
+        //show("clientManagementLink");
         show("bookingManagementLink");
 
     } else if (userRoles.includes("Receptionist")) {
@@ -177,7 +177,7 @@ function controlSidebarLinks() {
 
         // receptionist can access inquiries, view clients, and see booking status
         show("inquiryManagementLink");
-        show("clientManagementLink");
+        //show("clientManagementLink");
         show("paymentManagementLink");
     }
 
@@ -194,7 +194,7 @@ function controlSidebarLinks() {
         hide("itineraryBuilderLink");
         hide("tourPackageBuilderLink");
         hide("inquiryManagementLink");
-        hide("clientManagementLink");
+        //hide("clientManagementLink");
         hide("bookingManagementLink");
         hide("paymentManagementLink");
         hide("reportPageLink");
