@@ -11,6 +11,7 @@ public interface BookingDao extends JpaRepository<Booking, Integer> {
     @Query(value = "SELECT CONCAT('BK', LPAD(SUBSTRING(MAX(b.bookingcode), 3) + 1, 5, '0')) FROM booking AS b", nativeQuery = true)
     public String getNextBookingCode();
 
+    //bookings where needs to assigned resources
     @Query(value = "SELECT * FROM booking WHERE booking_status = 'Assignment_Pending'", nativeQuery = true)
     List<Booking> getAllPendingAssignments();
 

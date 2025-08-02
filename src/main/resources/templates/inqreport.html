@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="~{thymeleafFrs :: commonHeadFr}"></head>
+
+<head>
+    <!-- link employee css -->
+    <link rel="stylesheet" href="css/inqreport.css">
+
+    <!-- link employee js -->
+    <script src="controllerJSs/inqreport.js"></script>
+
+    <style>
+
+    </style>
+
+</head>
+
+<body>
+    <header th:replace="~{thymeleafFrs :: headerFragment}"></header>
+    <aside th:replace="~{thymeleafFrs :: asideFragment}"></aside>
+    <div th:replace="~{thymeleafFrs :: userInfoEditModalFragment}"></div>
+    <div th:replace="~{thymeleafFrs :: customAlertFragment}"></div>
+
+    <main id="mainAreaID" class="main mx-auto">
+
+        <!-- Tabs navigation panel -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <!-- for table side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="table-tab" data-bs-toggle="tab" href="#tableInqReportDiv" role="tab"
+                    aria-controls="tableInqReportDiv" aria-selected="true">Table</a>
+            </li>
+            <!-- for form side -->
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="form-tab" data-bs-toggle="tab" href="#chartInqReportDiv" role="tab"
+                    aria-controls="chartInqReportDiv" aria-selected="false" onclick="setEmpStatusAuto()">Chart</a>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-1" id="myTabContent">
+
+            <!-- Table tab  -->
+            <div id="tableInqReportDiv" class="tab-pane fade show active table-container p-4 rounded-3" role="tabpanel"
+                aria-labelledby="table-tab">
+
+                <!-- a table will be dynamically generated in here -->
+                <div class="container my-2">
+                    <!-- heading -->
+                    <h2 class="text-center">Inquiry Statistics</h2>
+                    <div class="row justify-content-center mt-4">
+
+                        <!-- 2 date pickers -->
+                        <div class="col-md-3">
+                            <label for="startDatePickerID" class="form-label">Start Date</label>
+                            <input type="date" id="startDatePickerID" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="endDatePickerID" class="form-label">End Date</label>
+                            <input type="date" id="endDatePickerID" class="form-control">
+                        </div>
+                        <div class="col-md-2 align-self-end">
+                            <button id="filterBtn" class="btn btn-primary mt-2" onclick="fillTable();">Filter</button>
+                        </div>
+                    </div>
+
+                    <!-- Initially hidden table -->
+                    <table id="inquiryTable" class="table table-bordered table-striped mt-4 d-none">
+
+                        <!-- 4 headers -->
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Date Range</th>
+                                <th scope="col">Total Inquiries</th>
+                                <th scope="col">Booked Inquiries</th>
+                                <th scope="col">Success Rate</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <!-- auto fill cols -->
+                            <tr>
+                                <td id="dateRange"></td>
+                                <td id="totalInquiries"></td>
+                                <td id="successfulInquiries"></td>
+                                <td id="successRateId"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+
+            <div class="tab-pane fade" id="chartInqReportDiv" role="tabpanel" aria-labelledby="form-tab">
+                <div class="card mx-auto" style="width: 1100px;">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">Inquiry summary chart</h3>
+                    </div>
+                    <div class="card-body" style="background-color: ivory;">
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+
+
+</body>
+
+</html>
