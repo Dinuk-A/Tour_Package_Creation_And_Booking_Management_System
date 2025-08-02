@@ -7,3 +7,5 @@ nisal    12345      Executive
 thisali    12345    Executive
 
 dinuka98    12345    admin 
+
+kalhara 12345    receptionist

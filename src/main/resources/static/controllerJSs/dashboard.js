@@ -33,6 +33,11 @@ const handleCardVisibility = () => {
 
         loadRescheduledInquiriesForToday();
         showCurrentlyActiveInquiries();
+    } else if ("Receptionist") {
+        document.getElementById('inqSummaryCard').style.display = 'none';
+        document.getElementById('unassignedInqCard').style.display = 'none';
+        document.getElementById('pendingAssignCard').style.display = 'none';
+
     }
 }
 

@@ -1778,9 +1778,25 @@ const saveSurchargeFee = () => {
             const surchargeModalElement = document.getElementById('surchargeModal');
             const modalInstance = bootstrap.Modal.getInstance(surchargeModalElement);
             modalInstance.hide();
+
+            handleNewPayStatusAfterSurcharge();
         }
     } else {
         showAlertModal('err', 'Form has some errors \n' + errors);
+    }
+}
+
+const handleNewPayStatusAfterSurcharge =()=>{
+    
+    if (booking.payment_status === "Fully_Paid") {
+        booking.payment_status = "Advance_Paid";
+        selectPaymentStatus.value = "Advance_Paid";
+        selectPaymentStatus.style.border ="2px solid orange";
+    }
+    if (booking.payment_status === "Advance_Paid") {
+        booking.payment_status = "Partially_Paid";
+        selectPaymentStatus.value = "Partially_Paid";
+        selectPaymentStatus.style.border ="2px solid orange";
     }
 }
 

@@ -120,8 +120,7 @@ public class FollowupController {
                 flwup.getInquiry_id().setInq_status("Working");
             }
 
-            //get the next followup requied date and save in main inquiry
-            
+            // get the next followup requied date and save in main inquiry
 
             inqDao.save(flwup.getInquiry_id());
 
@@ -256,9 +255,15 @@ public class FollowupController {
                 BigDecimal profitMargin = priceModsDao.getCompanyProfitMargin();
                 if (profitMargin == null) {
                     profitMargin = BigDecimal.ZERO;
+                } else {
+                    // Convert percent to fraction 
+                    profitMargin = profitMargin.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
                 }
-                BigDecimal advanceAmount = lastSentPkg.getPkgfinalprice().multiply(profitMargin).setScale(2,
-                        RoundingMode.HALF_UP);
+
+                BigDecimal advanceAmount = lastSentPkg.getPkgfinalprice()
+                        .multiply(profitMargin)
+                        .setScale(2, RoundingMode.HALF_UP);
+
                 newBooking.setAdvancement_amount(advanceAmount);
 
                 // statuses

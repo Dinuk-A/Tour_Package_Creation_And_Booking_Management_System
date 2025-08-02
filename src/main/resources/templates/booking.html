@@ -950,7 +950,7 @@
                                             <button type="button" id="bookingUpdateBtn" class=" btn-update fw-bold "
                                                 onclick="updateBooking()">Update Booking</button>
 
-                                            <button type="submit" id="bookingAddBtn" class=" btn-add fw-bold"
+                                            <button type="submit" id="bookingAddBtn" class="d-none btn-add fw-bold"
                                                 onclick="finalizeBooking()">Finalize Booking</button>
                                         </div>
                                     </div>
@@ -998,9 +998,9 @@
                             <span class="input-group-text p-1 pb-0">
                                 <h6 class="my-auto">LKR</h6>
                             </span>
-                            <input type="text" id="inputSurchargeAmount"
+                            <input type="number" id="inputSurchargeAmount"
                                 class="form-control form-input w-85 p-1 text-center"
-                                onkeyup="inputValidatorText(this,'^(?!0+$)\\d+(\\.\\d{1,2})?','surcharge','amount')"
+                                onkeyup="inputValidatorText(this,'','surcharge','amount')"
                                 onblur="insertDecimals(this);">
                         </div>
                     </div>

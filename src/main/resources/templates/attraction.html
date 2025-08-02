@@ -265,7 +265,7 @@
                                                     <input type="number" id="inputLocalAdultFee"
                                                         class="form-control form-input w-85 p-1 text-center"
                                                         placeholder=""
-                                                        onkeyup="inputValidatorText(this,'^(?!0?\.00$)([2-9]\d*|1\d\d*)(\.\d{1,2})?$','attraction','feelocaladult')"
+                                                        onkeyup="inputValidatorNumber(this,'(?!0+$)\\d+(\\.\\d{1,2})? ','attraction','feelocaladult')"
                                                         onblur="insertDecimals(this);">
                                                         <!-- ^(?!0+$)\\d+(\\.\\d{1,2})? -->
                                                 </div>

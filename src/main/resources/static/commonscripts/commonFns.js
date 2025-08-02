@@ -173,11 +173,12 @@ function controlSidebarLinks() {
         //hide("expensesManagementLink");
         hide("vehicleTypeManagementLink");
         hide("reportPageLink");
+        hide("bookingManagementLink");
 
         // receptionist can access inquiries, view clients, and see booking status
         show("inquiryManagementLink");
         show("clientManagementLink");
-        show("bookingManagementLink");
+        show("paymentManagementLink");
     }
 
     else {
