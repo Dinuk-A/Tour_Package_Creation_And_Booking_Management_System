@@ -533,7 +533,7 @@
                                                                     Travellers</label>
                                                                 <input type="number" value="0"
                                                                     class="text-center form-control"
-                                                                    id="tpkgTotalTravellers" disabled>
+                                                                    id="tpkgTotalTravellers" disabled oninput=" resetCostsExceptAddiCosts();">
                                                             </div>
                                                         </div>
 
@@ -1221,7 +1221,7 @@
                                                                 class="form-label fw-bold mb-0">Cost Name</label>
                                                             <input type="text" id="additionalCostName"
                                                                 class="form-control"
-                                                                onkeyup="inputValidatorText(this,'','addiCost','costname');">
+                                                                onkeyup="inputValidatorText(this,'^(?!\s*$)[a-zA-Z0-9 \-]{3,30}$','addiCost','costname');">
                                                         </div>
                                                     </div>
 
@@ -1236,7 +1236,7 @@
                                                                 </span>
                                                                 <input type="number" id="additionalCostAmount"
                                                                     class="form-control form-input p-1"
-                                                                    onkeyup="inputValidatorText(this,'','addiCost','amount');"
+                                                                    onkeyup="inputValidatorText(this,'^(?!0?\.00$)([2-9]\d*|1\d\d*)(\.\d{1,2})?$','addiCost','amount');"
                                                                     onblur="insertDecimals(this);">
                                                             </div>
 
@@ -1251,7 +1251,7 @@
                                                                 class="form-label fw-bold mb-0">Note:</label>
                                                             <textarea id="additionalCostNote" class="form-control"
                                                                 style="height: 100px;"
-                                                                onkeyup="inputValidatorText(this,'','addiCost','note')"></textarea>
+                                                                onkeyup="inputValidatorText(this,'^(?!\s*$)[a-zA-Z0-9 \-]{1,230}$','addiCost','note')"></textarea>
                                                         </div>
                                                     </div>
 

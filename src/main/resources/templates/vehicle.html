@@ -79,7 +79,7 @@
                                                 <input id="inputVehicleName" type="text"
                                                     placeholder="Enter Vehicle Brand/Modal/Year"
                                                     class="test form-control form-input"
-                                                    onkeyup="inputValidatorText(this,'^[a-zA-Z0-9 \-]{3,30}$','vehicle','vehiclename')"
+                                                    onkeyup="inputValidatorText(this,'^(?!\s*$)[a-zA-Z0-9 \-]{3,30}$','vehicle','vehiclename')"
                                                     required>
                                             </div>
                                         </div>

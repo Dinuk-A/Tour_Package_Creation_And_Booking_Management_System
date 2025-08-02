@@ -812,10 +812,19 @@ const refillTpkgForm = async (tpkgObj) => {
         //final price cx will see
         document.getElementById('pkgFinalPrice').value = tpkgObj.pkgfinalprice?.toFixed(2) || '0.00';
 
+        const statusSelect = document.getElementById('tpSelectStatus');
+        statusSelect.disabled = false;
+        statusSelect.children[1].classList.remove('d-none');
+        statusSelect.children[3].classList.add('d-none');
+        statusSelect.children[4].classList.add('d-none');
+
     }
 
     //for template pkgs
     if (tpkgObj.is_custompkg === false) {
+
+        document.getElementById('tpSelectStatus').disabled = false;
+        document.getElementById('tpSelectStatus').children[1].classList.add('d-none')
 
         //web description
         document.getElementById("tpDescription").value = tpkgObj.web_description || "";
@@ -907,6 +916,7 @@ const refillTpkgForm = async (tpkgObj) => {
     // note , status
     document.getElementById('tpNote').value = tpkgObj.note;
     document.getElementById('tpSelectStatus').value = tpkgObj.tpkg_status;
+
 
     //reactive days related button
     document.getElementById('showFirstDayBtn').disabled = false;
@@ -1708,6 +1718,14 @@ const resetTotalCostInputsAndAddiCostTable = () => {
     //reset additional cost add btn
     document.getElementById('addCostAddBtn').disabled = false;
 
+    document.getElementById('totalAdditionalCosts').style.border = "1px solid #ced4da";
+    document.getElementById('totalAdditionalCosts').value = '';
+
+    resetCostsExceptAddiCosts();
+}
+
+const resetCostsExceptAddiCosts = () => {
+
     // Array of input field IDs to reset
     const inputTagsIds = [
 
@@ -1718,7 +1736,6 @@ const resetTotalCostInputsAndAddiCostTable = () => {
         'totalStayCostInput',
         'totalDriverCostInput',
         'totalGuideCostInput',
-        'totalAdditionalCosts',
         'pkgStartingPrice'
 
     ];
@@ -1775,6 +1792,9 @@ const resetTotalCostInputsAndAddiCostTable = () => {
     const pkgFinalPriceShowInput = document.getElementById('pkgFinalPrice');
     pkgFinalPriceShowInput.value = '';
     pkgFinalPriceShowInput.style.border = "1px solid #ced4da";
+
+    tpkg.pkgfinalprice = null;
+
 }
 
 //get user permission before refill tpkg by inq when there are already data
@@ -2285,6 +2305,8 @@ const updateTourEndDate = () => {
 //function to flag which driver source is selected  
 const handleDriverSourceChange = () => {
 
+    resetCostsExceptAddiCosts();
+
     if (yathraDriverCB.checked) {
         tpkg.is_company_driver = true;
     } else if (rentalDriverCB.checked) {
@@ -2295,6 +2317,9 @@ const handleDriverSourceChange = () => {
 
 // function to flag which guide source is selected  
 const handleGuideSourceChange = () => {
+
+    resetCostsExceptAddiCosts();
+    
     if (yathraGuideCB.checked) {
         tpkg.is_company_guide = true;
     } else if (rentalGuideCB.checked) {
@@ -2330,6 +2355,8 @@ const handleNeedGuideCB = () => {
 
 //function to save vehicle source  
 const handleVehicleSourceChange = () => {
+
+    resetCostsExceptAddiCosts();
 
     if (yathraVehiCB.checked) {
         tpkg.is_company_vehicle = true;
@@ -2655,7 +2682,7 @@ const handleDiscs = () => {
     finalPriceInput.value = finalPrice.toFixed(2);
     tpkg.pkgfinalprice = finalPriceInput.value;
 
-    tpkg.useddiscounts = discountLabels.join(',');
+    tpkg.discountsused = discountLabels.join(',');
 };
 
 //this will be neede when refilling the form
@@ -4551,6 +4578,8 @@ const handleMidDaySelectChange = (selectElem, currentDay = null) => {
 // to load templates   
 const loadTemplates = async (selectElementId) => {
 
+    resetCostsExceptAddiCosts();
+
     //for first days
     if (selectElementId.id == "tpkgFirstDaySelect") {
         console.log(' if (selectElementId == "tpkgFirstDaySelect") called');
@@ -4600,6 +4629,8 @@ const loadTemplates = async (selectElementId) => {
 // to load existing first days  
 const loadExistingFDs = async (selectElementId) => {
 
+    resetCostsExceptAddiCosts();
+
     document.getElementById('addNewDaysBtn').disabled = true;
 
     tpkg.sd_dayplan_id = null;
@@ -4641,6 +4672,8 @@ const loadExistingFDs = async (selectElementId) => {
 
 // to load existing mid days  
 const loadExistingMDs = async (selectElement) => {
+
+    resetCostsExceptAddiCosts();
 
     selectElement.style.border = "1px solid #ced4da";
     clearDpInfoShowSection();
@@ -4685,6 +4718,8 @@ const loadExistingMDs = async (selectElement) => {
 // to load existing last days  
 const loadExistingLDs = async (selectElementId) => {
 
+    resetCostsExceptAddiCosts();
+
     tpkg.ed_dayplan_id = null;
 
     selectElementId.style.border = "1px solid #ced4da";
@@ -4725,6 +4760,8 @@ const deleteMidDay = (index) => {
         showAlertModal('inf', 'User cancelled the mid day deletion task');
         return;
     }
+
+    resetCostsExceptAddiCosts();
 
     const select = document.getElementById(`tpkgMidDaySelect${index}`);
 
@@ -4851,6 +4888,14 @@ const deleteMidDay = (index) => {
 
 // remove the final day from the tpkg
 const removeFinalDay = () => {
+
+    let userConfirm = confirm("Are you sure to remove the final day? ")
+    if (!userConfirm) {
+        showAlertModal('inf', 'User cancelled the final day removing task');
+        return;
+    }
+
+    resetCostsExceptAddiCosts();
 
     const finalDaySelectElement = document.getElementById('tpkgFinalDaySelect');
 
