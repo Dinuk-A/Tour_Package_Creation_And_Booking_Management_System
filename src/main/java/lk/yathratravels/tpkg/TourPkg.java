@@ -191,6 +191,17 @@ public class TourPkg {
     /**
      * @param id
      * @param pkgtitle
+     * @param pkgcode
+     */
+    public TourPkg(Integer id, String pkgtitle, String pkgcode) {
+        this.id = id;
+        this.pkgtitle = pkgtitle;
+        this.pkgcode = pkgcode;
+    }
+
+    /**
+     * @param id
+     * @param pkgtitle
      * @param sd_dayplan_id
      * @param ed_dayplan_id
      * @param dayplans

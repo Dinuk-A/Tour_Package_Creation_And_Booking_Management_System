@@ -30,41 +30,47 @@ window.addEventListener('load', () => {
     document.getElementById('generateReportBtn').addEventListener('click', fillTable);
 });
 
-
-// Function to fill the table
 const fillTable = async () => {
     const startDate = startDatePickerID.value;
     const lastDate = endDatePickerID.value;
 
     if (startDate && lastDate) {
 
-        // Show the table
         document.getElementById('pkgInquiryReportTable').classList.remove('d-none');
 
-        // Fill date range heading
         const formattedDateRangeText = `${new Date(startDate).toLocaleDateString()} to ${new Date(lastDate).toLocaleDateString()}`;
         document.getElementById('dateRange').innerText = formattedDateRangeText;
 
         try {
-            // Call the backend and get data
             const reportData = await ajaxGetReq("report/inquiries-by-pkg/" + startDate + "/" + lastDate);
-
-            const labels = reportData.labels; // package IDs
-            const data = reportData.data;     // inquiry counts
+            const labels = reportData.labels; // pkg IDs
+            const data = reportData.data;
 
             const tableBody = document.getElementById("pkgInquiryReportTableBody");
-            tableBody.innerHTML = ""; 
+            tableBody.innerHTML = "";
 
             for (let i = 0; i < labels.length; i++) {
+                const pkgId = labels[i];
+                const count = data[i];
+
+                // Fetch title & code for each package
+                let pkgInfo;
+                try {
+                    pkgInfo = await ajaxGetReq("/tpkg/byid?tpkgId=" + pkgId);
+                } catch (err) {
+                    console.error("Failed to load package details for ID " + pkgId, err);
+                    pkgInfo = { pkgtitle: "Unknown", pkgcode: "N/A" };
+                }
+
                 const row = document.createElement("tr");
 
-                const pkgIdCell = document.createElement("td");
-                pkgIdCell.innerText = labels[i];
+                const pkgCell = document.createElement("td");
+                pkgCell.innerText = pkgInfo.pkgcode + " - " + pkgInfo.pkgtitle;
 
                 const countCell = document.createElement("td");
-                countCell.innerText = data[i];
+                countCell.innerText = count;
 
-                row.appendChild(pkgIdCell);
+                row.appendChild(pkgCell);
                 row.appendChild(countCell);
 
                 tableBody.appendChild(row);
