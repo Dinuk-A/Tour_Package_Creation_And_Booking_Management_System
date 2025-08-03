@@ -79,7 +79,7 @@
                                             </span>
                                             <input type="number" placeholder="1500.00" id="inputCostperHead"
                                                 class="form-control" required
-                                                onkeyup="inputValidatorText(this,'^(?!0+(?:\\.0{1,2})?$)(\\d{1,4})(\\.\\d{1,2})?$','lunchplace','costperhead');"
+                                                onkeyup="inputValidatorText(this,'^[1-9][0-9]{0,5}([.][0-9]{2})?$','lunchplace','costperhead');"
                                                 onblur="insertDecimals(this);">
                                         </div>
                                     </div>

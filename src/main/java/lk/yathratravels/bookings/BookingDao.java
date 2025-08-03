@@ -53,3 +53,7 @@ public interface BookingDao extends JpaRepository<Booking, Integer> {
 List<UpcomingToursDTO> findUpcomingToursNotFullyPaidAndNotCancelled(@Param("tomorrow") LocalDate tomorrow);
 
 }
+
+/*
+ * select customer.name, order.item from customer left join order on customer.cx_id = order.customer
+ */
