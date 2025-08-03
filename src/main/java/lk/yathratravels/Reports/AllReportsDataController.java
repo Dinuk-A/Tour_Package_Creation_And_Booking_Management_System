@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -162,6 +163,27 @@ public class AllReportsDataController {
     public BigDecimal getSumOfPaymentsByGivenDate(@PathVariable("startDate") String startDate,
             @PathVariable("endDate") String endDate) {
         return paymentRepDao.findTotalPaidAmountByDateRange(LocalDate.parse(startDate), LocalDate.parse(endDate));
+    }
+
+    // FOR VIVA MODIICATION
+    @GetMapping(value = "paysum/bymonth", params = { "monthId" }, produces = "application/json")
+    public BigDecimal getPaySumByGivenMonth(@RequestParam("monthId") Integer monthId) {
+        return paymentRepDao.findPaySumByMonth(monthId);
+    }
+
+    // FOR VIVA MODIICATION
+    @RequestMapping(value = "/viva", method = RequestMethod.GET)
+    public ModelAndView vivaUi() throws JsonProcessingException {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        ModelAndView vivaView = new ModelAndView();
+        vivaView.setViewName("viva.html");
+        vivaView.addObject("loggedUserUN", auth.getName());
+        vivaView.addObject("title", "Yathra Reports");
+        vivaView.addObject("moduleName", "Yathra Reports");
+
+        return vivaView;
     }
 
     // ++++++++++++++++++++++++++++++ PKG REPORTS +++++++++++++++++++++++++++//

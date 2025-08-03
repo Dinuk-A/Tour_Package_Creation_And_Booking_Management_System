@@ -55,7 +55,7 @@
             <div class="row mt-4">
                 <div class="col-md-4">
                     <div class="card shadow-sm border-danger h-100"
-                    onclick="window.location.href='http://localhost:8081/paymentreports'">
+                        onclick="window.location.href='http://localhost:8081/paymentreports'">
                         <div class="card-header bg-danger text-white d-flex align-items-center">
                             <i class="bi bi-currency-dollar me-2"></i>
                             <h5 class="mb-0">Financial Reports</h5>
@@ -63,6 +63,23 @@
                         <div class="card-body">
 
                             <p class="text-muted">Overview of payments.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW FOR MODIFICATION -->
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-danger h-100"
+                        onclick="window.location.href='http://localhost:8081/viva'">
+                        <div class="card-header bg-danger text-white d-flex align-items-center">
+                            <i class="bi bi-currency-dollar me-2"></i>
+                            <h5 class="mb-0">Financial Reports BY MONTHS</h5>
+                        </div>
+                        <div class="card-body">
+
+                            <p class="text-muted">Overview of payments FILTERED BY MONTH VIVA MODIFICATION.</p>
                         </div>
                     </div>
                 </div>
@@ -91,3 +108,5 @@
 </body>
 
 </html>
+
+<!--SELECT sum(pay.paid_amount) FROM newyathra.payment as pay where month(pay.paid_date) =1-->

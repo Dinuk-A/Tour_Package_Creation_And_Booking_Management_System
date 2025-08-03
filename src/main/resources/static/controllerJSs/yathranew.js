@@ -359,20 +359,20 @@ const openReusableModalForCardsReadMore = (package) => {
 
             let mainStay = document.createElement('div');
             mainStay.className = "alert alert-success py-2 px-3 mb-2 small";
-            mainStay.innerHTML = `🏨 <strong>Main Accommodation:</strong> ${tpDayPlan.drop_stay_id.name}`;
+            mainStay.innerHTML = `<strong>Main Accommodation:</strong> ${tpDayPlan.drop_stay_id.name}`;
             staySection.appendChild(mainStay);
 
             if (tpDayPlan.alt_stay_1_id || tpDayPlan.alt_stay_2_id) {
                 if (tpDayPlan.alt_stay_1_id) {
                     let alt1 = document.createElement('div');
                     alt1.className = "alert alert-warning py-2 px-3 mb-2 small";
-                    alt1.innerHTML = `🔁 <strong>Alternate Option 1:</strong> ${tpDayPlan.alt_stay_1_id.name}`;
+                    alt1.innerHTML = `<strong>Alternate Option 1:</strong> ${tpDayPlan.alt_stay_1_id.name}`;
                     staySection.appendChild(alt1);
                 }
                 if (tpDayPlan.alt_stay_2_id) {
                     let alt2 = document.createElement('div');
                     alt2.className = "alert alert-warning py-2 px-3 mb-2 small";
-                    alt2.innerHTML = `🔁 <strong>Alternate Option 2:</strong> ${tpDayPlan.alt_stay_2_id.name}`;
+                    alt2.innerHTML = `<strong>Alternate Option 2:</strong> ${tpDayPlan.alt_stay_2_id.name}`;
                     staySection.appendChild(alt2);
                 }
 

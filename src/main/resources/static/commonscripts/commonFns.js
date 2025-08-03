@@ -156,6 +156,7 @@ function controlSidebarLinks() {
         show("inquiryManagementLink");
         //show("clientManagementLink");
         show("bookingManagementLink");
+        show("paymentManagementLink");
 
     } else if (userRoles.includes("Receptionist")) {
        
@@ -169,7 +170,7 @@ function controlSidebarLinks() {
         hide("destinationManagementLink");
         hide("itineraryBuilderLink");
         hide("tourPackageBuilderLink");
-        hide("paymentManagementLink");
+        //show("paymentManagementLink");
         //hide("expensesManagementLink");
         hide("vehicleTypeManagementLink");
         hide("reportPageLink");
