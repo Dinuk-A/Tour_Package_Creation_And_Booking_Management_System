@@ -106,7 +106,7 @@ const fillMultDataIntoDynamicSelects = (tagId, msg, dataContainer, displayingPro
 
 }
 
-//fill and display 2 values into the same <option>
+//fill and display 2 values into the same <option> but refilled by ID
 const fillMultDataIntoDynamicSelectsRefillById = (tagId, msg, dataContainer, displayingPropertyName1, displayingPropertyName2, selectedValue) => {
 
     tagId.innerHTML = "";
@@ -217,48 +217,6 @@ const inputValidatorText = (inputTagId, pattern, object, property) => {
         }
 
         //run this if no value is entered
-    } else {
-        window[object][property] = null;
-
-        //if this field is marked as required turn to red, else default colour
-        if (inputTagId.required) {
-            inputTagId.style.border = "2px solid red";
-        } else {
-            inputTagId.style.border = "2px solid #ced4da";
-        }
-    }
-}
-
-const inputValidatorNumber = (inputTagId, pattern, object, property) => {
-   
-    const regXP = new RegExp(pattern);
-
-    // For number inputs, we need to check the raw input value
-    // because .value might be empty even when user typed something invalid
-    const rawValue = inputTagId.value;
-    const displayValue = inputTagId.validity.badInput ? '' : rawValue;
-    
-    //run all this only if there is a value entered
-    if (rawValue !== "" && rawValue !== null && rawValue !== undefined) {
-        
-        // Test against the raw string value, not the parsed number
-        if (regXP.test(rawValue)) {
-            inputTagId.style.border = "2px solid lime";
-            
-            // For numbers, you might want to store as number or string based on your needs
-            // Store as trimmed string (like your original function)
-            window[object][property] = rawValue.trim();
-            
-            // Alternative: Store as number if you prefer
-            // const numValue = parseFloat(rawValue);
-            // window[object][property] = isNaN(numValue) ? null : numValue;
-            
-        } else {
-            inputTagId.style.border = "2px solid red";
-            window[object][property] = null;
-        }
-
-    //run this if no value is entered
     } else {
         window[object][property] = null;
 

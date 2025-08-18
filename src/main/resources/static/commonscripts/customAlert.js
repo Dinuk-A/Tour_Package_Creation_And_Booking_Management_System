@@ -40,7 +40,7 @@ const showAlertModal = (type, message) => {
     }, 10);
 };
 
-
+//not used
 const closeAlertModal = () => {
     let modal = document.getElementById("customAlertModal");
 
@@ -53,41 +53,5 @@ const closeAlertModal = () => {
     }, 300);
 }
 
-// Custom Confirm Function using Promises
-//const customConfirm = (msg) => {
-//    return new Promise((resolve) => {
-//        let modalCnfrm = document.getElementById("customConfirmModal");
-//        document.getElementById("confirmMsg").innerText = msg;
-//
-//        modalCnfrm.style.display = "block";
-//
-//        setTimeout(() => {
-//            modalCnfrm.style.top = "10px";
-//            modalCnfrm.style.opacity = "1";
-//        }, 10);
-//
-//        let btnOK = document.getElementById('btnConfirmOk');
-//        let btnCancel = document.getElementById('btnConfirmCancel');
-//
-//        btnOK.onclick = () => {
-//            closeConfirmModal();
-//            resolve(true);
-//        };
-//
-//        btnCancel.onclick = () => {
-//            closeConfirmModal();
-//            resolve(false);
-//        };
-//
-//        const closeConfirmModal = () => {
-//            modalCnfrm.style.top = "-100px";
-//            modalCnfrm.style.opacity = "0";
-//
-//            setTimeout(() => {
-//                modalCnfrm.style.display = "none";
-//            }, 300);
-//        };
-//    });
-//};
 
 
